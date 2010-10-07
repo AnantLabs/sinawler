@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SinaMBCrawler
+namespace Sinawler
 {
     //此类用于实现一些公用的、常用的处理函数
     class PubHelper

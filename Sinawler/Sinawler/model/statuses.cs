@@ -4,7 +4,7 @@ using System.Text;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace SinaMBCrawler.Model
+namespace Sinawler
 {
 	/// <summary>
     /// 类Status。此类中的方法，都是与数据库交互，从中读取或向其中写入数据
@@ -52,10 +52,16 @@ namespace SinaMBCrawler.Model
 
     public class Status
 	{
-        static private Database db = new Database();
+        static private Database db;
 
-		public Status()
-		{}
+        public Status()
+		{
+            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
+                db = new SqlDatabase();
+            else
+                db = new OracleDatabase();
+        }
+
 		#region Model
 		private long _status_id;
 		private string _created_at;

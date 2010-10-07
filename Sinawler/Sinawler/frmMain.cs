@@ -11,7 +11,7 @@ using Sina.Api;
 using System.IO;
 using System.Threading;
 
-namespace SinaMBCrawler
+namespace Sinawler
 {
     public partial class frmMain : Form
     {

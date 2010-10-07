@@ -7,8 +7,8 @@
     <ProjectGuid>{DAA2DB49-A89C-417B-AA99-112DB36362B9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SinaMBCrawler2</RootNamespace>
-    <AssemblyName>SinaMBCrawler2</AssemblyName>
+    <RootNamespace>Sinawler</RootNamespace>
+    <AssemblyName>Sinawler</AssemblyName>
     <PublishUrl>http://localhost/SinaMBCrawler2/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -32,7 +32,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\SinaMBCrawler.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -61,6 +62,8 @@
     <Compile Include="API\oAuthBase.cs" />
     <Compile Include="API\oAuthSina.cs" />
     <Compile Include="API\SinaApiService.cs" />
+    <Compile Include="classes\AppSettings.cs" />
+    <Compile Include="classes\Serialize.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
       <SubType>Code</SubType>
@@ -103,6 +106,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
@@ -114,6 +118,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

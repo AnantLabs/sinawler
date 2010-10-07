@@ -5,7 +5,7 @@ using Sina.Api;
 using System.Xml;
 using SinaMBCrawler.Model;
 
-namespace SinaMBCrawler
+namespace Sinawler
 {
     //SinaMBCrawler类是通过新浪微博API从微博中抓取数据的类
     class SinaMBCrawler

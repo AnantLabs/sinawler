@@ -21,7 +21,7 @@ namespace SinaMBCrawler.Model
     */
 	public class Comment
 	{
-        static private Database db = new Database();
+        static private Database db = new SqlDatabase();
 
 		#region Model
 

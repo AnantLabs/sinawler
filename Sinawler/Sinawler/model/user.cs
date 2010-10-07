@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace SinaMBCrawler.Model
+namespace Sinawler
 {
 	/// <summary>
 	/// 类user。此类中的方法，都是与数据库交互，从中读取或向其中写入数据
@@ -55,10 +55,16 @@ namespace SinaMBCrawler.Model
 
 	public class User
 	{
-        static private Database db = new Database();
+        static private Database db;
 
 		public User()
-		{}
+		{
+            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
+                db = new SqlDatabase();
+            else
+                db = new OracleDatabase();
+        }
+
 		#region Model
 		private long _uid;
 		private string _screen_name;

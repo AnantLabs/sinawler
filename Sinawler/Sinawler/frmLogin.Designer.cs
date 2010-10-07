@@ -1,4 +1,4 @@
-﻿namespace SinaMBCrawler
+﻿namespace Sinawler
 {
     partial class frmLogin
     {

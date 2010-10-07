@@ -7,7 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using Sina.Api;
 
-namespace SinaMBCrawler
+namespace Sinawler
 {
     public partial class frmLogin : Form
     {

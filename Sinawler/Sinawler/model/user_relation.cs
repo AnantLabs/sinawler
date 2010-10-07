@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace SinaMBCrawler.Model
+namespace Sinawler
 {
     /// <summary>
     /// UserRelation×´Ì¬Ã¶¾Ù
@@ -24,10 +24,16 @@ namespace SinaMBCrawler.Model
 
 	public class UserRelation
 	{
-        static private Database db = new Database();
+        static private Database db;
 
-		public UserRelation()
-		{}
+        public UserRelation()
+		{
+            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
+                db = new SqlDatabase();
+            else
+                db = new OracleDatabase();
+        }
+
 		#region Model
 		private long _source_uid;
         private long _target_uid;
