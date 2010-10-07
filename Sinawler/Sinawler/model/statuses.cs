@@ -52,15 +52,10 @@ namespace Sinawler
 
     public class Status
 	{
-        static private Database db;
+        static private Database db = DatabaseFactory.CreateDatabase();
 
         public Status()
-		{
-            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
-                db = new SqlDatabase();
-            else
-                db = new OracleDatabase();
-        }
+		{}
 
 		#region Model
 		private long _status_id;

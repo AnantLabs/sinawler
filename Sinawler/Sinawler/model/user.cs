@@ -55,15 +55,10 @@ namespace Sinawler
 
 	public class User
 	{
-        static private Database db;
+        static private Database db = DatabaseFactory.CreateDatabase();
 
 		public User()
-		{
-            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
-                db = new SqlDatabase();
-            else
-                db = new OracleDatabase();
-        }
+		{}
 
 		#region Model
 		private long _uid;

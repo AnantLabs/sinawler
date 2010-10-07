@@ -15,15 +15,10 @@ namespace Sinawler
 
 	public class SysArg
 	{
-        static private Database db;
+        static private Database db = DatabaseFactory.CreateDatabase();
 
         public SysArg()
-		{
-            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
-                db = new SqlDatabase();
-            else
-                db = new OracleDatabase();
-        }
+		{}
 
 		#region Model
 		private string _arg_name;

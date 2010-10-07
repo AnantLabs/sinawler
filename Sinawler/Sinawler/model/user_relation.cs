@@ -24,15 +24,10 @@ namespace Sinawler
 
 	public class UserRelation
 	{
-        static private Database db;
+        static private Database db = DatabaseFactory.CreateDatabase();
 
         public UserRelation()
-		{
-            if (AppSettings.LoadDefault().DataBaseType == "SQL Server")
-                db = new SqlDatabase();
-            else
-                db = new OracleDatabase();
-        }
+		{}
 
 		#region Model
 		private long _source_uid;

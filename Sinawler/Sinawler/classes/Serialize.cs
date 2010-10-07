@@ -11,11 +11,11 @@ namespace Sinawler
     public class Serialize
     {
         // 用于初始化对称密钥
-        private static byte[] key = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6,
-            7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2
-        };
-        private static byte[] IV = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6 };
-
+        //private static byte[] key = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6,
+        //    7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2
+        //};
+        //private static byte[] IV = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6 };
+        
 
         /// <summary>
         /// 将对象压缩加密到字节数据
@@ -27,7 +27,8 @@ namespace Sinawler
             // 建立对称密码信息
             MemoryStream ms = new MemoryStream();
             RijndaelManaged RM = new RijndaelManaged();
-            CryptoStream EnCrpStrm = new CryptoStream(ms, RM.CreateEncryptor(key, IV), CryptoStreamMode.Write);
+            //CryptoStream EnCrpStrm = new CryptoStream(ms, RM.CreateEncryptor(key, IV), CryptoStreamMode.Write);
+            CryptoStream EnCrpStrm = new CryptoStream( ms, RM.CreateEncryptor(null,null), CryptoStreamMode.Write );
             DeflateStream zip = new DeflateStream(EnCrpStrm, CompressionMode.Compress, true);
             try
             {
@@ -39,7 +40,6 @@ namespace Sinawler
             }
             catch (Exception e)
             {
-                MsgBoxs.Alert(e.ToString());
                 return null;
             }
             finally
@@ -58,7 +58,8 @@ namespace Sinawler
         {
             MemoryStream ms = new MemoryStream(ary);
             RijndaelManaged RM = new RijndaelManaged();
-            CryptoStream DeCrpStrm = new CryptoStream(ms, RM.CreateDecryptor(key, IV), CryptoStreamMode.Read);
+            //CryptoStream DeCrpStrm = new CryptoStream(ms, RM.CreateDecryptor(key, IV), CryptoStreamMode.Read);
+            CryptoStream DeCrpStrm = new CryptoStream( ms, RM.CreateDecryptor( null,null ), CryptoStreamMode.Read );
             DeflateStream UnZip = new DeflateStream(DeCrpStrm, CompressionMode.Decompress);
             try
             {
@@ -67,7 +68,6 @@ namespace Sinawler
             }
             catch (Exception e)
             {
-                MsgBoxs.Alert(e.ToString());
                 return null;
             }
             finally
@@ -100,7 +100,6 @@ namespace Sinawler
             {
                 zip.Close();
                 ms.Close();
-                MsgBoxs.Alert(e.ToString());
                 return null;
             }
         }
@@ -126,7 +125,6 @@ namespace Sinawler
             {
                 UnZip.Close();
                 ms.Close();
-                MsgBoxs.Alert(e.ToString());
                 return null;
             }
         }

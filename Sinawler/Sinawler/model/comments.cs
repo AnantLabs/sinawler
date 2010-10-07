@@ -21,7 +21,7 @@ namespace SinaMBCrawler.Model
     */
 	public class Comment
 	{
-        static private Database db = new SqlDatabase();
+        static private Database db = DatabaseFactory.CreateDatabase();
 
 		#region Model
 

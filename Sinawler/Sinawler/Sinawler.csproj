@@ -63,6 +63,8 @@
     <Compile Include="API\oAuthSina.cs" />
     <Compile Include="API\SinaApiService.cs" />
     <Compile Include="classes\AppSettings.cs" />
+    <Compile Include="classes\DatabaseFactory.cs" />
+    <Compile Include="classes\Robot.cs" />
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
