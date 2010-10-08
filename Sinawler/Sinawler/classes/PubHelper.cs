@@ -12,8 +12,8 @@ namespace Sinawler
         /// <summary>
         /// 将抓取的created_at时间转换为数据库可接受的yyyy-mm-dd hh:mm:ss格式
         /// </summary>
-        /// <param name="strDateTime"></param>
-        /// <returns></returns>
+        /// <param name="strDateTime">抓取的日期字符串</param>
+        /// <returns>整理后的yyyy-mm-dd hh:mm:ss格式的日期和时间</returns>
         static public string ParseDateTime ( string strDateTime )
         {
             string[] s = strDateTime.Split( ' ' );
@@ -61,6 +61,26 @@ namespace Sinawler
             }
             strBuffer += s[2] + " " + s[3];
             return strBuffer;
+        }
+
+        /// <summary>
+        /// 测试数据库连接
+        /// </summary>
+        /// <returns>成功提示或者错误信息</returns>
+        static public string TestDataBase ()
+        {
+            string strResult;
+            Database db = DatabaseFactory.CreateDatabase();
+            try
+            {
+                db.Test();
+                strResult = "OK";
+            }
+            catch(Exception ex)
+            {
+                strResult = ex.Message;
+            }
+            return strResult;
         }
     }
 }

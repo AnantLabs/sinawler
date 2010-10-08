@@ -31,49 +31,49 @@ public abstract class Database : IDisposable
     /// <summary>
     /// 构造函数。
     /// </summary>
-    public Database() { }
+    public Database () { }
 
     /// <summary>
     /// 构造函数。
     /// </summary>
     /// <param name="pDatabaseConnectionString">数据库连接串</param>
-    public Database(string pDatabaseConnectionString) { }
+    public Database ( string pDatabaseConnectionString ) { }
 
     /// <summary>
     /// 析构函数，释放非托管资源
     /// </summary>
-    ~Database() { }
+    ~Database () { }
 
     /// <summary>
     /// 保护方法，打开数据库连接。
     /// </summary>
-    protected abstract void Open();
+    protected abstract void Open ();
 
     /// <summary>
     /// 公有方法，关闭数据库连接。
     /// </summary>
-    public abstract void Close();
+    public abstract void Close ();
 
     /// <summary>
     /// 公有方法，释放资源。
     /// </summary>
-    public abstract void Dispose();
+    public abstract void Dispose ();
 
     /// <summary>
     /// 公有方法，获取数据，返回一个DataSet。
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>DataSet</returns>
-    public abstract DataSet GetDataSet(String SqlString);
+    public abstract DataSet GetDataSet ( String SqlString );
 
     /// <summary>
     /// 公有方法，获取数据，返回一个DataRow。
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>DataRow</returns>
-    public DataRow GetDataRow(String SqlString)
+    public DataRow GetDataRow ( String SqlString )
     {
-        DataSet dataset = GetDataSet(SqlString);
+        DataSet dataset = GetDataSet( SqlString );
         dataset.CaseSensitive = false;
         if (dataset.Tables[0].Rows.Count > 0)
         {
@@ -90,21 +90,21 @@ public abstract class Database : IDisposable
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Update、Insert、Delete为影响到的行数，其他情况为-1</returns>
-    public abstract int CountByExecuteSQL(String SqlString);
+    public abstract int CountByExecuteSQL ( String SqlString );
 
     /// <summary>
     /// 公有方法，执行Sql语句。
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Select为影响到的行数，其他情况为-1</returns>
-    public abstract int CountByExecuteSQLSelect(String SqlString);
+    public abstract int CountByExecuteSQLSelect ( String SqlString );
 
     /// <summary>
     /// 公有方法，执行一组Sql语句。
     /// </summary>
     /// <param name="SqlStrings">Sql语句组</param>
     /// <returns>是否成功</returns>
-    public abstract bool ExecuteSQL(ArrayList SqlStrings);
+    public abstract bool ExecuteSQL ( ArrayList SqlStrings );
 
     /// <summary>
     /// 公有方法，在一个数据表中插入一条记录。
@@ -112,7 +112,7 @@ public abstract class Database : IDisposable
     /// <param name="TableName">表名</param>
     /// <param name="Cols">哈西表，键值为字段名，值为字段值</param>
     /// <returns>是否成功</returns>
-    public bool Insert(String TableName, Hashtable Cols)
+    public bool Insert ( String TableName, Hashtable Cols )
     {
         int Count = 0;
 
@@ -139,7 +139,7 @@ public abstract class Database : IDisposable
 
         String SqlString = "Insert into " + TableName + Fields + Values;
 
-        if (CountByExecuteSQL(SqlString) <= 0) return false;
+        if (CountByExecuteSQL( SqlString ) <= 0) return false;
 
         return true;
     }
@@ -151,7 +151,7 @@ public abstract class Database : IDisposable
     /// <param name="Cols">哈西表，键值为字段名，值为字段值</param>
     /// <param name="Where">Where子句</param>
     /// <returns>是否成功</returns>
-    public bool Update(String TableName, Hashtable Cols, String Where)
+    public bool Update ( String TableName, Hashtable Cols, String Where )
     {
         int Count = 0;
         if (Cols.Count <= 0)
@@ -174,9 +174,14 @@ public abstract class Database : IDisposable
 
         String SqlString = "Update " + TableName + " Set " + Fields + " where " + Where;
 
-        if (CountByExecuteSQL(SqlString) <= 0) return false;
+        if (CountByExecuteSQL( SqlString ) <= 0) return false;
         return true;
     }
+
+    /// <summary>
+    /// 测试数据库连接。若正常，直接结束，否则抛出异常
+    /// </summary>
+    public abstract void Test ();
 }
 
 /// <summary>
@@ -193,7 +198,7 @@ public class SqlDatabase : Database
     /// 构造函数。
     /// </summary>
     /// <param name="DatabaseConnectionString">数据库连接串</param>
-    public SqlDatabase()
+    public SqlDatabase ()
     {
         _database_type = "SQL Server";
         _connection_string = ConfigurationManager.ConnectionStrings["SQLServerConnectionString"].ConnectionString;
@@ -203,7 +208,7 @@ public class SqlDatabase : Database
     /// 构造函数。
     /// </summary>
     /// <param name="pDatabaseConnectionString">数据库连接串</param>
-    public SqlDatabase(string pDatabaseConnectionString)
+    public SqlDatabase ( string pDatabaseConnectionString )
     {
         _connection_string = pDatabaseConnectionString;
     }
@@ -211,7 +216,7 @@ public class SqlDatabase : Database
     /// <summary>
     /// 析构函数，释放非托管资源
     /// </summary>
-    ~SqlDatabase()
+    ~SqlDatabase ()
     {
         try
         {
@@ -229,13 +234,13 @@ public class SqlDatabase : Database
     /// <summary>
     /// 保护方法，打开数据库连接。
     /// </summary>
-    protected override void Open()
+    protected override void Open ()
     {
         if (_sql_connection == null)
         {
-            _sql_connection = new SqlConnection(_connection_string);
+            _sql_connection = new SqlConnection( _connection_string );
         }
-        if (_sql_connection.State.Equals(ConnectionState.Closed))
+        if (_sql_connection.State.Equals( ConnectionState.Closed ))
         {
             _sql_connection.Open();
         }
@@ -244,16 +249,16 @@ public class SqlDatabase : Database
     /// <summary>
     /// 公有方法，关闭数据库连接。
     /// </summary>
-    public override void Close()
+    public override void Close ()
     {
-        if (_sql_connection != null && _sql_connection.State.Equals(ConnectionState.Open))
+        if (_sql_connection != null && _sql_connection.State.Equals( ConnectionState.Open ))
             _sql_connection.Close();
     }
 
     /// <summary>
     /// 公有方法，释放资源。
     /// </summary>
-    public override void Dispose()
+    public override void Dispose ()
     {
         // 确保连接被关闭
         if (_sql_connection != null)
@@ -268,13 +273,20 @@ public class SqlDatabase : Database
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>DataSet</returns>
-    public override DataSet GetDataSet(String SqlString)
+    public override DataSet GetDataSet ( String SqlString )
     {
         DataSet dataset = new DataSet();
-        Open();
-        SqlDataAdapter adapter = new SqlDataAdapter(SqlString, _sql_connection);
-        adapter.Fill(dataset);
-        Close();
+        try
+        {
+            Open();
+            SqlDataAdapter adapter = new SqlDataAdapter( SqlString, _sql_connection );
+            adapter.Fill( dataset );
+            Close();
+        }
+        catch
+        {
+            dataset = null;
+        }
         return dataset;
     }
 
@@ -283,13 +295,13 @@ public class SqlDatabase : Database
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Update、Insert、Delete为影响到的行数，其他情况为-1</returns>
-    public override int CountByExecuteSQL(String SqlString)
+    public override int CountByExecuteSQL ( String SqlString )
     {
         int count = -1;
         Open();
         try
         {
-            SqlCommand cmd = new SqlCommand(SqlString, _sql_connection);
+            SqlCommand cmd = new SqlCommand( SqlString, _sql_connection );
             cmd.CommandTimeout = 60;
             count = cmd.ExecuteNonQuery();
         }
@@ -309,15 +321,15 @@ public class SqlDatabase : Database
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Select为影响到的行数，其他情况为-1</returns>
-    public override int CountByExecuteSQLSelect(String SqlString)
+    public override int CountByExecuteSQLSelect ( String SqlString )
     {
         int count = -1;
         Open();
         try
         {
-            SqlCommand cmd = new SqlCommand(SqlString, _sql_connection);
+            SqlCommand cmd = new SqlCommand( SqlString, _sql_connection );
             cmd.CommandTimeout = 60;
-            count = Convert.ToInt32(cmd.ExecuteScalar());
+            count = Convert.ToInt32( cmd.ExecuteScalar() );
         }
         catch
         {
@@ -335,7 +347,7 @@ public class SqlDatabase : Database
     /// </summary>
     /// <param name="SqlStrings">Sql语句组</param>
     /// <returns>是否成功</returns>
-    public override bool ExecuteSQL(ArrayList SqlStrings)
+    public override bool ExecuteSQL ( ArrayList SqlStrings )
     {
         bool success = true;
         Open();
@@ -364,6 +376,33 @@ public class SqlDatabase : Database
         }
         return success;
     }
+
+    /// <summary>
+    /// 测试数据库连接。若有异常，抛出异常
+    /// </summary>
+    public override void Test ()
+    {
+        try
+        {
+            if (_sql_connection == null)
+            {
+                _sql_connection = new SqlConnection( _connection_string );
+            }
+            if (_sql_connection.State.Equals( ConnectionState.Closed ))
+            {
+                _sql_connection.Open();
+            }
+        }
+        catch
+        {
+            throw;
+        }
+        finally
+        {
+            Close();
+            Dispose();
+        }
+    }
 }
 
 /// <summary>
@@ -380,7 +419,7 @@ public class OracleDatabase : Database
     /// 构造函数。
     /// </summary>
     /// <param name="DatabaseConnectionString">数据库连接串</param>
-    public OracleDatabase()
+    public OracleDatabase ()
     {
         _database_type = "Oracle";
         _connection_string = ConfigurationManager.ConnectionStrings["OracleConnectionString"].ConnectionString;
@@ -390,7 +429,7 @@ public class OracleDatabase : Database
     /// 构造函数。
     /// </summary>
     /// <param name="pDatabaseConnectionString">数据库连接串</param>
-    public OracleDatabase(string pDatabaseConnectionString)
+    public OracleDatabase ( string pDatabaseConnectionString )
     {
         _connection_string = pDatabaseConnectionString;
     }
@@ -398,7 +437,7 @@ public class OracleDatabase : Database
     /// <summary>
     /// 析构函数，释放非托管资源
     /// </summary>
-    ~OracleDatabase()
+    ~OracleDatabase ()
     {
         try
         {
@@ -416,13 +455,13 @@ public class OracleDatabase : Database
     /// <summary>
     /// 保护方法，打开数据库连接。
     /// </summary>
-    protected override void Open()
+    protected override void Open ()
     {
         if (_oracle_connection == null)
         {
-            _oracle_connection = new OracleConnection(_connection_string);
+            _oracle_connection = new OracleConnection( _connection_string );
         }
-        if (_oracle_connection.State.Equals(ConnectionState.Closed))
+        if (_oracle_connection.State.Equals( ConnectionState.Closed ))
         {
             _oracle_connection.Open();
         }
@@ -431,16 +470,16 @@ public class OracleDatabase : Database
     /// <summary>
     /// 公有方法，关闭数据库连接。
     /// </summary>
-    public override void Close()
+    public override void Close ()
     {
-        if (_oracle_connection != null && _oracle_connection.State.Equals(ConnectionState.Open))
+        if (_oracle_connection != null && _oracle_connection.State.Equals( ConnectionState.Open ))
             _oracle_connection.Close();
     }
 
     /// <summary>
     /// 公有方法，释放资源。
     /// </summary>
-    public override void Dispose()
+    public override void Dispose ()
     {
         // 确保连接被关闭
         if (_oracle_connection != null)
@@ -455,12 +494,12 @@ public class OracleDatabase : Database
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>DataSet</returns>
-    public override DataSet GetDataSet(String SqlString)
+    public override DataSet GetDataSet ( String SqlString )
     {
         DataSet dataset = new DataSet();
         Open();
-        OracleDataAdapter adapter = new OracleDataAdapter(SqlString, _oracle_connection);
-        adapter.Fill(dataset);
+        OracleDataAdapter adapter = new OracleDataAdapter( SqlString, _oracle_connection );
+        adapter.Fill( dataset );
         Close();
         return dataset;
     }
@@ -470,13 +509,13 @@ public class OracleDatabase : Database
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Update、Insert、Delete为影响到的行数，其他情况为-1</returns>
-    public override int CountByExecuteSQL(String SqlString)
+    public override int CountByExecuteSQL ( String SqlString )
     {
         int count = -1;
         Open();
         try
         {
-            OracleCommand cmd = new OracleCommand(SqlString, _oracle_connection);
+            OracleCommand cmd = new OracleCommand( SqlString, _oracle_connection );
             cmd.CommandTimeout = 60;
             count = cmd.ExecuteNonQuery();
         }
@@ -496,15 +535,15 @@ public class OracleDatabase : Database
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Select为影响到的行数，其他情况为-1</returns>
-    public override int CountByExecuteSQLSelect(String SqlString)
+    public override int CountByExecuteSQLSelect ( String SqlString )
     {
         int count = -1;
         Open();
         try
         {
-            OracleCommand cmd = new OracleCommand(SqlString, _oracle_connection);
+            OracleCommand cmd = new OracleCommand( SqlString, _oracle_connection );
             cmd.CommandTimeout = 60;
-            count = Convert.ToInt32(cmd.ExecuteScalar());
+            count = Convert.ToInt32( cmd.ExecuteScalar() );
         }
         catch
         {
@@ -522,7 +561,7 @@ public class OracleDatabase : Database
     /// </summary>
     /// <param name="SqlStrings">Sql语句组</param>
     /// <returns>是否成功</returns>
-    public override bool ExecuteSQL(ArrayList SqlStrings)
+    public override bool ExecuteSQL ( ArrayList SqlStrings )
     {
         bool success = true;
         Open();
@@ -550,5 +589,32 @@ public class OracleDatabase : Database
             Close();
         }
         return success;
+    }
+
+    /// <summary>
+    /// 测试数据库连接。若有异常，抛出异常
+    /// </summary>
+    public override void Test ()
+    {
+        try
+        {
+            if (_oracle_connection == null)
+            {
+                _oracle_connection = new OracleConnection( _connection_string );
+            }
+            if (_oracle_connection.State.Equals( ConnectionState.Closed ))
+            {
+                _oracle_connection.Open();
+            }
+        }
+        catch
+        {
+            throw;
+        }
+        finally
+        {
+            Close();
+            Dispose();
+        }
     }
 }

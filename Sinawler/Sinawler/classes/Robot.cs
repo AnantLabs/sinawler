@@ -15,18 +15,17 @@ namespace Sinawler
         private SinaApiService api;
         private bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         private string strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";             //日志文件
-        private RichTextBox rtxtLog;                //用于显示日志的文本框
         private string strLog = "";                 //日志内容
+        private frmMain frmUI;                         //父线程中的界面，通过Robot的回调控制其显示信息
 
         private LinkedList<long> lstWaitingUID;     //等待爬行的UID队列
         private long lStartUID=0;                     //爬行的起点用户UID。应在Robot外部对其进行初始化
 
-        public Robot(SinaApiService oAPI,RichTextBox oLogTextBox)
+        //构造函数，需要传入相应的新浪微博API和主界面
+        public Robot ( SinaApiService oAPI, frmMain oUIForm )
         {
             this.api = oAPI;
-            this.rtxtLog = oLogTextBox;
-
-            lstWaitingUID = User.GetCrawedUID();
+            this.frmUI = oUIForm;
         }
 
         public bool AsyncCancelled
@@ -41,11 +40,17 @@ namespace Sinawler
             get { return strLogFile; }
         }
 
-        public RichTextBox LogTextBox
-        { set { rtxtLog = value; } }
+        public frmMain ParentUI
+        { set { frmUI = value; } }
 
         public long StartUID
         { set { lStartUID = value; } }
+
+        //重新设置API的接口
+        public SinaApiService SinaAPI
+        {
+            set { api = value; }
+        }
 
         //在文本框中显示日志，也可增加写日志文件
         public void Actioned(object sender, ProgressChangedEventArgs e)
@@ -55,10 +60,11 @@ namespace Sinawler
             //写入日志文件
             StreamWriter sw = File.AppendText(strLogFile);
             sw.WriteLine(strLog);
+            sw.Close();
+            sw.Dispose();
 
             //向文本框中追加
-            rtxtLog.AppendText(strLog + "\n");
-            rtxtLog.ScrollToCaret();
+            frmUI.ShowLog( strLog );
         }
 
         /// <summary>
@@ -67,6 +73,10 @@ namespace Sinawler
         /// <param name="lUid"></param>
         private void StartCraw ( BackgroundWorker bwAsync )
         {
+            if (lStartUID == 0) return;
+
+            lstWaitingUID = User.GetCrawedUID();
+
             SinaMBCrawler crawler = new SinaMBCrawler( api );
             //从队列中去掉当前UID
             lstWaitingUID.Remove( lStartUID );
@@ -403,6 +413,16 @@ namespace Sinawler
             BackgroundWorker bwAsync = sender as BackgroundWorker;
             lStartUID = SysArg.GetCurrentUID();
             this.StartCraw(bwAsync);
+        }
+
+        public void Stop( object sender, RunWorkerCompletedEventArgs e )
+        {
+            //停止爬行，初始化相应变量
+            blnAsyncCancelled = false;
+            lstWaitingUID = User.GetCrawedUID();
+
+            //界面上相应变化
+            frmUI.RobotStopped(e);
         }
     }
 }

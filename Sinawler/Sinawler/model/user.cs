@@ -673,7 +673,9 @@ namespace Sinawler.Model
 		{
             string strSQL = "select uid from users order by iteration desc,created_at";
             LinkedList<long> lstWaitingUID = new LinkedList<long>();
-            DataTable dt = db.GetDataSet( strSQL ).Tables[0];
+            DataSet ds=db.GetDataSet( strSQL );
+            if (ds == null) return lstWaitingUID;
+            DataTable dt = ds.Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 lstWaitingUID.AddLast( Convert.ToInt64( dt.Rows[i]["uid"] ) );

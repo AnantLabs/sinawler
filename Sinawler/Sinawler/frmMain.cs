@@ -23,19 +23,33 @@ namespace Sinawler
 
         private BackgroundWorker oAsyncWorker = null;
 
+        private Robot robot;                                //爬虫机器人
+
+        private string strDataBaseStatus = "";      //数据库测试状态结果，OK为正常
+
         public frmMain()
         {
             InitializeComponent();
         }
 
-        private void CheckLogin()   //检查登录状态。若未登录，弹出登录框
+        //检查登录状态。若未登录，弹出登录框
+        private void CheckLogin()
         {
             if (!blnAuthorized)
             {
                 frmLogin login = new frmLogin(api);
                 if (login.ShowDialog() == DialogResult.OK)
+                {
                     blnAuthorized = true;
+                }
             }
+        }
+
+        //向日志文本框中追加日志信息
+        public void ShowLog ( string strLogMessage )
+        {
+            rtxtLog.AppendText( strLogMessage + "\n" );
+            rtxtLog.ScrollToCaret();
         }
 
         //显示登录帐号用户信息
@@ -135,6 +149,12 @@ namespace Sinawler
                 ShowSearchedUser();
                 txtUID.Text = oSearchedUser.uid.ToString();
                 txtUserName.Text = oSearchedUser.screen_name;
+
+                robot = new Robot( api, this );   //爬虫机器人
+
+                strDataBaseStatus = PubHelper.TestDataBase();
+                if (strDataBaseStatus != "OK")
+                    MessageBox.Show( "数据库错误：" + strDataBaseStatus+"。\n请正确设置数据库。" );
             }
             else
             {
@@ -144,6 +164,10 @@ namespace Sinawler
                 btnStartBySearch.Enabled = false;
                 btnStartByLast.Enabled = true;
                 btnExit.Enabled = true;
+
+                strDataBaseStatus = PubHelper.TestDataBase();
+                if (strDataBaseStatus != "OK")
+                    MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
             }
         }
 
@@ -167,10 +191,6 @@ namespace Sinawler
                     ShowSearchedUser();
                     txtUID.Text = oSearchedUser.uid.ToString();
                     txtUserName.Text = oSearchedUser.screen_name;
-
-                    //初始化变量
-                    lstWaitingUID = User.GetCrawedUID();
-                    lCurrentUID = oCurrentUser.uid;
                 }
                 else
                 {
@@ -214,6 +234,12 @@ namespace Sinawler
 
         private void btnSearchOffLine_Click(object sender, EventArgs e)
         {
+            strDataBaseStatus = PubHelper.TestDataBase();
+            if (strDataBaseStatus != "OK")
+            {
+                MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                return;
+            }
             if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
             {
                 MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "请输入搜索条件");
@@ -251,22 +277,27 @@ namespace Sinawler
 
         private void btnStartByCurrent_Click(object sender, EventArgs e)
         {
+            strDataBaseStatus = PubHelper.TestDataBase();
+            if (strDataBaseStatus != "OK")
+            {
+                MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                return;
+            }
             CheckLogin();
             if (blnAuthorized)
             {
-                Robot robot = new Robot(api, rtxtLog);
+                robot.SinaAPI = api;
                 if (oAsyncWorker == null)
                 {
                     //清除日志窗口
-                    rtxtLog.Clear();
-                    
+                    rtxtLog.Clear();                    
                     robot.StartUID = oCurrentUser.uid;
-
+                    robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
                     oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(robot.Actioned);
-                    oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(oAsyncWorker_RunWorkerCompleted);
+                    oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(robot.Stop);
                     oAsyncWorker.DoWork += new DoWorkEventHandler(robot.StartCrawByCurrentUser);
                 }
                 if (oAsyncWorker.IsBusy)
@@ -288,6 +319,12 @@ namespace Sinawler
 
         private void btnStartBySearch_Click(object sender, EventArgs e)
         {
+            strDataBaseStatus = PubHelper.TestDataBase();
+            if (strDataBaseStatus != "OK")
+            {
+                MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                return;
+            }
             CheckLogin();
             if (oSearchedUser == null)
             {
@@ -296,23 +333,25 @@ namespace Sinawler
             }
             if (blnAuthorized)
             {
+                robot.SinaAPI = api;
                 if (oAsyncWorker == null)
                 {
                     //清除日志窗口
                     rtxtLog.Clear();
-                    sw = new StreamWriter(Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log");
+                    robot.StartUID = oSearchedUser.uid; 
+                    robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
-                    oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(oAsyncWorker_ProgressChanged);
-                    oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(oAsyncWorker_RunWorkerCompleted);
-                    oAsyncWorker.DoWork += new DoWorkEventHandler(StartCrawBySearchedUser);
+                    oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(robot.Actioned);
+                    oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(robot.Stop);
+                    oAsyncWorker.DoWork += new DoWorkEventHandler(robot.StartCrawBySearchedUser);
                 }
                 if (oAsyncWorker.IsBusy)
                 {
                     btnStartBySearch.Enabled = false;
                     btnStartBySearch.Text = "正在停止，请稍候...";
-                    blnAsyncCancelled = true;
+                    robot.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
                 else
@@ -327,6 +366,12 @@ namespace Sinawler
 
         private void btnStartByLast_Click(object sender, EventArgs e)
         {
+            strDataBaseStatus = PubHelper.TestDataBase();
+            if (strDataBaseStatus != "OK")
+            {
+                MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                return;
+            }
             CheckLogin();
             if (SysArg.GetCurrentUID() == 0)
             {
@@ -335,23 +380,25 @@ namespace Sinawler
             }
             if (blnAuthorized)
             {
+                robot.SinaAPI = api;
                 if (oAsyncWorker == null)
                 {
                     //清除日志窗口
                     rtxtLog.Clear();
-                    sw = new StreamWriter(Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log");
+                    robot.StartUID = SysArg.GetCurrentUID(); 
+                    robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
-                    oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(oAsyncWorker_ProgressChanged);
-                    oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(oAsyncWorker_RunWorkerCompleted);
-                    oAsyncWorker.DoWork += new DoWorkEventHandler(StartCrawByLastUser);
+                    oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(robot.Actioned);
+                    oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(robot.Stop);
+                    oAsyncWorker.DoWork += new DoWorkEventHandler(robot.StartCrawByLastUser);
                 }
                 if (oAsyncWorker.IsBusy)
                 {
                     btnStartByLast.Enabled = false;
                     btnStartByLast.Text = "正在停止，请稍候...";
-                    blnAsyncCancelled = true;
+                    robot.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
                 else
@@ -364,7 +411,7 @@ namespace Sinawler
             }
         }
 
-        private void oAsyncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public void RobotStopped ( RunWorkerCompletedEventArgs e )
         {
             btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
             btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -388,7 +435,6 @@ namespace Sinawler
                 MessageBox.Show(this, "爬虫已停止。");
             }
             oAsyncWorker = null;
-            blnAsyncCancelled = false;
         }
     }
 }
