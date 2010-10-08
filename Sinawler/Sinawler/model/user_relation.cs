@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace Sinawler
+namespace Sinawler.Model
 {
     /// <summary>
     /// UserRelation×´Ì¬Ã¶¾Ù

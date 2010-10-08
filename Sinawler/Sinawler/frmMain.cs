@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
-using SinaMBCrawler.Model;
+using Sinawler.Model;
 using Sina.Api;
 using System.IO;
 using System.Threading;
@@ -22,9 +22,6 @@ namespace Sinawler
         private User oSearchedUser = new User();    //搜索到的用户
 
         private BackgroundWorker oAsyncWorker = null;
-        private bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
-        private string strLog = "";
-        private StreamWriter sw;
 
         public frmMain()
         {
@@ -138,10 +135,6 @@ namespace Sinawler
                 ShowSearchedUser();
                 txtUID.Text = oSearchedUser.uid.ToString();
                 txtUserName.Text = oSearchedUser.screen_name;
-
-                //初始化变量
-                lstWaitingUID = User.GetCrawedUID();
-                lCurrentUID = oCurrentUser.uid;
             }
             else
             {
@@ -261,23 +254,26 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
+                Robot robot = new Robot(api, rtxtLog);
                 if (oAsyncWorker == null)
                 {
                     //清除日志窗口
                     rtxtLog.Clear();
-                    sw = new StreamWriter(Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log");
+                    
+                    robot.StartUID = oCurrentUser.uid;
+
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
-                    oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(oAsyncWorker_ProgressChanged);
+                    oAsyncWorker.ProgressChanged += new ProgressChangedEventHandler(robot.Actioned);
                     oAsyncWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(oAsyncWorker_RunWorkerCompleted);
-                    oAsyncWorker.DoWork += new DoWorkEventHandler(StartCrawByCurrentUser);
+                    oAsyncWorker.DoWork += new DoWorkEventHandler(robot.StartCrawByCurrentUser);
                 }
                 if (oAsyncWorker.IsBusy)
                 {
                     btnStartByCurrent.Enabled = false;
                     btnStartByCurrent.Text = "正在停止，请稍候...";
-                    blnAsyncCancelled = true;
+                    robot.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
                 else
@@ -288,33 +284,6 @@ namespace Sinawler
                     oAsyncWorker.RunWorkerAsync();
                 }
             }
-        }
-
-        private void oAsyncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-            btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-            btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
-            btnStartByCurrent.Enabled = true;
-            btnStartBySearch.Enabled = true;
-            btnStartByLast.Enabled = true;
-            if (e.Error != null)
-            {
-                MessageBox.Show(this, e.Error.Message);
-                return;
-            }
-            if (e.Cancelled)
-            {
-                //Cancelled
-                MessageBox.Show(this, "爬虫已停止。");
-            }
-            else
-            {
-                //Completed...
-                MessageBox.Show(this, "爬虫已停止。");
-            }
-            oAsyncWorker = null;
-            blnAsyncCancelled = false;
         }
 
         private void btnStartBySearch_Click(object sender, EventArgs e)
@@ -395,19 +364,31 @@ namespace Sinawler
             }
         }
 
-        //在文本框中显示日志，也可增加写日志文件
-        private void oAsyncWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        private void oAsyncWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            sw.WriteLine(strLog);
-            rtxtLog.AppendText(strLog + "\n");
-            rtxtLog.ScrollToCaret();
-        }
-
-        private void AppendLog(string strLogText, BackgroundWorker bw)
-        {
-            strLog = strLogText;
-            Thread.Sleep(100);
-            bw.ReportProgress(0);
+            btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
+            btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
+            btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+            btnStartByCurrent.Enabled = true;
+            btnStartBySearch.Enabled = true;
+            btnStartByLast.Enabled = true;
+            if (e.Error != null)
+            {
+                MessageBox.Show(this, e.Error.Message);
+                return;
+            }
+            if (e.Cancelled)
+            {
+                //Cancelled
+                MessageBox.Show(this, "爬虫已停止。");
+            }
+            else
+            {
+                //Completed...
+                MessageBox.Show(this, "爬虫已停止。");
+            }
+            oAsyncWorker = null;
+            blnAsyncCancelled = false;
         }
     }
 }

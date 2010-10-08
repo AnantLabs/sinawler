@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Sina.Api;
 using System.Xml;
-using SinaMBCrawler.Model;
+using Sinawler.Model;
 
 namespace Sinawler
 {
@@ -11,10 +11,7 @@ namespace Sinawler
     class SinaMBCrawler
     {
         private SinaApiService api;
-        private int iSleep = 3600;  //默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限    
-
-        private LinkedList<long> lstWaitingUID;     //等待爬行的UID
-        private long lCurrentUID;                   //当前正在爬行的UID
+        private int iSleep = 3600;  //默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
 
         public SinaMBCrawler ( SinaApiService oApi )
         {

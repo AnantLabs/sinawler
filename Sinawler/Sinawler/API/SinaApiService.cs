@@ -5,7 +5,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using System.Web;
-using SinaMBCrawler;
+using Sinawler;
 
 namespace Sina.Api
 {

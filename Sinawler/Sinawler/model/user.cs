@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace Sinawler
+namespace Sinawler.Model
 {
 	/// <summary>
 	/// 类user。此类中的方法，都是与数据库交互，从中读取或向其中写入数据
@@ -61,7 +61,7 @@ namespace Sinawler
 		{}
 
 		#region Model
-		private long _uid;
+		private long _uid=0;
 		private string _screen_name;
 		private string _name;
 		private string _province;

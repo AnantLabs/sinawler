@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 
-namespace Sinawler
+namespace Sinawler.Model
 {
 	/// <summary>
 	/// 类SysArg。此类中的方法，都是与数据库交互，从中读取或向其中写入数据。

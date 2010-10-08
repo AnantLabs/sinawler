@@ -3,7 +3,7 @@ using System.Data;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace SinaMBCrawler
+namespace Sinawler.Model
 {
 	/// <summary>
 	/// ¿‡user_tag°£
