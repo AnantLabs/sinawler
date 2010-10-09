@@ -16,7 +16,14 @@ public class SettingItems
     private string _db_server = "localhost";        //数据库服务器
     private string _db_username = "sa";             //数据库用户名
     private string _db_pwd = "sa";                  //数据库密码
+    private string _db_name = "Sinawler";           //数据库名称
     private int _queue_length = 5000;               //用户队列长度
+
+    public string AppKey
+    { get { return _app_key; } }
+
+    public string SecretKey
+    { get { return _secret_key; } }
 
     public string DBType
     {
@@ -42,6 +49,12 @@ public class SettingItems
         set { _db_pwd = value; }
     }
 
+    public string DBName
+    {
+        get { return _db_name; }
+        set { _db_name = value; }
+    }
+
     public int QueueLength
     {
         get { return _queue_length; }
@@ -55,27 +68,30 @@ class AppSettings
     public static SettingItems Load ()
     {
         SettingItems settings = new SettingItems();
-        if (!File.Exists( Application.StartupPath + "\\config.ini" ))
+        if (!File.Exists(Application.StartupPath + "\\config.ini"))
             return null;
-        //StreamReader sr = new StreamReader( Application.StartupPath + "\\config.ini" );
-        FileStream fs = new FileStream( Application.StartupPath + "\\config.ini", FileMode.Open );
+        FileStream fs = new FileStream( Application.StartupPath + "\\config.ini", FileMode.Open, FileAccess.Read );
         byte[] arrByte = new byte[1024];
         fs.Read( arrByte, 0, 1024 );
         fs.Close();
-        //byte[] arrByte = Encoding.ASCII.GetBytes( sr.ReadToEnd() );
+        int nLength = PubHelper.byteToInt(arrByte);
 
-        settings = (SettingItems)(Serialize.DecryptToObject( arrByte ));
-        //sr.Close();
+        byte[] arrEncryptByte = new byte[nLength];
+        for (int i = 0; i < nLength; i++)
+            arrEncryptByte[i] = arrByte[i + 4];
+
+        settings = (SettingItems)(Serialize.DecryptToObject(arrEncryptByte));
         return settings;
     }
 
     public static void Save ( SettingItems settings )
     {
-        StreamWriter sw = new StreamWriter( Application.StartupPath + "\\config.ini" );
-        sw.Write( Encoding.ASCII.GetChars(Serialize.EncryptToBytes( settings )) );
-        sw.Close();
-        //FileStream fs = new FileStream( Application.StartupPath + "\\config.ini", FileMode.OpenOrCreate );
-        //fs.
+        FileStream fs = new FileStream( Application.StartupPath + "\\config.ini", FileMode.OpenOrCreate );
+        byte[] arrEncryptByte = Serialize.EncryptToBytes(settings);
+        byte[] arrLength = PubHelper.intToByte(arrEncryptByte.Length);  //将长度（整数）保存在4个元素的字节数组中
+        fs.Write(arrLength, 0, arrLength.Length);
+        fs.Write(arrEncryptByte, 0, arrEncryptByte.Length);
+        fs.Close();
     }
 
     //获取默认设置

@@ -82,5 +82,37 @@ namespace Sinawler
             }
             return strResult;
         }
+
+        //整数到字节数组的转换   
+        static public byte[] intToByte(int number)
+        {
+            int temp = number;
+            byte[] b = new byte[4];
+            for (int i = b.Length - 1; i > -1; i--)
+            {
+                b[i] = Convert.ToByte(temp & 0xff);             //将最高位保存在最低位   
+                temp = temp >> 8;               //向右移8位   
+            }
+            return b;
+        }
+
+        //字节数组到整数的转换   
+        static public int byteToInt(byte[] b)
+        {
+            int s = 0;
+            for (int i = 0; i < 3; i++)
+            {
+                if (b[i] >= 0)
+                    s = s + b[i];
+                else
+                    s = s + 256 + b[i];
+                s = s * 256;
+            }
+            if (b[3] >= 0)               //最后一个之所以不乘，是因为可能会溢出   
+                s = s + b[3];
+            else
+                s = s + 256 + b[3];
+            return s;
+        }
     }
 }

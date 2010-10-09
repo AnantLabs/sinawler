@@ -32,6 +32,18 @@ namespace Sinawler
             InitializeComponent();
         }
 
+        //加载设置
+        private void LoadSettings()
+        {
+            SettingItems settings = AppSettings.Load();
+            if (settings == null)
+            {
+                MessageBox.Show("读取配置文件时发生错误，将加载默认值。");
+                settings = new SettingItems();
+            }
+            ShowSettings(settings);
+        }
+
         //检查登录状态。若未登录，弹出登录框
         private void CheckLogin()
         {
@@ -144,7 +156,7 @@ namespace Sinawler
                 txtUID.Text = oSearchedUser.uid.ToString();
                 txtUserName.Text = oSearchedUser.screen_name;
 
-                robot = new Robot( api, this );   //爬虫机器人
+                robot = new Robot( api );   //爬虫机器人
 
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
@@ -158,11 +170,9 @@ namespace Sinawler
                 btnStartBySearch.Enabled = false;
                 btnStartByLast.Enabled = true;
                 btnExit.Enabled = true;
-
-                strDataBaseStatus = PubHelper.TestDataBase();
-                if (strDataBaseStatus != "OK")
-                    MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
             }
+            //通过点击按钮，加载设置
+            LoadSettings();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -228,16 +238,16 @@ namespace Sinawler
 
         private void btnSearchOffLine_Click(object sender, EventArgs e)
         {
-            strDataBaseStatus = PubHelper.TestDataBase();
-            if (strDataBaseStatus != "OK")
-            {
-                MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
-                return;
-            }
             if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
             {
                 MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "请输入搜索条件");
                 txtUID.Focus();
+                return;
+            }
+            strDataBaseStatus = PubHelper.TestDataBase();
+            if (strDataBaseStatus != "OK")
+            {
+                MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。");
                 return;
             }
             string strUID = txtUID.Text.Trim();
@@ -280,10 +290,9 @@ namespace Sinawler
                     MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
                     return;
                 }
-                robot.SinaAPI = api;
+                
                 if (oAsyncWorker == null)
                 {
-                    //清除日志窗口
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
@@ -324,10 +333,9 @@ namespace Sinawler
                     MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
                     return;
                 }
-                robot.SinaAPI = api;
+                
                 if (oAsyncWorker == null)
                 {
-                    //清除日志窗口
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
@@ -368,10 +376,9 @@ namespace Sinawler
                     MessageBox.Show( this, "无上次中止用户的记录，请选择其它爬行起点。" );
                     return;
                 }
-                robot.SinaAPI = api;
+                
                 if (oAsyncWorker == null)
                 {
-                    //清除日志窗口
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
@@ -398,18 +405,24 @@ namespace Sinawler
                 
         private void StartCrawByCurrentUser(Object sender,DoWorkEventArgs e)
         {
+            robot.SinaAPI = api;
+            robot.QueueLength = AppSettings.Load().QueueLength;
             robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             robot.Start( oCurrentUser.uid, oAsyncWorker );
         }
 
         private void StartCrawBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
+            robot.SinaAPI = api;
+            robot.QueueLength = AppSettings.Load().QueueLength;
             robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             robot.Start( oSearchedUser.uid, oAsyncWorker );
         }
 
         private void StartCrawByLastUser ( Object sender, DoWorkEventArgs e )
         {
+            robot.SinaAPI = api;
+            robot.QueueLength = AppSettings.Load().QueueLength;
             robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             long lLastUID = SysArg.GetCurrentUID();
             if(lLastUID==0)
@@ -466,6 +479,7 @@ namespace Sinawler
             txtDBServer.Text = settings.DBServer;
             txtDBUserName.Text = settings.DBUserName;
             txtDBPwd.Text = settings.DBPwd;
+            txtDBName.Text = settings.DBName;
         }
 
         private void btnDefault_Click ( object sender, EventArgs e )
@@ -476,13 +490,7 @@ namespace Sinawler
 
         private void btnLoad_Click ( object sender, EventArgs e )
         {
-            SettingItems settings = AppSettings.Load();
-            if(settings==null)
-            {
-                MessageBox.Show( "读取配置文件时发生错误，将加载默认值。" );
-                settings = new SettingItems();
-            }
-            ShowSettings( settings );
+            LoadSettings();
         }
 
         private void btnSave_Click ( object sender, EventArgs e )
@@ -493,8 +501,11 @@ namespace Sinawler
             settings.DBServer = txtDBServer.Text.Trim();
             settings.DBUserName = txtDBUserName.Text.Trim();
             settings.DBPwd = txtDBPwd.Text;
+            settings.DBName = txtDBName.Text.Trim();
 
             AppSettings.Save( settings );
+
+            MessageBox.Show("设置已保存。启动新的爬虫任务时将使用新的设置。");
         }
 
         private void numQueueLength_ValueChanged ( object sender, EventArgs e )

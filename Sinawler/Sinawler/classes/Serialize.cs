@@ -14,8 +14,8 @@ namespace Sinawler
         //private static byte[] key = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 };
         static private String encryptKey = "sizheng0320Sinawler";
 
-        //private static byte[] key = null;
-        //private static byte[] IV = { 0x12, 0x34, 0x56, 0x78, 0x90, 0xAB, 0xCD, 0xEF };
+        static private byte[] key = Encoding.ASCII.GetBytes(encryptKey.Substring(0, 8));
+        static private byte[] IV = Encoding.ASCII.GetBytes(encryptKey);
 
 
         /// <summary>
@@ -25,8 +25,6 @@ namespace Sinawler
         /// <returns>处理后生成的字节数组</returns>
         public static byte[] EncryptToBytes ( object obj )
         {
-            byte[] key = Encoding.ASCII.GetBytes( encryptKey.Substring( 0, 8 ) );
-            byte[] IV = Encoding.ASCII.GetBytes( encryptKey );
             try
             {
                 DESCryptoServiceProvider des = new DESCryptoServiceProvider();
@@ -58,8 +56,6 @@ namespace Sinawler
         /// <returns>被还原的对象</returns>
         public static object DecryptToObject ( byte[] ary )
         {
-            byte[] key = Encoding.ASCII.GetBytes( encryptKey.Substring( 0, 8 ) );
-            byte[] IV = Encoding.ASCII.GetBytes( encryptKey );
             try
             {
                 DESCryptoServiceProvider des = new DESCryptoServiceProvider();

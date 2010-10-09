@@ -201,7 +201,8 @@ public class SqlDatabase : Database
     public SqlDatabase ()
     {
         _database_type = "SQL Server";
-        _connection_string = ConfigurationManager.ConnectionStrings["SQLServerConnectionString"].ConnectionString;
+        SettingItems settings = AppSettings.Load();
+        _connection_string = "Data Source="+settings.DBServer+";User Id="+settings.DBUserName+";Password="+settings.DBPwd+";database="+settings.DBName;
     }
 
     /// <summary>
@@ -422,7 +423,8 @@ public class OracleDatabase : Database
     public OracleDatabase ()
     {
         _database_type = "Oracle";
-        _connection_string = ConfigurationManager.ConnectionStrings["OracleConnectionString"].ConnectionString;
+        SettingItems settings = AppSettings.Load();
+        _connection_string = "Data Source=" + settings.DBServer + ";User Id=" + settings.DBUserName + ";Password=" + settings.DBPwd + ";database=" + settings.DBName;
     }
 
     /// <summary>

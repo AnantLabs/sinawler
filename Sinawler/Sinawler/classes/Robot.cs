@@ -16,16 +16,16 @@ namespace Sinawler
         private bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         private string strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";             //日志文件
         private string strLog = "";                 //日志内容
-        private frmMain frmUI;                         //父线程中的界面，通过Robot的回调控制其显示信息
 
         private LinkedList<long> lstWaitingUID;     //等待爬行的UID队列
-        private int QueueLength=4000;               //内存中队列长度上限，默认5000
+        private int iQueueLength=5000;               //内存中队列长度上限，默认5000
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public Robot ( SinaApiService oAPI, frmMain oUIForm )
+        public Robot ( SinaApiService oAPI)
         {
             this.api = oAPI;
-            this.frmUI = oUIForm;
+
+            iQueueLength = AppSettings.Load().QueueLength;
         }
 
         public bool AsyncCancelled
@@ -40,8 +40,8 @@ namespace Sinawler
             get { return strLogFile; }
         }
 
-        public frmMain ParentUI
-        { set { frmUI = value; } }
+        public int QueueLength
+        { set { iQueueLength = value; } }
 
         //重新设置API的接口
         public SinaApiService SinaAPI
@@ -82,9 +82,9 @@ namespace Sinawler
             //将当前UID加到队头
             lstWaitingUID.AddFirst( lStartUID );
             //若内存队列长度超出上限，将多余部分放入数据库队列缓存
-            if(lstWaitingUID.Count>QueueLength)
+            if (lstWaitingUID.Count > iQueueLength)
             {
-                for (int i = lstWaitingUID.Count - 1; i >= QueueLength; i--)
+                for (int i = lstWaitingUID.Count - 1; i >= iQueueLength; i--)
                 {
                     long lTmp = lstWaitingUID.Last.Value;
                     User usrTmp = new User( lTmp );
@@ -255,7 +255,7 @@ namespace Sinawler
                     {
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
-                        if (lstWaitingUID.Count < QueueLength)
+                        if (lstWaitingUID.Count < iQueueLength)
                             lstWaitingUID.AddLast( lstBuffer.First.Value );
                         else
                             QueueBuffer.Enqueue( lstBuffer.First.Value );
@@ -308,7 +308,7 @@ namespace Sinawler
                     {
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
-                        if (lstWaitingUID.Count < QueueLength)
+                        if (lstWaitingUID.Count < iQueueLength)
                             lstWaitingUID.AddLast( lstBuffer.First.Value );
                         else
                             QueueBuffer.Enqueue( lstBuffer.First.Value );
@@ -364,7 +364,7 @@ namespace Sinawler
                     {
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
-                        if (lstWaitingUID.Count < QueueLength)
+                        if (lstWaitingUID.Count < iQueueLength)
                             lstWaitingUID.AddLast( lstBuffer.First.Value );
                         else
                             QueueBuffer.Enqueue( lstBuffer.First.Value );
@@ -417,7 +417,7 @@ namespace Sinawler
                     {
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
-                        if (lstWaitingUID.Count < QueueLength)
+                        if (lstWaitingUID.Count < iQueueLength)
                             lstWaitingUID.AddLast( lstBuffer.First.Value );
                         else
                             QueueBuffer.Enqueue( lstBuffer.First.Value );
@@ -432,7 +432,7 @@ namespace Sinawler
                 #endregion
                 //最后再将刚刚爬行完的UID加入队尾
                 //若内存中已达到上限，则使用数据库队列缓存
-                if (lstWaitingUID.Count < QueueLength)
+                if (lstWaitingUID.Count < iQueueLength)
                     lstWaitingUID.AddLast( lCurrentUID );
                 else
                     QueueBuffer.Enqueue( lCurrentUID );
