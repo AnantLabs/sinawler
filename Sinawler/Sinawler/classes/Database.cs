@@ -202,6 +202,7 @@ public class SqlDatabase : Database
     {
         _database_type = "SQL Server";
         SettingItems settings = AppSettings.Load();
+        if (settings == null) settings = AppSettings.LoadDefault();
         _connection_string = "Data Source="+settings.DBServer+";User Id="+settings.DBUserName+";Password="+settings.DBPwd+";database="+settings.DBName;
     }
 
@@ -424,6 +425,7 @@ public class OracleDatabase : Database
     {
         _database_type = "Oracle";
         SettingItems settings = AppSettings.Load();
+        if (settings == null) settings = AppSettings.LoadDefault();
         _connection_string = "Data Source=" + settings.DBServer + ";User Id=" + settings.DBUserName + ";Password=" + settings.DBPwd + ";database=" + settings.DBName;
     }
 

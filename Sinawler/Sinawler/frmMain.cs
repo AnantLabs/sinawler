@@ -406,7 +406,9 @@ namespace Sinawler
         private void StartCrawByCurrentUser(Object sender,DoWorkEventArgs e)
         {
             robot.SinaAPI = api;
-            robot.QueueLength = AppSettings.Load().QueueLength;
+            SettingItems settings = AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            robot.QueueLength = settings.QueueLength;
             robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             robot.Start( oCurrentUser.uid, oAsyncWorker );
         }
@@ -414,7 +416,9 @@ namespace Sinawler
         private void StartCrawBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
             robot.SinaAPI = api;
-            robot.QueueLength = AppSettings.Load().QueueLength;
+            SettingItems settings = AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            robot.QueueLength = settings.QueueLength;
             robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             robot.Start( oSearchedUser.uid, oAsyncWorker );
         }
@@ -422,7 +426,9 @@ namespace Sinawler
         private void StartCrawByLastUser ( Object sender, DoWorkEventArgs e )
         {
             robot.SinaAPI = api;
-            robot.QueueLength = AppSettings.Load().QueueLength;
+            SettingItems settings = AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            robot.QueueLength = settings.QueueLength;
             robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             long lLastUID = SysArg.GetCurrentUID();
             if(lLastUID==0)

@@ -11,7 +11,6 @@ namespace Sinawler
     public class Serialize
     {
         // 用于初始化对称密钥
-        //private static byte[] key = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2 };
         static private String encryptKey = "sizheng0320Sinawler";
 
         static private byte[] key = Encoding.ASCII.GetBytes(encryptKey.Substring(0, 8));
@@ -36,7 +35,7 @@ namespace Sinawler
                 byte[] inputByteArray = msPlaneText.ToArray();
                 msPlaneText.Close();
                 MemoryStream msEncrypt = new MemoryStream();
-                CryptoStream cs = new CryptoStream( msEncrypt, des.CreateEncryptor( key, IV ), CryptoStreamMode.Write );
+                CryptoStream cs = new CryptoStream( msEncrypt, des.CreateEncryptor(key,IV), CryptoStreamMode.Write );
                 cs.Write( inputByteArray, 0, inputByteArray.Length );
                 cs.FlushFinalBlock();
                 byte[] byteEncrypt = msEncrypt.ToArray();
@@ -60,7 +59,7 @@ namespace Sinawler
             {
                 DESCryptoServiceProvider des = new DESCryptoServiceProvider();
                 MemoryStream ms = new MemoryStream();
-                CryptoStream cs = new CryptoStream( ms, des.CreateDecryptor( key, IV ), CryptoStreamMode.Write );
+                CryptoStream cs = new CryptoStream( ms, des.CreateDecryptor(key,IV), CryptoStreamMode.Write );
                 cs.Write( ary, 0, ary.Length );
                 cs.FlushFinalBlock();
                 cs.Close();

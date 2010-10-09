@@ -22,14 +22,5 @@ namespace Sinawler.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("3600")]
-        public int settingInterval {
-            get {
-                return ((int)(this["settingInterval"]));
-            }
-        }
     }
 }

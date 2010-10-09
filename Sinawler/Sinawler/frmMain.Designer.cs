@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnStartByLast = new System.Windows.Forms.Button();
             this.grpUserInfo = new System.Windows.Forms.GroupBox();
             this.lblVerified = new System.Windows.Forms.Label();
@@ -66,6 +67,8 @@
             this.gpSetting = new System.Windows.Forms.GroupBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.grpDBSettings = new System.Windows.Forms.GroupBox();
+            this.txtDBName = new System.Windows.Forms.TextBox();
+            this.lblDBName = new System.Windows.Forms.Label();
             this.drplstDBType = new System.Windows.Forms.ComboBox();
             this.txtDBPwd = new System.Windows.Forms.TextBox();
             this.txtDBUserName = new System.Windows.Forms.TextBox();
@@ -83,8 +86,6 @@
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
             this.lblStatusMessage = new System.Windows.Forms.Label();
-            this.lblDBName = new System.Windows.Forms.Label();
-            this.txtDBName = new System.Windows.Forms.TextBox();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -493,6 +494,25 @@
             this.grpDBSettings.TabStop = false;
             this.grpDBSettings.Text = "数据库设置";
             // 
+            // txtDBName
+            // 
+            this.txtDBName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDBName.Location = new System.Drawing.Point(562, 43);
+            this.txtDBName.MaxLength = 30;
+            this.txtDBName.Name = "txtDBName";
+            this.txtDBName.Size = new System.Drawing.Size(143, 21);
+            this.txtDBName.TabIndex = 15;
+            // 
+            // lblDBName
+            // 
+            this.lblDBName.AutoSize = true;
+            this.lblDBName.Location = new System.Drawing.Point(502, 49);
+            this.lblDBName.Name = "lblDBName";
+            this.lblDBName.Size = new System.Drawing.Size(65, 12);
+            this.lblDBName.TabIndex = 14;
+            this.lblDBName.Text = "数据库名：";
+            this.lblDBName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // drplstDBType
             // 
             this.drplstDBType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
@@ -678,31 +698,11 @@
             this.lblStatusMessage.Text = "停止。";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // lblDBName
-            // 
-            this.lblDBName.AutoSize = true;
-            this.lblDBName.Location = new System.Drawing.Point(502, 49);
-            this.lblDBName.Name = "lblDBName";
-            this.lblDBName.Size = new System.Drawing.Size(65, 12);
-            this.lblDBName.TabIndex = 14;
-            this.lblDBName.Text = "数据库名：";
-            this.lblDBName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // txtDBName
-            // 
-            this.txtDBName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBName.Location = new System.Drawing.Point(562, 43);
-            this.txtDBName.MaxLength = 30;
-            this.txtDBName.Name = "txtDBName";
-            this.txtDBName.Size = new System.Drawing.Size(143, 21);
-            this.txtDBName.TabIndex = 15;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(837, 625);
-            this.ControlBox = false;
             this.Controls.Add(this.grpStatus);
             this.Controls.Add(this.gpSetting);
             this.Controls.Add(this.grpControl);
@@ -710,8 +710,8 @@
             this.Controls.Add(this.grpSearch);
             this.Controls.Add(this.grpCurrentUser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "新浪微博爬虫";

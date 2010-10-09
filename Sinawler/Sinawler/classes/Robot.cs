@@ -25,7 +25,9 @@ namespace Sinawler
         {
             this.api = oAPI;
 
-            iQueueLength = AppSettings.Load().QueueLength;
+            SettingItems settings = AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            iQueueLength = settings.QueueLength;
         }
 
         public bool AsyncCancelled

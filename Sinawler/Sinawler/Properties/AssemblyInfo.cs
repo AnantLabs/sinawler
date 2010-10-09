@@ -1,16 +1,17 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Resources;
 
 // 有关程序集的常规信息通过下列属性集
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("SinaMBCrawler")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("新浪微博爬虫")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Personal")]
+[assembly: AssemblyCompany("BUCT")]
 [assembly: AssemblyProduct("SinaMBCrawler")]
-[assembly: AssemblyCopyright("版权所有 (C) Personal 2010")]
+[assembly: AssemblyCopyright("版权所有 (C) 卢罡 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,3 +32,4 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: NeutralResourcesLanguageAttribute("zh-CHS")]
