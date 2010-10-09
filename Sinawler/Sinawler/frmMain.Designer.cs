@@ -497,7 +497,7 @@
             // txtDBName
             // 
             this.txtDBName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBName.Location = new System.Drawing.Point(562, 43);
+            this.txtDBName.Location = new System.Drawing.Point(562, 46);
             this.txtDBName.MaxLength = 30;
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size(143, 21);
@@ -506,7 +506,7 @@
             // lblDBName
             // 
             this.lblDBName.AutoSize = true;
-            this.lblDBName.Location = new System.Drawing.Point(502, 49);
+            this.lblDBName.Location = new System.Drawing.Point(502, 53);
             this.lblDBName.Name = "lblDBName";
             this.lblDBName.Size = new System.Drawing.Size(65, 12);
             this.lblDBName.TabIndex = 14;
@@ -520,7 +520,7 @@
             this.drplstDBType.Items.AddRange(new object[] {
             "SQL Server",
             "Oracle"});
-            this.drplstDBType.Location = new System.Drawing.Point(101, 12);
+            this.drplstDBType.Location = new System.Drawing.Point(101, 16);
             this.drplstDBType.Name = "drplstDBType";
             this.drplstDBType.Size = new System.Drawing.Size(121, 20);
             this.drplstDBType.TabIndex = 13;
@@ -528,7 +528,7 @@
             // txtDBPwd
             // 
             this.txtDBPwd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBPwd.Location = new System.Drawing.Point(326, 43);
+            this.txtDBPwd.Location = new System.Drawing.Point(326, 47);
             this.txtDBPwd.MaxLength = 50;
             this.txtDBPwd.Name = "txtDBPwd";
             this.txtDBPwd.PasswordChar = '*';
@@ -538,7 +538,7 @@
             // txtDBUserName
             // 
             this.txtDBUserName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBUserName.Location = new System.Drawing.Point(100, 43);
+            this.txtDBUserName.Location = new System.Drawing.Point(100, 47);
             this.txtDBUserName.MaxLength = 20;
             this.txtDBUserName.Name = "txtDBUserName";
             this.txtDBUserName.Size = new System.Drawing.Size(123, 21);
@@ -547,7 +547,7 @@
             // txtDBServer
             // 
             this.txtDBServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBServer.Location = new System.Drawing.Point(438, 12);
+            this.txtDBServer.Location = new System.Drawing.Point(438, 16);
             this.txtDBServer.Name = "txtDBServer";
             this.txtDBServer.Size = new System.Drawing.Size(145, 21);
             this.txtDBServer.TabIndex = 9;
@@ -555,7 +555,7 @@
             // lblDBType
             // 
             this.lblDBType.AutoSize = true;
-            this.lblDBType.Location = new System.Drawing.Point(26, 21);
+            this.lblDBType.Location = new System.Drawing.Point(27, 20);
             this.lblDBType.Name = "lblDBType";
             this.lblDBType.Size = new System.Drawing.Size(77, 12);
             this.lblDBType.TabIndex = 12;
@@ -564,7 +564,7 @@
             // lblDBUserName
             // 
             this.lblDBUserName.AutoSize = true;
-            this.lblDBUserName.Location = new System.Drawing.Point(15, 49);
+            this.lblDBUserName.Location = new System.Drawing.Point(15, 53);
             this.lblDBUserName.Name = "lblDBUserName";
             this.lblDBUserName.Size = new System.Drawing.Size(89, 12);
             this.lblDBUserName.TabIndex = 7;
@@ -573,7 +573,7 @@
             // lblDBServer
             // 
             this.lblDBServer.AutoSize = true;
-            this.lblDBServer.Location = new System.Drawing.Point(350, 15);
+            this.lblDBServer.Location = new System.Drawing.Point(350, 20);
             this.lblDBServer.Name = "lblDBServer";
             this.lblDBServer.Size = new System.Drawing.Size(89, 12);
             this.lblDBServer.TabIndex = 6;
@@ -582,7 +582,7 @@
             // lblDBPwd
             // 
             this.lblDBPwd.AutoSize = true;
-            this.lblDBPwd.Location = new System.Drawing.Point(252, 49);
+            this.lblDBPwd.Location = new System.Drawing.Point(252, 53);
             this.lblDBPwd.Name = "lblDBPwd";
             this.lblDBPwd.Size = new System.Drawing.Size(77, 12);
             this.lblDBPwd.TabIndex = 8;
