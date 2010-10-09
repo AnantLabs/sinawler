@@ -118,6 +118,7 @@ namespace Sinawler
             return api.followers_ids( lUid, iCursor );
         }
 
+        //根据UID抓取用户信息
         public User GetUserInfo ( long lUid )
         {
             System.Threading.Thread.Sleep( iSleep );
@@ -162,6 +163,7 @@ namespace Sinawler
             return user;
         }
 
+        //根据用户昵称抓取用户信息
         public User GetUserInfo ( string strScreenName )
         {
             System.Threading.Thread.Sleep( iSleep );
@@ -206,6 +208,7 @@ namespace Sinawler
             return user;
         }
 
+        //同时根据UID和用户昵称抓取用户信息
         public User GetUserInfo ( long lUid, string strScreenName )
         {
             System.Threading.Thread.Sleep( iSleep );
@@ -250,6 +253,7 @@ namespace Sinawler
             return user;
         }
 
+        //抓取当前登录用户的信息
         public User GetCurrentUserInfo ()
         {
             System.Threading.Thread.Sleep( iSleep );

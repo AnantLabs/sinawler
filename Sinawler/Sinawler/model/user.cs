@@ -578,12 +578,9 @@ namespace Sinawler.Model
         /// </summary>
         public bool GetModel ( long lUid,string strScreenName )
         {
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append( "select  top 1 uid,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
-            strSql.Append( " FROM users " );
-            strSql.Append( " where uid="+lUid.ToString()+" and screen_name='" + strScreenName + "'" );
+            string strSql = "select  top 1 * FROM users where uid="+lUid.ToString()+" and screen_name='" + strScreenName + "'";
 
-            DataRow dr = db.GetDataRow( strSql.ToString() );
+            DataRow dr = db.GetDataRow( strSql );
             if (dr != null)
             {
                 _uid = Convert.ToInt64( dr["uid"] );
@@ -671,7 +668,7 @@ namespace Sinawler.Model
 		/// </summary>
 		static public LinkedList<long> GetCrawedUID()
 		{
-            string strSQL = "select uid from users order by iteration desc,created_at";
+            string strSQL = "select uid from users order by iteration desc,update_time";
             LinkedList<long> lstWaitingUID = new LinkedList<long>();
             DataSet ds=db.GetDataSet( strSQL );
             if (ds == null) return lstWaitingUID;

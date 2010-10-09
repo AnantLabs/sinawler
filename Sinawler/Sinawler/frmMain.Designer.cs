@@ -62,20 +62,38 @@
             this.btnStartByCurrent = new System.Windows.Forms.Button();
             this.grpSearch = new System.Windows.Forms.GroupBox();
             this.btnExit = new System.Windows.Forms.Button();
-            this.rtxtLog = new System.Windows.Forms.RichTextBox();
             this.grpControl = new System.Windows.Forms.GroupBox();
             this.gpSetting = new System.Windows.Forms.GroupBox();
+            this.grpDBSettings = new System.Windows.Forms.GroupBox();
+            this.drplstDBType = new System.Windows.Forms.ComboBox();
+            this.lblDBType = new System.Windows.Forms.Label();
+            this.lblDBServer = new System.Windows.Forms.Label();
+            this.lblDBUserName = new System.Windows.Forms.Label();
+            this.txtDBPwd = new System.Windows.Forms.TextBox();
+            this.lblDBPwd = new System.Windows.Forms.Label();
+            this.txtDBUserName = new System.Windows.Forms.TextBox();
+            this.txtDBServer = new System.Windows.Forms.TextBox();
+            this.grpQueueLength = new System.Windows.Forms.GroupBox();
+            this.lblQueueLength = new System.Windows.Forms.Label();
+            this.tbQueueLength = new System.Windows.Forms.TrackBar();
+            this.numQueueLength = new System.Windows.Forms.NumericUpDown();
             this.btnDefault = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
-            this.nudInterval = new System.Windows.Forms.NumericUpDown();
-            this.lblInterval = new System.Windows.Forms.Label();
+            this.lblStatusTitle = new System.Windows.Forms.Label();
+            this.grpStatus = new System.Windows.Forms.GroupBox();
+            this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
             this.grpSearch.SuspendLayout();
             this.grpControl.SuspendLayout();
             this.gpSetting.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudInterval)).BeginInit();
+            this.grpDBSettings.SuspendLayout();
+            this.grpQueueLength.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numQueueLength)).BeginInit();
+            this.grpStatus.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnStartByLast
@@ -410,7 +428,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point( 380, 631 );
+            this.btnExit.Location = new System.Drawing.Point( 381, 584 );
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size( 75, 23 );
             this.btnExit.TabIndex = 11;
@@ -418,21 +436,12 @@
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler( this.btnExit_Click );
             // 
-            // rtxtLog
-            // 
-            this.rtxtLog.Location = new System.Drawing.Point( 4, 400 );
-            this.rtxtLog.Name = "rtxtLog";
-            this.rtxtLog.ReadOnly = true;
-            this.rtxtLog.Size = new System.Drawing.Size( 827, 225 );
-            this.rtxtLog.TabIndex = 13;
-            this.rtxtLog.Text = "";
-            // 
             // grpControl
             // 
             this.grpControl.Controls.Add( this.btnStartByCurrent );
             this.grpControl.Controls.Add( this.btnStartBySearch );
             this.grpControl.Controls.Add( this.btnStartByLast );
-            this.grpControl.Location = new System.Drawing.Point( 4, 331 );
+            this.grpControl.Location = new System.Drawing.Point( 5, 442 );
             this.grpControl.Name = "grpControl";
             this.grpControl.Size = new System.Drawing.Size( 827, 63 );
             this.grpControl.TabIndex = 14;
@@ -441,73 +450,239 @@
             // 
             // gpSetting
             // 
+            this.gpSetting.Controls.Add( this.btnLoad );
+            this.gpSetting.Controls.Add( this.grpDBSettings );
+            this.gpSetting.Controls.Add( this.grpQueueLength );
             this.gpSetting.Controls.Add( this.btnDefault );
             this.gpSetting.Controls.Add( this.btnSave );
-            this.gpSetting.Controls.Add( this.nudInterval );
-            this.gpSetting.Controls.Add( this.lblInterval );
             this.gpSetting.Location = new System.Drawing.Point( 5, 261 );
             this.gpSetting.Name = "gpSetting";
-            this.gpSetting.Size = new System.Drawing.Size( 826, 64 );
+            this.gpSetting.Size = new System.Drawing.Size( 826, 175 );
             this.gpSetting.TabIndex = 15;
             this.gpSetting.TabStop = false;
             this.gpSetting.Text = "设置（改变设置后请点击“保存”）";
             // 
+            // grpDBSettings
+            // 
+            this.grpDBSettings.Controls.Add( this.drplstDBType );
+            this.grpDBSettings.Controls.Add( this.txtDBPwd );
+            this.grpDBSettings.Controls.Add( this.txtDBUserName );
+            this.grpDBSettings.Controls.Add( this.txtDBServer );
+            this.grpDBSettings.Controls.Add( this.lblDBType );
+            this.grpDBSettings.Controls.Add( this.lblDBUserName );
+            this.grpDBSettings.Controls.Add( this.lblDBServer );
+            this.grpDBSettings.Controls.Add( this.lblDBPwd );
+            this.grpDBSettings.Location = new System.Drawing.Point( 10, 85 );
+            this.grpDBSettings.Name = "grpDBSettings";
+            this.grpDBSettings.Size = new System.Drawing.Size( 725, 78 );
+            this.grpDBSettings.TabIndex = 13;
+            this.grpDBSettings.TabStop = false;
+            this.grpDBSettings.Text = "数据库设置";
+            // 
+            // drplstDBType
+            // 
+            this.drplstDBType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.drplstDBType.FormattingEnabled = true;
+            this.drplstDBType.Items.AddRange( new object[] {
+            "SQL Server",
+            "Oracle"} );
+            this.drplstDBType.Location = new System.Drawing.Point( 101, 12 );
+            this.drplstDBType.Name = "drplstDBType";
+            this.drplstDBType.Size = new System.Drawing.Size( 121, 20 );
+            this.drplstDBType.TabIndex = 13;
+            // 
+            // lblDBType
+            // 
+            this.lblDBType.AutoSize = true;
+            this.lblDBType.Location = new System.Drawing.Point( 26, 21 );
+            this.lblDBType.Name = "lblDBType";
+            this.lblDBType.Size = new System.Drawing.Size( 77, 12 );
+            this.lblDBType.TabIndex = 12;
+            this.lblDBType.Text = "数据库类型：";
+            // 
+            // lblDBServer
+            // 
+            this.lblDBServer.AutoSize = true;
+            this.lblDBServer.Location = new System.Drawing.Point( 350, 15 );
+            this.lblDBServer.Name = "lblDBServer";
+            this.lblDBServer.Size = new System.Drawing.Size( 89, 12 );
+            this.lblDBServer.TabIndex = 6;
+            this.lblDBServer.Text = "数据库服务器：";
+            // 
+            // lblDBUserName
+            // 
+            this.lblDBUserName.AutoSize = true;
+            this.lblDBUserName.Location = new System.Drawing.Point( 15, 49 );
+            this.lblDBUserName.Name = "lblDBUserName";
+            this.lblDBUserName.Size = new System.Drawing.Size( 89, 12 );
+            this.lblDBUserName.TabIndex = 7;
+            this.lblDBUserName.Text = "数据库用户名：";
+            // 
+            // txtDBPwd
+            // 
+            this.txtDBPwd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDBPwd.Location = new System.Drawing.Point( 438, 43 );
+            this.txtDBPwd.MaxLength = 50;
+            this.txtDBPwd.Name = "txtDBPwd";
+            this.txtDBPwd.PasswordChar = '*';
+            this.txtDBPwd.Size = new System.Drawing.Size( 145, 21 );
+            this.txtDBPwd.TabIndex = 11;
+            // 
+            // lblDBPwd
+            // 
+            this.lblDBPwd.AutoSize = true;
+            this.lblDBPwd.Location = new System.Drawing.Point( 362, 52 );
+            this.lblDBPwd.Name = "lblDBPwd";
+            this.lblDBPwd.Size = new System.Drawing.Size( 77, 12 );
+            this.lblDBPwd.TabIndex = 8;
+            this.lblDBPwd.Text = "数据库密码：";
+            // 
+            // txtDBUserName
+            // 
+            this.txtDBUserName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDBUserName.Location = new System.Drawing.Point( 100, 43 );
+            this.txtDBUserName.MaxLength = 20;
+            this.txtDBUserName.Name = "txtDBUserName";
+            this.txtDBUserName.Size = new System.Drawing.Size( 123, 21 );
+            this.txtDBUserName.TabIndex = 10;
+            // 
+            // txtDBServer
+            // 
+            this.txtDBServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtDBServer.Location = new System.Drawing.Point( 438, 12 );
+            this.txtDBServer.Name = "txtDBServer";
+            this.txtDBServer.Size = new System.Drawing.Size( 145, 21 );
+            this.txtDBServer.TabIndex = 9;
+            // 
+            // grpQueueLength
+            // 
+            this.grpQueueLength.Controls.Add( this.lblQueueLength );
+            this.grpQueueLength.Controls.Add( this.tbQueueLength );
+            this.grpQueueLength.Controls.Add( this.numQueueLength );
+            this.grpQueueLength.Location = new System.Drawing.Point( 10, 20 );
+            this.grpQueueLength.Name = "grpQueueLength";
+            this.grpQueueLength.Size = new System.Drawing.Size( 725, 61 );
+            this.grpQueueLength.TabIndex = 12;
+            this.grpQueueLength.TabStop = false;
+            this.grpQueueLength.Text = "队列长度";
+            // 
+            // lblQueueLength
+            // 
+            this.lblQueueLength.AutoSize = true;
+            this.lblQueueLength.Location = new System.Drawing.Point( 8, 26 );
+            this.lblQueueLength.Name = "lblQueueLength";
+            this.lblQueueLength.Size = new System.Drawing.Size( 281, 12 );
+            this.lblQueueLength.TabIndex = 0;
+            this.lblQueueLength.Text = "用户队列长度（较大值提高性能，但占内存较多）：";
+            // 
+            // tbQueueLength
+            // 
+            this.tbQueueLength.LargeChange = 100;
+            this.tbQueueLength.Location = new System.Drawing.Point( 284, 16 );
+            this.tbQueueLength.Maximum = 100000;
+            this.tbQueueLength.Minimum = 1000;
+            this.tbQueueLength.Name = "tbQueueLength";
+            this.tbQueueLength.Size = new System.Drawing.Size( 367, 42 );
+            this.tbQueueLength.SmallChange = 100;
+            this.tbQueueLength.TabIndex = 4;
+            this.tbQueueLength.TickFrequency = 1000;
+            this.tbQueueLength.Value = 5000;
+            this.tbQueueLength.ValueChanged += new System.EventHandler( this.tbQueueLength_ValueChanged );
+            // 
+            // numQueueLength
+            // 
+            this.numQueueLength.Location = new System.Drawing.Point( 652, 22 );
+            this.numQueueLength.Maximum = new decimal( new int[] {
+            100000,
+            0,
+            0,
+            0} );
+            this.numQueueLength.Minimum = new decimal( new int[] {
+            1000,
+            0,
+            0,
+            0} );
+            this.numQueueLength.Name = "numQueueLength";
+            this.numQueueLength.Size = new System.Drawing.Size( 62, 21 );
+            this.numQueueLength.TabIndex = 5;
+            this.numQueueLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.numQueueLength.Value = new decimal( new int[] {
+            5000,
+            0,
+            0,
+            0} );
+            this.numQueueLength.ValueChanged += new System.EventHandler( this.numQueueLength_ValueChanged );
+            // 
             // btnDefault
             // 
-            this.btnDefault.Location = new System.Drawing.Point( 605, 25 );
+            this.btnDefault.Location = new System.Drawing.Point( 741, 82 );
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size( 75, 23 );
             this.btnDefault.TabIndex = 3;
-            this.btnDefault.Text = "默认值";
+            this.btnDefault.Text = "加载默认值";
             this.btnDefault.UseVisualStyleBackColor = true;
+            this.btnDefault.Click += new System.EventHandler( this.btnDefault_Click );
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point( 733, 25 );
+            this.btnSave.Location = new System.Drawing.Point( 741, 140 );
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size( 75, 23 );
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler( this.btnSave_Click );
             // 
-            // nudInterval
+            // lblStatusTitle
             // 
-            this.nudInterval.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.nudInterval.Location = new System.Drawing.Point( 120, 20 );
-            this.nudInterval.Maximum = new decimal( new int[] {
-            3600000,
-            0,
-            0,
-            0} );
-            this.nudInterval.Minimum = new decimal( new int[] {
-            3600,
-            0,
-            0,
-            0} );
-            this.nudInterval.Name = "nudInterval";
-            this.nudInterval.Size = new System.Drawing.Size( 65, 21 );
-            this.nudInterval.TabIndex = 1;
-            this.nudInterval.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nudInterval.Value = global::Sinawler.Properties.Settings.Default.settingInterval;
+            this.lblStatusTitle.AutoSize = true;
+            this.lblStatusTitle.Location = new System.Drawing.Point( 11, 22 );
+            this.lblStatusTitle.Name = "lblStatusTitle";
+            this.lblStatusTitle.Size = new System.Drawing.Size( 65, 12 );
+            this.lblStatusTitle.TabIndex = 16;
+            this.lblStatusTitle.Text = "爬虫状态：";
+            this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // lblInterval
+            // grpStatus
             // 
-            this.lblInterval.AutoSize = true;
-            this.lblInterval.Location = new System.Drawing.Point( 11, 25 );
-            this.lblInterval.Name = "lblInterval";
-            this.lblInterval.Size = new System.Drawing.Size( 113, 12 );
-            this.lblInterval.TabIndex = 0;
-            this.lblInterval.Text = "请求间隔（毫秒）：";
+            this.grpStatus.Controls.Add( this.lblStatusMessage );
+            this.grpStatus.Controls.Add( this.lblStatusTitle );
+            this.grpStatus.Location = new System.Drawing.Point( 5, 511 );
+            this.grpStatus.Name = "grpStatus";
+            this.grpStatus.Size = new System.Drawing.Size( 827, 48 );
+            this.grpStatus.TabIndex = 17;
+            this.grpStatus.TabStop = false;
+            this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
+            // 
+            // lblStatusMessage
+            // 
+            this.lblStatusMessage.AutoSize = true;
+            this.lblStatusMessage.Location = new System.Drawing.Point( 73, 22 );
+            this.lblStatusMessage.Name = "lblStatusMessage";
+            this.lblStatusMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblStatusMessage.TabIndex = 17;
+            this.lblStatusMessage.Text = "停止。";
+            this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point( 741, 111 );
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size( 75, 23 );
+            this.btnLoad.TabIndex = 14;
+            this.btnLoad.Text = "加载最新值";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler( this.btnLoad_Click );
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size( 837, 663 );
+            this.ClientSize = new System.Drawing.Size( 837, 625 );
             this.ControlBox = false;
+            this.Controls.Add( this.grpStatus );
             this.Controls.Add( this.gpSetting );
             this.Controls.Add( this.grpControl );
-            this.Controls.Add( this.rtxtLog );
             this.Controls.Add( this.btnExit );
             this.Controls.Add( this.grpSearch );
             this.Controls.Add( this.grpCurrentUser );
@@ -527,8 +702,14 @@
             this.grpSearch.ResumeLayout( false );
             this.grpControl.ResumeLayout( false );
             this.gpSetting.ResumeLayout( false );
-            this.gpSetting.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.nudInterval)).EndInit();
+            this.grpDBSettings.ResumeLayout( false );
+            this.grpDBSettings.PerformLayout();
+            this.grpQueueLength.ResumeLayout( false );
+            this.grpQueueLength.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numQueueLength)).EndInit();
+            this.grpStatus.ResumeLayout( false );
+            this.grpStatus.PerformLayout();
             this.ResumeLayout( false );
 
         }
@@ -569,13 +750,27 @@
         private System.Windows.Forms.Label lblCUID;
         private System.Windows.Forms.GroupBox grpSearch;
         private System.Windows.Forms.Button btnExit;
-        private System.Windows.Forms.RichTextBox rtxtLog;
         private System.Windows.Forms.GroupBox grpControl;
         private System.Windows.Forms.GroupBox gpSetting;
-        private System.Windows.Forms.Label lblInterval;
-        private System.Windows.Forms.NumericUpDown nudInterval;
+        private System.Windows.Forms.Label lblQueueLength;
         private System.Windows.Forms.Button btnDefault;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Label lblStatusTitle;
+        private System.Windows.Forms.GroupBox grpStatus;
+        private System.Windows.Forms.Label lblStatusMessage;
+        private System.Windows.Forms.TrackBar tbQueueLength;
+        private System.Windows.Forms.Label lblDBServer;
+        private System.Windows.Forms.NumericUpDown numQueueLength;
+        private System.Windows.Forms.TextBox txtDBPwd;
+        private System.Windows.Forms.TextBox txtDBUserName;
+        private System.Windows.Forms.TextBox txtDBServer;
+        private System.Windows.Forms.Label lblDBPwd;
+        private System.Windows.Forms.Label lblDBUserName;
+        private System.Windows.Forms.GroupBox grpQueueLength;
+        private System.Windows.Forms.GroupBox grpDBSettings;
+        private System.Windows.Forms.ComboBox drplstDBType;
+        private System.Windows.Forms.Label lblDBType;
+        private System.Windows.Forms.Button btnLoad;
     }
 }
 

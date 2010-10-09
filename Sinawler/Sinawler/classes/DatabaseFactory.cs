@@ -9,7 +9,7 @@ public class DatabaseFactory
     {
         Database db;
         SettingItems settings=AppSettings.LoadDefault();
-        string strDBType = settings.DataBaseType;
+        string strDBType = settings.DBType;
 
         if (strDBType == "SQL Server")
             db = new SqlDatabase();
