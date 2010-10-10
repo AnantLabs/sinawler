@@ -125,5 +125,35 @@ namespace Sinawler
             if (strResult == null) return false;
             else return true;
         }
+
+        /**
+        * This method ensures that the output String has only valid XML unicode
+        * characters as specified by the XML 1.0 standard. For reference, please
+        * see <a href="http://www.w3.org/TR/2000/REC-xml-20001006#NT-Char">the
+        * standard</a>. This method will return an empty String if the input is
+        * null or empty.
+        * 
+        * @param value
+        *            The String whose non-valid characters we want to remove.
+        * @return The in String, stripped of non-valid characters.
+        */
+        static public string stripNonValidXMLCharacters ( String value )
+        {
+            StringBuilder strResult = new StringBuilder(); // Used to hold the output.
+            char current; // Used to reference the current character.
+
+            if (value == null) return ""; // vacancy test.
+            for (int i = 0; i < value.Length; i++)
+            {
+                current = value[i]; // NOTE: No IndexOutOfBoundsException caught
+                // here; it should not happen.
+                if ((current == 0x9) || (current == 0xA) || (current == 0xD)
+                        || ((current >= 0x20) && (current <= 0xD7FF))
+                        || ((current >= 0xE000) && (current <= 0xFFFD))
+                        || ((current >= 0x10000) && (current <= 0x10FFFF)))
+                    strResult.Append( current );
+            }
+            return strResult.ToString();
+        }
     }
 }

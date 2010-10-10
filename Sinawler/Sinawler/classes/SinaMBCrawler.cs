@@ -125,6 +125,7 @@ namespace Sinawler
             string strResult = api.user_show( lUid );
             while (strResult == null)
                 strResult = api.user_show( lUid );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             User user = new User();
@@ -170,6 +171,7 @@ namespace Sinawler
             string strResult = api.user_show( strScreenName );
             while (strResult == null)
                 strResult = api.user_show( strScreenName );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             User user = new User();
@@ -215,6 +217,7 @@ namespace Sinawler
             string strResult = api.user_show( lUid, strScreenName );
             while (strResult == null)
                 strResult = api.user_show( lUid, strScreenName );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             User user = new User();
@@ -274,6 +277,7 @@ namespace Sinawler
             string strResult = api.user_timeline( lUid, lSinceSid );
             while (strResult == null)
                 strResult = api.user_timeline( lUid, lSinceSid );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             List<Status> lstStatuses = new List<Status>();
@@ -365,6 +369,7 @@ namespace Sinawler
             string strResult = api.comments( lStatusID, iPage );
             while (strResult == null)
                 strResult = api.comments( lStatusID, iPage );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             XmlNodeList nodes = xmlDoc.GetElementsByTagName( "comment" );
