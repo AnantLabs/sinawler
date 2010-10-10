@@ -72,9 +72,6 @@ namespace Sinawler
         /// <param name="lUid"></param>
         public void Start ( long lStartUID, BackgroundWorker bwAsync )
         {
-            //œ»≥ı ºªØ
-            this.Initialize();
-
             if (lStartUID == 0) return;
             SinaMBCrawler crawler = new SinaMBCrawler( api );
 

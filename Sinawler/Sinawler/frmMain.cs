@@ -157,10 +157,6 @@ namespace Sinawler
                 txtUserName.Text = oSearchedUser.screen_name;
 
                 robot = new Robot( api );   //爬虫机器人
-
-                strDataBaseStatus = PubHelper.TestDataBase();
-                if (strDataBaseStatus != "OK")
-                    MessageBox.Show( "数据库错误：" + strDataBaseStatus+"。\n请正确设置数据库。" );
             }
             else
             {
@@ -182,33 +178,15 @@ namespace Sinawler
 
         private void btnSearchOnline_Click(object sender, EventArgs e)
         {
-            if (!blnAuthorized)
-            {
-                CheckLogin();
-                if (blnAuthorized)
-                {
-                    SinaMBCrawler crawler = new SinaMBCrawler(api);
-                    crawler.SleepTime = 0;  //这里不等待
-                    oCurrentUser = crawler.GetCurrentUserInfo();
-                    oSearchedUser = oCurrentUser;
-                    ShowCurrentUser();
-                    ShowSearchedUser();
-                    txtUID.Text = oSearchedUser.uid.ToString();
-                    txtUserName.Text = oSearchedUser.screen_name;
-                }
-                else
-                {
-                    btnSearchOnline.Enabled = true;
-                    btnSearchOffLine.Enabled = true;
-                    btnStartByCurrent.Enabled = false;
-                    btnStartBySearch.Enabled = false;
-                    btnStartByLast.Enabled = true;
-                    btnExit.Enabled = true;
-                    return;
-                }
-            }
+            CheckLogin();            
             if (blnAuthorized)
             {
+                btnSearchOnline.Enabled = true;
+                btnSearchOffLine.Enabled = true;
+                btnStartByCurrent.Enabled = true;
+                btnStartBySearch.Enabled = true;
+                btnStartByLast.Enabled = true;
+
                 if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
                 {
                     MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "请输入搜索条件");
@@ -233,6 +211,14 @@ namespace Sinawler
                     oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUID), strScreenName);
                 if (oSearchedUser == null) MessageBox.Show("未搜索到指定用户。", "搜索结果");
                 ShowSearchedUser();
+            }
+            else
+            {
+                btnSearchOnline.Enabled = true;
+                btnSearchOffLine.Enabled = true;
+                btnStartByCurrent.Enabled = false;
+                btnStartBySearch.Enabled = false;
+                btnStartByLast.Enabled = true;
             }
         }
 
@@ -405,6 +391,7 @@ namespace Sinawler
                 
         private void StartCrawByCurrentUser(Object sender,DoWorkEventArgs e)
         {
+            robot.Initialize();
             robot.SinaAPI = api;
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
@@ -415,6 +402,7 @@ namespace Sinawler
 
         private void StartCrawBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
+            robot.Initialize();
             robot.SinaAPI = api;
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
@@ -425,6 +413,7 @@ namespace Sinawler
 
         private void StartCrawByLastUser ( Object sender, DoWorkEventArgs e )
         {
+            robot.Initialize();
             robot.SinaAPI = api;
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
@@ -522,6 +511,18 @@ namespace Sinawler
         private void tbQueueLength_ValueChanged ( object sender, EventArgs e )
         {
             numQueueLength.Value = tbQueueLength.Value;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            CheckLogin();
+            if (blnAuthorized)
+            {
+                if (PubHelper.PostAdvertisement())
+                    MessageBox.Show("您已经帮忙发布了一条推广此应用的微博。\n感谢您对本应用的支持！");
+                else
+                    MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。");
+            }
         }
     }
 }

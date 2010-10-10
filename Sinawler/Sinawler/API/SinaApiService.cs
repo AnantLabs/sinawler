@@ -197,7 +197,7 @@ namespace Sina.Api
                 string url = "http://api.t.sina.com.cn/statuses/update." + Format + "?";
                 return oAuthWebRequest(Method.POST, url, "status=" + HttpUtility.UrlEncode(status));
             }
-            catch
+            catch(Exception ex)
             { return null; }
         }
         /*上传图片并发布一条微博信息 */

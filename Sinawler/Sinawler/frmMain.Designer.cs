@@ -86,6 +86,7 @@
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -431,11 +432,11 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(381, 584);
+            this.btnExit.Location = new System.Drawing.Point(331, 584);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(75, 23);
+            this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 11;
-            this.btnExit.Text = "退出";
+            this.btnExit.Text = "退出程序";
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
@@ -698,11 +699,23 @@
             this.lblStatusMessage.Text = "停止。";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(212, 584);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(170, 23);
+            this.button1.TabIndex = 18;
+            this.button1.Text = "发一条微博帮忙推广：）3Q";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(837, 625);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.grpStatus);
             this.Controls.Add(this.gpSetting);
             this.Controls.Add(this.grpControl);
@@ -796,6 +809,7 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Label lblDBName;
         private System.Windows.Forms.TextBox txtDBName;
+        private System.Windows.Forms.Button button1;
     }
 }
 

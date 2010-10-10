@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.ComponentModel;
+using Sina.Api;
 
 namespace Sinawler
 {
@@ -113,6 +114,15 @@ namespace Sinawler
             else
                 s = s + 256 + b[3];
             return s;
+        }
+
+        //发一条微博帮忙推广
+        static public bool PostAdvertisement()
+        {
+            SinaApiService api = new SinaApiService();
+            string strResult = api.statuses_update("我正在使用开源应用“新浪微博爬虫”。它的主页：http://code.google.com/p/sinawler/");
+            if (strResult == null) return false;
+            else return true;
         }
     }
 }
