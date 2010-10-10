@@ -68,9 +68,6 @@ namespace Sinawler
             //向文本框中追加
             Label lblLog = (Label)oControl;
             lblLog.Text = strLog;
-
-            //调整请求频度
-            crawler.AdjustFreq();
         }
 
         /// <summary>
@@ -445,6 +442,10 @@ namespace Sinawler
                 strLog=DateTime.Now.ToString( "u" ).Replace( "Z", "  " ) + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress(0);
                 Thread.Sleep( 100 );
+
+                //调整请求频度
+                //针对用户计算频度，不需要调整了，默认设置已可满足
+                //crawler.AdjustFreq();
             }
 
         }

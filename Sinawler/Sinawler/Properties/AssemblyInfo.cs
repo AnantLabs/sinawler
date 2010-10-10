@@ -6,11 +6,11 @@ using System.Resources;
 // 有关程序集的常规信息通过下列属性集
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("SinaMBCrawler")]
+[assembly: AssemblyTitle( "Sinawler" )]
 [assembly: AssemblyDescription("新浪微博爬虫")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BUCT")]
-[assembly: AssemblyProduct("SinaMBCrawler")]
+[assembly: AssemblyProduct( "Sinawler" )]
 [assembly: AssemblyCopyright("版权所有 (C) 卢罡 2010")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -30,6 +30,6 @@ using System.Resources;
 //      内部版本号
 //      修订号
 //
-[assembly: AssemblyVersion("1.1.0.1")]
-[assembly: AssemblyFileVersion("1.1.0.1")]
+[assembly: AssemblyVersion( "1.1.0.2" )]
+[assembly: AssemblyFileVersion( "1.1.0.2" )]
 [assembly: NeutralResourcesLanguageAttribute("zh-CHS")]
