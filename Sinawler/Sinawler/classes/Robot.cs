@@ -20,6 +20,8 @@ namespace Sinawler
         private LinkedList<long> lstWaitingUID;     //等待爬行的UID队列
         private int iQueueLength=5000;               //内存中队列长度上限，默认5000
 
+        private SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
+
         //构造函数，需要传入相应的新浪微博API和主界面
         public Robot ( SinaApiService oAPI)
         {
@@ -28,6 +30,8 @@ namespace Sinawler
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
             iQueueLength = settings.QueueLength;
+
+            crawler = new SinaMBCrawler(this.api);
         }
 
         public bool AsyncCancelled
@@ -64,6 +68,9 @@ namespace Sinawler
             //向文本框中追加
             Label lblLog = (Label)oControl;
             lblLog.Text = strLog;
+
+            //调整请求频度
+            crawler.AdjustFreq();
         }
 
         /// <summary>
@@ -73,7 +80,6 @@ namespace Sinawler
         public void Start ( long lStartUID, BackgroundWorker bwAsync )
         {
             if (lStartUID == 0) return;
-            SinaMBCrawler crawler = new SinaMBCrawler( api );
 
             lstWaitingUID = User.GetCrawedUID();
             //从队列中去掉当前UID
