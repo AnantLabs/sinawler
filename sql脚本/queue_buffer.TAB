@@ -1,9 +1,0 @@
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[queue_buffer]') and OBJECTPROPERTY(id, N'IsUserTable') = 1)
-drop table [dbo].[queue_buffer]
-GO
-
-CREATE TABLE [dbo].[queue_buffer] (
-	[uid] [bigint] NOT NULL ,
-	[enqueue_time] [datetime] NOT NULL
-) ON [PRIMARY]
-GO
