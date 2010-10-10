@@ -38,7 +38,7 @@ namespace Sinawler
             SettingItems settings = AppSettings.Load();
             if (settings == null)
             {
-                MessageBox.Show("读取配置文件时发生错误，将加载默认值。");
+                MessageBox.Show("读取配置文件时发生错误，将加载默认值。", "新浪微博爬虫");
                 settings = new SettingItems();
             }
             ShowSettings(settings);
@@ -189,7 +189,7 @@ namespace Sinawler
 
                 if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
                 {
-                    MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "请输入搜索条件");
+                    MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫");
                     txtUID.Focus();
                     return;
                 }
@@ -198,7 +198,7 @@ namespace Sinawler
                 long lBuffer;
                 if (strUID != "" && !long.TryParse(strUID, out lBuffer))
                 {
-                    MessageBox.Show("请输入正确的用户ID。", "输入错误");
+                    MessageBox.Show("请输入正确的用户ID。", "新浪微博爬虫");
                     return;
                 }
                 SinaMBCrawler crawler = new SinaMBCrawler(api);
@@ -209,7 +209,7 @@ namespace Sinawler
                     oSearchedUser = crawler.GetUserInfo(strScreenName);
                 if (strUID != "" && strScreenName != "")
                     oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUID), strScreenName);
-                if (oSearchedUser == null) MessageBox.Show("未搜索到指定用户。", "搜索结果");
+                if (oSearchedUser == null) MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
                 ShowSearchedUser();
             }
             else
@@ -226,14 +226,14 @@ namespace Sinawler
         {
             if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
             {
-                MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "请输入搜索条件");
+                MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫");
                 txtUID.Focus();
                 return;
             }
             strDataBaseStatus = PubHelper.TestDataBase();
             if (strDataBaseStatus != "OK")
             {
-                MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。");
+                MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
                 return;
             }
             string strUID = txtUID.Text.Trim();
@@ -241,25 +241,25 @@ namespace Sinawler
             long lBuffer;
             if (strUID != "" && !long.TryParse(strUID, out lBuffer))
             {
-                MessageBox.Show("请输入正确的用户ID。", "输入错误");
+                MessageBox.Show("请输入正确的用户ID。", "新浪微博爬虫");
                 return;
             }
             if (strUID != "" && strScreenName == "")
                 if (!oSearchedUser.GetModel(Convert.ToInt64(strUID)))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "搜索结果");
+                    MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
                     oSearchedUser = null;
                 }
             if (strUID == "" && strScreenName != "")
                 if (!oSearchedUser.GetModel(strScreenName))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "搜索结果");
+                    MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
                     oSearchedUser = null;
                 }
             if (strUID != "" && strScreenName != "")
                 if (!oSearchedUser.GetModel(Convert.ToInt64(strUID), strScreenName))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "搜索结果");
+                    MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
                     oSearchedUser = null;
                 }
             ShowSearchedUser();
@@ -273,7 +273,7 @@ namespace Sinawler
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
                 {
-                    MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                    MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
                     return;
                 }
                 
@@ -310,13 +310,13 @@ namespace Sinawler
             {
                 if (oSearchedUser == null)
                 {
-                    MessageBox.Show( this, "无搜索结果用户，请先搜索用户。" );
+                    MessageBox.Show(this, "无搜索结果用户，请先搜索用户。", "新浪微博爬虫");
                     return;
                 }
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
                 {
-                    MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                    MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
                     return;
                 }
                 
@@ -354,12 +354,12 @@ namespace Sinawler
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
                 {
-                    MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。" );
+                    MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
                     return;
                 }
                 if (SysArg.GetCurrentUID() == 0)
                 {
-                    MessageBox.Show( this, "无上次中止用户的记录，请选择其它爬行起点。" );
+                    MessageBox.Show(this, "无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫");
                     return;
                 }
                 
@@ -422,7 +422,7 @@ namespace Sinawler
             long lLastUID = SysArg.GetCurrentUID();
             if(lLastUID==0)
             {
-                MessageBox.Show( "无上次中止用户的记录，请选择其它爬行起点。" );
+                MessageBox.Show("无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫");
                 return;
             }
             robot.Start( lLastUID,oAsyncWorker );
@@ -451,12 +451,12 @@ namespace Sinawler
             if (e.Cancelled)
             {
                 //Cancelled
-                MessageBox.Show( this, "爬虫已停止。" );
+                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
             }
             else
             {
                 //Completed...
-                MessageBox.Show( this, "爬虫已停止。" );
+                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
             }
             oAsyncWorker = null;
         }
@@ -500,7 +500,7 @@ namespace Sinawler
 
             AppSettings.Save( settings );
 
-            MessageBox.Show("设置已保存。启动新的爬虫任务时将使用新的设置。");
+            MessageBox.Show("设置已保存。启动新的爬虫任务时将使用新的设置。", "新浪微博爬虫");
         }
 
         private void numQueueLength_ValueChanged ( object sender, EventArgs e )
@@ -518,10 +518,10 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
-                if (PubHelper.PostAdvertisement())
-                    MessageBox.Show("您已经帮忙发布了一条推广此应用的微博。\n感谢您对本应用的支持！");
+                if (PubHelper.PostAdvertisement(api))
+                    MessageBox.Show("您已经帮忙发布了一条推广此应用的微博。\n感谢您对本应用的支持！","新浪微博爬虫");
                 else
-                    MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。");
+                    MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。", "新浪微博爬虫");
             }
         }
     }

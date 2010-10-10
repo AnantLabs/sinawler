@@ -432,7 +432,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(331, 584);
+            this.btnExit.Location = new System.Drawing.Point(453, 584);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 11;
@@ -707,7 +707,6 @@
             this.button1.TabIndex = 18;
             this.button1.Text = "发一条微博帮忙推广：）3Q";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // frmMain

@@ -117,10 +117,11 @@ namespace Sinawler
         }
 
         //发一条微博帮忙推广
-        static public bool PostAdvertisement()
+        static public bool PostAdvertisement(SinaApiService api)
         {
-            SinaApiService api = new SinaApiService();
-            string strResult = api.statuses_update("我正在使用开源应用“新浪微博爬虫”。它的主页：http://code.google.com/p/sinawler/");
+            SettingItems settings=AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            string strResult = api.statuses_update("我正在使用开源应用“新浪微博爬虫”。Project页面：http://code.google.com/p/sinawler/；下载页面：http://code.google.com/p/sinawler/downloads/list");
             if (strResult == null) return false;
             else return true;
         }
