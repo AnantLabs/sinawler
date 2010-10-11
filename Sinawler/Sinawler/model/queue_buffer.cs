@@ -77,7 +77,7 @@ namespace Sinawler.Model
         /// </summary>
         static public void Clear ()
         {
-            db.CountByExecuteSQL( "delete from enqueue_buffer" );
+            db.CountByExecuteSQL( "delete from queue_buffer" );
         }
 
         static public int Count

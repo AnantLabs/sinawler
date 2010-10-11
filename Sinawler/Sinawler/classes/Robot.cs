@@ -97,6 +97,7 @@ namespace Sinawler
                 Thread.Sleep( 100 );
                 for (int i = lstWaitingUID.Count - 1; i >= iQueueLength; i--)
                 {
+                    if (blnAsyncCancelled) return;
                     long lTmp = lstWaitingUID.Last.Value;
                     User usrTmp = new User( lTmp );
                     QueueBuffer.Add( lTmp,usrTmp.update_time );
@@ -548,9 +549,9 @@ namespace Sinawler
 
         public void Initialize()
         {
-            //停止爬行，初始化相应变量
+            //初始化相应变量
             blnAsyncCancelled = false;
-            lstWaitingUID = User.GetCrawedUID();
+            if(lstWaitingUID!=null) lstWaitingUID.Clear();
 
             //清空数据库队列缓存
             QueueBuffer.Clear();
