@@ -11,7 +11,12 @@ namespace Sinawler
     class SinaMBCrawler
     {
         private SinaApiService api;
-        private int iSleep = 3600;  //默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
+        //默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
+        //后经测试，此值还可缩小。2010-10-11定为最小值2000，可调整
+        private int iSleep = 3600;
+
+        private int iRemainingHits = 1000; //当前小时内剩余请求次数
+        private int iResetTimeInSeconds = 3600; //剩余秒数
 
         public SinaMBCrawler ( SinaApiService oApi )
         {
@@ -22,6 +27,16 @@ namespace Sinawler
         {
             set { iSleep = value; }
             get { return iSleep; }
+        }
+
+        public int RemainingHits
+        {
+            get { return iRemainingHits; }
+        }
+
+        public int ResetTimeInSeconds
+        {
+            get { return iResetTimeInSeconds; }
         }
 
         private int CompareStatus ( Status x, Status y )
@@ -420,7 +435,7 @@ namespace Sinawler
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
 
-            int iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
+            iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
             int iHourlyLimit = Convert.ToInt32( xmlDoc.GetElementsByTagName( "hourly-limit" )[0].InnerText );
             int iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
             string[] strBuffer = PubHelper.ParseDateTime( xmlDoc.GetElementsByTagName( "reset-time" )[0].InnerText ).Split( ' ' )[0].Split( '-' );
@@ -433,7 +448,7 @@ namespace Sinawler
                 while (iResetTimeInSeconds * 1000 / iSleep > iRemainingHits)
                 {
                     //增加等待时间
-                    iSleep += 10;
+                    iSleep += 100;
 
                     //重新获取信息
                     strResult = api.check_hits_limit();
@@ -447,8 +462,8 @@ namespace Sinawler
             else
             {
                 //剩余时间可访问次数小于剩余次数，说明剩余次数够用，不会超限，则减少等待时间，但不低于3600毫秒下限
-                iSleep -= 10;
-                if (iSleep < 3600) iSleep = 3600;
+                iSleep -= 100;
+                if (iSleep < 3600) iSleep = 2000;
             }
         }
     };

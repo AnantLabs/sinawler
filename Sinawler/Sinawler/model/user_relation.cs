@@ -151,9 +151,11 @@ namespace Sinawler.Model
 		/// </summary>
         static public LinkedList<long> GetFollowingUID(long lSourceUID)
         {
-            string strSQL = "select target_uid,relation_state from user_relation where source_uid="+lSourceUID.ToString()+" order by iteration desc";
+            string strSQL = "select target_uid,relation_state from user_relation where source_uid=" + lSourceUID.ToString() + " order by update_time";
             LinkedList<long> lstTargetUID = new LinkedList<long>();
-            DataTable dt = db.GetDataSet( strSQL ).Tables[0];
+            DataSet ds = db.GetDataSet( strSQL );
+            if (ds == null) return lstTargetUID;
+            DataTable dt = ds.Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 int state=Convert.ToInt32(dt.Rows[i]["relation_state"]);
@@ -170,9 +172,11 @@ namespace Sinawler.Model
         /// </summary>
         static public LinkedList<long> GetFollowedByUID ( long lTargetUID )
         {
-            string strSQL = "select source_uid,relation_state from user_relation where target_uid=" + lTargetUID.ToString() + " order by iteration desc";
+            string strSQL = "select source_uid,relation_state from user_relation where target_uid=" + lTargetUID.ToString() + " order by update_time";
             LinkedList<long> lstSourceUID = new LinkedList<long>();
-            DataTable dt = db.GetDataSet( strSQL ).Tables[0];
+            DataSet ds = db.GetDataSet( strSQL );
+            if (ds == null) return lstSourceUID;
+            DataTable dt = ds.Tables[0];
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 int state = Convert.ToInt32( dt.Rows[i]["relation_state"] );
@@ -182,6 +186,28 @@ namespace Sinawler.Model
                     lstSourceUID.Remove( state );
             }
             return lstSourceUID;
+        }
+
+        /// <summary>
+        /// 获得用户关系表中所有UID，包括source_uid和target_uid
+        /// </summary>
+        static public LinkedList<long> GetAllUID()
+        {
+            string strSQL = "select * from all_uid";
+            LinkedList<long> lstAllUID = new LinkedList<long>();
+            DataSet ds = db.GetDataSet( strSQL );
+            if (ds == null) return lstAllUID;
+            DataTable dt = ds.Tables[0];
+            long lUID;
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                lUID = Convert.ToInt64( dt.Rows[i]["uid"] );
+                if(!lstAllUID.Contains(lUID))
+                lstAllUID.AddLast( lUID );
+            }
+
+
+            return lstAllUID;
         }
 
 		#endregion  成员方法

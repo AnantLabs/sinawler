@@ -224,68 +224,6 @@ namespace Sinawler.Model
 
 		#region  成员方法
 
-		/// <summary>
-		/// 得到一个对象实体
-		/// </summary>
-        //public statuses(long status_id)
-        //{
-        //    StringBuilder strSql=new StringBuilder();
-        //    strSql.Append("select status_id,created_at,content,source_url,source_name,favorited,truncated,in_reply_to_status_id,in_reply_to_user_id,in_reply_to_screen_name,thumbnail_pic,bmiddle_pic,original_pic,uid,retweeted_status_id ");
-        //    strSql.Append(" FROM statuses ");
-        //    strSql.Append(" where status_id=@status_id ");
-        //    SqlParameter[] parameters = {
-        //            new SqlParameter("@status_id", SqlDbType.BigInt)};
-        //    parameters[0].Value = status_id;
-
-        //    DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
-        //    if(ds.Tables[0].Rows.Count>0)
-        //    {
-        //        status_id=ds.Tables[0].Rows[0]["status_id"].ToString();
-        //        if(ds.Tables[0].Rows[0]["created_at"].ToString()!="")
-        //        {
-        //            created_at=DateTime.Parse(ds.Tables[0].Rows[0]["created_at"].ToString());
-        //        }
-        //        content=ds.Tables[0].Rows[0]["content"].ToString();
-        //        source_url=ds.Tables[0].Rows[0]["source_url"].ToString();
-        //        source_name=ds.Tables[0].Rows[0]["source_name"].ToString();
-        //        if(ds.Tables[0].Rows[0]["favorited"].ToString()!="")
-        //        {
-        //            if((ds.Tables[0].Rows[0]["favorited"].ToString()=="1")||(ds.Tables[0].Rows[0]["favorited"].ToString().ToLower()=="true"))
-        //            {
-        //                favorited=true;
-        //            }
-        //            else
-        //            {
-        //                favorited=false;
-        //            }
-        //        }
-
-        //        if(ds.Tables[0].Rows[0]["truncated"].ToString()!="")
-        //        {
-        //            if((ds.Tables[0].Rows[0]["truncated"].ToString()=="1")||(ds.Tables[0].Rows[0]["truncated"].ToString().ToLower()=="true"))
-        //            {
-        //                truncated=true;
-        //            }
-        //            else
-        //            {
-        //                truncated=false;
-        //            }
-        //        }
-
-        //        in_reply_to_status_id=ds.Tables[0].Rows[0]["in_reply_to_status_id"].ToString();
-        //        in_reply_to_user_id=ds.Tables[0].Rows[0]["in_reply_to_user_id"].ToString();
-        //        in_reply_to_screen_name=ds.Tables[0].Rows[0]["in_reply_to_screen_name"].ToString();
-        //        thumbnail_pic=ds.Tables[0].Rows[0]["thumbnail_pic"].ToString();
-        //        bmiddle_pic=ds.Tables[0].Rows[0]["bmiddle_pic"].ToString();
-        //        original_pic=ds.Tables[0].Rows[0]["original_pic"].ToString();
-        //        uid=ds.Tables[0].Rows[0]["uid"].ToString();
-        //        retweeted_status_id=ds.Tables[0].Rows[0]["retweeted_status_id"].ToString();
-        //    }
-        //}
-
-		/// <summary>
-		/// 是否存在该记录
-		/// </summary>
 		static public bool Exists(long lStatusID)
 		{
             int count = db.CountByExecuteSQLSelect( "select status_id from statuses where status_id=" + lStatusID.ToString() );

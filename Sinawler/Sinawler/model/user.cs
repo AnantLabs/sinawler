@@ -668,7 +668,7 @@ namespace Sinawler.Model
 		/// </summary>
 		static public LinkedList<long> GetCrawedUID()
 		{
-            string strSQL = "select uid from users order by iteration desc,update_time";
+            string strSQL = "select uid from users order by update_time";
             LinkedList<long> lstWaitingUID = new LinkedList<long>();
             DataSet ds=db.GetDataSet( strSQL );
             if (ds == null) return lstWaitingUID;
