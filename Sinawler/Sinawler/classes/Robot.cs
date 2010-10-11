@@ -104,7 +104,7 @@ namespace Sinawler
                     if (!lstWaitingUID.Contains( lUID ))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将用户" + lUID.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户（进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%）";
+                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将用户" + lUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户（进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%）";
                         bwAsync.ReportProgress(5);
                         Thread.Sleep(5);
                         lstWaitingUID.AddLast( lUID );
@@ -119,7 +119,7 @@ namespace Sinawler
                     if(!QueueBuffer.Contains(lUID))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将超出内存队列长度的用户ID" + lUID.ToString() + "放入数据库队列...（进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%）";
+                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：内存队列已满，将其余用户ID" + lUID.ToString() + "加入数据库队列；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户（进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%）";
                         bwAsync.ReportProgress(5);
                         Thread.Sleep(5);
                         QueueBuffer.Enqueue( lUID );
@@ -249,7 +249,7 @@ namespace Sinawler
                             else
                             {
                                 //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户";
+                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户";
                                 bwAsync.ReportProgress( 100 );
                                 //若内存中已达到上限，则使用数据库队列缓存
                                 //否则使用数据库队列缓存
@@ -331,7 +331,7 @@ namespace Sinawler
                             else
                             {
                                 //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户";
+                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户";
                                 bwAsync.ReportProgress( 100 );
                                 //若内存中已达到上限，则使用数据库队列缓存
                                 //否则使用数据库队列缓存
@@ -387,7 +387,7 @@ namespace Sinawler
                     else
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户";
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户";
                         bwAsync.ReportProgress( 100 );
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
@@ -439,7 +439,7 @@ namespace Sinawler
                     else
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户";
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户";
                         bwAsync.ReportProgress( 100 );
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
@@ -494,7 +494,7 @@ namespace Sinawler
                     else
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户";
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户";
                         bwAsync.ReportProgress( 100 );
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
@@ -546,7 +546,7 @@ namespace Sinawler
                     else
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列...内存队列中现有" + lstWaitingUID.Count + "个用户；数据库队列中现有" + QueueBuffer.Count.ToString() + "个用户";
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户";
                         bwAsync.ReportProgress( 100 );
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
