@@ -282,73 +282,7 @@ namespace Sinawler.Model
 		/// 得到一个对象实体
 		/// </summary>
 		public void GetModel(long status_id)
-		{
-            //StringBuilder strSql=new StringBuilder();
-            //strSql.Append("select  top 1 status_id,created_at,content,source_url,source_name,favorited,truncated,in_reply_to_status_id,in_reply_to_user_id,in_reply_to_screen_name,thumbnail_pic,bmiddle_pic,original_pic,uid,retweeted_status_id ");
-            //strSql.Append(" FROM statuses ");
-            //strSql.Append(" where status_id=@status_id ");
-            //SqlParameter[] parameters = {
-            //        new SqlParameter("@status_id", SqlDbType.BigInt)};
-            //parameters[0].Value = status_id;
-
-            //DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
-            //if(ds.Tables[0].Rows.Count>0)
-            //{
-            //    if(ds.Tables[0].Rows[0]["status_id"].ToString()!="")
-            //    {
-            //        model.status_id=long.Parse(ds.Tables[0].Rows[0]["status_id"].ToString());
-            //    }
-            //    if(ds.Tables[0].Rows[0]["created_at"].ToString()!="")
-            //    {
-            //        model.created_at=DateTime.Parse(ds.Tables[0].Rows[0]["created_at"].ToString());
-            //    }
-            //    model.content=ds.Tables[0].Rows[0]["content"].ToString();
-            //    model.source_url=ds.Tables[0].Rows[0]["source_url"].ToString();
-            //    model.source_name=ds.Tables[0].Rows[0]["source_name"].ToString();
-            //    if(ds.Tables[0].Rows[0]["favorited"].ToString()!="")
-            //    {
-            //        if((ds.Tables[0].Rows[0]["favorited"].ToString()=="1")||(ds.Tables[0].Rows[0]["favorited"].ToString().ToLower()=="true"))
-            //        {
-            //            model.favorited=true;
-            //        }
-            //        else
-            //        {
-            //            model.favorited=false;
-            //        }
-            //    }
-            //    if(ds.Tables[0].Rows[0]["truncated"].ToString()!="")
-            //    {
-            //        if((ds.Tables[0].Rows[0]["truncated"].ToString()=="1")||(ds.Tables[0].Rows[0]["truncated"].ToString().ToLower()=="true"))
-            //        {
-            //            model.truncated=true;
-            //        }
-            //        else
-            //        {
-            //            model.truncated=false;
-            //        }
-            //    }
-            //    if(ds.Tables[0].Rows[0]["in_reply_to_status_id"].ToString()!="")
-            //    {
-            //        model.in_reply_to_status_id=long.Parse(ds.Tables[0].Rows[0]["in_reply_to_status_id"].ToString());
-            //    }
-            //    if(ds.Tables[0].Rows[0]["in_reply_to_user_id"].ToString()!="")
-            //    {
-            //        model.in_reply_to_user_id=long.Parse(ds.Tables[0].Rows[0]["in_reply_to_user_id"].ToString());
-            //    }
-            //    model.in_reply_to_screen_name=ds.Tables[0].Rows[0]["in_reply_to_screen_name"].ToString();
-            //    model.thumbnail_pic=ds.Tables[0].Rows[0]["thumbnail_pic"].ToString();
-            //    model.bmiddle_pic=ds.Tables[0].Rows[0]["bmiddle_pic"].ToString();
-            //    model.original_pic=ds.Tables[0].Rows[0]["original_pic"].ToString();
-            //    if(ds.Tables[0].Rows[0]["uid"].ToString()!="")
-            //    {
-            //        model.uid=long.Parse(ds.Tables[0].Rows[0]["uid"].ToString());
-            //    }
-            //    if(ds.Tables[0].Rows[0]["retweeted_status_id"].ToString()!="")
-            //    {
-            //        model.retweeted_status_id=long.Parse(ds.Tables[0].Rows[0]["retweeted_status_id"].ToString());
-            //    }
-            //}
-		}
+		{}
 
         /// <summary>
         /// 获得数据库中指定用户最新一条微博ID

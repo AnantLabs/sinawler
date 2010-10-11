@@ -190,24 +190,14 @@ namespace Sinawler.Model
 
         /// <summary>
         /// 获得用户关系表中所有UID，包括source_uid和target_uid
+        /// 返回DataTable，以便于调用者观察进度——本不应该将DataTable暴露给上层的，无奈
         /// </summary>
-        static public LinkedList<long> GetAllUID()
+        static public DataTable GetAllUIDTable ()
         {
             string strSQL = "select * from all_uid";
-            LinkedList<long> lstAllUID = new LinkedList<long>();
             DataSet ds = db.GetDataSet( strSQL );
-            if (ds == null) return lstAllUID;
-            DataTable dt = ds.Tables[0];
-            long lUID;
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                lUID = Convert.ToInt64( dt.Rows[i]["uid"] );
-                if(!lstAllUID.Contains(lUID))
-                lstAllUID.AddLast( lUID );
-            }
-
-
-            return lstAllUID;
+            if (ds == null) return null;
+            else return ds.Tables[0];
         }
 
 		#endregion  成员方法

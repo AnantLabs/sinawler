@@ -79,6 +79,7 @@
     <Compile Include="classes\DatabaseFactory.cs" />
     <Compile Include="classes\Robot.cs" />
     <Compile Include="classes\Serialize.cs" />
+    <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
       <SubType>Code</SubType>

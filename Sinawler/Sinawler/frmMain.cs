@@ -265,6 +265,17 @@ namespace Sinawler
             ShowSearchedUser();
         }
 
+        //开始任务前初始化robot等
+        private void PrepareToStart()
+        {
+            robot.Initialize();
+            robot.SinaAPI = api;
+            SettingItems settings = AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            robot.QueueLength = settings.QueueLength;
+            robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
+        }
+
         private void btnStartByCurrent_Click(object sender, EventArgs e)
         {
             CheckLogin();
@@ -279,6 +290,7 @@ namespace Sinawler
                 
                 if (oAsyncWorker == null)
                 {
+                    PrepareToStart();
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
@@ -322,6 +334,7 @@ namespace Sinawler
                 
                 if (oAsyncWorker == null)
                 {
+                    PrepareToStart();
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
@@ -365,6 +378,7 @@ namespace Sinawler
                 
                 if (oAsyncWorker == null)
                 {
+                    PrepareToStart();
                     oAsyncWorker = new BackgroundWorker();
                     oAsyncWorker.WorkerReportsProgress = true;
                     oAsyncWorker.WorkerSupportsCancellation = true;
@@ -391,40 +405,17 @@ namespace Sinawler
                 
         private void StartCrawByCurrentUser(Object sender,DoWorkEventArgs e)
         {
-            robot.Initialize();
-            robot.SinaAPI = api;
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            robot.QueueLength = settings.QueueLength;
-            robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             robot.Start( oCurrentUser.uid, oAsyncWorker );
         }
 
         private void StartCrawBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
-            robot.Initialize();
-            robot.SinaAPI = api;
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            robot.QueueLength = settings.QueueLength;
-            robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
             robot.Start( oSearchedUser.uid, oAsyncWorker );
         }
 
         private void StartCrawByLastUser ( Object sender, DoWorkEventArgs e )
         {
-            robot.Initialize();
-            robot.SinaAPI = api;
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            robot.QueueLength = settings.QueueLength;
-            robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
-            long lLastUID = SysArg.GetCurrentUID();
-            if(lLastUID==0)
-            {
-                MessageBox.Show("无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫");
-                return;
-            }
+            long lLastUID = SysArg.GetCurrentUID(); //能走到这一步，说明lLastUID没问题
             robot.Start( lLastUID,oAsyncWorker );
         }
 
@@ -513,7 +504,7 @@ namespace Sinawler
             numQueueLength.Value = tbQueueLength.Value;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnPost_Click(object sender, EventArgs e)
         {
             CheckLogin();
             if (blnAuthorized)

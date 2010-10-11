@@ -34,7 +34,7 @@ namespace Sinawler.Model
 		{
             Hashtable htValues = new Hashtable();
             htValues.Add( "uid", uid );
-            htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'" );
+            htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
             db.Insert( "queue_buffer", htValues );
 		}
 
