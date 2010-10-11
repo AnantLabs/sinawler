@@ -104,7 +104,7 @@ namespace Sinawler
                     if (!lstWaitingUID.Contains( lUID ))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将用户" + lUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户（进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%）";
+                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将用户" + lUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%";
                         bwAsync.ReportProgress(5);
                         Thread.Sleep(5);
                         lstWaitingUID.AddLast( lUID );
@@ -119,7 +119,7 @@ namespace Sinawler
                     if(!QueueBuffer.Contains(lUID))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：内存队列已满，将其余用户ID" + lUID.ToString() + "加入数据库队列；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户（进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%）";
+                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：内存队列已满，将其余用户ID" + lUID.ToString() + "加入数据库队列；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%";
                         bwAsync.ReportProgress(5);
                         Thread.Sleep(5);
                         QueueBuffer.Enqueue( lUID );
