@@ -307,7 +307,9 @@ namespace Sinawler
                 }
                 else
                 {
-                    chkBoxPreLoadQueue.Enabled = false;
+                    rdNoPreLoad.Enabled = false;
+                    rdPreLoadUID.Enabled = false;
+                    rdPreLoadAllUID.Enabled = false;
                     btnStartByCurrent.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -352,7 +354,9 @@ namespace Sinawler
                 }
                 else
                 {
-                    chkBoxPreLoadQueue.Enabled = false;
+                    rdNoPreLoad.Enabled = false;
+                    rdPreLoadUID.Enabled = false;
+                    rdPreLoadAllUID.Enabled = false;
                     btnStartBySearch.Text = "停止爬行";
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -397,7 +401,9 @@ namespace Sinawler
                 }
                 else
                 {
-                    chkBoxPreLoadQueue.Enabled = false;
+                    rdNoPreLoad.Enabled = false;
+                    rdPreLoadUID.Enabled = false;
+                    rdPreLoadAllUID.Enabled = false;
                     btnStartByLast.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
@@ -437,7 +443,9 @@ namespace Sinawler
             btnStartByCurrent.Enabled = true;
             btnStartBySearch.Enabled = true;
             btnStartByLast.Enabled = true;
-            chkBoxPreLoadQueue.Enabled = true;
+            rdNoPreLoad.Enabled = true;
+            rdPreLoadUID.Enabled = true;
+            rdPreLoadAllUID.Enabled = true;
             if (e.Error != null)
             {
                 MessageBox.Show( this, e.Error.Message );
@@ -520,9 +528,28 @@ namespace Sinawler
             }
         }
 
-        private void chkBoxPreLoadQueue_CheckedChanged(object sender, EventArgs e)
+        private void rdNoPreLoad_CheckedChanged ( object sender, EventArgs e )
         {
-            robot.PreLoadQueue = chkBoxPreLoadQueue.Checked;
+            rdPreLoadUID.Checked = !rdNoPreLoad.Checked;
+            rdPreLoadAllUID.Checked = !rdNoPreLoad.Checked;
+            if (rdNoPreLoad.Checked)
+                robot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
+        }
+
+        private void rdPreLoadUID_CheckedChanged ( object sender, EventArgs e )
+        {
+            rdNoPreLoad.Checked = !rdPreLoadUID.Checked;
+            rdPreLoadAllUID.Checked = !rdPreLoadUID.Checked;
+            if (rdPreLoadUID.Checked)
+                robot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_UID;
+        }
+
+        private void rdPreLoadAllUID_CheckedChanged ( object sender, EventArgs e )
+        {
+            rdNoPreLoad.Checked = !rdPreLoadAllUID.Checked;
+            rdPreLoadUID.Checked = !rdPreLoadAllUID.Checked;
+            if (rdPreLoadAllUID.Checked)
+                robot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_UID;
         }
     }
 }
