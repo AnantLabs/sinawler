@@ -307,6 +307,7 @@ namespace Sinawler
                 }
                 else
                 {
+                    chkBoxPreLoadQueue.Enabled = false;
                     btnStartByCurrent.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -351,6 +352,7 @@ namespace Sinawler
                 }
                 else
                 {
+                    chkBoxPreLoadQueue.Enabled = false;
                     btnStartBySearch.Text = "停止爬行";
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -395,6 +397,7 @@ namespace Sinawler
                 }
                 else
                 {
+                    chkBoxPreLoadQueue.Enabled = false;
                     btnStartByLast.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
@@ -434,6 +437,7 @@ namespace Sinawler
             btnStartByCurrent.Enabled = true;
             btnStartBySearch.Enabled = true;
             btnStartByLast.Enabled = true;
+            chkBoxPreLoadQueue.Enabled = true;
             if (e.Error != null)
             {
                 MessageBox.Show( this, e.Error.Message );
@@ -514,6 +518,11 @@ namespace Sinawler
                 else
                     MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。", "新浪微博爬虫");
             }
+        }
+
+        private void chkBoxPreLoadQueue_CheckedChanged(object sender, EventArgs e)
+        {
+            robot.PreLoadQueue = chkBoxPreLoadQueue.Checked;
         }
     }
 }

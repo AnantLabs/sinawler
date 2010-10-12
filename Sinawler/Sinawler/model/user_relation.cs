@@ -194,7 +194,7 @@ namespace Sinawler.Model
         /// </summary>
         static public DataTable GetAllUIDTable ()
         {
-            string strSQL = "select * from all_uid";
+            string strSQL = "select uid from all_uid order by update_time";
             DataSet ds = db.GetDataSet( strSQL );
             if (ds == null) return null;
             else return ds.Tables[0];

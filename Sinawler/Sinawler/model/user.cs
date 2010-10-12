@@ -663,22 +663,17 @@ namespace Sinawler.Model
                 return false;
         }
 
-		/// <summary>
-		/// 获得已爬到用户ID列表
-		/// </summary>
-		static public LinkedList<long> GetCrawedUID()
-		{
+        /// <summary>
+        /// 获得用户表中已爬取所有UID
+        /// 返回DataTable，以便于调用者观察进度——本不应该将DataTable暴露给上层的，无奈
+        /// </summary>
+        static public DataTable GetCrawedUIDTable()
+        {
             string strSQL = "select uid from users order by update_time";
-            LinkedList<long> lstWaitingUID = new LinkedList<long>();
-            DataSet ds=db.GetDataSet( strSQL );
-            if (ds == null) return lstWaitingUID;
-            DataTable dt = ds.Tables[0];
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                lstWaitingUID.AddLast( Convert.ToInt64( dt.Rows[i]["uid"] ) );
-            }
-            return lstWaitingUID;
-		}
+            DataSet ds = db.GetDataSet(strSQL);
+            if (ds == null) return null;
+            else return ds.Tables[0];
+        }
 
 		#endregion  成员方法
 	}
