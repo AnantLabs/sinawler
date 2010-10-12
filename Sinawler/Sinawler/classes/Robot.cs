@@ -24,6 +24,7 @@ namespace Sinawler
         private int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
         private int iPreLoadQueue = 1;       //是否从数据库中预加载用户队列。默认为“否”
+        private bool blnSuspending = false;         //是否暂停，默认为“否”
 
         private SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
 
@@ -66,6 +67,12 @@ namespace Sinawler
         {
             get { return (EnumPreLoadQueue)iPreLoadQueue; }
             set { iPreLoadQueue = (int)value; }
+        }
+
+        public bool Suspending
+        {
+            get { return blnSuspending; }
+            set { blnSuspending = value; }
         }
 
         //重新设置API的接口
@@ -126,6 +133,7 @@ namespace Sinawler
                 for (i = 0; i < dtUID.Rows.Count && lstWaitingUID.Count < iQueueLength; i++)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     lUID = Convert.ToInt64( dtUID.Rows[i]["uid"] );
                     if (!lstWaitingUID.Contains( lUID ))
                     {
@@ -141,6 +149,7 @@ namespace Sinawler
                 while (i < dtUID.Rows.Count)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     lUID = Convert.ToInt64( dtUID.Rows[i]["uid"] );
                     int iLengthInDB = QueueBuffer.Count;
                     if (!QueueBuffer.Contains( lUID ))
@@ -170,6 +179,7 @@ namespace Sinawler
             while (lstWaitingUID.Count > 0)
             {
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //将队头取出
                 lCurrentUID = lstWaitingUID.First.Value;
                 lstWaitingUID.RemoveFirst();
@@ -181,6 +191,7 @@ namespace Sinawler
                 if (lCurrentUID == lStartUID)  //说明经过一次循环迭代
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
 
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "开始爬行之前增加迭代次数...";
@@ -201,11 +212,11 @@ namespace Sinawler
                 #endregion
                 #region 用户基本信息
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
 
                 //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
                 if (!User.Exists( lCurrentUID ))
                 {
-                    if (blnAsyncCancelled) return;
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "将用户" + lCurrentUID.ToString() + "存入数据库...";
                     bwAsync.ReportProgress( 100 );
@@ -213,7 +224,6 @@ namespace Sinawler
                 }
                 else
                 {
-                    if (blnAsyncCancelled) return;
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "更新用户" + lCurrentUID.ToString() + "的数据...";
                     bwAsync.ReportProgress( 100 );
@@ -223,6 +233,7 @@ namespace Sinawler
                 #endregion
                 #region 用户微博信息
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "获取数据库中用户" + lCurrentUID.ToString() + "最新一条微博的ID...";
                 bwAsync.ReportProgress( 100 );
@@ -236,6 +247,7 @@ namespace Sinawler
                 if (lLastStatusIDOf > 0)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
 
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "爬取微博" + lLastStatusIDOf.ToString() + "的评论...";
@@ -248,11 +260,13 @@ namespace Sinawler
                     bwAsync.ReportProgress( 100 );
                     Thread.Sleep( 5 );
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
 
                     foreach (Comment comment in lstComment)
                     {
-                        Thread.Sleep( 5 );
+                        //Thread.Sleep( 5 );
                         if (blnAsyncCancelled) return;
+                        while (blnSuspending) Thread.Sleep( 50 );
                         if (!Comment.Exists( comment.comment_id ))
                         {
                             //日志
@@ -285,13 +299,13 @@ namespace Sinawler
                                 else
                                     QueueBuffer.Enqueue( lCommentUID );
                             }
-                            Thread.Sleep( 5 );
                         }
                     }
                 }
                 #endregion
 
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "的ID在" + lLastStatusIDOf.ToString() + "之后的微博...";
                 bwAsync.ReportProgress( 100 );
@@ -304,11 +318,11 @@ namespace Sinawler
                 Thread.Sleep( 5 );
                 #endregion
                 #region 微博相应评论
-                if (blnAsyncCancelled) return;
                 foreach (Status status in lstStatus)
                 {
-                    Thread.Sleep( 5 );
+                    //Thread.Sleep( 5 );
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     if (!Status.Exists( status.status_id ))
                     {
                         //日志
@@ -318,6 +332,7 @@ namespace Sinawler
                         status.Add();
                     }
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
 
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "爬取微博" + status.status_id.ToString() + "的评论...";
@@ -329,12 +344,12 @@ namespace Sinawler
                     strLog = DateTime.Now.ToString() + "  " + "爬得" + lstComment.Count.ToString() + "条评论。";
                     bwAsync.ReportProgress( 100 );
                     Thread.Sleep( 5 );
-                    if (blnAsyncCancelled) return;
 
                     foreach (Comment comment in lstComment)
                     {
-                        Thread.Sleep( 5 );
+                        //Thread.Sleep( 5 );
                         if (blnAsyncCancelled) return;
+                        while (blnSuspending) Thread.Sleep( 50 );
                         if (!Comment.Exists( comment.comment_id ))
                         {
                             //日志
@@ -374,6 +389,7 @@ namespace Sinawler
                 #endregion
                 #region 用户关注列表
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //日志                
                 strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "关注用户ID列表...";
                 bwAsync.ReportProgress( 100 );
@@ -388,10 +404,12 @@ namespace Sinawler
                 while (lstBuffer.Count > 0)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //若不存在有效关系，增加
                     if (!UserRelation.Exists( lCurrentUID, lstBuffer.First.Value ))
                     {
                         if (blnAsyncCancelled) return;
+                        while (blnSuspending) Thread.Sleep( 50 );
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "记录用户" + lCurrentUID.ToString() + "关注用户" + lstBuffer.First.Value.ToString() + "...";
                         bwAsync.ReportProgress( 100 );
@@ -404,6 +422,7 @@ namespace Sinawler
                         ur.Add();
                     }
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //加入队列
                     if (lstWaitingUID.Contains( lstBuffer.First.Value ) || QueueBuffer.Contains( lstBuffer.First.Value ))
                     {
@@ -427,6 +446,7 @@ namespace Sinawler
                     lstBuffer.RemoveFirst();
                 }
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "关注用户ID列表...";
                 bwAsync.ReportProgress( 100 );
@@ -440,10 +460,12 @@ namespace Sinawler
                 while (lstBuffer.Count > 0)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //若不存在有效关系，增加
                     if (!UserRelation.Exists( lCurrentUID, lstBuffer.First.Value ))
                     {
                         if (blnAsyncCancelled) return;
+                        while (blnSuspending) Thread.Sleep( 50 );
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "记录用户" + lCurrentUID.ToString() + "关注用户" + lstBuffer.First.Value.ToString() + "...";
                         bwAsync.ReportProgress( 100 );
@@ -456,6 +478,7 @@ namespace Sinawler
                         ur.Add();
                     }
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //加入队列
                     if (lstWaitingUID.Contains( lstBuffer.First.Value ) || QueueBuffer.Contains( lstBuffer.First.Value ))
                     {
@@ -482,6 +505,7 @@ namespace Sinawler
                 #region 用户粉丝列表
                 //爬取当前用户的粉丝的ID，记录关系，加入队列
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "的粉丝用户ID列表...";
                 bwAsync.ReportProgress( 100 );
@@ -495,10 +519,12 @@ namespace Sinawler
                 while (lstBuffer.Count > 0)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //若不存在有效关系，增加
                     if (!UserRelation.Exists( lstBuffer.First.Value, lCurrentUID ))
                     {
                         if (blnAsyncCancelled) return;
+                        while (blnSuspending) Thread.Sleep( 50 );
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "记录用户" + lstBuffer.First.Value.ToString() + "关注用户" + lCurrentUID.ToString() + "...";
                         bwAsync.ReportProgress( 100 );
@@ -511,6 +537,7 @@ namespace Sinawler
                         ur.Add();
                     }
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //加入队列
                     if (lstWaitingUID.Contains( lstBuffer.First.Value ) || QueueBuffer.Contains( lstBuffer.First.Value ))
                     {
@@ -534,6 +561,7 @@ namespace Sinawler
                     lstBuffer.RemoveFirst();
                 }
                 if (blnAsyncCancelled) return;
+                while (blnSuspending) Thread.Sleep( 50 );
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "的粉丝用户ID列表...";
                 bwAsync.ReportProgress( 100 );
@@ -547,10 +575,12 @@ namespace Sinawler
                 while (lstBuffer.Count > 0)
                 {
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //若不存在有效关系，增加
                     if (!UserRelation.Exists( lstBuffer.First.Value, lCurrentUID ))
                     {
                         if (blnAsyncCancelled) return;
+                        while (blnSuspending) Thread.Sleep( 50 );
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "记录用户" + lstBuffer.First.Value.ToString() + "关注用户" + lCurrentUID.ToString() + "...";
                         bwAsync.ReportProgress( 100 );
@@ -563,6 +593,7 @@ namespace Sinawler
                         ur.Add();
                     }
                     if (blnAsyncCancelled) return;
+                    while (blnSuspending) Thread.Sleep( 50 );
                     //加入队列
                     if (lstWaitingUID.Contains( lstBuffer.First.Value ) || QueueBuffer.Contains( lstBuffer.First.Value ))
                     {

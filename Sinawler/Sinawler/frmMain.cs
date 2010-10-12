@@ -173,6 +173,16 @@ namespace Sinawler
 
         private void btnExit_Click(object sender, EventArgs e)
         {
+            if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
+            {
+                robot.Suspending = true;    //先暂停
+                if (MessageBox.Show( "爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
+                {
+                    robot.Suspending = false;
+                    return;
+                }   
+            }
+
             Application.Exit();
         }
 
