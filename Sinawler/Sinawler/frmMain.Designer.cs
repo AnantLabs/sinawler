@@ -469,7 +469,7 @@
             this.rdPreLoadAllUID.TabIndex = 14;
             this.rdPreLoadAllUID.Text = "从数据库全范围内预加载用户队列（慢）";
             this.rdPreLoadAllUID.UseVisualStyleBackColor = true;
-            this.rdPreLoadAllUID.CheckedChanged += new System.EventHandler( this.rdPreLoadAllUID_CheckedChanged );
+            this.rdPreLoadAllUID.Click += new System.EventHandler( this.rdPreLoadAllUID_Click );
             // 
             // rdPreLoadUID
             // 
@@ -480,7 +480,7 @@
             this.rdPreLoadUID.TabIndex = 13;
             this.rdPreLoadUID.Text = "从用户表预加载用户队列（较快）";
             this.rdPreLoadUID.UseVisualStyleBackColor = true;
-            this.rdPreLoadUID.CheckedChanged += new System.EventHandler( this.rdPreLoadUID_CheckedChanged );
+            this.rdPreLoadUID.Click += new System.EventHandler( this.rdPreLoadUID_Click );
             // 
             // rdNoPreLoad
             // 
@@ -493,7 +493,7 @@
             this.rdNoPreLoad.TabStop = true;
             this.rdNoPreLoad.Text = "不预加载用户队列（快）";
             this.rdNoPreLoad.UseVisualStyleBackColor = true;
-            this.rdNoPreLoad.CheckedChanged += new System.EventHandler( this.rdNoPreLoad_CheckedChanged );
+            this.rdNoPreLoad.Click += new System.EventHandler( this.rdNoPreLoad_Click );
             // 
             // gpSetting
             // 

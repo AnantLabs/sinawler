@@ -438,7 +438,7 @@ namespace Sinawler
 
             iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
             int iHourlyLimit = Convert.ToInt32( xmlDoc.GetElementsByTagName( "hourly-limit" )[0].InnerText );
-            int iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
+            iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
             string[] strBuffer = PubHelper.ParseDateTime( xmlDoc.GetElementsByTagName( "reset-time" )[0].InnerText ).Split( ' ' )[0].Split( '-' );
             string strResetTime = strBuffer[0] + "年" + strBuffer[1] + "月" + strBuffer[2] + "日";
 

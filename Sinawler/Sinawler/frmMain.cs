@@ -528,7 +528,7 @@ namespace Sinawler
             }
         }
 
-        private void rdNoPreLoad_CheckedChanged ( object sender, EventArgs e )
+        private void rdNoPreLoad_Click ( object sender, EventArgs e )
         {
             rdPreLoadUID.Checked = !rdNoPreLoad.Checked;
             rdPreLoadAllUID.Checked = !rdNoPreLoad.Checked;
@@ -536,7 +536,7 @@ namespace Sinawler
                 robot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
         }
 
-        private void rdPreLoadUID_CheckedChanged ( object sender, EventArgs e )
+        private void rdPreLoadUID_Click ( object sender, EventArgs e )
         {
             rdNoPreLoad.Checked = !rdPreLoadUID.Checked;
             rdPreLoadAllUID.Checked = !rdPreLoadUID.Checked;
@@ -544,7 +544,7 @@ namespace Sinawler
                 robot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_UID;
         }
 
-        private void rdPreLoadAllUID_CheckedChanged ( object sender, EventArgs e )
+        private void rdPreLoadAllUID_Click ( object sender, EventArgs e )
         {
             rdNoPreLoad.Checked = !rdPreLoadAllUID.Checked;
             rdPreLoadUID.Checked = !rdPreLoadAllUID.Checked;
