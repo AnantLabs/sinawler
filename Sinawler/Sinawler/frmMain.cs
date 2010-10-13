@@ -173,7 +173,7 @@ namespace Sinawler
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            if (!btnStartByCurrent.Enabled && !btnStartBySearch.Enabled && !btnStartByLast.Enabled)
+            if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
             {
                 robot.Suspending = true;    //先暂停
                 if (MessageBox.Show( "爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
@@ -191,12 +191,6 @@ namespace Sinawler
             CheckLogin();            
             if (blnAuthorized)
             {
-                btnSearchOnline.Enabled = true;
-                btnSearchOffLine.Enabled = true;
-                btnStartByCurrent.Enabled = true;
-                btnStartBySearch.Enabled = true;
-                btnStartByLast.Enabled = true;
-
                 if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
                 {
                     MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫");
