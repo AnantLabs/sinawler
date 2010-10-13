@@ -8,7 +8,7 @@ namespace Sinawler.Model
 	/// <summary>
 	/// ¿‡user_tag°£
 	/// </summary>
-	public class user_tag
+    public class user_tag : ModelBase
 	{
 		public user_tag()
 		{}

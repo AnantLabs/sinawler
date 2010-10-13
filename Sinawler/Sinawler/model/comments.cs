@@ -19,11 +19,9 @@ namespace Sinawler.Model
         + <status>
     </comment>
     */
-	public class Comment
+    public class Comment : ModelBase
 	{
-        static private Database db = DatabaseFactory.CreateDatabase();
-
-		#region Model
+        #region Model
 
 		private long _comment_id;
 		private string _content;

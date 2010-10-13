@@ -12,11 +12,9 @@ namespace Sinawler.Model
     /// 此类不可实例化
     /// 可通过此类提供的静态方法做出入队列操作，或调用Add方法、Remove方法添加、删除指定节点
 	/// </summary>
-	static public class QueueBuffer
+    public class QueueBuffer : ModelBase
 	{
-        static private Database db = DatabaseFactory.CreateDatabase();
-
-		#region  成员方法
+        #region  成员方法
 
 		/// <summary>
 		/// 是否存在该记录

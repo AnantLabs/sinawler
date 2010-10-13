@@ -23,7 +23,7 @@ namespace Sinawler
 
         private BackgroundWorker oAsyncWorker = null;
 
-        private Robot robot;                                //爬虫机器人
+        private Robot robotForUser,robotForStatus;      //爬虫机器人，一个是爬取用户信息的，另一个是爬取微博数据的，分别在两个线程中运行
 
         private string strDataBaseStatus = "";      //数据库测试状态结果，OK为正常
 
@@ -156,7 +156,8 @@ namespace Sinawler
                 txtUID.Text = oSearchedUser.uid.ToString();
                 txtUserName.Text = oSearchedUser.screen_name;
 
-                robot = new Robot( api );   //爬虫机器人
+                robotForUser = new Robot( api );   //爬虫机器人
+                robotForStatus = new Robot( api );   //爬虫机器人
             }
             else
             {
@@ -175,10 +176,10 @@ namespace Sinawler
         {
             if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
             {
-                robot.Suspending = true;    //先暂停
+                robotForUser.Suspending = true;    //先暂停
                 if (MessageBox.Show( "爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
                 {
-                    robot.Suspending = false;
+                    robotForUser.Suspending = false;
                     return;
                 }   
             }
@@ -272,12 +273,16 @@ namespace Sinawler
         //开始任务前初始化robot等
         private void PrepareToStart()
         {
-            robot.Initialize();
-            robot.SinaAPI = api;
+            robotForUser.Initialize();
+            robotForUser.SinaAPI = api;
+            robotForStatus.Initialize();
+            robotForStatus.SinaAPI = api;
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            robot.QueueLength = settings.QueueLength;
-            robot.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".log";
+            robotForUser.QueueLength = settings.QueueLength;
+            robotForUser.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_user.log";
+            robotForStatus.QueueLength = settings.QueueLength;
+            robotForStatus.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
         }
 
         private void btnStartByCurrent_Click(object sender, EventArgs e)
@@ -307,7 +312,8 @@ namespace Sinawler
                     btnStartByCurrent.Enabled = false;
                     btnStartByCurrent.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
-                    robot.AsyncCancelled = true;
+                    robotForUser.AsyncCancelled = true;
+                    robotForStatus.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
                 else
@@ -357,7 +363,8 @@ namespace Sinawler
                     btnStartBySearch.Enabled = false;
                     btnStartBySearch.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
-                    robot.AsyncCancelled = true;
+                    robotForUser.AsyncCancelled = true;
+                    robotForStatus.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
                 else
@@ -407,7 +414,8 @@ namespace Sinawler
                     btnStartByLast.Enabled = false;
                     btnStartByLast.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
-                    robot.AsyncCancelled = true;
+                    robotForUser.AsyncCancelled = true;
+                    robotForStatus.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
                 else
@@ -427,23 +435,23 @@ namespace Sinawler
                 
         private void StartCrawByCurrentUser(Object sender,DoWorkEventArgs e)
         {
-            robot.Start( oCurrentUser.uid, oAsyncWorker );
+            robotForUser.Start( oCurrentUser.uid, oAsyncWorker );
         }
 
         private void StartCrawBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
-            robot.Start( oSearchedUser.uid, oAsyncWorker );
+            robotForUser.Start( oSearchedUser.uid, oAsyncWorker );
         }
 
         private void StartCrawByLastUser ( Object sender, DoWorkEventArgs e )
         {
             long lLastUID = SysArg.GetCurrentUID(); //能走到这一步，说明lLastUID没问题
-            robot.Start( lLastUID,oAsyncWorker );
+            robotForUser.Start( lLastUID,oAsyncWorker );
         }
 
         private void ProgressChanged(Object sender, ProgressChangedEventArgs e)
         {
-            robot.Actioned(lblStatusMessage);
+            robotForUser.Actioned(lblStatusMessage);
         }
 
         private void CompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -453,7 +461,7 @@ namespace Sinawler
                 MessageBox.Show(this, e.Error.Message);
                 return;
             }
-            robot.Initialize();
+            robotForUser.Initialize();
             lblStatusMessage.Text = "停止。";
             btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
             btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -511,6 +519,8 @@ namespace Sinawler
             AppSettings.Save( settings );
 
             MessageBox.Show("设置已保存。启动新的爬虫任务时将使用新的设置。", "新浪微博爬虫");
+
+            oCurrentUser.ReLoadDBSettings();
         }
 
         private void numQueueLength_ValueChanged ( object sender, EventArgs e )
@@ -540,7 +550,7 @@ namespace Sinawler
             rdPreLoadUID.Checked = !rdNoPreLoad.Checked;
             rdPreLoadAllUID.Checked = !rdNoPreLoad.Checked;
             if (rdNoPreLoad.Checked)
-                robot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
+                robotForUser.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
         }
 
         private void rdPreLoadUID_Click ( object sender, EventArgs e )
@@ -548,7 +558,7 @@ namespace Sinawler
             rdNoPreLoad.Checked = !rdPreLoadUID.Checked;
             rdPreLoadAllUID.Checked = !rdPreLoadUID.Checked;
             if (rdPreLoadUID.Checked)
-                robot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_UID;
+                robotForUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_UID;
         }
 
         private void rdPreLoadAllUID_Click ( object sender, EventArgs e )
@@ -556,7 +566,7 @@ namespace Sinawler
             rdNoPreLoad.Checked = !rdPreLoadAllUID.Checked;
             rdPreLoadUID.Checked = !rdPreLoadAllUID.Checked;
             if (rdPreLoadAllUID.Checked)
-                robot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_UID;
+                robotForUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_UID;
         }
 
         private void btnPauseContinue_Click(object sender, EventArgs e)
@@ -565,7 +575,7 @@ namespace Sinawler
                 btnPauseContinue.Text = "继续";
             else
                 btnPauseContinue.Text = "暂停";
-            robot.Suspending = !robot.Suspending;
+            robotForUser.Suspending = !robotForUser.Suspending;
         }
     }
 }

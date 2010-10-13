@@ -22,10 +22,8 @@ namespace Sinawler.Model
     //relation_state: 关系状态，1为成立，0为不成立，以此记录关系动态变化，默认为1
     //iteration: 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
 
-	public class UserRelation
+	public class UserRelation:ModelBase
 	{
-        static private Database db = DatabaseFactory.CreateDatabase();
-
         public UserRelation()
 		{}
 

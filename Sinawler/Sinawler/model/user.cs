@@ -53,11 +53,9 @@ namespace Sinawler.Model
     //geo_enabled: 未知（允许地理信息？）
     //iteration: 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
 
-	public class User
+	public class User:ModelBase
 	{
-        static private Database db = DatabaseFactory.CreateDatabase();
-
-		public User()
+        public User()
 		{}
 
 		#region Model

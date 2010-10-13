@@ -8,7 +8,7 @@ namespace Sinawler.Model
 	/// <summary>
 	/// ¿‡tags°£
 	/// </summary>
-	public class tags
+    public class tags : ModelBase
 	{
 		public tags()
 		{}

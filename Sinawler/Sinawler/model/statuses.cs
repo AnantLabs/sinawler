@@ -50,10 +50,8 @@ namespace Sinawler.Model
         </status>
     */
 
-    public class Status
+    public class Status : ModelBase
 	{
-        static private Database db = DatabaseFactory.CreateDatabase();
-
         public Status()
 		{}
 

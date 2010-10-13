@@ -13,10 +13,8 @@ namespace Sinawler.Model
     //arg_name: 参数名称
     //arg_value: 参数值
 
-	public class SysArg
+    public class SysArg : ModelBase
 	{
-        static private Database db = DatabaseFactory.CreateDatabase();
-
         public SysArg()
 		{}
 
