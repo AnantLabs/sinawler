@@ -12,6 +12,7 @@ using System.IO;
 using System.Collections.Specialized;
 using System.Text.RegularExpressions;
 using System.Text;
+using Sinawler;
 
 namespace Sina.Api
 {

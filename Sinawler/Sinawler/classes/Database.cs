@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Data.OracleClient;
+using Sinawler;
 
 /// <summary>
 /// 数据库访问基类

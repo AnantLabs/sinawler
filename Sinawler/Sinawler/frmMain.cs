@@ -39,7 +39,7 @@ namespace Sinawler
             if (settings == null)
             {
                 MessageBox.Show("读取配置文件时发生错误，将加载默认值。", "新浪微博爬虫");
-                settings = new SettingItems();
+                settings = AppSettings.LoadDefault();
             }
             ShowSettings(settings);
         }
@@ -173,7 +173,7 @@ namespace Sinawler
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
+            if (!btnStartByCurrent.Enabled && !btnStartBySearch.Enabled && !btnStartByLast.Enabled)
             {
                 robot.Suspending = true;    //先暂停
                 if (MessageBox.Show( "爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
@@ -312,6 +312,7 @@ namespace Sinawler
                 {
                     btnStartByCurrent.Enabled = false;
                     btnStartByCurrent.Text = "正在停止，请稍候...";
+                    btnPauseContinue.Enabled = false;
                     robot.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
@@ -323,6 +324,8 @@ namespace Sinawler
                     btnStartByCurrent.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
+                    btnPauseContinue.Text = "暂停";
+                    btnPauseContinue.Enabled = true;
                     oAsyncWorker.RunWorkerAsync();
                 }
             }
@@ -359,6 +362,7 @@ namespace Sinawler
                 {
                     btnStartBySearch.Enabled = false;
                     btnStartBySearch.Text = "正在停止，请稍候...";
+                    btnPauseContinue.Enabled = false;
                     robot.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
@@ -370,6 +374,8 @@ namespace Sinawler
                     btnStartBySearch.Text = "停止爬行";
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
+                    btnPauseContinue.Text = "暂停";
+                    btnPauseContinue.Enabled = true;
                     oAsyncWorker.RunWorkerAsync();
                 }
             }
@@ -406,6 +412,7 @@ namespace Sinawler
                 {
                     btnStartByLast.Enabled = false;
                     btnStartByLast.Text = "正在停止，请稍候...";
+                    btnPauseContinue.Enabled = false;
                     robot.AsyncCancelled = true;
                     oAsyncWorker.CancelAsync();
                 }
@@ -417,6 +424,8 @@ namespace Sinawler
                     btnStartByLast.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
+                    btnPauseContinue.Text = "暂停";
+                    btnPauseContinue.Enabled = true;
                     oAsyncWorker.RunWorkerAsync();
                 }
             }
@@ -445,6 +454,11 @@ namespace Sinawler
 
         private void CompleteWork(Object sender, RunWorkerCompletedEventArgs e)
         {
+            if (e.Error != null)
+            {
+                MessageBox.Show(this, e.Error.Message);
+                return;
+            }
             robot.Initialize();
             lblStatusMessage.Text = "停止。";
             btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
@@ -456,21 +470,10 @@ namespace Sinawler
             rdNoPreLoad.Enabled = true;
             rdPreLoadUID.Enabled = true;
             rdPreLoadAllUID.Enabled = true;
-            if (e.Error != null)
-            {
-                MessageBox.Show( this, e.Error.Message );
-                return;
-            }
-            if (e.Cancelled)
-            {
-                //Cancelled
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
-            }
-            else
-            {
-                //Completed...
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
-            }
+            btnPauseContinue.Enabled = false;
+            btnPauseContinue.Text = "暂停/停止";
+            
+            MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
             oAsyncWorker = null;
         }
 
@@ -560,6 +563,15 @@ namespace Sinawler
             rdPreLoadUID.Checked = !rdPreLoadAllUID.Checked;
             if (rdPreLoadAllUID.Checked)
                 robot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_UID;
+        }
+
+        private void btnPauseContinue_Click(object sender, EventArgs e)
+        {
+            if (btnPauseContinue.Text == "暂停")
+                btnPauseContinue.Text = "继续";
+            else
+                btnPauseContinue.Text = "暂停";
+            robot.Suspending = !robot.Suspending;
         }
     }
 }

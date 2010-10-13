@@ -23,13 +23,12 @@ namespace Sinawler
         private LinkedList<long> lstWaitingUID = new LinkedList<long>();     //等待爬行的UID队列
         private int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
-        private int iPreLoadQueue = 1;       //是否从数据库中预加载用户队列。默认为“否”
+        private int iPreLoadQueue = (int)(EnumPreLoadQueue.NO_PRELOAD);       //是否从数据库中预加载用户队列。默认为“否”
         private bool blnSuspending = false;         //是否暂停，默认为“否”
 
         private SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
 
-        //用于进度条的变量值
-        private int iProMax = 100;
+        private int iInitQueueLength = 100;          //初始队列长度
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public Robot ( SinaApiService oAPI )
@@ -58,9 +57,9 @@ namespace Sinawler
         public int QueueLength
         { set { iQueueLength = value; } }
 
-        public int ProgressMax
+        public int InitQueueLength
         {
-            get { return iProMax; }
+            get { return iInitQueueLength; }
         }
 
         public EnumPreLoadQueue PreLoadQueue
@@ -127,7 +126,7 @@ namespace Sinawler
 
             if (dtUID != null)
             {
-                iProMax = dtUID.Rows.Count - 1;
+                iInitQueueLength = dtUID.Rows.Count;
                 long lUID;
                 int i;
                 for (i = 0; i < dtUID.Rows.Count && lstWaitingUID.Count < iQueueLength; i++)
@@ -138,7 +137,7 @@ namespace Sinawler
                     if (!lstWaitingUID.Contains( lUID ))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将用户" + lUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%";
+                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：将用户" + lUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + QueueBuffer.Count.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%";
                         bwAsync.ReportProgress( 5 );
                         Thread.Sleep( 5 );
                         lstWaitingUID.AddLast( lUID );
@@ -157,7 +156,7 @@ namespace Sinawler
                         QueueBuffer.Enqueue( lUID );
                         ++iLengthInDB;
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：内存队列已满，将用户" + lUID.ToString() + "加入数据库队列；数据库队列中有" + iLengthInDB.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iProMax)).ToString() + "%";
+                        strLog = DateTime.Now.ToString() + "  " + "初始化用户队列：内存队列已满，将用户" + lUID.ToString() + "加入数据库队列；数据库队列中有" + iLengthInDB.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%";
                         bwAsync.ReportProgress( 5 );
                         Thread.Sleep( 5 );
                     }
@@ -643,9 +642,6 @@ namespace Sinawler
             //初始化相应变量
             blnAsyncCancelled = false;
             if (lstWaitingUID != null) lstWaitingUID.Clear();
-
-            //初始队列长度
-            iProMax = AllUID.ItemsCount;
 
             //清空数据库队列缓存
             QueueBuffer.Clear();

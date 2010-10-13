@@ -2,20 +2,22 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-
-public class DatabaseFactory
+namespace Sinawler
 {
-    public static Database CreateDatabase()
+    public class DatabaseFactory
     {
-        Database db;
-        SettingItems settings=AppSettings.LoadDefault();
-        string strDBType = settings.DBType;
+        public static Database CreateDatabase()
+        {
+            Database db;
+            SettingItems settings = AppSettings.LoadDefault();
+            string strDBType = settings.DBType;
 
-        if (strDBType == "SQL Server")
-            db = new SqlDatabase();
-        else
-            db = new OracleDatabase();
+            if (strDBType == "SQL Server")
+                db = new SqlDatabase();
+            else
+                db = new OracleDatabase();
 
-        return db;
+            return db;
+        }
     }
 }

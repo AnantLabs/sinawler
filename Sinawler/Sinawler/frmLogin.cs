@@ -26,14 +26,13 @@ namespace Sinawler
             string strPWD = txtPWD.Text;
             if (!_api.oAuthDesktop(strUserID, strPWD))
             {
-                MessageBox.Show("登录失败。请重试。");
+                MessageBox.Show("登录失败。请重试。","新浪微博爬虫");
                 btnLogin.Enabled = true;
                 btnCancel.Enabled = true;
                 return;
             }
             else
             {
-                //api.statuses_update("这是从我的应用发出的测试微博！此微博表明已从应用登录成功！");
                 this.DialogResult = DialogResult.OK;
             }
         }
