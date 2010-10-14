@@ -11,7 +11,7 @@ namespace Sinawler.Model
     public class user_tag : ModelBase
 	{
 		public user_tag()
-		{}
+        { db = DatabaseFactory.CreateDatabase(); }
 		#region Model
 		private long _uid;
 		private long _tag_id;

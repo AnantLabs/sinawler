@@ -77,8 +77,9 @@
     <Compile Include="API\SinaApiService.cs" />
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
-    <Compile Include="classes\Robot.cs" />
+    <Compile Include="classes\UserRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
+    <Compile Include="classes\StatusRobot.cs" />
     <Compile Include="model\all_uid.cs" />
     <Compile Include="model\model_base.cs" />
     <Compile Include="model\user.cs" />

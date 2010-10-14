@@ -12,6 +12,7 @@ namespace Sinawler.Model
         {
             get
             {
+                db = DatabaseFactory.CreateDatabase();
                 string strSQL = "select count(*) from all_uid";
                 return db.CountByExecuteSQLSelect( strSQL );
             }

@@ -56,7 +56,7 @@ namespace Sinawler.Model
 	public class User:ModelBase
 	{
         public User()
-		{}
+        { db = DatabaseFactory.CreateDatabase(); }
 
 		#region Model
 		private long _uid=0;

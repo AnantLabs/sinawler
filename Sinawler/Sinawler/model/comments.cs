@@ -94,54 +94,7 @@ namespace Sinawler.Model
 		/// 得到一个对象实体
 		/// </summary>
 		public Comment()
-		{
-//            StringBuilder strSql=new StringBuilder();
-//            strSql.Append("select comment_id,content,source_url,source_name,favorited,truncated,created_at,uid,status_id,reply_comment_id ");
-//            strSql.Append(" FROM comments ");
-//            //strSql.Append(" where 条件);
-//            SqlParameter[] parameters = {
-//};
-
-//            DataSet ds = DbHelperSQL.GetDataSet(strSql.ToString(), parameters);
-//            if(ds.Tables[0].Rows.Count>0)
-//            {
-//                comment_id=(long)(ds.Tables[0].Rows[0]["comment_id"]);
-//                content=ds.Tables[0].Rows[0]["content"].ToString();
-//                source_url=ds.Tables[0].Rows[0]["source_url"].ToString();
-//                source_name=ds.Tables[0].Rows[0]["source_name"].ToString();
-//                if(ds.Tables[0].Rows[0]["favorited"].ToString()!="")
-//                {
-//                    if((ds.Tables[0].Rows[0]["favorited"].ToString()=="1")||(ds.Tables[0].Rows[0]["favorited"].ToString().ToLower()=="true"))
-//                    {
-//                        favorited=true;
-//                    }
-//                    else
-//                    {
-//                        favorited=false;
-//                    }
-//                }
-
-//                if(ds.Tables[0].Rows[0]["truncated"].ToString()!="")
-//                {
-//                    if((ds.Tables[0].Rows[0]["truncated"].ToString()=="1")||(ds.Tables[0].Rows[0]["truncated"].ToString().ToLower()=="true"))
-//                    {
-//                        truncated=true;
-//                    }
-//                    else
-//                    {
-//                        truncated=false;
-//                    }
-//                }
-
-//                if(ds.Tables[0].Rows[0]["created_at"].ToString()!="")
-//                {
-//                    created_at=DateTime.Parse(ds.Tables[0].Rows[0]["created_at"].ToString());
-//                }
-//                uid=(long)(ds.Tables[0].Rows[0]["uid"]);
-//                status_id=(long)(ds.Tables[0].Rows[0]["status_id"]);
-//                reply_comment_id=(long)(ds.Tables[0].Rows[0]["reply_comment_id"]);
-//            }
-		}
+        { db = DatabaseFactory.CreateDatabase();}
 
 		/// <summary>
 		/// 数据库中是否存在指定ID的评论

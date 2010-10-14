@@ -25,7 +25,7 @@ namespace Sinawler.Model
 	public class UserRelation:ModelBase
 	{
         public UserRelation()
-		{}
+        { db = DatabaseFactory.CreateDatabase(); }
 
 		#region Model
 		private long _source_uid;

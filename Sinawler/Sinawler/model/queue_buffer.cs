@@ -6,88 +6,126 @@ using System.Collections.Generic;
 
 namespace Sinawler.Model
 {
+    public enum QueueBufferTarget {FOR_USER=1,FOR_STATUS=0};
+
 	/// <summary>
-	/// 类QueueBuffer，当内存中的待爬行的UID队列长度超过5000时，开始使用数据库保存队列。
-    /// 数据库中的队列在内存中的队列的后面，根据enqueue字段排序
+	/// 类QueueBuffer，当内存中的待爬行的UID队列长度超过指定长度时，开始使用数据库保存队列。
+    /// 数据库中分别有用于用户机器人和微博机器人的两个队列表，具体操作哪个，由构造函数中的参数指明
+    /// 数据库中的队列在内存中的队列的后面，根据enqueue_time字段排序
     /// 此类不可实例化
     /// 可通过此类提供的静态方法做出入队列操作，或调用Add方法、Remove方法添加、删除指定节点
 	/// </summary>
     public class QueueBuffer : ModelBase
 	{
+        private QueueBufferTarget _target=QueueBufferTarget.FOR_USER;
+
         #region  成员方法
+        ///构造函数
+        ///<param name="target">要操作的目标</param>
+        public QueueBuffer(QueueBufferTarget target)
+        {
+            _target = target;
+            db = DatabaseFactory.CreateDatabase();
+        }
 
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		static public bool Contains(long uid)
+		public bool Contains(long uid)
 		{
-            int count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer where uid="+uid.ToString() );
+            int count;
+            if (_target == QueueBufferTarget.FOR_USER)
+                count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_user where uid="+uid.ToString() );
+            else
+                count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_status where uid=" + uid.ToString() );
             return count > 0;
 		}
 
         /// <summary>
 		/// 一个UID入队
 		/// </summary>
-		static public void Enqueue(long uid)
+		public void Enqueue(long uid)
 		{
             Hashtable htValues = new Hashtable();
             htValues.Add( "uid", uid );
             htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
-            db.Insert( "queue_buffer", htValues );
+            if (_target == QueueBufferTarget.FOR_USER)
+                db.Insert( "queue_buffer_for_user", htValues );
+            else
+                db.Insert( "queue_buffer_for_status", htValues );
 		}
 
 		/// <summary>
 		/// 队头UID出队
 		/// </summary>
-		static public long Dequeue()
+		public long Dequeue()
 		{
             //先获取头节点
-            DataRow dr = db.GetDataRow( "select top 1 uid from queue_buffer order by enqueue_time" );
+            DataRow dr;
+            if (_target == QueueBufferTarget.FOR_USER)
+                dr = db.GetDataRow( "select top 1 uid from queue_buffer_for_user order by enqueue_time" );
+            else
+                dr = db.GetDataRow( "select top 1 uid from queue_buffer_for_status order by enqueue_time" );
             if (dr == null) return 0;
             long lUid = Convert.ToInt64(dr["uid"]);
 
             //再删除头节点
-            db.CountByExecuteSQL( "delete from enqueue_buffer where uid=" + lUid.ToString() );
+            if (_target == QueueBufferTarget.FOR_USER)
+                db.CountByExecuteSQL( "delete from queue_buffer_for_user where uid=" + lUid.ToString() );
+            else
+                db.CountByExecuteSQL( "delete from queue_buffer_for_status where uid=" + lUid.ToString() );
             return lUid;
 		}
 
         /// <summary>
         /// 增加指定节点
         /// </summary>
-        static public void Add(long uid, string enqueue_time)
+        public void Add(long uid, string enqueue_time)
         {
             Hashtable htValues = new Hashtable();
             htValues.Add( "uid", uid );
             htValues.Add( "enqueue_time", "'" + enqueue_time + "'" );
-            db.Insert( "queue_buffer", htValues );
+            if (_target == QueueBufferTarget.FOR_USER)
+                db.Insert( "queue_buffer_for_user", htValues );
+            else
+                db.Insert( "queue_buffer_for_status", htValues );
         }
 
         /// <summary>
         /// 删除指定节点
         /// </summary>
-        static public void Remove (long uid)
+        public void Remove (long uid)
         {
-            db.CountByExecuteSQL( "delete from enqueue_buffer where uid=" + uid.ToString() );
+            if (_target == QueueBufferTarget.FOR_USER)
+                db.CountByExecuteSQL( "delete from queue_buffer_for_user where uid=" + uid.ToString() );
+            else
+                db.CountByExecuteSQL( "delete from queue_buffer_for_status where uid=" + uid.ToString() );
         }
 
         /// <summary>
         /// 清除数据
         /// </summary>
-        static public void Clear ()
+        public void Clear ()
         {
-            db.CountByExecuteSQL( "delete from queue_buffer" );
+            if (_target == QueueBufferTarget.FOR_USER)
+                db.CountByExecuteSQL( "delete from queue_buffer_for_user" );
+            else
+                db.CountByExecuteSQL( "delete from queue_buffer_for_status" );
         }
 
-        static public int Count
+        public int Count
         { 
             get 
             {
-                DataRow dr = db.GetDataRow( "select count(uid) as cnt from queue_buffer" );
-                if (dr == null) return 0;
-                else return Convert.ToInt32(dr["cnt"]);
+                int count=0;
+                if (_target == QueueBufferTarget.FOR_USER)
+                    count = db.CountByExecuteSQLSelect( "select count(uid) as cnt from queue_buffer_for_user" );
+                else
+                    count = db.CountByExecuteSQLSelect( "select count(uid) as cnt from queue_buffer_for_status" );
+                if (count == -1) return 0;
+                else return count;
             }
         }
 		#endregion  成员方法
 	}
 }
-

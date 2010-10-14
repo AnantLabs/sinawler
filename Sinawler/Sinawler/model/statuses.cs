@@ -53,7 +53,7 @@ namespace Sinawler.Model
     public class Status : ModelBase
 	{
         public Status()
-		{}
+        { db = DatabaseFactory.CreateDatabase(); }
 
 		#region Model
 		private long _status_id;
@@ -224,6 +224,7 @@ namespace Sinawler.Model
 
 		static public bool Exists(long lStatusID)
 		{
+            db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select status_id from statuses where status_id=" + lStatusID.ToString() );
             return count > 0;
 		}
@@ -233,6 +234,7 @@ namespace Sinawler.Model
         /// </summary>
         static public void NewIterate ()
         {
+            db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL( "update statuses set iteration=iteration+1" );
         }
 

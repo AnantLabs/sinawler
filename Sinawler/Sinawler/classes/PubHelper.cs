@@ -7,6 +7,8 @@ using Sina.Api;
 
 namespace Sinawler
 {
+    public enum EnumPreLoadQueue { NO_PRELOAD = 1, PRELOAD_UID = 2, PRELOAD_ALL_UID = 3 };
+
     //此类用于实现一些公用的、常用的处理函数
     class PubHelper
     {

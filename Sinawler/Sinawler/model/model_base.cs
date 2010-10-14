@@ -6,7 +6,7 @@ namespace Sinawler.Model
 {
     public class ModelBase
     {
-        static protected Database db = DatabaseFactory.CreateDatabase();
+        protected Database db;
 
         public void ReLoadDBSettings()
         {
