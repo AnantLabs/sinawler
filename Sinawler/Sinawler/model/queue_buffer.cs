@@ -15,9 +15,10 @@ namespace Sinawler.Model
     /// 此类不可实例化
     /// 可通过此类提供的静态方法做出入队列操作，或调用Add方法、Remove方法添加、删除指定节点
 	/// </summary>
-    public class QueueBuffer : ModelBase
+    public class QueueBuffer
 	{
         private QueueBufferTarget _target=QueueBufferTarget.FOR_USER;
+        static Database db = DatabaseFactory.CreateDatabase();
 
         #region  成员方法
         ///构造函数
@@ -25,7 +26,6 @@ namespace Sinawler.Model
         public QueueBuffer(QueueBufferTarget target)
         {
             _target = target;
-            db = DatabaseFactory.CreateDatabase();
         }
 
 		/// <summary>
@@ -125,6 +125,11 @@ namespace Sinawler.Model
                 if (count == -1) return 0;
                 else return count;
             }
+        }
+
+        public void ReLoadDBSettings()
+        {
+            db.LoadSettings();
         }
 		#endregion  成员方法
 	}

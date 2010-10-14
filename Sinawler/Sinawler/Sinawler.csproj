@@ -81,7 +81,6 @@
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="classes\StatusRobot.cs" />
     <Compile Include="model\all_uid.cs" />
-    <Compile Include="model\model_base.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
       <SubType>Code</SubType>

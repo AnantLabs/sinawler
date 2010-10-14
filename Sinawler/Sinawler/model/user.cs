@@ -53,10 +53,12 @@ namespace Sinawler.Model
     //geo_enabled: 未知（允许地理信息？）
     //iteration: 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
 
-	public class User:ModelBase
+	public class User
 	{
+        static Database db = DatabaseFactory.CreateDatabase();
+
         public User()
-        { db = DatabaseFactory.CreateDatabase(); }
+        {  }
 
 		#region Model
 		private long _uid=0;
@@ -671,6 +673,11 @@ namespace Sinawler.Model
             DataSet ds = db.GetDataSet(strSQL);
             if (ds == null) return null;
             else return ds.Tables[0];
+        }
+
+        public void ReLoadDBSettings()
+        {
+            db.LoadSettings();
         }
 
 		#endregion  成员方法

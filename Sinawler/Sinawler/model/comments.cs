@@ -19,8 +19,10 @@ namespace Sinawler.Model
         + <status>
     </comment>
     */
-    public class Comment : ModelBase
+    public class Comment
 	{
+        static Database db = DatabaseFactory.CreateDatabase();
+
         #region Model
 
 		private long _comment_id;
@@ -94,7 +96,7 @@ namespace Sinawler.Model
 		/// 得到一个对象实体
 		/// </summary>
 		public Comment()
-        { db = DatabaseFactory.CreateDatabase();}
+        { }
 
 		/// <summary>
 		/// 数据库中是否存在指定ID的评论
@@ -135,6 +137,11 @@ namespace Sinawler.Model
             catch
             { return; }
 		}
+
+        public void ReLoadDBSettings()
+        {
+            db.LoadSettings();
+        }
 
 		#endregion  成员方法
 	}

@@ -22,10 +22,12 @@ namespace Sinawler.Model
     //relation_state: 关系状态，1为成立，0为不成立，以此记录关系动态变化，默认为1
     //iteration: 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
 
-	public class UserRelation:ModelBase
+	public class UserRelation
 	{
+        static Database db = DatabaseFactory.CreateDatabase();
+
         public UserRelation()
-        { db = DatabaseFactory.CreateDatabase(); }
+        { }
 
 		#region Model
 		private long _source_uid;
@@ -196,6 +198,11 @@ namespace Sinawler.Model
             DataSet ds = db.GetDataSet( strSQL );
             if (ds == null) return null;
             else return ds.Tables[0];
+        }
+
+        public void ReLoadDBSettings()
+        {
+            db.LoadSettings();
         }
 
 		#endregion  成员方法

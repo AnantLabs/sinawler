@@ -8,10 +8,13 @@ namespace Sinawler.Model
 	/// <summary>
 	/// 类tags。
 	/// </summary>
-    public class tags : ModelBase
+    public class tags
 	{
+        static Database db = DatabaseFactory.CreateDatabase();
+
 		public tags()
-        { db = DatabaseFactory.CreateDatabase(); }
+        { }
+
 		#region Model
 		private long _tag_id;
 		private string _tag;
@@ -163,6 +166,11 @@ namespace Sinawler.Model
 			}
 			return null;
 		}
+
+        public void ReLoadDBSettings()
+        {
+            db.LoadSettings();
+        }
 
 		#endregion  成员方法
 	}

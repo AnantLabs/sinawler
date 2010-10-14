@@ -50,10 +50,12 @@ namespace Sinawler.Model
         </status>
     */
 
-    public class Status : ModelBase
+    public class Status
 	{
+        static Database db = DatabaseFactory.CreateDatabase();
+
         public Status()
-        { db = DatabaseFactory.CreateDatabase(); }
+        { }
 
 		#region Model
 		private long _status_id;
@@ -293,6 +295,11 @@ namespace Sinawler.Model
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr[0] );
+        }
+
+        public void ReLoadDBSettings()
+        {
+            db.LoadSettings();
         }
 
 		#endregion  成员方法

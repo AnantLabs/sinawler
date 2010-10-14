@@ -13,8 +13,10 @@ namespace Sinawler.Model
     //arg_name: 参数名称
     //arg_value: 参数值
 
-    public class SysArg : ModelBase
+    public class SysArg
 	{
+        static Database db = DatabaseFactory.CreateDatabase();
+
         public SysArg()
 		{}
 
@@ -46,7 +48,6 @@ namespace Sinawler.Model
 		/// </summary>
 		static public void SetCurrentUID(long lUID)
 		{
-            db = DatabaseFactory.CreateDatabase();
             string strSQL="update sys_args set arg_value='"+lUID.ToString()+"' where arg_name='current_uid'";
             db.CountByExecuteSQL(strSQL);
 		}
@@ -56,7 +57,6 @@ namespace Sinawler.Model
         /// </summary>
         static public long GetCurrentUID ()
         {
-            db = DatabaseFactory.CreateDatabase();
             string strSQL = "select arg_value from sys_args where arg_name='current_uid'";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
