@@ -11,125 +11,20 @@ using System.Data;
 
 namespace Sinawler
 {
-    class UserRobot
+    class UserRobot:RobotBase
     {
-        private SinaApiService api;
-        private bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
-        private string strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_user.log";             //日志文件
-        private string strLog = "";                 //日志内容
-
-        private LinkedList<long> lstWaitingUID = new LinkedList<long>();     //等待爬行的UID队列
-        private int iQueueLength = 5000;               //内存中队列长度上限，默认5000
-
-        private int iPreLoadQueue = (int)(EnumPreLoadQueue.NO_PRELOAD);       //是否从数据库中预加载用户队列。默认为“否”
-        private bool blnSuspending = false;         //是否暂停，默认为“否”
-
-        private SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
-
-        private int iInitQueueLength = 100;          //初始队列长度
-        private QueueBuffer queueBuffer = new QueueBuffer( QueueBufferTarget.FOR_USER );    //数据库队列缓存
-        private long lCurrentUID = 0;               //当前爬取的用户，随时抛出给StatusRobot
-        BackgroundWorker bwAsync = null;
-
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserRobot ( SinaApiService oAPI )
+        public UserRobot ( SinaApiService oAPI ):base(oAPI)
         {
-            this.api = oAPI;
-
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            iQueueLength = settings.QueueLength;
-
-            crawler = new SinaMBCrawler( this.api );
-        }
-
-        public bool AsyncCancelled
-        {
-            set { blnAsyncCancelled = value; }
-            get { return blnAsyncCancelled; }
-        }
-
-        public string LogFile
-        {
-            set { strLogFile = value; }
-            get { return strLogFile; }
-        }
-
-        public int QueueLength
-        { set { iQueueLength = value; } }
-
-        public int InitQueueLength
-        { get { return iInitQueueLength; } }
-
-        public EnumPreLoadQueue PreLoadQueue
-        {
-            get { return (EnumPreLoadQueue)iPreLoadQueue; }
-            set { iPreLoadQueue = (int)value; }
-        }
-
-        public bool Suspending
-        {
-            get { return blnSuspending; }
-            set { blnSuspending = value; }
-        }
-
-        //重新设置API的接口
-        public SinaApiService SinaAPI
-        { set { api = value; } }
-
-        public long ThrownUID
-        { get { return lCurrentUID; } }
-
-        public BackgroundWorker AsyncWorker
-        { set { bwAsync = value; } }
-
-        //写日志文件，也可增加在文本框中显示日志
-        //oControl参数即为同时要操作的控件
-        public void Actioned ( Object oControl )
-        {
-            //写入日志文件
-            StreamWriter sw = File.AppendText( strLogFile );
-            sw.WriteLine( strLog );
-            sw.Close();
-            sw.Dispose();
-
-            //向文本框中追加
-            Label lblLog = (Label)oControl;
-            lblLog.Text = strLog;
-        }
-
-        /// <summary>
-        /// 从外部获取UID加到自己队列中
-        /// </summary>
-        /// <param name="lUid"></param>
-        public void Enqueue ( long lUID)
-        {
-            if (lstWaitingUID.Contains( lUID ) || queueBuffer.Contains( lUID ))
-            {
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "用户" + lUID.ToString() + "已在队列中...";
-                bwAsync.ReportProgress( 100 );
-            }
-            else
-            {
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "将用户" + lUID + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
-                bwAsync.ReportProgress( 100 );
-                //若内存中已达到上限，则使用数据库队列缓存
-                //否则使用数据库队列缓存
-                if (lstWaitingUID.Count < iQueueLength)
-                    lstWaitingUID.AddLast( lUID );
-                else
-                    queueBuffer.Enqueue( lUID );
-            }
-            Thread.Sleep( 5 );
+            queueBuffer = new QueueBuffer( QueueBufferTarget.FOR_USER );
+            strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_user.log";
         }
 
         /// <summary>
         /// 以指定的UID为起点开始爬行
         /// </summary>
         /// <param name="lUid"></param>
-        public void Start ( long lStartUID )
+        public override void Start ( long lStartUID )
         {
             if (lStartUID == 0) return;
 
@@ -209,6 +104,7 @@ namespace Sinawler
             {
                 if (blnAsyncCancelled) return;
                 while (blnSuspending) Thread.Sleep( 50 );
+                blnOneUserCompleted = false;    //开始新的用户的迭代
                 //将队头取出
                 lCurrentUID = lstWaitingUID.First.Value;
                 lstWaitingUID.RemoveFirst();
@@ -266,62 +162,6 @@ namespace Sinawler
                 Thread.Sleep( 5 );
                 //爬取当前用户的关注的用户ID，记录关系，加入队列
                 LinkedList<long> lstBuffer = crawler.GetFriendsOf( lCurrentUID, -1 );
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬得" + lstBuffer.Count.ToString() + "位关注用户。";
-                bwAsync.ReportProgress( 100 );
-                Thread.Sleep( 5 );
-
-                while (lstBuffer.Count > 0)
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending) Thread.Sleep( 50 );
-                    //若不存在有效关系，增加
-                    if (!UserRelation.Exists( lCurrentUID, lstBuffer.First.Value ))
-                    {
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending) Thread.Sleep( 50 );
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "记录用户" + lCurrentUID.ToString() + "关注用户" + lstBuffer.First.Value.ToString() + "...";
-                        bwAsync.ReportProgress( 100 );
-                        Thread.Sleep( 5 );
-                        UserRelation ur = new UserRelation();
-                        ur.source_uid = lCurrentUID;
-                        ur.target_uid = lstBuffer.First.Value;
-                        ur.relation_state = Convert.ToInt32( RelationState.RelationExists );
-                        ur.iteration = 0;
-                        ur.Add();
-                    }
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending) Thread.Sleep( 50 );
-                    //加入队列
-                    if (lstWaitingUID.Contains( lstBuffer.First.Value ) || queueBuffer.Contains( lstBuffer.First.Value ))
-                    {
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "用户" + lstBuffer.First.Value.ToString() + "已在队列中...";
-                        bwAsync.ReportProgress( 100 );
-                    }
-                    else
-                    {
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
-                        bwAsync.ReportProgress( 100 );
-                        //若内存中已达到上限，则使用数据库队列缓存
-                        //否则使用数据库队列缓存
-                        if (lstWaitingUID.Count < iQueueLength)
-                            lstWaitingUID.AddLast( lstBuffer.First.Value );
-                        else
-                            queueBuffer.Enqueue( lstBuffer.First.Value );
-                    }
-                    Thread.Sleep( 5 );
-                    lstBuffer.RemoveFirst();
-                }
-                if (blnAsyncCancelled) return;
-                while (blnSuspending) Thread.Sleep( 50 );
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "关注用户ID列表...";
-                bwAsync.ReportProgress( 100 );
-                Thread.Sleep( 5 );
-                lstBuffer = crawler.GetFriendsOf( lCurrentUID, 0 );
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬得" + lstBuffer.Count.ToString() + "位关注用户。";
                 bwAsync.ReportProgress( 100 );
@@ -430,64 +270,9 @@ namespace Sinawler
                     Thread.Sleep( 5 );
                     lstBuffer.RemoveFirst();
                 }
-                if (blnAsyncCancelled) return;
-                while (blnSuspending) Thread.Sleep( 50 );
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "的粉丝用户ID列表...";
-                bwAsync.ReportProgress( 100 );
-                Thread.Sleep( 5 );
-                lstBuffer = crawler.GetFollowersOf( lCurrentUID, 0 );
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬得" + lstBuffer.Count.ToString() + "位粉丝。";
-                bwAsync.ReportProgress( 100 );
-                Thread.Sleep( 5 );
-
-                while (lstBuffer.Count > 0)
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending) Thread.Sleep( 50 );
-                    //若不存在有效关系，增加
-                    if (!UserRelation.Exists( lstBuffer.First.Value, lCurrentUID ))
-                    {
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending) Thread.Sleep( 50 );
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "记录用户" + lstBuffer.First.Value.ToString() + "关注用户" + lCurrentUID.ToString() + "...";
-                        bwAsync.ReportProgress( 100 );
-                        Thread.Sleep( 5 );
-                        UserRelation ur = new UserRelation();
-                        ur.source_uid = lstBuffer.First.Value;
-                        ur.target_uid = lCurrentUID;
-                        ur.relation_state = Convert.ToInt32( RelationState.RelationExists );
-                        ur.iteration = 0;
-                        ur.Add();
-                    }
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending) Thread.Sleep( 50 );
-                    //加入队列
-                    if (lstWaitingUID.Contains( lstBuffer.First.Value ) || queueBuffer.Contains( lstBuffer.First.Value ))
-                    {
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "用户" + lstBuffer.First.Value.ToString() + "已在队列中...";
-                        bwAsync.ReportProgress( 100 );
-                    }
-                    else
-                    {
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
-                        bwAsync.ReportProgress( 100 );
-                        //若内存中已达到上限，则使用数据库队列缓存
-                        //否则使用数据库队列缓存
-                        if (lstWaitingUID.Count < iQueueLength)
-                            lstWaitingUID.AddLast( lstBuffer.First.Value );
-                        else
-                            queueBuffer.Enqueue( lstBuffer.First.Value );
-                    }
-                    Thread.Sleep( 5 );
-                    lstBuffer.RemoveFirst();
-                }
                 #endregion
                 //最后再将刚刚爬行完的UID加入队尾，并抛出该UID
+                blnOneUserCompleted = true; //结束一个用户的迭代
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress( 100 );
@@ -507,7 +292,7 @@ namespace Sinawler
             }
         }
 
-        public void Initialize ()
+        public override void Initialize ()
         {
             //初始化相应变量
             blnAsyncCancelled = false;

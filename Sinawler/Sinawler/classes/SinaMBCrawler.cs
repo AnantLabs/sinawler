@@ -8,7 +8,7 @@ using Sinawler.Model;
 namespace Sinawler
 {
     //SinaMBCrawler类是通过新浪微博API从微博中抓取数据的类
-    class SinaMBCrawler
+    public class SinaMBCrawler
     {
         private SinaApiService api;
         ///默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限

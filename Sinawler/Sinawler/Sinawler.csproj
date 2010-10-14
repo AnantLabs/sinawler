@@ -80,6 +80,7 @@
     <Compile Include="classes\UserRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="classes\StatusRobot.cs" />
+    <Compile Include="classes\RobotBase.cs" />
     <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">

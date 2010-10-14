@@ -496,13 +496,24 @@ namespace Sinawler
             //抛给StatusRobot
             if (robotUser.ThrownUID!=0 && !lstQueueUserToStatus.Contains( robotUser.ThrownUID ))
                 lstQueueUserToStatus.AddLast( robotUser.ThrownUID );
-            //获取StatusRobot抛来的
-            if (lstQueueStatusToUser.Count > 0)
+            //完成一个用户的迭代时，获取StatusRobot抛来的。
+            //第一个条件防止进程陷入获取元素增长队列的过程
+            if (robotUser.OneUserCompleted && lstQueueStatusToUser.Count > 0)
             {
                 long lUID = lstQueueStatusToUser.First.Value;
                 if (lUID > 0)
                 {
-                    robotUser.Enqueue( lUID );
+                    if (robotUser.QueueExists( lUID ))
+                    {
+                        //日志
+                        robotUser.LogMessage= DateTime.Now.ToString() + "  " + "用户" + lUID.ToString() + "已在队列中...";
+                    }
+                    else
+                    {
+                        //日志
+                        robotUser.LogMessage = DateTime.Now.ToString() + "  " + "将用户" + lUID.ToString() + "加入队列。内存队列中有" + robotUser.LengthOfQueueInMem.ToString() + "个用户；数据库队列中有" + robotUser.LengthOfQueueInDB.ToString() + "个用户";
+                        robotUser.Enqueue( lUID );
+                    }
                     lstQueueStatusToUser.RemoveFirst();
                 }
             }
@@ -560,13 +571,24 @@ namespace Sinawler
             //抛给UserRobot
             if (robotStatus.ThrownUID!=0 && !lstQueueStatusToUser.Contains( robotStatus.ThrownUID ))
                 lstQueueStatusToUser.AddLast( robotStatus.ThrownUID );
-            //获取UserRobot抛来的
-            if (lstQueueUserToStatus.Count > 0)
+            //完成一个用户的迭代时，获取UserRobot抛来的。
+            //第一个条件防止进程陷入获取元素增长队列的过程
+            if (robotStatus.OneUserCompleted && lstQueueUserToStatus.Count > 0)
             {
                 long lUID = lstQueueUserToStatus.First.Value;
                 if (lUID > 0)
                 {
-                    robotStatus.Enqueue( lUID );
+                    if (robotStatus.QueueExists( lUID ))
+                    {
+                        //日志
+                        robotStatus.LogMessage = DateTime.Now.ToString() + "  " + "用户" + lUID.ToString() + "已在队列中...";
+                    }
+                    else
+                    {
+                        //日志
+                        robotStatus.LogMessage = DateTime.Now.ToString() + "  " + "将用户" + lUID.ToString() + "加入队列。内存队列中有" + robotStatus.LengthOfQueueInMem.ToString() + "个用户；数据库队列中有" + robotStatus.LengthOfQueueInDB.ToString() + "个用户";
+                        robotStatus.Enqueue( lUID );
+                    }
                     lstQueueUserToStatus.RemoveFirst();
                 }
             }
