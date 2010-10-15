@@ -24,8 +24,6 @@ namespace Sinawler.Model
 
 	public class UserRelation
 	{
-        static Database db = DatabaseFactory.CreateDatabase();
-
         public UserRelation()
         { }
 
@@ -92,6 +90,7 @@ namespace Sinawler.Model
 		/// </summary>
         static public bool Exists ( long lSourceUID, long lTargetUID)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select top 1 relation_state from user_relation where source_uid=" + lSourceUID.ToString()+" and target_uid="+lTargetUID.ToString()+" and relation_state=1 order by iteration" );
             return count > 0;
 		}
@@ -101,6 +100,7 @@ namespace Sinawler.Model
         /// </summary>
         static public void NewIterate ()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL("update user_relation set iteration=iteration+1");
         }
 
@@ -111,6 +111,7 @@ namespace Sinawler.Model
 		{
             try
             {
+                Database db = DatabaseFactory.CreateDatabase();
                 Hashtable htValues = new Hashtable();
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
                 htValues.Add( "source_uid", _source_uid );
@@ -130,6 +131,7 @@ namespace Sinawler.Model
         /// </summary>
         public bool GetModel ( long lSourceUID, long lTargetUID)
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select top 1 * from user_relation where source_uid=" + lSourceUID.ToString() + " and target_uid=" + lTargetUID.ToString() + " order by iteration";
 
             DataRow dr = db.GetDataRow( strSQL );
@@ -151,6 +153,7 @@ namespace Sinawler.Model
 		/// </summary>
         static public LinkedList<long> GetFollowingUID(long lSourceUID)
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select target_uid,relation_state from user_relation where source_uid=" + lSourceUID.ToString() + " order by update_time";
             LinkedList<long> lstTargetUID = new LinkedList<long>();
             DataSet ds = db.GetDataSet( strSQL );
@@ -172,6 +175,7 @@ namespace Sinawler.Model
         /// </summary>
         static public LinkedList<long> GetFollowedByUID ( long lTargetUID )
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select source_uid,relation_state from user_relation where target_uid=" + lTargetUID.ToString() + " order by update_time";
             LinkedList<long> lstSourceUID = new LinkedList<long>();
             DataSet ds = db.GetDataSet( strSQL );
@@ -194,15 +198,11 @@ namespace Sinawler.Model
         /// </summary>
         static public DataTable GetAllUIDTable ()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select uid from all_uid order by update_time";
             DataSet ds = db.GetDataSet( strSQL );
             if (ds == null) return null;
             else return ds.Tables[0];
-        }
-
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
         }
 
 		#endregion  成员方法

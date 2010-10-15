@@ -52,8 +52,6 @@ namespace Sinawler.Model
 
     public class Status
 	{
-        static Database db = DatabaseFactory.CreateDatabase();
-
         public Status()
         { }
 
@@ -226,6 +224,7 @@ namespace Sinawler.Model
 
 		static public bool Exists(long lStatusID)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select status_id from statuses where status_id=" + lStatusID.ToString() );
             return count > 0;
@@ -236,6 +235,7 @@ namespace Sinawler.Model
         /// </summary>
         static public void NewIterate ()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL( "update statuses set iteration=iteration+1" );
         }
@@ -247,6 +247,7 @@ namespace Sinawler.Model
 		{
             try
             {
+                Database db = DatabaseFactory.CreateDatabase();
                 Hashtable htValues = new Hashtable();
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
                 htValues.Add( "status_id", _status_id );
@@ -291,15 +292,11 @@ namespace Sinawler.Model
         /// </summary>
         static public long GetLastStatusIDOf(long lUid)
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select top 1 status_id from statuses where uid="+lUid.ToString()+" order by created_at desc";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr[0] );
-        }
-
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
         }
 
 		#endregion  成员方法

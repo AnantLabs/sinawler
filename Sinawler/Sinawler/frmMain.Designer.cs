@@ -90,10 +90,12 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
-            this.lblUserMessage = new System.Windows.Forms.Label();
-            this.btnPost = new System.Windows.Forms.Button();
-            this.lblStatusTitle = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.lblUserMessage = new System.Windows.Forms.Label();
+            this.lblStatusTitle = new System.Windows.Forms.Label();
+            this.btnPost = new System.Windows.Forms.Button();
+            this.lblUserToStatus = new System.Windows.Forms.Label();
+            this.lblStatusToUser = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -439,7 +441,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point( 453, 601 );
+            this.btnExit.Location = new System.Drawing.Point( 453, 631 );
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size( 170, 23 );
             this.btnExit.TabIndex = 11;
@@ -748,46 +750,18 @@
             // 
             // grpStatus
             // 
+            this.grpStatus.Controls.Add( this.lblStatusToUser );
+            this.grpStatus.Controls.Add( this.lblUserToStatus );
             this.grpStatus.Controls.Add( this.lblStatusMessage );
             this.grpStatus.Controls.Add( this.lblUserMessage );
             this.grpStatus.Controls.Add( this.lblStatusTitle );
             this.grpStatus.Controls.Add( this.lblUserTitle );
             this.grpStatus.Location = new System.Drawing.Point( 5, 522 );
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size( 827, 66 );
+            this.grpStatus.Size = new System.Drawing.Size( 827, 91 );
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
-            // 
-            // lblUserMessage
-            // 
-            this.lblUserMessage.AutoSize = true;
-            this.lblUserMessage.Location = new System.Drawing.Point( 107, 24 );
-            this.lblUserMessage.Name = "lblUserMessage";
-            this.lblUserMessage.Size = new System.Drawing.Size( 41, 12 );
-            this.lblUserMessage.TabIndex = 17;
-            this.lblUserMessage.Text = "停止。";
-            this.lblUserMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // btnPost
-            // 
-            this.btnPost.Location = new System.Drawing.Point( 212, 601 );
-            this.btnPost.Name = "btnPost";
-            this.btnPost.Size = new System.Drawing.Size( 170, 23 );
-            this.btnPost.TabIndex = 18;
-            this.btnPost.Text = "发一条微博帮忙推广：）3Q";
-            this.btnPost.UseVisualStyleBackColor = true;
-            this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
-            // 
-            // lblStatusTitle
-            // 
-            this.lblStatusTitle.AutoSize = true;
-            this.lblStatusTitle.Location = new System.Drawing.Point( 11, 46 );
-            this.lblStatusTitle.Name = "lblStatusTitle";
-            this.lblStatusTitle.Size = new System.Drawing.Size( 101, 12 );
-            this.lblStatusTitle.TabIndex = 16;
-            this.lblStatusTitle.Text = "微博机器人状态：";
-            this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblStatusMessage
             // 
@@ -799,11 +773,59 @@
             this.lblStatusMessage.Text = "停止。";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblUserMessage
+            // 
+            this.lblUserMessage.AutoSize = true;
+            this.lblUserMessage.Location = new System.Drawing.Point( 107, 24 );
+            this.lblUserMessage.Name = "lblUserMessage";
+            this.lblUserMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblUserMessage.TabIndex = 17;
+            this.lblUserMessage.Text = "停止。";
+            this.lblUserMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblStatusTitle
+            // 
+            this.lblStatusTitle.AutoSize = true;
+            this.lblStatusTitle.Location = new System.Drawing.Point( 11, 46 );
+            this.lblStatusTitle.Name = "lblStatusTitle";
+            this.lblStatusTitle.Size = new System.Drawing.Size( 101, 12 );
+            this.lblStatusTitle.TabIndex = 16;
+            this.lblStatusTitle.Text = "微博机器人状态：";
+            this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // btnPost
+            // 
+            this.btnPost.Location = new System.Drawing.Point( 212, 631 );
+            this.btnPost.Name = "btnPost";
+            this.btnPost.Size = new System.Drawing.Size( 170, 23 );
+            this.btnPost.TabIndex = 18;
+            this.btnPost.Text = "发一条微博帮忙推广：）3Q";
+            this.btnPost.UseVisualStyleBackColor = true;
+            this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
+            // 
+            // lblUserToStatus
+            // 
+            this.lblUserToStatus.AutoSize = true;
+            this.lblUserToStatus.Location = new System.Drawing.Point( 11, 68 );
+            this.lblUserToStatus.Name = "lblUserToStatus";
+            this.lblUserToStatus.Size = new System.Drawing.Size( 275, 12 );
+            this.lblUserToStatus.TabIndex = 18;
+            this.lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：0";
+            // 
+            // lblStatusToUser
+            // 
+            this.lblStatusToUser.AutoSize = true;
+            this.lblStatusToUser.Location = new System.Drawing.Point( 422, 68 );
+            this.lblStatusToUser.Name = "lblStatusToUser";
+            this.lblStatusToUser.Size = new System.Drawing.Size( 275, 12 );
+            this.lblStatusToUser.TabIndex = 19;
+            this.lblStatusToUser.Text = "微博机器人传递给用户机器人的用户队列长度为：0";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size( 837, 646 );
+            this.ClientSize = new System.Drawing.Size( 837, 679 );
             this.Controls.Add( this.btnPost );
             this.Controls.Add( this.grpStatus );
             this.Controls.Add( this.gpSetting );
@@ -907,6 +929,8 @@
         private System.Windows.Forms.Button btnPauseContinue;
         private System.Windows.Forms.Label lblStatusMessage;
         private System.Windows.Forms.Label lblStatusTitle;
+        private System.Windows.Forms.Label lblStatusToUser;
+        private System.Windows.Forms.Label lblUserToStatus;
     }
 }
 

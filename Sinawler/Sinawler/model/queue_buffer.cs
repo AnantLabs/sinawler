@@ -18,8 +18,7 @@ namespace Sinawler.Model
     public class QueueBuffer
 	{
         private QueueBufferTarget _target=QueueBufferTarget.FOR_USER;
-        static Database db = DatabaseFactory.CreateDatabase();
-
+        
         #region  成员方法
         ///构造函数
         ///<param name="target">要操作的目标</param>
@@ -33,6 +32,7 @@ namespace Sinawler.Model
 		/// </summary>
 		public bool Contains(long uid)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             int count;
             if (_target == QueueBufferTarget.FOR_USER)
                 count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_user where uid="+uid.ToString() );
@@ -46,6 +46,7 @@ namespace Sinawler.Model
 		/// </summary>
 		public void Enqueue(long uid)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             Hashtable htValues = new Hashtable();
             htValues.Add( "uid", uid );
             htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
@@ -60,6 +61,7 @@ namespace Sinawler.Model
 		/// </summary>
 		public long Dequeue()
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             //先获取头节点
             DataRow dr;
             if (_target == QueueBufferTarget.FOR_USER)
@@ -82,6 +84,7 @@ namespace Sinawler.Model
         /// </summary>
         public void Add(long uid, string enqueue_time)
         {
+            Database db = DatabaseFactory.CreateDatabase();
             Hashtable htValues = new Hashtable();
             htValues.Add( "uid", uid );
             htValues.Add( "enqueue_time", "'" + enqueue_time + "'" );
@@ -96,6 +99,7 @@ namespace Sinawler.Model
         /// </summary>
         public void Remove (long uid)
         {
+            Database db = DatabaseFactory.CreateDatabase();
             if (_target == QueueBufferTarget.FOR_USER)
                 db.CountByExecuteSQL( "delete from queue_buffer_for_user where uid=" + uid.ToString() );
             else
@@ -107,6 +111,7 @@ namespace Sinawler.Model
         /// </summary>
         public void Clear ()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             if (_target == QueueBufferTarget.FOR_USER)
                 db.CountByExecuteSQL( "delete from queue_buffer_for_user" );
             else
@@ -117,6 +122,7 @@ namespace Sinawler.Model
         { 
             get 
             {
+                Database db = DatabaseFactory.CreateDatabase();
                 int count=0;
                 if (_target == QueueBufferTarget.FOR_USER)
                     count = db.CountByExecuteSQLSelect( "select count(uid) as cnt from queue_buffer_for_user" );
@@ -127,10 +133,6 @@ namespace Sinawler.Model
             }
         }
 
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
-        }
 		#endregion  成员方法
 	}
 }

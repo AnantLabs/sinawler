@@ -55,8 +55,6 @@ namespace Sinawler.Model
 
 	public class User
 	{
-        static Database db = DatabaseFactory.CreateDatabase();
-
         public User()
         {  }
 
@@ -276,6 +274,7 @@ namespace Sinawler.Model
 		/// </summary>
 		static public bool Exists(long lUid)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select uid from users where uid=" + lUid.ToString() );
             return count > 0;
 		}
@@ -285,6 +284,7 @@ namespace Sinawler.Model
         /// </summary>
         static public void NewIterate ()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL("update users set iteration=iteration+1");
         }
 
@@ -295,6 +295,7 @@ namespace Sinawler.Model
 		{
             try
             {
+                Database db = DatabaseFactory.CreateDatabase();
                 Hashtable htValues = new Hashtable();
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
                 htValues.Add( "uid", _uid );
@@ -345,6 +346,7 @@ namespace Sinawler.Model
         {
             try
             {
+                Database db = DatabaseFactory.CreateDatabase();
                 Hashtable htValues = new Hashtable();
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
                 htValues.Add( "screen_name", "'" + _screen_name.Replace( "'", "''" ) + "'" );
@@ -392,6 +394,7 @@ namespace Sinawler.Model
 		/// </summary>
 		public bool GetModel(long lUid)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             StringBuilder strSql = new StringBuilder();
             strSql.Append( "select  top 1 uid,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
             strSql.Append( " FROM users " );
@@ -485,6 +488,7 @@ namespace Sinawler.Model
         /// </summary>
         public bool GetModel ( string strScreenName )
         {
+            Database db = DatabaseFactory.CreateDatabase();
             StringBuilder strSql = new StringBuilder();
             strSql.Append( "select  top 1 uid,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
             strSql.Append( " FROM users " );
@@ -578,6 +582,7 @@ namespace Sinawler.Model
         /// </summary>
         public bool GetModel ( long lUid,string strScreenName )
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSql = "select  top 1 * FROM users where uid="+lUid.ToString()+" and screen_name='" + strScreenName + "'";
 
             DataRow dr = db.GetDataRow( strSql );
@@ -669,15 +674,11 @@ namespace Sinawler.Model
         /// </summary>
         static public DataTable GetCrawedUIDTable()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select uid from users order by update_time";
             DataSet ds = db.GetDataSet(strSQL);
             if (ds == null) return null;
             else return ds.Tables[0];
-        }
-
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
         }
 
 		#endregion  成员方法

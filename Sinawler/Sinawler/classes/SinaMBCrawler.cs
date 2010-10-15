@@ -282,6 +282,90 @@ namespace Sinawler
         }
 
         /// <summary>
+        /// 获取指定ID的微博
+        /// </summary>
+        /// <param name="lStatusID">要获取微博内容的微博ID</param>
+        /// <returns>微博</returns>
+        public Status GetStatus(long lStatusID)
+        {
+            System.Threading.Thread.Sleep( iSleep );
+            string strResult = api.statuses_show( lStatusID );
+            if (strResult == null) return null;
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml( strResult );
+
+            Status status = new Status();
+            XmlNode nodeStatus = xmlDoc.GetElementsByTagName( "status" )[0];
+            foreach (XmlNode node in nodeStatus.ChildNodes)
+            {
+                switch (node.Name.ToLower())
+                {
+                    case "created_at":
+                        status.created_at = PubHelper.ParseDateTime( node.InnerText );
+                        break;
+                    case "id":
+                        status.status_id = Convert.ToInt64( node.InnerText );
+                        break;
+                    case "text":
+                        status.content = node.InnerText;
+                        break;
+                    case "source":
+                        status.source_name = node.InnerText;
+                        status.source_url = node.ChildNodes[0].Attributes["href"].Value;
+                        break;
+                    case "favorited":
+                        if (node.InnerText == "false")
+                            status.favorited = false;
+                        else
+                            status.favorited = true;
+                        break;
+                    case "truncated":
+                        if (node.InnerText == "false")
+                            status.truncated = false;
+                        else
+                            status.truncated = true;
+                        break;
+                    case "geo":
+                        status.geo = node.InnerText;
+                        break;
+                    case "in_reply_to_status_id":
+                        if (node.InnerText == "")
+                            status.in_reply_to_status_id = 0;
+                        else
+                            status.in_reply_to_status_id = Convert.ToInt64( node.InnerText );
+                        break;
+                    case "in_reply_to_user_id":
+                        if (node.InnerText == "")
+                            status.in_reply_to_user_id = 0;
+                        else
+                            status.in_reply_to_user_id = Convert.ToInt64( node.InnerText );
+                        break;
+                    case "in_reply_to_screen_name":
+                        status.in_reply_to_screen_name = node.InnerText;
+                        break;
+                    case "thumbnail_pic":
+                        status.thumbnail_pic = node.InnerText;
+                        break;
+                    case "bmiddle_pic":
+                        status.bmiddle_pic = node.InnerText;
+                        break;
+                    case "original_pic":
+                        status.original_pic = node.InnerText;
+                        break;
+                    case "user":
+                        status.uid = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                        break;
+                    case "retweeted_status":
+                        status.retweeted_status_id = Convert.ToInt64( node.ChildNodes[1].InnerText );
+                        break;
+                }
+            }
+            status.iteration = 0;
+            return status;
+        }
+
+        /// <summary>
         /// 获取指定UID的指定微博ID之后的微博
         /// </summary>
         /// <param name="lUid">要获取微博内容的UID</param>

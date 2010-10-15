@@ -10,9 +10,7 @@ namespace Sinawler.Model
 	/// </summary>
     public class user_tag
 	{
-        static Database db = DatabaseFactory.CreateDatabase();
-
-		public user_tag()
+        public user_tag()
         { }
 		#region Model
 		private long _uid;
@@ -176,11 +174,6 @@ namespace Sinawler.Model
 			}
 			return null;
 		}
-
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
-        }
 
 		#endregion  成员方法
 	}

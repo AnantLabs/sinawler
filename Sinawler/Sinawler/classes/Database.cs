@@ -7,6 +7,7 @@ using System.Data.SqlClient;
 using System.Configuration;
 using System.Data.OracleClient;
 using Sinawler;
+using System.Threading;
 
 /// <summary>
 /// 数据库访问基类
@@ -82,7 +83,21 @@ public abstract class Database : IDisposable
     /// </summary>
     /// <param name="SqlString">Sql语句</param>
     /// <returns>DataRow</returns>
-    public abstract DataRow GetDataRow ( String SqlString );
+    public DataRow GetDataRow ( String SqlString )
+    {
+        DataSet dataset = GetDataSet( SqlString );
+        if (dataset == null) return null;
+        if (dataset.Tables.Count == 0) return null;
+        dataset.CaseSensitive = false;
+        if (dataset.Tables[0].Rows.Count > 0)
+        {
+            return dataset.Tables[0].Rows[0];
+        }
+        else
+        {
+            return null;
+        }
+    }
 
     /// <summary>
     /// 公有方法，执行Sql语句。
@@ -280,36 +295,19 @@ public class SqlDatabase : Database
         try
         {
             Open();
+            //给足够的时间打开连接，否则获取不到dataset——无语……
+            //Thread.Sleep( 10 );
             SqlDataAdapter adapter = new SqlDataAdapter( SqlString, _sql_connection );
             adapter.Fill( dataset );
             Close();
+            //给足够的时间关闭连接，否则异常——无语……
+            //Thread.Sleep( 10 );
         }
-        catch
+        catch(Exception ex)
         {
             dataset = null;
         }
         return dataset;
-    }
-
-    /// <summary>
-    /// 公有方法，获取数据，返回一个DataRow。
-    /// </summary>
-    /// <param name="SqlString">Sql语句</param>
-    /// <returns>DataRow</returns>
-    public override DataRow GetDataRow ( String SqlString )
-    {
-        DataSet dataset = GetDataSet( SqlString );
-        if (dataset == null) return null;
-        if (dataset.Tables.Count == 0) return null;
-        dataset.CaseSensitive = false;
-        if (dataset.Tables[0].Rows.Count > 0)
-        {
-            return dataset.Tables[0].Rows[0];
-        }
-        else
-        {
-            return null;
-        }
     }
 
     /// <summary>
@@ -522,31 +520,14 @@ public class OracleDatabase : Database
     {
         DataSet dataset = new DataSet();
         Open();
+        //给足够的时间打开连接，否则获取不到dataset——无语……
+        Thread.Sleep( 10 );
         OracleDataAdapter adapter = new OracleDataAdapter( SqlString, _oracle_connection );
         adapter.Fill( dataset );
         Close();
+        //给足够的时间关闭连接，否则获取不到dataset——无语……
+        Thread.Sleep( 10 );
         return dataset;
-    }
-
-    /// <summary>
-    /// 公有方法，获取数据，返回一个DataRow。
-    /// </summary>
-    /// <param name="SqlString">Sql语句</param>
-    /// <returns>DataRow</returns>
-    public override DataRow GetDataRow ( String SqlString )
-    {
-        DataSet dataset = GetDataSet( SqlString );
-        if (dataset == null) return null;
-        if (dataset.Tables.Count == 0) return null;
-        dataset.CaseSensitive = false;
-        if (dataset.Tables[0].Rows.Count > 0)
-        {
-            return dataset.Tables[0].Rows[0];
-        }
-        else
-        {
-            return null;
-        }
     }
 
     /// <summary>

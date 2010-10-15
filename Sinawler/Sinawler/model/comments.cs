@@ -21,8 +21,6 @@ namespace Sinawler.Model
     */
     public class Comment
 	{
-        static Database db = DatabaseFactory.CreateDatabase();
-
         #region Model
 
 		private long _comment_id;
@@ -103,6 +101,7 @@ namespace Sinawler.Model
 		/// </summary>
 		static public bool Exists(long lCommentID)
 		{
+            Database db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select comment_id from comments where comment_id=" + lCommentID.ToString() );
             return count > 0;
 		}
@@ -112,6 +111,7 @@ namespace Sinawler.Model
         /// </summary>
         static public void NewIterate ()
         {
+            Database db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL( "update comments set iteration=iteration+1" );
         }
 
@@ -122,6 +122,7 @@ namespace Sinawler.Model
 		{
             try
             {
+                Database db = DatabaseFactory.CreateDatabase();
                 Hashtable htValues = new Hashtable();
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
                 htValues.Add( "comment_id", _comment_id );
@@ -137,11 +138,6 @@ namespace Sinawler.Model
             catch
             { return; }
 		}
-
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
-        }
 
 		#endregion  成员方法
 	}

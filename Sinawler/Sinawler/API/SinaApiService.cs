@@ -168,11 +168,11 @@ namespace Sina.Api
          **********************************************************************************************
          **********************************************************************************************/
         /*获取单条ID的微博信息*/
-        public string statuses_show(string id)
+        public string statuses_show(long id)
         {
             try
             {
-                string url = "http://api.t.sina.com.cn/statuses/show/" + id + "." + Format;
+                string url = "http://api.t.sina.com.cn/statuses/show/" + id.ToString() + "." + Format;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch

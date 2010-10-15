@@ -9,8 +9,7 @@ namespace Sinawler
         public static Database CreateDatabase()
         {
             Database db;
-            SettingItems settings = AppSettings.LoadDefault();
-            string strDBType = settings.DBType;
+            string strDBType = AppSettings.LoadDefault().DBType;
 
             if (strDBType == "SQL Server")
                 db = new SqlDatabase();

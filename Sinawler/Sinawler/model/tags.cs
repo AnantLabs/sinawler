@@ -10,9 +10,7 @@ namespace Sinawler.Model
 	/// </summary>
     public class tags
 	{
-        static Database db = DatabaseFactory.CreateDatabase();
-
-		public tags()
+        public tags()
         { }
 
 		#region Model
@@ -166,11 +164,6 @@ namespace Sinawler.Model
 			}
 			return null;
 		}
-
-        public void ReLoadDBSettings()
-        {
-            db.LoadSettings();
-        }
 
 		#endregion  成员方法
 	}

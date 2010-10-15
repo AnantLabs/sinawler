@@ -327,6 +327,18 @@ namespace Sinawler
                 }
                 if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
+                    //记录原状态
+                    bool userState = robotUser.Suspending;
+                    bool statusState = robotStatus.Suspending;
+                    robotUser.Suspending = true;    //暂停
+                    robotStatus.Suspending = true;    //暂停
+                    if (MessageBox.Show( "您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
+                    {
+                        //恢复状态
+                        robotUser.Suspending = userState;
+                        robotStatus.Suspending = statusState;
+                        return;
+                    }
                     btnStartByCurrent.Enabled = false;
                     btnStartByCurrent.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
@@ -389,6 +401,18 @@ namespace Sinawler
                 }
                 if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
+                    //记录原状态
+                    bool userState = robotUser.Suspending;
+                    bool statusState = robotStatus.Suspending;
+                    robotUser.Suspending = true;    //暂停
+                    robotStatus.Suspending = true;    //暂停
+                    if (MessageBox.Show( "您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
+                    {
+                        //恢复状态
+                        robotUser.Suspending = userState;
+                        robotStatus.Suspending = statusState;
+                        return;
+                    }
                     btnStartBySearch.Enabled = false;
                     btnStartBySearch.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
@@ -451,6 +475,18 @@ namespace Sinawler
                 }
                 if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
+                    //记录原状态
+                    bool userState = robotUser.Suspending;
+                    bool statusState = robotStatus.Suspending;
+                    robotUser.Suspending = true;    //暂停
+                    robotStatus.Suspending = true;    //暂停
+                    if (MessageBox.Show( "您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
+                    {
+                        //恢复状态
+                        robotUser.Suspending = userState;
+                        robotStatus.Suspending = statusState;
+                        return;
+                    }
                     btnStartByLast.Enabled = false;
                     btnStartByLast.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
@@ -494,8 +530,11 @@ namespace Sinawler
         private void UserProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
             //抛给StatusRobot
-            if (robotUser.ThrownUID!=0 && !lstQueueUserToStatus.Contains( robotUser.ThrownUID ))
+            if (robotUser.ThrownUID != 0 && !lstQueueUserToStatus.Contains( robotUser.ThrownUID ))
+            {
                 lstQueueUserToStatus.AddLast( robotUser.ThrownUID );
+                lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：" + lstQueueUserToStatus.Count.ToString();
+            }
             //完成一个用户的迭代时，获取StatusRobot抛来的。
             //第一个条件防止进程陷入获取元素增长队列的过程
             if (robotUser.OneUserCompleted && lstQueueStatusToUser.Count > 0)
@@ -569,8 +608,11 @@ namespace Sinawler
         private void StatusProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
             //抛给UserRobot
-            if (robotStatus.ThrownUID!=0 && !lstQueueStatusToUser.Contains( robotStatus.ThrownUID ))
+            if (robotStatus.ThrownUID != 0 && !lstQueueStatusToUser.Contains( robotStatus.ThrownUID ))
+            {
                 lstQueueStatusToUser.AddLast( robotStatus.ThrownUID );
+                lblStatusToUser.Text = "微博机器人传递给用户机器人的用户队列长度为：" + lstQueueStatusToUser.Count.ToString();
+            }
             //完成一个用户的迭代时，获取UserRobot抛来的。
             //第一个条件防止进程陷入获取元素增长队列的过程
             if (robotStatus.OneUserCompleted && lstQueueUserToStatus.Count > 0)
@@ -664,8 +706,6 @@ namespace Sinawler
             AppSettings.Save( settings );
 
             MessageBox.Show( "设置已保存。启动新的爬虫任务时将使用新的设置。", "新浪微博爬虫" );
-
-            oCurrentUser.ReLoadDBSettings();
         }
 
         private void numQueueLength_ValueChanged ( object sender, EventArgs e )
