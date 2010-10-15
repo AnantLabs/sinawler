@@ -51,6 +51,26 @@ namespace Sinawler
             ShowSettings( settings );
         }
 
+        //关闭窗口时调用
+        private bool CanBeClosed()
+        {
+            if (robotUser != null && robotStatus != null)
+            {
+                if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
+                {
+                    robotUser.Suspending = true;    //先暂停
+                    robotStatus.Suspending = true;    //先暂停
+                    if (MessageBox.Show( "爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
+                    {
+                        robotUser.Suspending = false;
+                        robotStatus.Suspending = false;
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+
         //检查登录状态。若未登录，弹出登录框
         private void CheckLogin ()
         {
@@ -181,23 +201,7 @@ namespace Sinawler
 
         private void btnExit_Click ( object sender, EventArgs e )
         {
-            if (robotUser != null && robotStatus != null)
-            {
-                //if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
-                if(!robotUser.Suspending || !robotStatus.Suspending)
-                {
-                    robotUser.Suspending = true;    //先暂停
-                    robotStatus.Suspending = true;    //先暂停
-                    if (MessageBox.Show("爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo) == DialogResult.No)
-                    {
-                        robotUser.Suspending = false;
-                        robotStatus.Suspending = false;
-                        return;
-                    }
-                }
-            }
-
-            Application.Exit();
+            if (CanBeClosed())  Application.Exit();
         }
 
         private void btnSearchOnline_Click ( object sender, EventArgs e )
@@ -591,6 +595,8 @@ namespace Sinawler
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
             oAsyncWorkerUser = null;
+            lstQueueUserToStatus.Clear();
+            lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：0";
         }
 
         private void StartCrawStatusByCurrentUser ( Object sender, DoWorkEventArgs e )
@@ -668,6 +674,8 @@ namespace Sinawler
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
             oAsyncWorkerStatus = null;
+            lstQueueStatusToUser.Clear();
+            lblStatusToUser.Text = "微博机器人传递给用户机器人的用户队列长度为：0";
         }
 
         private void ShowSettings ( SettingItems settings )
@@ -775,6 +783,11 @@ namespace Sinawler
                 btnPauseContinue.Text = "暂停";
             robotUser.Suspending = !robotUser.Suspending;
             robotStatus.Suspending = !robotStatus.Suspending;
+        }
+
+        private void frmMain_FormClosing ( object sender, FormClosingEventArgs e )
+        {
+            if (!CanBeClosed()) e.Cancel=true;
         }
     }
 }

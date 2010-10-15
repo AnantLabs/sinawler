@@ -222,7 +222,7 @@ namespace Sinawler
                             else
                             {
                                 //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
+                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count.ToString() + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
                                 bwAsync.ReportProgress( 100 );
                                 //若内存中已达到上限，则使用数据库队列缓存
                                 //否则使用数据库队列缓存
@@ -329,7 +329,7 @@ namespace Sinawler
                             else
                             {
                                 //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
+                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count.ToString() + "个用户；数据库队列中有" + queueBuffer.Count.ToString() + "个用户";
                                 bwAsync.ReportProgress( 100 );
                                 //若内存中已达到上限，则使用数据库队列缓存
                                 //否则使用数据库队列缓存

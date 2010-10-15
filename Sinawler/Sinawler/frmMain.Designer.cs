@@ -90,12 +90,12 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
+            this.lblStatusToUser = new System.Windows.Forms.Label();
+            this.lblUserToStatus = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.lblUserMessage = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.lblUserToStatus = new System.Windows.Forms.Label();
-            this.lblStatusToUser = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -763,6 +763,24 @@
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
             // 
+            // lblStatusToUser
+            // 
+            this.lblStatusToUser.AutoSize = true;
+            this.lblStatusToUser.Location = new System.Drawing.Point( 422, 68 );
+            this.lblStatusToUser.Name = "lblStatusToUser";
+            this.lblStatusToUser.Size = new System.Drawing.Size( 275, 12 );
+            this.lblStatusToUser.TabIndex = 19;
+            this.lblStatusToUser.Text = "微博机器人传递给用户机器人的用户队列长度为：0";
+            // 
+            // lblUserToStatus
+            // 
+            this.lblUserToStatus.AutoSize = true;
+            this.lblUserToStatus.Location = new System.Drawing.Point( 11, 68 );
+            this.lblUserToStatus.Name = "lblUserToStatus";
+            this.lblUserToStatus.Size = new System.Drawing.Size( 275, 12 );
+            this.lblUserToStatus.TabIndex = 18;
+            this.lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：0";
+            // 
             // lblStatusMessage
             // 
             this.lblStatusMessage.AutoSize = true;
@@ -803,24 +821,6 @@
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
             // 
-            // lblUserToStatus
-            // 
-            this.lblUserToStatus.AutoSize = true;
-            this.lblUserToStatus.Location = new System.Drawing.Point( 11, 68 );
-            this.lblUserToStatus.Name = "lblUserToStatus";
-            this.lblUserToStatus.Size = new System.Drawing.Size( 275, 12 );
-            this.lblUserToStatus.TabIndex = 18;
-            this.lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：0";
-            // 
-            // lblStatusToUser
-            // 
-            this.lblStatusToUser.AutoSize = true;
-            this.lblStatusToUser.Location = new System.Drawing.Point( 422, 68 );
-            this.lblStatusToUser.Name = "lblStatusToUser";
-            this.lblStatusToUser.Size = new System.Drawing.Size( 275, 12 );
-            this.lblStatusToUser.TabIndex = 19;
-            this.lblStatusToUser.Text = "微博机器人传递给用户机器人的用户队列长度为：0";
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
@@ -840,6 +840,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "新浪微博爬虫";
             this.Load += new System.EventHandler( this.frmMain_Load );
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler( this.frmMain_FormClosing );
             this.grpUserInfo.ResumeLayout( false );
             this.grpUserInfo.PerformLayout();
             this.grpSearchCondition.ResumeLayout( false );
