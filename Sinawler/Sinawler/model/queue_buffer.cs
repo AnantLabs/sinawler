@@ -30,30 +30,48 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Contains(long uid)
+		public bool Contains(long id)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            int count;
-            if (_target == QueueBufferTarget.FOR_USER)
-                count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_user where uid="+uid.ToString() );
-            else
-                count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_status where uid=" + uid.ToString() );
+            int count=0;
+            switch(_target)
+            {
+                case QueueBufferTarget.FOR_USER:
+                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_user where uid="+id.ToString() );
+                    break;
+                case QueueBufferTarget.FOR_STATUS:
+                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_status where uid=" + id.ToString() );
+                    break;
+                case QueueBufferTarget.FOR_COMMENT:
+                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_comment where status_id=" + id.ToString() );
+                    break;
+            }   
             return count > 0;
 		}
 
         /// <summary>
 		/// 一个UID入队
 		/// </summary>
-		public void Enqueue(long uid)
+		public void Enqueue(long id)
 		{
             Database db = DatabaseFactory.CreateDatabase();
             Hashtable htValues = new Hashtable();
-            htValues.Add( "uid", uid );
             htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
-            if (_target == QueueBufferTarget.FOR_USER)
-                db.Insert( "queue_buffer_for_user", htValues );
-            else
-                db.Insert( "queue_buffer_for_status", htValues );
+            switch(_target)
+            {
+                case QueueBufferTarget.FOR_USER:
+                    htValues.Add( "uid", id );
+                    db.Insert( "queue_buffer_for_user", htValues );
+                    break;
+                case QueueBufferTarget.FOR_STATUS:
+                    htValues.Add( "uid", id );
+                    db.Insert( "queue_buffer_for_status", htValues );
+                    break;
+                case QueueBufferTarget.FOR_COMMENT:
+                    htValues.Add( "status_id", id );
+                    db.Insert( "queue_buffer_for_comment", htValues );
+                    break;
+            }
 		}
 
 		/// <summary>

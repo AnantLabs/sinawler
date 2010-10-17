@@ -351,15 +351,16 @@ namespace Sinawler
                     oAsyncWorkerStatus.DoWork += new DoWorkEventHandler( StartCrawStatus );
                     robotStatus.AsyncWorker = oAsyncWorkerStatus;
 
-                    oAsyncWorkerComment = new BackgroundWorker();
-                    oAsyncWorkerComment.WorkerReportsProgress = true;
-                    oAsyncWorkerComment.WorkerSupportsCancellation = true;
-                    oAsyncWorkerComment.ProgressChanged += new ProgressChangedEventHandler(CommentProgressChanged);
-                    oAsyncWorkerComment.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CommentCompleteWork);
-                    oAsyncWorkerComment.DoWork += new DoWorkEventHandler(StartCrawComment);
-                    robotComment.AsyncWorker = oAsyncWorkerComment;
+                    //oAsyncWorkerComment = new BackgroundWorker();
+                    //oAsyncWorkerComment.WorkerReportsProgress = true;
+                    //oAsyncWorkerComment.WorkerSupportsCancellation = true;
+                    //oAsyncWorkerComment.ProgressChanged += new ProgressChangedEventHandler(CommentProgressChanged);
+                    //oAsyncWorkerComment.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CommentCompleteWork);
+                    //oAsyncWorkerComment.DoWork += new DoWorkEventHandler(StartCrawComment);
+                    //robotComment.AsyncWorker = oAsyncWorkerComment;
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                //if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -384,7 +385,7 @@ namespace Sinawler
                     robotComment.AsyncCancelled = true;
                     oAsyncWorkerUser.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
-                    oAsyncWorkerComment.CancelAsync();
+                    //oAsyncWorkerComment.CancelAsync();
                 }
                 else
                 {
@@ -398,7 +399,7 @@ namespace Sinawler
                     btnPauseContinue.Enabled = true;
                     oAsyncWorkerUser.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
-                    oAsyncWorkerComment.RunWorkerAsync();
+                    //oAsyncWorkerComment.RunWorkerAsync();
                 }
             }
         }
@@ -603,6 +604,7 @@ namespace Sinawler
             {
                 lstQueueUserToStatus.AddLast(lCurrentUID);
                 lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：" + lstQueueUserToStatus.Count.ToString();
+                Thread.Sleep(150);
             }
             //完成一个用户的迭代时，获取CommentRobot抛来的评论人UID。
             if (robotUser.OneIDCompleted && lstQueueCommentToUser.Count > 0)
@@ -624,8 +626,21 @@ namespace Sinawler
                     }
                 }
             }
+            Thread.Sleep(150);
+            
+            string strLogFile = robotUser.LogFile;
+            string strLogMessage = robotUser.LogMessage;
+            if(strLogMessage.Trim()!="")
+            {
+                //写入日志文件
+                StreamWriter sw = File.AppendText( strLogFile );
+                sw.WriteLine( strLogMessage );
+                sw.Close();
+                sw.Dispose();
 
-            robotUser.Actioned( lblUserMessage );
+                //显示日志内容
+                lblUserMessage.Text = strLogMessage;
+            }
         }
 
         private void UserCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -672,9 +687,11 @@ namespace Sinawler
             {
                 lstQueueStatusToComment.AddLast(lCurrentSID);
                 lblStatusToComment.Text = "微博机器人传递给评论机器人的微博队列长度为：" + lstQueueStatusToComment.Count.ToString();
+                Thread.Sleep(150);
             }
             //完成一条微博时，获取UserRobot抛来的。
-            if (robotStatus.OneIDCompleted && lstQueueUserToStatus.Count > 0)
+            //if (robotStatus.OneIDCompleted && lstQueueUserToStatus.Count > 0)
+            if (lstQueueUserToStatus.Count > 0)
             {
                 long lUID = lstQueueUserToStatus.First.Value;
                 lstQueueUserToStatus.RemoveFirst();
@@ -693,7 +710,21 @@ namespace Sinawler
                     }
                 }
             }
-            robotStatus.Actioned( lblStatusMessage );
+            Thread.Sleep(150);
+
+            string strLogFile = robotStatus.LogFile;
+            string strLogMessage = robotStatus.LogMessage;
+            if (strLogMessage.Trim() != "")
+            {
+                //写入日志文件
+                StreamWriter sw = File.AppendText( strLogFile );
+                sw.WriteLine( strLogMessage );
+                sw.Close();
+                sw.Dispose();
+
+                //显示日志内容
+                lblStatusMessage.Text = strLogMessage;
+            }
         }
 
         private void StatusCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -740,9 +771,11 @@ namespace Sinawler
             {
                 lstQueueCommentToUser.AddLast(lCurrentUID);
                 lblCommentToUser.Text = "评论机器人传递给用户机器人的用户队列长度为：" + lstQueueCommentToUser.Count.ToString();
+                Thread.Sleep(150);
             }
             //完成一条评论时，获取StatusRobot抛来的。
-            if (robotComment.OneIDCompleted && lstQueueStatusToComment.Count > 0)
+            //if (robotComment.OneIDCompleted && lstQueueStatusToComment.Count > 0)
+            if (lstQueueStatusToComment.Count > 0)
             {
                 long lStatusID = lstQueueStatusToComment.First.Value;
                 lstQueueStatusToComment.RemoveFirst();
@@ -761,7 +794,21 @@ namespace Sinawler
                     }
                 }
             }
-            robotComment.Actioned(lblStatusMessage);
+            Thread.Sleep(150);
+
+            string strLogFile = robotComment.LogFile;
+            string strLogMessage = robotComment.LogMessage;
+            if (strLogMessage.Trim() != "")
+            {
+                //写入日志文件
+                StreamWriter sw = File.AppendText( strLogFile );
+                sw.WriteLine( strLogMessage );
+                sw.Close();
+                sw.Dispose();
+
+                //显示日志内容
+                lblCommentMessage.Text = strLogMessage;
+            }
         }
 
         private void CommentCompleteWork(Object sender, RunWorkerCompletedEventArgs e)

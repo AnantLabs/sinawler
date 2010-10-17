@@ -58,6 +58,7 @@ namespace Sinawler
         public string LogMessage
         {
             set { strLog = value; }
+            get { return strLog; }
         }
 
         public int QueueLength
@@ -90,21 +91,6 @@ namespace Sinawler
 
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
-
-        //写日志文件，也可增加在文本框中显示日志
-        //oControl参数即为同时要操作的控件
-        public void Actioned ( Object oControl )
-        {
-            //写入日志文件
-            StreamWriter sw = File.AppendText( strLogFile );
-            sw.WriteLine( strLog );
-            sw.Close();
-            sw.Dispose();
-
-            //向文本框中追加
-            Label lblLog = (Label)oControl;
-            lblLog.Text = strLog;
-        }
 
         /// <summary>
         /// 从外部调用判断队列中是否存在指定ID

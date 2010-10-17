@@ -688,7 +688,7 @@
             this.tbQueueLength.LargeChange = 100;
             this.tbQueueLength.Location = new System.Drawing.Point(284, 16);
             this.tbQueueLength.Maximum = 100000;
-            this.tbQueueLength.Minimum = 1000;
+            this.tbQueueLength.Minimum = 1;
             this.tbQueueLength.Name = "tbQueueLength";
             this.tbQueueLength.Size = new System.Drawing.Size(367, 42);
             this.tbQueueLength.SmallChange = 100;
@@ -706,7 +706,7 @@
             0,
             0});
             this.numQueueLength.Minimum = new decimal(new int[] {
-            1000,
+            1,
             0,
             0,
             0});
