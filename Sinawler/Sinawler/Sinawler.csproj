@@ -81,7 +81,6 @@
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="classes\StatusRobot.cs" />
     <Compile Include="classes\RobotBase.cs" />
-    <Compile Include="classes\CommentRobot.cs" />
     <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
@@ -128,7 +127,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <None Include="app.config" />
     <BaseApplicationManifest Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
