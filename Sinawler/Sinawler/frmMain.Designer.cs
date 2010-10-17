@@ -90,8 +90,8 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
-            this.lblStatusToUser = new System.Windows.Forms.Label();
-            this.lblUserToStatus = new System.Windows.Forms.Label();
+            this.lblStatusQueueInfo = new System.Windows.Forms.Label();
+            this.lblUserQueueInfo = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.lblUserMessage = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
@@ -441,7 +441,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point( 453, 631 );
+            this.btnExit.Location = new System.Drawing.Point( 453, 648 );
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size( 170, 23 );
             this.btnExit.TabIndex = 11;
@@ -750,36 +750,36 @@
             // 
             // grpStatus
             // 
-            this.grpStatus.Controls.Add( this.lblStatusToUser );
-            this.grpStatus.Controls.Add( this.lblUserToStatus );
+            this.grpStatus.Controls.Add( this.lblStatusQueueInfo );
+            this.grpStatus.Controls.Add( this.lblUserQueueInfo );
             this.grpStatus.Controls.Add( this.lblStatusMessage );
             this.grpStatus.Controls.Add( this.lblUserMessage );
             this.grpStatus.Controls.Add( this.lblStatusTitle );
             this.grpStatus.Controls.Add( this.lblUserTitle );
             this.grpStatus.Location = new System.Drawing.Point( 5, 522 );
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size( 827, 91 );
+            this.grpStatus.Size = new System.Drawing.Size( 827, 111 );
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
             // 
-            // lblStatusToUser
+            // lblStatusQueueInfo
             // 
-            this.lblStatusToUser.AutoSize = true;
-            this.lblStatusToUser.Location = new System.Drawing.Point( 422, 68 );
-            this.lblStatusToUser.Name = "lblStatusToUser";
-            this.lblStatusToUser.Size = new System.Drawing.Size( 275, 12 );
-            this.lblStatusToUser.TabIndex = 19;
-            this.lblStatusToUser.Text = "微博机器人传递给用户机器人的用户队列长度为：0";
+            this.lblStatusQueueInfo.AutoSize = true;
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 89 );
+            this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
+            this.lblStatusQueueInfo.Size = new System.Drawing.Size( 365, 12 );
+            this.lblStatusQueueInfo.TabIndex = 19;
+            this.lblStatusQueueInfo.Text = "微博机器人的内存队列中现有0个用户，数据库队列中现有0个用户。";
             // 
-            // lblUserToStatus
+            // lblUserQueueInfo
             // 
-            this.lblUserToStatus.AutoSize = true;
-            this.lblUserToStatus.Location = new System.Drawing.Point( 11, 68 );
-            this.lblUserToStatus.Name = "lblUserToStatus";
-            this.lblUserToStatus.Size = new System.Drawing.Size( 275, 12 );
-            this.lblUserToStatus.TabIndex = 18;
-            this.lblUserToStatus.Text = "用户机器人传递给微博机器人的用户队列长度为：0";
+            this.lblUserQueueInfo.AutoSize = true;
+            this.lblUserQueueInfo.Location = new System.Drawing.Point( 11, 68 );
+            this.lblUserQueueInfo.Name = "lblUserQueueInfo";
+            this.lblUserQueueInfo.Size = new System.Drawing.Size( 365, 12 );
+            this.lblUserQueueInfo.TabIndex = 18;
+            this.lblUserQueueInfo.Text = "用户机器人的内存队列中现有0个用户，数据库队列中现有0个用户。";
             // 
             // lblStatusMessage
             // 
@@ -813,7 +813,7 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point( 212, 631 );
+            this.btnPost.Location = new System.Drawing.Point( 212, 648 );
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size( 170, 23 );
             this.btnPost.TabIndex = 18;
@@ -825,7 +825,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size( 837, 679 );
+            this.ClientSize = new System.Drawing.Size( 837, 691 );
             this.Controls.Add( this.btnPost );
             this.Controls.Add( this.grpStatus );
             this.Controls.Add( this.gpSetting );
@@ -930,8 +930,8 @@
         private System.Windows.Forms.Button btnPauseContinue;
         private System.Windows.Forms.Label lblStatusMessage;
         private System.Windows.Forms.Label lblStatusTitle;
-        private System.Windows.Forms.Label lblStatusToUser;
-        private System.Windows.Forms.Label lblUserToStatus;
+        private System.Windows.Forms.Label lblStatusQueueInfo;
+        private System.Windows.Forms.Label lblUserQueueInfo;
     }
 }
 

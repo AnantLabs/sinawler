@@ -17,16 +17,14 @@ namespace Sinawler
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
         protected string strLog = "";                 //日志内容
+        protected string strQueueInfo = "";           //等待队列的相关信息
 
         protected LinkedList<long> lstWaitingUID = new LinkedList<long>();     //等待爬行的UID队列
         protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
-        protected int iPreLoadQueue = (int)(EnumPreLoadQueue.NO_PRELOAD);       //是否从数据库中预加载用户队列。默认为“否”
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
 
-        protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
-
-        protected int iInitQueueLength = 100;          //初始队列长度
+        protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化        
         protected QueueBuffer queueBuffer;              //数据库队列缓存
         protected long lCurrentUID = 0;               //当前爬取的用户，随时抛出给StatusRobot
         protected BackgroundWorker bwAsync = null;
@@ -62,23 +60,20 @@ namespace Sinawler
             get { return strLog; }
         }
 
+        public string QueueInfo
+        {
+            set { strQueueInfo = value; }
+            get { return strQueueInfo; }
+        }
+
         public int QueueLength
         { set { iQueueLength = value; } }
-
-        public int InitQueueLength
-        { get { return iInitQueueLength; } }
 
         public int LengthOfQueueInMem
         { get { return lstWaitingUID.Count; } }
 
         public int LengthOfQueueInDB
         { get { return queueBuffer.Count; } }
-
-        public EnumPreLoadQueue PreLoadQueue
-        {
-            get { return (EnumPreLoadQueue)iPreLoadQueue; }
-            set { iPreLoadQueue = (int)value; }
-        }
 
         public bool Suspending
         {
@@ -124,12 +119,6 @@ namespace Sinawler
                     queueBuffer.Enqueue( lUID );
             }
         }
-
-        /// <summary>
-        /// 以指定的UID为起点开始爬行
-        /// </summary>
-        /// <param name="lUid"></param>
-        public virtual void Start ( long lStartUID ){}
 
         public virtual void Initialize (){}
     }
