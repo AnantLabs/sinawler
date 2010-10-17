@@ -28,7 +28,6 @@ namespace Sinawler
         /// </summary>
         public void Start ()
         {   
-            blnOneUserCompleted = true; //设为true，使得用户机器人可以向微博机器传递UID
             while (lstWaitingUID.Count == 0) Thread.Sleep(1);   //若队列为空，则等待
             long lStartUID = lstWaitingUID.First.Value;
             while(true)
@@ -39,7 +38,6 @@ namespace Sinawler
                     if (blnAsyncCancelled) return;
                     Thread.Sleep( 50 );
                 }
-                blnOneUserCompleted = false;    //开始新的用户的迭代
                 //将队头取出
                 lCurrentUID = lstWaitingUID.First.Value;
                 lstWaitingUID.RemoveFirst();
@@ -396,7 +394,6 @@ namespace Sinawler
                 }
                 #endregion
                 //最后再将刚刚爬行完的UID加入队尾
-                blnOneUserCompleted = true; //结束一个用户的迭代
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress( 100 );

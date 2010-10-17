@@ -28,7 +28,6 @@ namespace Sinawler
         protected QueueBuffer queueBuffer;              //数据库队列缓存
         protected long lCurrentUID = 0;               //当前爬取的用户，随时抛出给StatusRobot
         protected BackgroundWorker bwAsync = null;
-        protected bool blnOneUserCompleted = false;     //完成一个用户信息（微博）的爬取，即完成队列中一个元素的一次迭代
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public RobotBase ( SinaApiService oAPI )
@@ -90,9 +89,6 @@ namespace Sinawler
 
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
-
-        public bool OneUserCompleted
-        { get { return blnOneUserCompleted; } }
 
         /// <summary>
         /// 从外部调用判断队列中是否存在指定UID

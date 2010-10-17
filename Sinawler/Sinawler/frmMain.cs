@@ -570,6 +570,7 @@ namespace Sinawler
             }
             robotUser.Initialize();
             lblUserMessage.Text = "停止。";
+            lblUserQueueInfo.Text = "用户机器人的内存队列中现有0个用户，数据库队列中现有0个用户。";
 
             if (oAsyncWorkerStatus == null)  //如果微博机器人也已停止
             {
@@ -638,6 +639,7 @@ namespace Sinawler
             }
             robotStatus.Initialize();
             lblStatusMessage.Text = "停止。";
+            lblStatusQueueInfo.Text = "微博机器人的内存队列中现有0个用户，数据库队列中现有0个用户。";
 
             if (oAsyncWorkerUser == null)  //如果用户机器人也已停止
             {

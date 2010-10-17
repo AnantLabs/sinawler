@@ -77,7 +77,6 @@ namespace Sinawler
                     lUID = Convert.ToInt64( dtUID.Rows[i]["uid"] );
                     if (!lstWaitingUID.Contains( lUID ))
                     {
-
                         lstWaitingUID.AddLast( lUID );
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "将用户" + lUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%";
@@ -131,7 +130,6 @@ namespace Sinawler
                     if (blnAsyncCancelled) return;
                     Thread.Sleep( 50 );
                 }
-                blnOneUserCompleted = false;    //开始新的用户的迭代
                 //将队头取出
                 lCurrentUID = lstWaitingUID.First.Value;
                 lstWaitingUID.RemoveFirst();
@@ -214,8 +212,9 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep( 50 );
                     }
+                    long lQueueFirst = lstBuffer.First.Value;
                     //若不存在有效关系，增加
-                    if (!UserRelation.Exists( lCurrentUID, lstBuffer.First.Value ))
+                    if (!UserRelation.Exists( lCurrentUID, lQueueFirst ))
                     {
                         if (blnAsyncCancelled) return;
                         while (blnSuspending)
@@ -224,7 +223,7 @@ namespace Sinawler
                             Thread.Sleep( 50 );
                         }
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "记录用户" + lCurrentUID.ToString() + "关注用户" + lstBuffer.First.Value.ToString() + "...";
+                        strLog = DateTime.Now.ToString() + "  " + "记录用户" + lCurrentUID.ToString() + "关注用户" + lQueueFirst.ToString() + "...";
                         bwAsync.ReportProgress( 100 );
                         Thread.Sleep( 5 );
                         UserRelation ur = new UserRelation();
@@ -241,10 +240,10 @@ namespace Sinawler
                         Thread.Sleep( 50 );
                     }
                     //加入队列
-                    if (lstWaitingUID.Contains( lstBuffer.First.Value ) || queueBuffer.Contains( lstBuffer.First.Value ))
+                    if (lstWaitingUID.Contains( lQueueFirst ) || queueBuffer.Contains( lQueueFirst ))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "用户" + lstBuffer.First.Value.ToString() + "已在队列中...";
+                        strLog = DateTime.Now.ToString() + "  " + "用户" + lQueueFirst.ToString() + "已在队列中...";
                         bwAsync.ReportProgress( 100 );
                     }
                     else
@@ -252,11 +251,11 @@ namespace Sinawler
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
                         if (lstWaitingUID.Count < iQueueLength)
-                            lstWaitingUID.AddLast( lstBuffer.First.Value );
+                            lstWaitingUID.AddLast( lQueueFirst );
                         else
-                            queueBuffer.Enqueue( lstBuffer.First.Value );
+                            queueBuffer.Enqueue( lQueueFirst );
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lQueueFirst.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
                         strQueueInfo = DateTime.Now.ToString() + "  " + "用户机器人的内存队列中现有" + lstWaitingUID.Count + "个用户，数据库队列中现有" + queueBuffer.Count.ToString() + "个用户。";
                         bwAsync.ReportProgress( 100 );
                     }
@@ -290,8 +289,9 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep( 50 );
                     }
+                    long lQueueFirst = lstBuffer.First.Value;
                     //若不存在有效关系，增加
-                    if (!UserRelation.Exists( lstBuffer.First.Value, lCurrentUID ))
+                    if (!UserRelation.Exists( lQueueFirst, lCurrentUID ))
                     {
                         if (blnAsyncCancelled) return;
                         while (blnSuspending)
@@ -300,7 +300,7 @@ namespace Sinawler
                             Thread.Sleep( 50 );
                         }
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "记录用户" + lstBuffer.First.Value.ToString() + "关注用户" + lCurrentUID.ToString() + "...";
+                        strLog = DateTime.Now.ToString() + "  " + "记录用户" + lQueueFirst.ToString() + "关注用户" + lCurrentUID.ToString() + "...";
                         bwAsync.ReportProgress( 100 );
                         Thread.Sleep( 5 );
                         UserRelation ur = new UserRelation();
@@ -317,10 +317,10 @@ namespace Sinawler
                         Thread.Sleep( 50 );
                     }
                     //加入队列
-                    if (lstWaitingUID.Contains( lstBuffer.First.Value ) || queueBuffer.Contains( lstBuffer.First.Value ))
+                    if (lstWaitingUID.Contains( lQueueFirst ) || queueBuffer.Contains( lQueueFirst ))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "用户" + lstBuffer.First.Value.ToString() + "已在队列中...";
+                        strLog = DateTime.Now.ToString() + "  " + "用户" + lQueueFirst.ToString() + "已在队列中...";
                         bwAsync.ReportProgress( 100 );
                     }
                     else
@@ -328,11 +328,11 @@ namespace Sinawler
                         //若内存中已达到上限，则使用数据库队列缓存
                         //否则使用数据库队列缓存
                         if (lstWaitingUID.Count < iQueueLength)
-                            lstWaitingUID.AddLast( lstBuffer.First.Value );
+                            lstWaitingUID.AddLast( lQueueFirst );
                         else
-                            queueBuffer.Enqueue( lstBuffer.First.Value );
+                            queueBuffer.Enqueue( lQueueFirst );
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lstBuffer.First.Value.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lQueueFirst.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
                         strQueueInfo = DateTime.Now.ToString() + "  " + "用户机器人的内存队列中现有" + lstWaitingUID.Count + "个用户，数据库队列中现有" + queueBuffer.Count.ToString() + "个用户。";
                         bwAsync.ReportProgress( 100 );
                     }
@@ -341,7 +341,6 @@ namespace Sinawler
                 }
                 #endregion
                 //最后再将刚刚爬行完的UID加入队尾，并抛出该UID
-                blnOneUserCompleted = true; //结束一个用户的迭代
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress( 100 );
