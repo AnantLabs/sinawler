@@ -123,7 +123,7 @@ namespace Sinawler
         {
             SettingItems settings=AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            string strResult = api.statuses_update("（"+DateTime.Now.ToString()+"）我正在使用开源应用“新浪微博爬虫v"+System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()+"”。Project页面：http://code.google.com/p/sinawler/");
+            string strResult = api.statuses_update("（"+DateTime.Now.ToString()+"）我正在使用开源应用“新浪微博爬虫Sinawler v"+System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()+"”。Project页面：http://code.google.com/p/sinawler/");
             if (strResult == null) return false;
             else return true;
         }
