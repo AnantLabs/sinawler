@@ -18,18 +18,19 @@ namespace Sinawler
         protected string strLogFile = "";             //日志文件
         protected string strLog = "";                 //日志内容
 
-        protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UID，也可能是StatusID等
+        protected LinkedList<long> lstWaitingUID = new LinkedList<long>();     //等待爬行的UID队列
         protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
+        protected int iPreLoadQueue = (int)(EnumPreLoadQueue.NO_PRELOAD);       //是否从数据库中预加载用户队列。默认为“否”
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
-        protected bool blnOneIDCompleted = false;     //完成队列中一个ID的爬取（用户ID、微博ID、评论ID）
 
         protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
 
         protected int iInitQueueLength = 100;          //初始队列长度
         protected QueueBuffer queueBuffer;              //数据库队列缓存
-        protected long lCurrentID = 0;               //当前爬取的用户或微博ID，随时抛出传递给另外的对象
+        protected long lCurrentUID = 0;               //当前爬取的用户，随时抛出给StatusRobot
         protected BackgroundWorker bwAsync = null;
+        protected bool blnOneUserCompleted = false;     //完成一个用户信息（微博）的爬取，即完成队列中一个元素的一次迭代
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public RobotBase ( SinaApiService oAPI )
@@ -68,10 +69,16 @@ namespace Sinawler
         { get { return iInitQueueLength; } }
 
         public int LengthOfQueueInMem
-        { get { return lstWaitingID.Count; } }
+        { get { return lstWaitingUID.Count; } }
 
         public int LengthOfQueueInDB
         { get { return queueBuffer.Count; } }
+
+        public EnumPreLoadQueue PreLoadQueue
+        {
+            get { return (EnumPreLoadQueue)iPreLoadQueue; }
+            set { iPreLoadQueue = (int)value; }
+        }
 
         public bool Suspending
         {
@@ -79,44 +86,50 @@ namespace Sinawler
             set { blnSuspending = value; }
         }
 
-        public bool OneIDCompleted
-        { get { return blnOneIDCompleted; } }
-
         //重新设置API的接口
         public SinaApiService SinaAPI
         { set { api = value; } }
 
-        public long CurrentID
-        { get { return lCurrentID; } }
+        public long ThrownUID
+        { get { return lCurrentUID; } }
 
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
 
+        public bool OneUserCompleted
+        { get { return blnOneUserCompleted; } }
+
         /// <summary>
-        /// 从外部调用判断队列中是否存在指定ID
+        /// 从外部调用判断队列中是否存在指定UID
         /// </summary>
         /// <param name="lUid"></param>
-        public bool QueueExists(long lID)
+        public bool QueueExists(long lUID)
         {
-            return (lstWaitingID.Contains( lID ) || queueBuffer.Contains( lID ));
+            return (lstWaitingUID.Contains( lUID ) || queueBuffer.Contains( lUID ));
         }
 
         /// <summary>
-        /// 从外部获取ID加到自己队列中
+        /// 从外部获取UID加到自己队列中
         /// </summary>
-        /// <param name="lid"></param>
-        public void Enqueue ( long lID)
+        /// <param name="lUid"></param>
+        public void Enqueue ( long lUID)
         {
-            if (!lstWaitingID.Contains( lID ) && !queueBuffer.Contains( lID ))
+            if (!lstWaitingUID.Contains( lUID ) && !queueBuffer.Contains( lUID ))
             {   
                 //若内存中已达到上限，则使用数据库队列缓存
                 //否则使用数据库队列缓存
-                if (lstWaitingID.Count < iQueueLength)
-                    lstWaitingID.AddLast( lID );
+                if (lstWaitingUID.Count < iQueueLength)
+                    lstWaitingUID.AddLast( lUID );
                 else
-                    queueBuffer.Enqueue( lID );
+                    queueBuffer.Enqueue( lUID );
             }
         }
+
+        /// <summary>
+        /// 以指定的UID为起点开始爬行
+        /// </summary>
+        /// <param name="lUid"></param>
+        public virtual void Start ( long lStartUID ){}
 
         public virtual void Initialize (){}
     }
