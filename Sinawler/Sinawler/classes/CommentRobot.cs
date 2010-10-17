@@ -13,12 +13,13 @@ namespace Sinawler
 {
     class CommentRobot : RobotBase
     {
-        private LinkedList<long> lstWaitingStatusID = new LinkedList<long>();   //等待爬行的微博ID队列
         private long lCommentUID = 0;    //评论人的UID
 
+        public long CurrentUID
+        { get { return lCommentUID; } }
+
         //构造函数，需要传入相应的新浪微博API
-        public CommentRobot(SinaApiService oAPI)
-            : base(oAPI)
+        public CommentRobot(SinaApiService oAPI) : base(oAPI)
         {
             queueBuffer = new QueueBuffer(QueueBufferTarget.FOR_COMMENT);
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
@@ -29,16 +30,12 @@ namespace Sinawler
         /// </summary>
         public void Start()
         {
-            long lStartSID = 0;
-            long lCurrentSID = 0;
-            //获取第一个StatusID，获取到之后，记为StartID，用于比较并确定迭代次数
-            while (lstWaitingID.Count == 0) bwAsync.ReportProgress(0);//触发该事件，从而从微博机器人传递的微博队列中获取队头
-            lStartSID = lstWaitingID.First.Value;
-
+            //不加载用户队列，完全依靠UserRobot传递过来
+            while (lstWaitingID.Count == 0) Thread.Sleep( 1 );   //若队列为空，则等待
+            long lStartSID = lstWaitingID.First.Value;
             //对队列无限循环爬行，直至有操作暂停或停止
-            while(true)
+            while (true)
             {
-                Thread.Sleep( 10 );
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
                 {
@@ -46,13 +43,12 @@ namespace Sinawler
                     Thread.Sleep(50);
                 }
                 //将队头取出
-                lCurrentSID = lstWaitingID.First.Value;
+                long lCurrentSID = lstWaitingID.First.Value;
                 lstWaitingID.RemoveFirst();
                 //从数据库队列缓存中移入元素
                 long lHead = queueBuffer.Dequeue();
                 if (lHead > 0)
                     lstWaitingID.AddLast(lHead);
-                blnOneIDCompleted = false;  //开始新的ID
                 #region 预处理
                 if (lCurrentSID == lStartSID)  //说明经过一次循环迭代
                 {
@@ -66,7 +62,7 @@ namespace Sinawler
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "开始爬行之前增加迭代次数...";
                     bwAsync.ReportProgress(0);
-                    Thread.Sleep(150);
+                    Thread.Sleep(5);
                     Comment.NewIterate();
                 }
                 #endregion
@@ -81,13 +77,13 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取微博" + lCurrentSID.ToString() + "的评论...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(150);
+                Thread.Sleep(5);
                 //爬取当前微博的评论
                 List<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬得" + lstComment.Count.ToString() + "条评论。";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(150);
+                Thread.Sleep(5);
 
                 foreach (Comment comment in lstComment)
                 {
@@ -104,17 +100,16 @@ namespace Sinawler
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "将评论" + lCurrentID.ToString() + "存入数据库...";
                         bwAsync.ReportProgress(0);
-                        Thread.Sleep(150);
+                        Thread.Sleep(5);
                         comment.Add();
                     }
                 }
                 #endregion
-                blnOneIDCompleted = true;  //完成一个ID
                 //最后再将刚刚爬行完的StatusID加入队尾
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentSID.ToString() + "的评论已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(150);
+                Thread.Sleep(5);
                 //若内存中已达到上限，则使用数据库队列缓存
                 if (lstWaitingID.Count < iQueueLength)
                     lstWaitingID.AddLast(lCurrentSID);
@@ -126,7 +121,7 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(150);
+                Thread.Sleep(5);
             }
         }
 

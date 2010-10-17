@@ -22,13 +22,10 @@ namespace Sinawler
         protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
-        protected bool blnOneIDCompleted = false;     //完成队列中一个ID的爬取（用户ID、微博ID、评论ID）
 
         protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
-
-        protected int iInitQueueLength = 100;          //初始队列长度
         protected QueueBuffer queueBuffer;              //数据库队列缓存
-        protected long lCurrentID = 0;               //当前爬取的用户或微博ID，随时抛出传递给另外的对象
+        protected long lCurrentID = 0;               //当前爬取的用户或微博ID，随时抛出传递给另外的机器人，由各子类决定由其暴露的属性名
         protected BackgroundWorker bwAsync = null;
 
         //构造函数，需要传入相应的新浪微博API和主界面
@@ -64,9 +61,6 @@ namespace Sinawler
         public int QueueLength
         { set { iQueueLength = value; } }
 
-        public int InitQueueLength
-        { get { return iInitQueueLength; } }
-
         public int LengthOfQueueInMem
         { get { return lstWaitingID.Count; } }
 
@@ -79,15 +73,9 @@ namespace Sinawler
             set { blnSuspending = value; }
         }
 
-        public bool OneIDCompleted
-        { get { return blnOneIDCompleted; } }
-
         //重新设置API的接口
         public SinaApiService SinaAPI
         { set { api = value; } }
-
-        public long CurrentID
-        { get { return lCurrentID; } }
 
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }

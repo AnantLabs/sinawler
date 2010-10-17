@@ -12,7 +12,7 @@ using System.Resources;
 [assembly: AssemblyCompany("BUCT")]
 [assembly: AssemblyProduct( "Sinawler" )]
 [assembly: AssemblyCopyright("版权所有 (C) 卢罡 2010")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark( "Sizheng@BUCT" )]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
@@ -30,6 +30,6 @@ using System.Resources;
 //      内部版本号
 //      修订号
 //
-[assembly: AssemblyVersion( "2.2.0.5" )]
-[assembly: AssemblyFileVersion( "2.2.0.5" )]
+[assembly: AssemblyVersion( "3.3.0.0" )]
+[assembly: AssemblyFileVersion( "3.3.0.0" )]
 [assembly: NeutralResourcesLanguageAttribute("zh-CHS")]
