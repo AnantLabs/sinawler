@@ -81,7 +81,7 @@ namespace Sinawler
                 //爬取当前微博的评论
                 List<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
                 //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬得" + lstComment.Count.ToString() + "条评论。";
+                strLog = DateTime.Now.ToString() + "  " + "爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。";
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(5);
 

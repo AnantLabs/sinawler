@@ -603,6 +603,7 @@ namespace Sinawler
             if (iTurn == 0)
             {
                 lblUserMessage.Text = robotUser.LogMessage;
+                Application.DoEvents();
             }
             iTurn = 1;
         }
@@ -661,6 +662,7 @@ namespace Sinawler
             if (iTurn == 1)
             {
                 lblStatusMessage.Text = robotStatus.LogMessage;
+                Application.DoEvents();
             }
             iTurn = 2;
         }
@@ -716,6 +718,7 @@ namespace Sinawler
             if (iTurn == 2)
             {
                 lblCommentMessage.Text = robotComment.LogMessage;
+                Application.DoEvents();
             }
             iTurn = 0;
         }

@@ -286,7 +286,7 @@ namespace Sinawler
         /// </summary>
         /// <param name="lStatusID">要获取微博内容的微博ID</param>
         /// <returns>微博</returns>
-        public Status GetStatus(long lStatusID)
+        public Status GetStatus ( long lStatusID )
         {
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.statuses_show( lStatusID );
@@ -508,12 +508,12 @@ namespace Sinawler
                 xmlDoc.LoadXml( strResult );
                 nodes = xmlDoc.GetElementsByTagName( "comment" );
             }
-            lstComments.Sort(CompareComment);
+            lstComments.Sort( CompareComment );
             return lstComments;
         }
 
         //检查请求限制剩余次数，并根据情况调整访问频度
-        public void AdjustFreq()
+        public void AdjustFreq ()
         {
             string strResult = api.check_hits_limit();
             if (strResult == null) return;
@@ -532,16 +532,20 @@ namespace Sinawler
             {
                 while (iResetTimeInSeconds * 1000 / iSleep > iRemainingHits)
                 {
+                    //若已无剩余次数，则等待剩余秒，否则会加到很大，并且会频繁请求，造成被封IP
+                    if (iRemainingHits == 0)
+                        System.Threading.Thread.Sleep( iResetTimeInSeconds * 1000 );
+
                     //增加等待时间
                     iSleep += 200;
 
                     //重新获取信息
                     strResult = api.check_hits_limit();
                     if (strResult == null) return;
-                    xmlDoc.LoadXml(strResult);
+                    xmlDoc.LoadXml( strResult );
 
-                    iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
-                    iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
+                    iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
+                    iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
                 }
             }
             else
