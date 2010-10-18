@@ -90,15 +90,15 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
+            this.lblCommentQueueInfo = new System.Windows.Forms.Label();
+            this.lblStatusQueueInfo = new System.Windows.Forms.Label();
+            this.lblUserQueueInfo = new System.Windows.Forms.Label();
             this.lblCommentMessage = new System.Windows.Forms.Label();
             this.lblCommentTitle = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
             this.lblUserMessage = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.lblUserQueueInfo = new System.Windows.Forms.Label();
-            this.lblStatusQueueInfo = new System.Windows.Forms.Label();
-            this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -769,6 +769,33 @@
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
             // 
+            // lblCommentQueueInfo
+            // 
+            this.lblCommentQueueInfo.AutoSize = true;
+            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 117 );
+            this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
+            this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblCommentQueueInfo.TabIndex = 24;
+            this.lblCommentQueueInfo.Text = "评论机器人的内存队列中有0条微博，数据库队列中有0条微博。";
+            // 
+            // lblStatusQueueInfo
+            // 
+            this.lblStatusQueueInfo.AutoSize = true;
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 99 );
+            this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
+            this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblStatusQueueInfo.TabIndex = 23;
+            this.lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
+            // lblUserQueueInfo
+            // 
+            this.lblUserQueueInfo.AutoSize = true;
+            this.lblUserQueueInfo.Location = new System.Drawing.Point( 11, 81 );
+            this.lblUserQueueInfo.Name = "lblUserQueueInfo";
+            this.lblUserQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblUserQueueInfo.TabIndex = 22;
+            this.lblUserQueueInfo.Text = "用户机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
             // lblCommentMessage
             // 
             this.lblCommentMessage.AutoSize = true;
@@ -828,33 +855,6 @@
             this.btnPost.Text = "发一条微博帮忙推广：）3Q";
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
-            // 
-            // lblUserQueueInfo
-            // 
-            this.lblUserQueueInfo.AutoSize = true;
-            this.lblUserQueueInfo.Location = new System.Drawing.Point( 11, 81 );
-            this.lblUserQueueInfo.Name = "lblUserQueueInfo";
-            this.lblUserQueueInfo.Size = new System.Drawing.Size( 341, 12 );
-            this.lblUserQueueInfo.TabIndex = 22;
-            this.lblUserQueueInfo.Text = "用户机器人的内存队列中有0个用户，数据库队列中有0个用户。";
-            // 
-            // lblStatusQueueInfo
-            // 
-            this.lblStatusQueueInfo.AutoSize = true;
-            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 99 );
-            this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
-            this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
-            this.lblStatusQueueInfo.TabIndex = 23;
-            this.lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
-            // 
-            // lblCommentQueueInfo
-            // 
-            this.lblCommentQueueInfo.AutoSize = true;
-            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 117 );
-            this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
-            this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
-            this.lblCommentQueueInfo.TabIndex = 24;
-            this.lblCommentQueueInfo.Text = "评论机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // frmMain
             // 
