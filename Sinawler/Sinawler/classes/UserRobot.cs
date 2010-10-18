@@ -186,6 +186,12 @@ namespace Sinawler
                     crawler.GetUserInfo( lCurrentID ).Update();
                 }
                 Thread.Sleep(50);
+                //调整请求频度
+                crawler.AdjustFreq();
+                //日志
+                strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
+                bwAsync.ReportProgress( 0 );
+                Thread.Sleep( 50 );
                 #endregion
                 #region 用户关注列表
                 if (blnAsyncCancelled) return;
@@ -262,6 +268,12 @@ namespace Sinawler
                     Thread.Sleep(50);
                     lstBuffer.RemoveFirst();
                 }
+                //调整请求频度
+                crawler.AdjustFreq();
+                //日志
+                strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
+                bwAsync.ReportProgress( 0 );
+                Thread.Sleep( 50 );
                 #endregion
                 #region 用户粉丝列表
                 //爬取当前用户的粉丝的ID，记录关系，加入队列
@@ -350,7 +362,6 @@ namespace Sinawler
                 else
                     queueBuffer.Enqueue( lCurrentID );
                 //调整请求频度
-                //针对用户计算频度
                 crawler.AdjustFreq();
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
