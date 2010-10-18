@@ -62,7 +62,7 @@ namespace Sinawler
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "开始爬行之前增加迭代次数...";
                     bwAsync.ReportProgress(0);
-                    Thread.Sleep(5);
+                    Thread.Sleep(50);
                     Comment.NewIterate();
                 }
                 #endregion
@@ -77,13 +77,13 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取微博" + lCurrentSID.ToString() + "的评论...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
                 //爬取当前微博的评论
                 List<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
 
                 foreach (Comment comment in lstComment)
                 {
@@ -100,7 +100,7 @@ namespace Sinawler
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "将评论" + lCurrentID.ToString() + "存入数据库...";
                         bwAsync.ReportProgress(0);
-                        Thread.Sleep(5);
+                        Thread.Sleep(50);
                         comment.Add();
                     }
                 }
@@ -109,7 +109,7 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentSID.ToString() + "的评论已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
                 //若内存中已达到上限，则使用数据库队列缓存
                 if (lstWaitingID.Count < iQueueLength)
                     lstWaitingID.AddLast(lCurrentSID);
@@ -121,7 +121,7 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
             }
         }
 

@@ -96,6 +96,9 @@
             this.lblUserMessage = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
+            this.lblUserQueueInfo = new System.Windows.Forms.Label();
+            this.lblStatusQueueInfo = new System.Windows.Forms.Label();
+            this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -441,7 +444,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point( 453, 618 );
+            this.btnExit.Location = new System.Drawing.Point( 453, 674 );
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size( 170, 23 );
             this.btnExit.TabIndex = 11;
@@ -750,15 +753,18 @@
             // 
             // grpStatus
             // 
+            this.grpStatus.Controls.Add( this.lblCommentQueueInfo );
+            this.grpStatus.Controls.Add( this.lblStatusQueueInfo );
+            this.grpStatus.Controls.Add( this.lblUserQueueInfo );
             this.grpStatus.Controls.Add( this.lblCommentMessage );
             this.grpStatus.Controls.Add( this.lblCommentTitle );
             this.grpStatus.Controls.Add( this.lblStatusMessage );
             this.grpStatus.Controls.Add( this.lblUserMessage );
             this.grpStatus.Controls.Add( this.lblStatusTitle );
             this.grpStatus.Controls.Add( this.lblUserTitle );
-            this.grpStatus.Location = new System.Drawing.Point( 5, 522 );
+            this.grpStatus.Location = new System.Drawing.Point( 5, 524 );
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size( 827, 82 );
+            this.grpStatus.Size = new System.Drawing.Size( 827, 135 );
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
@@ -815,7 +821,7 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point( 212, 618 );
+            this.btnPost.Location = new System.Drawing.Point( 212, 674 );
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size( 170, 23 );
             this.btnPost.TabIndex = 18;
@@ -823,11 +829,38 @@
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
             // 
+            // lblUserQueueInfo
+            // 
+            this.lblUserQueueInfo.AutoSize = true;
+            this.lblUserQueueInfo.Location = new System.Drawing.Point( 11, 81 );
+            this.lblUserQueueInfo.Name = "lblUserQueueInfo";
+            this.lblUserQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblUserQueueInfo.TabIndex = 22;
+            this.lblUserQueueInfo.Text = "用户机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
+            // lblStatusQueueInfo
+            // 
+            this.lblStatusQueueInfo.AutoSize = true;
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 99 );
+            this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
+            this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblStatusQueueInfo.TabIndex = 23;
+            this.lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
+            // lblCommentQueueInfo
+            // 
+            this.lblCommentQueueInfo.AutoSize = true;
+            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 117 );
+            this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
+            this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblCommentQueueInfo.TabIndex = 24;
+            this.lblCommentQueueInfo.Text = "评论机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size( 837, 661 );
+            this.ClientSize = new System.Drawing.Size( 837, 720 );
             this.Controls.Add( this.btnPost );
             this.Controls.Add( this.grpStatus );
             this.Controls.Add( this.gpSetting );
@@ -934,6 +967,9 @@
         private System.Windows.Forms.Label lblStatusTitle;
         private System.Windows.Forms.Label lblCommentMessage;
         private System.Windows.Forms.Label lblCommentTitle;
+        private System.Windows.Forms.Label lblCommentQueueInfo;
+        private System.Windows.Forms.Label lblStatusQueueInfo;
+        private System.Windows.Forms.Label lblUserQueueInfo;
     }
 }
 

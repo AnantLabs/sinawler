@@ -44,7 +44,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
+                    Thread.Sleep(10);
                 }
                 //将队头取出
                 long lCurrentUID = lstWaitingID.First.Value;
@@ -60,13 +60,13 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
+                        Thread.Sleep(10);
                     }
 
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "开始爬行之前增加迭代次数...";
                     bwAsync.ReportProgress(0);
-                    Thread.Sleep(5);
+                    Thread.Sleep(50);
 
                     Status.NewIterate();
                 }
@@ -76,12 +76,12 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
+                    Thread.Sleep(10);
                 }
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "获取数据库中用户" + lCurrentUID.ToString() + "最新一条微博的ID...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
                 //获取数据库中当前用户最新一条微博的ID
                 lCurrentID = Status.GetLastStatusIDOf( lCurrentUID );
 
@@ -89,18 +89,18 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
+                    Thread.Sleep(10);
                 }
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬取用户" + lCurrentUID.ToString() + "的ID在" + lCurrentID.ToString() + "之后的微博...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
                 //爬取数据库中当前用户最新一条微博的ID之后的微博，存入数据库
                 List<Status> lstStatus = crawler.GetStatusesOfSince(lCurrentUID, lCurrentID);
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬得" + lstStatus.Count.ToString() + "条微博。";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
 
                 foreach (Status status in lstStatus)
                 {
@@ -108,7 +108,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
+                        Thread.Sleep(10);
                     }
                     lCurrentID = status.status_id;
                     if (!Status.Exists(lCurrentID))
@@ -116,7 +116,7 @@ namespace Sinawler
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "将微博" + lCurrentID.ToString() + "存入数据库...";
                         bwAsync.ReportProgress(0);
-                        Thread.Sleep(5);
+                        Thread.Sleep(50);
                         status.Add();
                     }
                     //若该微博有转发，将转发微博ID入队
@@ -125,7 +125,7 @@ namespace Sinawler
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status_id.ToString() + "加入队列等待爬取...";
                         bwAsync.ReportProgress(0);
-                        Thread.Sleep(5);
+                        Thread.Sleep(50);
                         lstRetweetedStatus.AddLast( status.retweeted_status_id );
                     }
                 }
@@ -134,13 +134,13 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "所有"+lstStatus.Count.ToString()+"条微博爬取完毕，共获得"+lstRetweetedStatus.Count.ToString()+"条转发微博。";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
                 if(lstRetweetedStatus.Count>0)
                 {
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "开始爬取获得的" + lstRetweetedStatus.Count.ToString() + "条转发微博...";
                     bwAsync.ReportProgress(0);
-                    Thread.Sleep(5);
+                    Thread.Sleep(50);
                 }
                 while(lstRetweetedStatus.Count>0)
                 {
@@ -148,7 +148,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
+                        Thread.Sleep(10);
                     }
 
                     lCurrentID = lstRetweetedStatus.First.Value;
@@ -164,7 +164,7 @@ namespace Sinawler
                             //日志
                             strLog = DateTime.Now.ToString() + "  " + "将微博" + lCurrentID.ToString() + "存入数据库...";
                             bwAsync.ReportProgress(0);
-                            Thread.Sleep(5);
+                            Thread.Sleep(50);
                             status.Add();
                         }
                         //若该微博有转发，将转发微博ID入队
@@ -173,7 +173,7 @@ namespace Sinawler
                             //日志
                             strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status_id.ToString() + "加入微博队列...";
                             bwAsync.ReportProgress(0);
-                            Thread.Sleep(5);
+                            Thread.Sleep(50);
                             lstRetweetedStatus.AddLast( status.retweeted_status_id );
                         }
                     }
@@ -183,7 +183,7 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
                 //若内存中已达到上限，则使用数据库队列缓存
                 if (lstWaitingID.Count < iQueueLength)
                     lstWaitingID.AddLast( lCurrentUID );
@@ -195,7 +195,7 @@ namespace Sinawler
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
                 bwAsync.ReportProgress(0);
-                Thread.Sleep(5);
+                Thread.Sleep(50);
             }
         }
 
