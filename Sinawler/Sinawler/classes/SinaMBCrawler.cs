@@ -532,6 +532,10 @@ namespace Sinawler
             {
                 while (iResetTimeInSeconds * 1000 / iSleep > iRemainingHits)
                 {
+                    //若已无剩余次数，则等待剩余秒，否则会加到很大，并且会频繁请求，造成被封IP
+                    if (iRemainingHits == 0)
+                        System.Threading.Thread.Sleep( iResetTimeInSeconds * 1000 );
+
                     //增加等待时间
                     iSleep += 200;
 
