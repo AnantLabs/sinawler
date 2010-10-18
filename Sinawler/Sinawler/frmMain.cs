@@ -603,8 +603,8 @@ namespace Sinawler
             if (iTurn == 0)
             {
                 lblUserMessage.Text = robotUser.LogMessage;
-                iTurn = 1;
             }
+            iTurn = 1;
         }
 
         private void UserCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -661,8 +661,8 @@ namespace Sinawler
             if (iTurn == 1)
             {
                 lblStatusMessage.Text = robotStatus.LogMessage;
-                iTurn = 2;
             }
+            iTurn = 2;
         }
 
         private void StatusCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -716,8 +716,8 @@ namespace Sinawler
             if (iTurn == 2)
             {
                 lblCommentMessage.Text = robotComment.LogMessage;
-                iTurn = 0;
             }
+            iTurn = 0;
         }
 
         private void CommentCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
