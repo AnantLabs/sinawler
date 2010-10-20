@@ -4,10 +4,18 @@ using System.Text;
 using System.Threading;
 using System.ComponentModel;
 using Sina.Api;
+using System.Xml;
 
 namespace Sinawler
 {
     public enum EnumPreLoadQueue { NO_PRELOAD = 1, PRELOAD_UID = 2, PRELOAD_ALL_UID = 3 };
+
+    public struct RequestFrequency
+    {
+        public int RemainingHits;
+        public int ResetTimeInSeconds;
+        public int Interval;
+    }
 
     //此类用于实现一些公用的、常用的处理函数
     class PubHelper
@@ -156,6 +164,64 @@ namespace Sinawler
                     strResult.Append( current );
             }
             return strResult.ToString();
+        }
+
+        //检查请求限制剩余次数，并根据情况调整访问频度并返回
+        static public RequestFrequency AdjustFreq(SinaApiService api, int iSleep)
+        {
+            if (iSleep <= 0) iSleep = 3000; //默认值
+
+            RequestFrequency rf;
+            rf.Interval = 3000;
+            rf.RemainingHits = 1000;
+            rf.ResetTimeInSeconds = 3600;
+
+            string strResult = api.check_hits_limit();
+            if (strResult == null) return rf;
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(strResult);
+
+            //string[] strBuffer = PubHelper.ParseDateTime(xmlDoc.GetElementsByTagName("reset-time")[0].InnerText).Split(' ')[0].Split('-');
+            //string strResetTime = strBuffer[0] + "年" + strBuffer[1] + "月" + strBuffer[2] + "日";
+            //int iHourlyLimit = Convert.ToInt32(xmlDoc.GetElementsByTagName("hourly-limit")[0].InnerText);
+            int iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
+            int iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
+
+            //计算
+            //理论上剩余时间可访问次数大于等于实际剩余次数，说明实际剩余次数不够用，将会超限，则加长等待时间
+            if (iResetTimeInSeconds * 1000 / iSleep >= iRemainingHits)
+            {
+                //若已无剩余次数，则等待剩余秒，否则会加到很大，并且会频繁请求，造成被封IP
+                if (iRemainingHits == 0)
+                    System.Threading.Thread.Sleep(iResetTimeInSeconds * 1000);
+
+                while (iResetTimeInSeconds * 1000 / iSleep >= iRemainingHits)
+                {
+                    //增加等待时间
+                    iSleep += 200;
+
+                    //重新获取信息
+                    strResult = api.check_hits_limit();
+                    if (strResult == null) return rf;
+                    xmlDoc.LoadXml(strResult);
+
+                    iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
+                    iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
+                }
+            }
+            else
+            {
+                //剩余时间可访问次数小于剩余次数，说明剩余次数够用，不会超限，则减少等待时间
+                iSleep -= 200;
+                //2010-10-12定为不设下限
+                if (iSleep <= 0) iSleep = 1;
+            }
+
+            rf.Interval = iSleep;
+            rf.RemainingHits = iRemainingHits;
+            rf.ResetTimeInSeconds = iResetTimeInSeconds;
+
+            return rf;
         }
     }
 }

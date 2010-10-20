@@ -24,6 +24,8 @@ namespace Sinawler
         //分别用于两个机器人的线程
         private BackgroundWorker oAsyncWorkerUser = null;
         private BackgroundWorker oAsyncWorkerStatus = null;
+        //调整请求频率的线程
+        private BackgroundWorker oAsyncWorkerFreqAdjust = null;
 
         //爬虫机器人，一个是爬取用户信息的，另一个是爬取微博数据的，分别在两个线程中运行
         private UserRobot robotUser;
@@ -194,7 +196,7 @@ namespace Sinawler
 
         private void btnExit_Click ( object sender, EventArgs e )
         {
-            if (CanBeClosed()) Application.Exit();
+            Application.Exit();
         }
 
         private void btnSearchOnline_Click ( object sender, EventArgs e )
@@ -325,6 +327,11 @@ namespace Sinawler
                     oAsyncWorkerStatus.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StatusCompleteWork );
                     oAsyncWorkerStatus.DoWork += new DoWorkEventHandler( StartCrawStatus );
                     robotStatus.AsyncWorker = oAsyncWorkerStatus;
+
+                    oAsyncWorkerFreqAdjust = new BackgroundWorker();
+                    oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
+                    oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
+                    oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
                 if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
@@ -347,6 +354,7 @@ namespace Sinawler
                     robotStatus.AsyncCancelled = true;
                     oAsyncWorkerUser.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
+                    oAsyncWorkerFreqAdjust.CancelAsync();
                 }
                 else
                 {
@@ -360,6 +368,7 @@ namespace Sinawler
                     btnPauseContinue.Enabled = true;
                     oAsyncWorkerUser.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
+                    oAsyncWorkerFreqAdjust.RunWorkerAsync();
                 }
             }
         }
@@ -399,6 +408,11 @@ namespace Sinawler
                     oAsyncWorkerStatus.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StatusCompleteWork );
                     oAsyncWorkerStatus.DoWork += new DoWorkEventHandler( StartCrawStatus );
                     robotStatus.AsyncWorker = oAsyncWorkerStatus;
+
+                    oAsyncWorkerFreqAdjust = new BackgroundWorker();
+                    oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
+                    oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
+                    oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
                 if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
@@ -421,6 +435,7 @@ namespace Sinawler
                     robotStatus.AsyncCancelled = true;
                     oAsyncWorkerUser.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
+                    oAsyncWorkerFreqAdjust.CancelAsync();
                 }
                 else
                 {
@@ -434,6 +449,7 @@ namespace Sinawler
                     btnPauseContinue.Enabled = true;
                     oAsyncWorkerUser.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
+                    oAsyncWorkerFreqAdjust.RunWorkerAsync();
                 }
             }
         }
@@ -473,6 +489,11 @@ namespace Sinawler
                     oAsyncWorkerStatus.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StatusCompleteWork );
                     oAsyncWorkerStatus.DoWork += new DoWorkEventHandler( StartCrawStatus );
                     robotStatus.AsyncWorker = oAsyncWorkerStatus;
+
+                    oAsyncWorkerFreqAdjust = new BackgroundWorker();
+                    oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
+                    oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
+                    oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
                 if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy)
                 {
@@ -495,6 +516,7 @@ namespace Sinawler
                     robotStatus.AsyncCancelled = true;
                     oAsyncWorkerUser.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
+                    oAsyncWorkerFreqAdjust.CancelAsync();
                 }
                 else
                 {
@@ -508,6 +530,7 @@ namespace Sinawler
                     btnPauseContinue.Enabled = true;
                     oAsyncWorkerUser.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
+                    oAsyncWorkerFreqAdjust.RunWorkerAsync();
                 }
             }
         }
@@ -658,6 +681,20 @@ namespace Sinawler
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
             oAsyncWorkerStatus = null;
+        }
+
+        private void StartAdjustFrequency(Object sender, DoWorkEventArgs e)
+        {
+            int iSleep = 3000;
+            while (true)
+            {
+                RequestFrequency rf = PubHelper.AdjustFreq(api, iSleep);
+                iSleep = rf.Interval;
+                robotUser.SetRequestFrequency(rf);
+                robotStatus.SetRequestFrequency(rf);
+
+                Thread.Sleep(5000);
+            }
         }
 
         private void ShowSettings ( SettingItems settings )
