@@ -106,6 +106,13 @@ namespace Sinawler
             }
         }
 
+        public void SetRequestFrequency(RequestFrequency rf)
+        {
+            crawler.SleepTime = rf.Interval;
+            crawler.RemainingHits = rf.RemainingHits;
+            crawler.ResetTimeInSeconds = rf.ResetTimeInSeconds;
+        }
+
         public virtual void Initialize (){}
     }
 }

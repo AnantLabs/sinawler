@@ -47,7 +47,9 @@ namespace Sinawler.Model
 		static public void SetCurrentUID(long lUID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL="update sys_args set arg_value='"+lUID.ToString()+"' where arg_name='current_uid'";
+            string strSQL = "delete from sys_args where arg_name='current_uid'";
+            db.CountByExecuteSQL(strSQL);
+            strSQL = "insert into sys_args(arg_name,arg_value) values('current_uid','" + lUID.ToString() + "')";
             db.CountByExecuteSQL(strSQL);
 		}
 

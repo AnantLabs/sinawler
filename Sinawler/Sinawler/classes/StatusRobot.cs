@@ -151,8 +151,6 @@ namespace Sinawler
                         Thread.Sleep(10);
                     }
 
-                    //调整请求频度
-                    crawler.AdjustFreq();
                     //日志
                     strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
                     bwAsync.ReportProgress( 0 );
@@ -196,8 +194,7 @@ namespace Sinawler
                     lstWaitingID.AddLast( lCurrentUID );
                 else
                     queueBuffer.Enqueue( lCurrentUID );
-                //调整请求频度
-                crawler.AdjustFreq();
+
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
                 bwAsync.ReportProgress(0);
