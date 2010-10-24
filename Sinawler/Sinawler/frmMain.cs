@@ -328,7 +328,7 @@ namespace Sinawler
                     return;
                 }
 
-                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
+                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null && oAsyncWorkerFreqAdjust == null)
                 {
                     PrepareToStart();
                     oAsyncWorkerUser = new BackgroundWorker();
@@ -358,9 +358,10 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust = new BackgroundWorker();
                     oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
                     oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
+                    oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy || oAsyncWorkerFreqAdjust.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -423,7 +424,7 @@ namespace Sinawler
                     return;
                 }
 
-                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
+                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null && oAsyncWorkerFreqAdjust == null)
                 {
                     PrepareToStart();
                     oAsyncWorkerUser = new BackgroundWorker();
@@ -453,9 +454,10 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust = new BackgroundWorker();
                     oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
                     oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
+                    oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy || oAsyncWorkerFreqAdjust.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -518,7 +520,7 @@ namespace Sinawler
                     return;
                 }
 
-                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
+                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null && oAsyncWorkerFreqAdjust == null)
                 {
                     PrepareToStart();
                     oAsyncWorkerUser = new BackgroundWorker();
@@ -548,9 +550,10 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust = new BackgroundWorker();
                     oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
                     oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
+                    oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);                    
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy || oAsyncWorkerFreqAdjust.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -774,7 +777,7 @@ namespace Sinawler
             int iSleep = 3000;
             while (true)
             {
-                //if (oAsyncWorkerFreqAdjust.CancellationPending) return;
+                if (oAsyncWorkerFreqAdjust.CancellationPending) return;
 
                 RequestFrequency rf = PubHelper.AdjustFreq(api, iSleep);
                 iSleep = rf.Interval;
@@ -784,6 +787,17 @@ namespace Sinawler
 
                 Thread.Sleep(5000);
             }
+        }
+
+        private void StopAdjustFrequency ( Object sender, RunWorkerCompletedEventArgs e )
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show( this, e.Error.Message );
+                return;
+            }
+
+            oAsyncWorkerFreqAdjust = null;
         }
 
         private void ShowSettings ( SettingItems settings )
