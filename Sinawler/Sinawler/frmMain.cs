@@ -688,6 +688,8 @@ namespace Sinawler
             int iSleep = 3000;
             while (true)
             {
+                if (oAsyncWorkerFreqAdjust.CancellationPending) return;
+
                 RequestFrequency rf = PubHelper.AdjustFreq(api, iSleep);
                 iSleep = rf.Interval;
                 robotUser.SetRequestFrequency(rf);
