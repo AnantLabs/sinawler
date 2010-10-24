@@ -358,10 +358,9 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust = new BackgroundWorker();
                     oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
                     oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
-                    oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy || oAsyncWorkerFreqAdjust.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -454,10 +453,9 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust = new BackgroundWorker();
                     oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
                     oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
-                    oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy || oAsyncWorkerFreqAdjust.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -550,10 +548,9 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust = new BackgroundWorker();
                     oAsyncWorkerFreqAdjust.WorkerReportsProgress = false;
                     oAsyncWorkerFreqAdjust.WorkerSupportsCancellation = true;
-                    oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);                    
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy || oAsyncWorkerFreqAdjust.IsBusy)
+                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
                 {
                     //记录原状态
                     bool userState = robotUser.Suspending;
@@ -642,7 +639,7 @@ namespace Sinawler
             lblUserMessage.Text = "停止。";
             lblUserQueueInfo.Text = "用户机器人的内存队列中有0个用户，数据库队列中有0个用户。";
 
-            if (oAsyncWorkerStatus == null && oAsyncWorkerComment == null && oAsyncWorkerFreqAdjust == null)  //如果另外三个机器人也已停止
+            if (oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外两个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -699,7 +696,7 @@ namespace Sinawler
             lblStatusMessage.Text = "停止。";
             lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
 
-            if (oAsyncWorkerUser == null && oAsyncWorkerComment == null && oAsyncWorkerFreqAdjust == null)  //如果另外三个机器人也已停止
+            if (oAsyncWorkerUser == null && oAsyncWorkerComment == null)  //如果另外两个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -753,7 +750,7 @@ namespace Sinawler
             lblCommentMessage.Text = "停止。";
             lblCommentQueueInfo.Text = "评论机器人的内存队列中有0条微博，数据库队列中有0条微博。";
 
-            if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerFreqAdjust == null)  //如果另外三个机器人也已停止
+            if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null)  //如果另外两个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -777,7 +774,7 @@ namespace Sinawler
             int iSleep = 3000;
             while (true)
             {
-                if (oAsyncWorkerFreqAdjust.CancellationPending) return;
+                //if (oAsyncWorkerFreqAdjust.CancellationPending) return;
 
                 RequestFrequency rf = PubHelper.AdjustFreq(api, iSleep);
                 iSleep = rf.Interval;
@@ -787,33 +784,6 @@ namespace Sinawler
 
                 Thread.Sleep(5000);
             }
-        }
-
-        private void StopAdjustFrequency ( Object sender, RunWorkerCompletedEventArgs e )
-        {
-            if (e.Error != null)
-            {
-                MessageBox.Show( this, e.Error.Message );
-                return;
-            }
-
-            if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外三个机器人也已停止
-            {
-                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
-                btnStartByCurrent.Enabled = true;
-                btnStartBySearch.Enabled = true;
-                btnStartByLast.Enabled = true;
-                rdNoPreLoad.Enabled = true;
-                rdPreLoadUID.Enabled = true;
-                rdPreLoadAllUID.Enabled = true;
-                btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/停止";
-
-                MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
-            }
-            oAsyncWorkerFreqAdjust = null;
         }
 
         private void ShowSettings ( SettingItems settings )
