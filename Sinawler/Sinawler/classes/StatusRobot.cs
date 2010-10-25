@@ -13,7 +13,6 @@ namespace Sinawler
 {
     class StatusRobot:RobotBase
     {
-        private long lCommentUID = 0;    //评论人的UID
         private LinkedList<long> lstRetweetedStatus = new LinkedList<long>();   //转发微博ID
         private long lRetweetedUID = 0;     //转发微博的UID，用于传递给用户机器人
 
@@ -31,7 +30,7 @@ namespace Sinawler
         }
 
         /// <summary>
-        /// 开始爬行微博
+        /// 开始爬取微博数据
         /// </summary>
         public void Start()
         {
@@ -70,9 +69,7 @@ namespace Sinawler
                     Thread.Sleep(50);
 
                     Status.NewIterate();
-                    Comment.NewIterate();
                 }
-
                 #endregion                
                 #region 用户微博信息
                 if (blnAsyncCancelled) return;
@@ -86,84 +83,7 @@ namespace Sinawler
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(50);
                 //获取数据库中当前用户最新一条微博的ID
-                long lLastStatusIDOf = Status.GetLastStatusIDOf( lCurrentUID );
-
-                ///@2010-10-11
-                ///考虑到中止爬行时可能会中断评论的保存，故此处先重新爬取最新一条微博的评论
-                #region 爬取数据库中最新一条微博的评论
-                if (lLastStatusIDOf > 0)
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
-                    }
-
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "爬取微博" + lLastStatusIDOf.ToString() + "的评论...";
-                    bwAsync.ReportProgress( 100 );
-                    Thread.Sleep( 5 );
-                    //爬取当前微博的评论
-                    List<Comment> lstComment = crawler.GetCommentsOf( lLastStatusIDOf );
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "爬得" + lstComment.Count.ToString() + "条评论。";
-                    bwAsync.ReportProgress( 100 );
-                    Thread.Sleep( 5 );
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
-                    }
-
-                    foreach (Comment comment in lstComment)
-                    {
-                        //Thread.Sleep( 5 );
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
-                        {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep( 50 );
-                        }
-                        if (!Comment.Exists( comment.comment_id ))
-                        {
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "将评论" + comment.comment_id.ToString() + "存入数据库...";
-                            bwAsync.ReportProgress( 100 );
-                            Thread.Sleep( 5 );
-                            comment.Add();
-
-                            //将评论人加入队列——2010-10-11
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "将评论人" + comment.uid.ToString() + "加入队列...";
-                            bwAsync.ReportProgress( 100 );
-                            Thread.Sleep( 5 );
-                            lCommentUID = comment.uid;
-                            if (lstWaitingUID.Contains( lCommentUID ) || queueBuffer.Contains( lCommentUID ))
-                            {
-                                //日志
-                                strLog = DateTime.Now.ToString() + "  " + "用户" + lCommentUID.ToString() + "已在队列中...";
-                                bwAsync.ReportProgress( 100 );
-                            }
-                            else
-                            {
-                                //若内存中已达到上限，则使用数据库队列缓存
-                                //否则使用数据库队列缓存
-                                if (lstWaitingUID.Count < iQueueLength)
-                                    lstWaitingUID.AddLast( lCommentUID );
-                                else
-                                    queueBuffer.Enqueue( lCommentUID );
-
-                                //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count.ToString() + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
-                                strQueueInfo = DateTime.Now.ToString() + "  " + "微博机器人的内存队列中现有" + lstWaitingUID.Count + "个用户，数据库队列中现有" + queueBuffer.Count.ToString() + "个用户。";
-                                bwAsync.ReportProgress( 100 );                                
-                            }
-                        }
-                    }
-                }
-                #endregion
+                lCurrentID = Status.GetLastStatusIDOf( lCurrentUID );
 
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
@@ -176,7 +96,7 @@ namespace Sinawler
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(50);
                 //爬取数据库中当前用户最新一条微博的ID之后的微博，存入数据库
-                List<Status> lstStatus = crawler.GetStatusesOfSince( lCurrentUID, lLastStatusIDOf );
+                List<Status> lstStatus = crawler.GetStatusesOfSince(lCurrentUID, lCurrentID);
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "爬得" + lstStatus.Count.ToString() + "条微博。";
                 bwAsync.ReportProgress(0);
@@ -190,7 +110,8 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep(10);
                     }
-                    if (!Status.Exists( status.status_id ))
+                    lCurrentID = status.status_id;
+                    if (!Status.Exists(lCurrentID))
                     {
                         //日志
                         strLog = DateTime.Now.ToString() + "  " + "将微博" + lCurrentID.ToString() + "存入数据库...";
@@ -206,70 +127,6 @@ namespace Sinawler
                         bwAsync.ReportProgress(0);
                         Thread.Sleep(50);
                         lstRetweetedStatus.AddLast( status.retweeted_status_id );
-                    }
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
-                    }
-
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "爬取微博" + status.status_id.ToString() + "的评论...";
-                    bwAsync.ReportProgress( 100 );
-                    Thread.Sleep( 5 );
-                    //爬取当前微博的评论
-                    List<Comment> lstComment = crawler.GetCommentsOf( status.status_id );
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "爬得" + lstComment.Count.ToString() + "条评论。";
-                    bwAsync.ReportProgress( 100 );
-                    Thread.Sleep( 5 );
-
-                    foreach (Comment comment in lstComment)
-                    {
-                        //Thread.Sleep( 5 );
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
-                        {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep( 50 );
-                        }
-                        if (!Comment.Exists( comment.comment_id ))
-                        {
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "将评论" + comment.comment_id.ToString() + "存入数据库...";
-                            bwAsync.ReportProgress( 100 );
-                            Thread.Sleep( 5 );
-                            comment.Add();
-
-                            //将评论人加入队列——2010-10-11
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "将评论人" + comment.uid.ToString() + "加入队列...";
-                            bwAsync.ReportProgress( 100 );
-                            Thread.Sleep( 5 );
-                            long lCommentUID = comment.uid;
-                            if (lstWaitingUID.Contains( lCommentUID ) || queueBuffer.Contains( lCommentUID ))
-                            {
-                                //日志
-                                strLog = DateTime.Now.ToString() + "  " + "用户" + lCommentUID.ToString() + "已在队列中...";
-                                bwAsync.ReportProgress( 100 );
-                            }
-                            else
-                            {
-                                //若内存中已达到上限，则使用数据库队列缓存
-                                //否则使用数据库队列缓存
-                                if (lstWaitingUID.Count < iQueueLength)
-                                    lstWaitingUID.AddLast( lCommentUID );
-                                else
-                                    queueBuffer.Enqueue( lCommentUID );
-
-                                //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count.ToString() + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
-                                strQueueInfo = DateTime.Now.ToString() + "  " + "微博机器人的内存队列中现有" + lstWaitingUID.Count + "个用户，数据库队列中现有" + queueBuffer.Count.ToString() + "个用户。";
-                                bwAsync.ReportProgress( 100 );                                
-                            }
-                            Thread.Sleep( 5 );
-                        }
                     }
                 }
                 #endregion                
@@ -315,35 +172,6 @@ namespace Sinawler
                             Thread.Sleep(50);
                             status.Add();
                         }
-                        //将该转发微博的UID入队——2010-10-18
-                        long lRetweetUID = status.uid;
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将微博的发布人" + lRetweetUID.ToString() + "加入队列...";
-                        bwAsync.ReportProgress( 100 );
-                        Thread.Sleep( 5 );
-
-                        if (lstWaitingUID.Contains( lRetweetUID ) || queueBuffer.Contains( lRetweetUID ))
-                        {
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "用户" + lRetweetUID.ToString() + "已在队列中...";
-                            bwAsync.ReportProgress( 100 );
-                        }
-                        else
-                        {
-                            //若内存中已达到上限，则使用数据库队列缓存
-                            //否则使用数据库队列缓存
-                            if (lstWaitingUID.Count < iQueueLength)
-                                lstWaitingUID.AddLast( lRetweetUID );
-                            else
-                                queueBuffer.Enqueue( lRetweetUID );
-
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "将用户" + lRetweetUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
-                            strQueueInfo = DateTime.Now.ToString() + "  " + "微博机器人的内存队列中现有" + lstWaitingUID.Count + "个用户，数据库队列中现有" + queueBuffer.Count.ToString() + "个用户。";
-                            bwAsync.ReportProgress( 100 );                            
-                        }
-                        Thread.Sleep( 5 );
-
                         //若该微博有转发，将转发微博ID入队
                         if (status.retweeted_status_id > 0)
                         {
@@ -353,72 +181,7 @@ namespace Sinawler
                             Thread.Sleep(50);
                             lstRetweetedStatus.AddLast( status.retweeted_status_id );
                         }
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
-                        {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep( 50 );
-                        }
-
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "爬取微博" + lRetweetedStatusID.ToString() + "的评论...";
-                        bwAsync.ReportProgress( 100 );
-                        Thread.Sleep( 5 );
-                        //爬取当前微博的评论
-                        List<Comment> lstComment = crawler.GetCommentsOf( lRetweetedStatusID );
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "爬得" + lstComment.Count.ToString() + "条评论。";
-                        bwAsync.ReportProgress( 100 );
-                        Thread.Sleep( 5 );
-
-                        foreach (Comment comment in lstComment)
-                        {
-                            //Thread.Sleep( 5 );
-                            if (blnAsyncCancelled) return;
-                            while (blnSuspending)
-                            {
-                                if (blnAsyncCancelled) return;
-                                Thread.Sleep( 50 );
-                            }
-                            if (!Comment.Exists( comment.comment_id ))
-                            {
-                                //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将评论" + comment.comment_id.ToString() + "存入数据库...";
-                                bwAsync.ReportProgress( 100 );
-                                Thread.Sleep( 5 );
-                                comment.Add();
-
-                                //将评论人加入队列——2010-10-11
-                                long lCommentUID = comment.uid;
-                                //日志
-                                strLog = DateTime.Now.ToString() + "  " + "将评论人" + lCommentUID.ToString() + "加入队列...";
-                                bwAsync.ReportProgress( 100 );
-                                Thread.Sleep( 5 );                                
-                                if (lstWaitingUID.Contains( lCommentUID ) || queueBuffer.Contains( lCommentUID ))
-                                {
-                                    //日志
-                                    strLog = DateTime.Now.ToString() + "  " + "用户" + lCommentUID.ToString() + "已在队列中...";
-                                    bwAsync.ReportProgress( 100 );
-                                }
-                                else
-                                {
-                                    //若内存中已达到上限，则使用数据库队列缓存
-                                    //否则使用数据库队列缓存
-                                    if (lstWaitingUID.Count < iQueueLength)
-                                        lstWaitingUID.AddLast( lCommentUID );
-                                    else
-                                        queueBuffer.Enqueue( lCommentUID );
-
-                                    //日志
-                                    strLog = DateTime.Now.ToString() + "  " + "将用户" + lCommentUID.ToString() + "加入队列。内存队列中有" + lstWaitingUID.Count + "个用户，数据库队列中有" + queueBuffer.Count.ToString() + "个用户。";
-                                    strQueueInfo = DateTime.Now.ToString() + "  " + "微博机器人的内存队列中现有" + lstWaitingUID.Count + "个用户，数据库队列中现有" + queueBuffer.Count.ToString() + "个用户。";
-                                    bwAsync.ReportProgress( 100 );                                    
-                                }
-                                Thread.Sleep( 5 );
-                            }
-                        }
                     }
-                    lstRetweetedStatus.RemoveFirst();
                 }
                 #endregion
                 //最后再将刚刚爬行完的UID加入队尾
@@ -427,8 +190,8 @@ namespace Sinawler
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(50);
                 //若内存中已达到上限，则使用数据库队列缓存
-                if (lstWaitingUID.Count < iQueueLength)
-                    lstWaitingUID.AddLast( lCurrentUID );
+                if (lstWaitingID.Count < iQueueLength)
+                    lstWaitingID.AddLast( lCurrentUID );
                 else
                     queueBuffer.Enqueue( lCurrentUID );
 
@@ -444,7 +207,8 @@ namespace Sinawler
             //初始化相应变量
             blnAsyncCancelled = false;
             blnSuspending = false;
-            if (lstWaitingUID != null) lstWaitingUID.Clear();
+            if (lstWaitingID != null) lstWaitingID.Clear();
+            if (lstRetweetedStatus != null) lstRetweetedStatus.Clear();
 
             //清空数据库队列缓存
             queueBuffer.Clear();

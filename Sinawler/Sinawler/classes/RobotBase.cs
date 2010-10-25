@@ -17,9 +17,8 @@ namespace Sinawler
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
         protected string strLog = "";                 //日志内容
-        protected string strQueueInfo = "";           //等待队列的相关信息
 
-        protected LinkedList<long> lstWaitingUID = new LinkedList<long>();     //等待爬行的UID队列
+        protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UID，也可能是StatusID等
         protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
@@ -59,17 +58,11 @@ namespace Sinawler
             get { return strLog; }
         }
 
-        public string QueueInfo
-        {
-            set { strQueueInfo = value; }
-            get { return strQueueInfo; }
-        }
-
         public int QueueLength
         { set { iQueueLength = value; } }
 
         public int LengthOfQueueInMem
-        { get { return lstWaitingUID.Count; } }
+        { get { return lstWaitingID.Count; } }
 
         public int LengthOfQueueInDB
         { get { return queueBuffer.Count; } }
@@ -88,28 +81,28 @@ namespace Sinawler
         { set { bwAsync = value; } }
 
         /// <summary>
-        /// 从外部调用判断队列中是否存在指定UID
+        /// 从外部调用判断队列中是否存在指定ID
         /// </summary>
         /// <param name="lUid"></param>
-        public bool QueueExists(long lUID)
+        public bool QueueExists(long lID)
         {
-            return (lstWaitingUID.Contains( lUID ) || queueBuffer.Contains( lUID ));
+            return (lstWaitingID.Contains( lID ) || queueBuffer.Contains( lID ));
         }
 
         /// <summary>
-        /// 从外部获取UID加到自己队列中
+        /// 从外部获取ID加到自己队列中
         /// </summary>
-        /// <param name="lUid"></param>
-        public void Enqueue ( long lUID)
+        /// <param name="lid"></param>
+        public void Enqueue ( long lID)
         {
-            if (!lstWaitingUID.Contains( lUID ) && !queueBuffer.Contains( lUID ))
+            if (!lstWaitingID.Contains( lID ) && !queueBuffer.Contains( lID ))
             {   
                 //若内存中已达到上限，则使用数据库队列缓存
                 //否则使用数据库队列缓存
-                if (lstWaitingUID.Count < iQueueLength)
-                    lstWaitingUID.AddLast( lUID );
+                if (lstWaitingID.Count < iQueueLength)
+                    lstWaitingID.AddLast( lID );
                 else
-                    queueBuffer.Enqueue( lUID );
+                    queueBuffer.Enqueue( lID );
             }
         }
 
