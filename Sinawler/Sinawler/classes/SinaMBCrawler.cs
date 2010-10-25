@@ -288,7 +288,7 @@ namespace Sinawler
         /// </summary>
         /// <param name="lStatusID">要获取微博内容的微博ID</param>
         /// <returns>微博</returns>
-        public Status GetStatus(long lStatusID)
+        public Status GetStatus ( long lStatusID )
         {
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.statuses_show( lStatusID );
@@ -510,7 +510,7 @@ namespace Sinawler
                 xmlDoc.LoadXml( strResult );
                 nodes = xmlDoc.GetElementsByTagName( "comment" );
             }
-            lstComments.Sort(CompareComment);
+            lstComments.Sort( CompareComment );
             return lstComments;
         }
     };

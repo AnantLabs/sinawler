@@ -306,6 +306,7 @@ namespace Sina.Api
         */
         public LinkedList<long> friends_ids(long user_id,int cursor)
         {
+            LinkedList<long> ids = new LinkedList<long>();
             try
             {
                 string url = "http://api.t.sina.com.cn/friends/ids/" + user_id.ToString() + "." + Format;
@@ -314,16 +315,16 @@ namespace Sina.Api
 
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(response);
-                LinkedList<long> ids = new LinkedList<long>();
+                
                 XmlNodeList nodes = xmlDoc.GetElementsByTagName("id");
                 for (int i = 0; i < nodes.Count; i++)
                 {
                     ids.AddLast(Convert.ToInt64(nodes[i].InnerText));
                 }
-                return ids;
             }
             catch(Exception ex)
-            { return null; }
+            {  }
+            return ids;
         }
 
         /*获取用户粉丝对象uid列表 */

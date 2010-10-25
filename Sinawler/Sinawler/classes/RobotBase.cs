@@ -24,9 +24,9 @@ namespace Sinawler
 
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
 
-        protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化        
+        protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
         protected QueueBuffer queueBuffer;              //数据库队列缓存
-        protected long lCurrentUID = 0;               //当前爬取的用户，随时抛出给StatusRobot
+        protected long lCurrentID = 0;               //当前爬取的用户或微博ID，随时抛出传递给另外的机器人，由各子类决定由其暴露的属性名
         protected BackgroundWorker bwAsync = null;
 
         //构造函数，需要传入相应的新浪微博API和主界面
@@ -83,9 +83,6 @@ namespace Sinawler
         //重新设置API的接口
         public SinaApiService SinaAPI
         { set { api = value; } }
-
-        public long ThrownUID
-        { get { return lCurrentUID; } }
 
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
