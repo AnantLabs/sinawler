@@ -43,6 +43,8 @@ namespace Sinawler
         {
             if (lStartUID == 0) return;
 
+            long lQueueFirst = 0;   //队头值
+
             //根据选项，选择加载用户队列的方法
             DataTable dtUID=new DataTable();
 
@@ -218,7 +220,7 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep(10);
                     }
-                    long lQueueFirst = lstBuffer.First.Value;
+                    lQueueFirst = lstBuffer.First.Value;
                     //若不存在有效关系，增加
                     if (!UserRelation.Exists( lCurrentID, lQueueFirst ))
                     {
@@ -299,7 +301,7 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep(10);
                     }
-                    long lQueueFirst = lstBuffer.First.Value;
+                    lQueueFirst = lstBuffer.First.Value;
                     //若不存在有效关系，增加
                     if (!UserRelation.Exists( lQueueFirst, lCurrentID ))
                     {

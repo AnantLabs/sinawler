@@ -724,13 +724,15 @@ namespace Sinawler
         {
             //传递给UserRobot
             long lUID = robotComment.CurrentUID;
-            if (lUID > 0 && !robotUser.QueueExists( lUID ) && oAsyncWorkerUser != null)
+            if (lUID!=null && lUID > 0 && !robotUser.QueueExists( lUID ) && oAsyncWorkerUser != null)
             {
                 robotUser.Enqueue( lUID );
             }
 
             StreamWriter swComment = File.AppendText( robotComment.LogFile );
             swComment.WriteLine( robotComment.LogMessage );
+            if (lUID == null)
+                swComment.WriteLine("lUID is null!");
             swComment.Close();
             swComment.Dispose();
             lblCommentMessage.Text = robotComment.LogMessage;
