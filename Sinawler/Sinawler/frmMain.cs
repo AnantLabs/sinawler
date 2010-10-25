@@ -627,8 +627,7 @@ namespace Sinawler
             swUser.Close();
             swUser.Dispose();
             lblUserMessage.Text = robotUser.LogMessage;
-
-            RefreshQueueInfo();
+            lblUserQueueInfo.Text = "用户机器人的内存队列中有" + robotUser.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotUser.LengthOfQueueInDB.ToString() + "个用户。";
         }
 
         private void UserCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -682,10 +681,8 @@ namespace Sinawler
             swStatus.WriteLine( robotStatus.LogMessage );
             swStatus.Close();
             swStatus.Dispose();
-
             lblStatusMessage.Text = robotStatus.LogMessage;
-
-            RefreshQueueInfo();
+            lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + robotStatus.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotStatus.LengthOfQueueInDB.ToString() + "个用户。";
         }
 
         private void StatusCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -736,10 +733,8 @@ namespace Sinawler
             swComment.WriteLine( robotComment.LogMessage );
             swComment.Close();
             swComment.Dispose();
-
             lblCommentMessage.Text = robotComment.LogMessage;
-
-            RefreshQueueInfo();
+            lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + robotComment.LengthOfQueueInMem.ToString() + "条微博，数据库队列中有" + robotComment.LengthOfQueueInDB.ToString() + "条微博。";
         }
 
         private void CommentCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -902,16 +897,6 @@ namespace Sinawler
         private void frmMain_FormClosing ( object sender, FormClosingEventArgs e )
         {
             if (!CanBeClosed()) e.Cancel = true;
-        }
-
-        private void RefreshQueueInfo()
-        {
-            lock(objLockMe)
-            {
-                lblUserQueueInfo.Text = "用户机器人的内存队列中有" + robotUser.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotUser.LengthOfQueueInDB.ToString() + "个用户。";
-                lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + robotStatus.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotStatus.LengthOfQueueInDB.ToString() + "个用户。";
-                lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + robotComment.LengthOfQueueInMem.ToString() + "条微博，数据库队列中有" + robotComment.LengthOfQueueInDB.ToString() + "条微博。";
-            }
         }
     }
 }
