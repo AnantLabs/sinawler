@@ -102,7 +102,7 @@ namespace Sinawler.Model
 		static public bool Exists(long lCommentID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select comment_id from comments where comment_id=" + lCommentID.ToString() );
+            int count = db.CountByExecuteSQLSelect( "select count(comment_id) from comments where comment_id=" + lCommentID.ToString() );
             return count > 0;
 		}
 

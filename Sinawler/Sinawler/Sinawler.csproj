@@ -133,6 +133,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="sqlscripts\queue_buffer_for_comment.TAB" />
+    <None Include="sqlscripts\queue_buffer_for_status.TAB" />
+    <None Include="sqlscripts\queue_buffer_for_user.TAB" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
@@ -150,8 +153,6 @@
   <ItemGroup>
     <Content Include="Monsters21.ico" />
     <Content Include="sqlscripts\comments.TAB" />
-    <Content Include="sqlscripts\queue_buffer.TAB" />
-    <Content Include="sqlscripts\SinaMBCrawler.DBS" />
     <Content Include="sqlscripts\statuses.TAB" />
     <Content Include="sqlscripts\sys_args.TAB" />
     <Content Include="sqlscripts\tags.TAB" />

@@ -275,7 +275,7 @@ namespace Sinawler.Model
 		static public bool Exists(long lUid)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select uid from users where uid=" + lUid.ToString() );
+            int count = db.CountByExecuteSQLSelect( "select count(uid) from users where uid=" + lUid.ToString() );
             return count > 0;
 		}
 

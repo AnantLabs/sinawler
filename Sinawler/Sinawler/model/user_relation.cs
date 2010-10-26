@@ -91,7 +91,7 @@ namespace Sinawler.Model
         static public bool Exists ( long lSourceUID, long lTargetUID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select top 1 relation_state from user_relation where source_uid=" + lSourceUID.ToString()+" and target_uid="+lTargetUID.ToString()+" and relation_state=1 order by iteration" );
+            int count = db.CountByExecuteSQLSelect( "select count(relation_state) from user_relation where source_uid=" + lSourceUID.ToString()+" and target_uid="+lTargetUID.ToString()+" and relation_state=1" );
             return count > 0;
 		}
 

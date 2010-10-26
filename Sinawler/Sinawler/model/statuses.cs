@@ -226,7 +226,7 @@ namespace Sinawler.Model
 		{
             Database db = DatabaseFactory.CreateDatabase();
             db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select status_id from statuses where status_id=" + lStatusID.ToString() );
+            int count = db.CountByExecuteSQLSelect( "select count(status_id) from statuses where status_id=" + lStatusID.ToString() );
             return count > 0;
 		}
 
