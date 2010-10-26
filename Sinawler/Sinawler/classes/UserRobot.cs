@@ -351,16 +351,12 @@ namespace Sinawler
                     lstBuffer.RemoveFirst();
                 }
                 #endregion
-                //最后再将刚刚爬行完的UID加入队尾，并抛出该UID
+                //最后再将刚刚爬行完的UID加入队尾
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(50);
-                //若内存中已达到上限，则使用数据库队列缓存
-                if (lstWaitingID.Count < iQueueLength)
-                    lstWaitingID.AddLast( lCurrentID );
-                else
-                    queueBuffer.Enqueue( lCurrentID );
+                Enqueue( lCurrentID );
 
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";

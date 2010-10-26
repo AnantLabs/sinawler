@@ -71,9 +71,6 @@ namespace Sina.Api
         /// <returns>The url with a valid request token, or a null string.</returns>
         public string RequestTokenGet()
         {
-            string ret = null;
-
-            //string response = oAuthWebRequest(Method.GET, REQUEST_TOKEN, String.Empty);
             string response = oAuthWebRequest( Method.GET, REQUEST_TOKEN, String.Empty );
             if (response.Length > 0)
             {

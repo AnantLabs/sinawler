@@ -90,12 +90,12 @@ namespace Sinawler
         }
 
         /// <summary>
-        /// 从外部获取ID加到自己队列中
+        /// 将指定ID加到自己队列中
         /// </summary>
         /// <param name="lid"></param>
         public void Enqueue ( long lID)
         {
-            if (!lstWaitingID.Contains( lID ) && !queueBuffer.Contains( lID ))
+            if (!QueueExists(lID))
             {   
                 //若内存中已达到上限，则使用数据库队列缓存
                 //否则使用数据库队列缓存

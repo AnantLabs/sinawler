@@ -37,6 +37,8 @@ namespace Sinawler
             //不加载用户队列，完全依靠UserRobot传递过来
             while (lstWaitingID.Count == 0) Thread.Sleep( 1 );   //若队列为空，则等待
             long lStartUID = lstWaitingID.First.Value;
+            long lCurrentUID = 0;
+            long lHead = 0;
             //对队列无限循环爬行，直至有操作暂停或停止
             while(true)
             {
@@ -47,10 +49,10 @@ namespace Sinawler
                     Thread.Sleep(10);
                 }
                 //将队头取出
-                long lCurrentUID = lstWaitingID.First.Value;
+                lCurrentUID = lstWaitingID.First.Value;
                 lstWaitingID.RemoveFirst();
                 //从数据库队列缓存中移入元素
-                long lHead = queueBuffer.Dequeue();
+                lHead = queueBuffer.Dequeue();
                 if (lHead > 0)
                     lstWaitingID.AddLast( lHead );
                 #region 预处理
@@ -189,11 +191,7 @@ namespace Sinawler
                 strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(50);
-                //若内存中已达到上限，则使用数据库队列缓存
-                if (lstWaitingID.Count < iQueueLength)
-                    lstWaitingID.AddLast( lCurrentUID );
-                else
-                    queueBuffer.Enqueue( lCurrentUID );
+                Enqueue( lCurrentUID );
 
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";

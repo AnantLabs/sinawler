@@ -87,7 +87,7 @@ namespace Sinawler
                 db.Test();
                 strResult = "OK";
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 strResult = ex.Message;
             }
@@ -95,20 +95,20 @@ namespace Sinawler
         }
 
         //整数到字节数组的转换   
-        static public byte[] intToByte(int number)
+        static public byte[] intToByte ( int number )
         {
             int temp = number;
             byte[] b = new byte[4];
             for (int i = b.Length - 1; i > -1; i--)
             {
-                b[i] = Convert.ToByte(temp & 0xff);             //将最高位保存在最低位   
+                b[i] = Convert.ToByte( temp & 0xff );             //将最高位保存在最低位   
                 temp = temp >> 8;               //向右移8位   
             }
             return b;
         }
 
         //字节数组到整数的转换   
-        static public int byteToInt(byte[] b)
+        static public int byteToInt ( byte[] b )
         {
             int s = 0;
             for (int i = 0; i < 3; i++)
@@ -127,11 +127,11 @@ namespace Sinawler
         }
 
         //发一条微博帮忙推广
-        static public bool PostAdvertisement(SinaApiService api)
+        static public bool PostAdvertisement ( SinaApiService api )
         {
-            SettingItems settings=AppSettings.Load();
+            SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            string strResult = api.statuses_update("（"+DateTime.Now.ToString()+"）我正在使用开源应用“新浪微博爬虫Sinawler v"+System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString()+"”。Project页面：http://code.google.com/p/sinawler/");
+            string strResult = api.statuses_update( "（" + DateTime.Now.ToString() + "）我正在使用开源应用“新浪微博爬虫Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。Project页面：http://code.google.com/p/sinawler/" );
             if (strResult == null) return false;
             else return true;
         }
@@ -167,7 +167,7 @@ namespace Sinawler
         }
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        static public RequestFrequency AdjustFreq(SinaApiService api, int iSleep)
+        static public RequestFrequency AdjustFreq ( SinaApiService api, int iSleep )
         {
             if (iSleep <= 0) iSleep = 3000; //默认值
 
@@ -179,43 +179,46 @@ namespace Sinawler
             string strResult = api.check_hits_limit();
             if (strResult == null) return rf;
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(strResult);
+            xmlDoc.LoadXml( strResult );
 
-            //string[] strBuffer = PubHelper.ParseDateTime(xmlDoc.GetElementsByTagName("reset-time")[0].InnerText).Split(' ')[0].Split('-');
-            //string strResetTime = strBuffer[0] + "年" + strBuffer[1] + "月" + strBuffer[2] + "日";
-            //int iHourlyLimit = Convert.ToInt32(xmlDoc.GetElementsByTagName("hourly-limit")[0].InnerText);
-            int iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
-            int iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
+            int iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
+            int iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
+
+            //若已无剩余次数，直接返回剩余时间
+            if (iRemainingHits == 0)
+            {
+                rf.Interval = iResetTimeInSeconds * 1000;
+                rf.RemainingHits = iRemainingHits;
+                rf.ResetTimeInSeconds = iResetTimeInSeconds;
+
+                return rf;
+            }
 
             //计算
-            //理论上剩余时间可访问次数大于等于实际剩余次数，说明实际剩余次数不够用，将会超限，则加长等待时间
-            if (iResetTimeInSeconds * 1000 / iSleep >= iRemainingHits)
+            //剩余时间可访问次数小于剩余次数，说明剩余次数够用，不会超限，则减少等待时间
+            if (iResetTimeInSeconds * 1000 / iSleep < iRemainingHits)
             {
-                //若已无剩余次数，则等待剩余秒，否则会加到很大，并且会频繁请求，造成被封IP
-                if (iRemainingHits == 0)
-                    System.Threading.Thread.Sleep(iResetTimeInSeconds * 1000);
-
-                while (iResetTimeInSeconds * 1000 / iSleep >= iRemainingHits)
-                {
-                    //增加等待时间
-                    iSleep += 200;
-
-                    //重新获取信息
-                    strResult = api.check_hits_limit();
-                    if (strResult == null) return rf;
-                    xmlDoc.LoadXml(strResult);
-
-                    iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
-                    iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
-                }
-            }
-            else
-            {
-                //剩余时间可访问次数小于剩余次数，说明剩余次数够用，不会超限，则减少等待时间
-                iSleep -= 200;
+                iSleep -= 100;
                 //2010-10-12定为不设下限
                 if (iSleep <= 0) iSleep = 1;
             }
+
+            //理论上剩余时间可访问次数大于等于实际剩余次数，说明实际剩余次数不够用，将会超限，则加长等待时间
+            //此操作可能会将上一步减少的时间又增加回来，但是得到的值将是个处于超限与不超限的临界点的安全值
+            while (iResetTimeInSeconds * 1000 / iSleep >= iRemainingHits)
+            {
+                //增加等待时间
+                iSleep += 100;
+
+                //重新获取信息
+                strResult = api.check_hits_limit();
+                if (strResult == null) return rf;
+                xmlDoc.LoadXml( strResult );
+
+                iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
+                iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
+            }
+
 
             rf.Interval = iSleep;
             rf.RemainingHits = iRemainingHits;
