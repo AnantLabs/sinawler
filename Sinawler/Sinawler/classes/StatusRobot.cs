@@ -55,6 +55,8 @@ namespace Sinawler
                 lHead = queueBuffer.Dequeue();
                 if (lHead > 0)
                     lstWaitingID.AddLast( lHead );
+                //移入队尾
+                Enqueue( lCurrentUID );
                 #region 预处理
                 if (lCurrentUID == lStartUID)  //说明经过一次循环迭代
                 {
@@ -188,10 +190,9 @@ namespace Sinawler
                 #endregion
                 //最后再将刚刚爬行完的UID加入队尾
                 //日志
-                strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕，将其加入队尾...";
+                strLog = DateTime.Now.ToString() + "  " + "用户" + lCurrentUID.ToString() + "的数据已爬取完毕。";
                 bwAsync.ReportProgress(0);
                 Thread.Sleep(50);
-                Enqueue( lCurrentUID );
 
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";

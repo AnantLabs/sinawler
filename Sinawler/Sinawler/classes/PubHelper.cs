@@ -195,30 +195,8 @@ namespace Sinawler
             }
 
             //计算
-            //剩余时间可访问次数小于剩余次数，说明剩余次数够用，不会超限，则减少等待时间
-            if (iResetTimeInSeconds * 1000 / iSleep < iRemainingHits)
-            {
-                iSleep -= 100;
-                //2010-10-12定为不设下限
-                if (iSleep <= 0) iSleep = 1;
-            }
-
-            //理论上剩余时间可访问次数大于等于实际剩余次数，说明实际剩余次数不够用，将会超限，则加长等待时间
-            //此操作可能会将上一步减少的时间又增加回来，但是得到的值将是个处于超限与不超限的临界点的安全值
-            while (iResetTimeInSeconds * 1000 / iSleep >= iRemainingHits)
-            {
-                //增加等待时间
-                iSleep += 100;
-
-                //重新获取信息
-                strResult = api.check_hits_limit();
-                if (strResult == null) return rf;
-                xmlDoc.LoadXml( strResult );
-
-                iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
-                iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
-            }
-
+            iSleep=Convert.ToInt32(iResetTimeInSeconds*1000/iRemainingHits);
+            if (iSleep <= 0) iSleep = 1;
 
             rf.Interval = iSleep;
             rf.RemainingHits = iRemainingHits;
