@@ -619,7 +619,7 @@ namespace Sinawler
         {
             //传递给StatusRobot
             long lUID = robotUser.CurrentUID;
-            if (lUID > 0 && !robotStatus.QueueExists( lUID ) && oAsyncWorkerStatus != null)
+            if (lUID > 0 && oAsyncWorkerStatus != null)
                 robotStatus.Enqueue( lUID );
 
             StreamWriter swUser = File.AppendText( robotUser.LogFile );
@@ -669,12 +669,12 @@ namespace Sinawler
         {
             //传递给CommentRobot
             long lSID = robotStatus.CurrentSID;
-            if (lSID > 0 && !robotComment.QueueExists( lSID ) && oAsyncWorkerComment != null)
+            if (lSID > 0 && oAsyncWorkerComment != null)
                 robotComment.Enqueue( lSID );
 
             //传递给UserRobot
             long lUID = robotStatus.CurrentRetweetedUID;
-            if (lUID > 0 && !robotUser.QueueExists( lUID ) && oAsyncWorkerUser != null)
+            if (lUID > 0 && oAsyncWorkerUser != null)
                 robotUser.Enqueue( lUID );
 
             StreamWriter swStatus = File.AppendText( robotStatus.LogFile );
@@ -724,15 +724,12 @@ namespace Sinawler
         {
             //传递给UserRobot
             long lUID = robotComment.CurrentUID;
-            if (lUID!=null && lUID > 0 && !robotUser.QueueExists( lUID ) && oAsyncWorkerUser != null)
-            {
+            if (lUID == null) lUID = 0;
+            if (lUID!=null && lUID > 0 && oAsyncWorkerUser != null)
                 robotUser.Enqueue( lUID );
-            }
 
             StreamWriter swComment = File.AppendText( robotComment.LogFile );
             swComment.WriteLine( robotComment.LogMessage );
-            if (lUID == null)
-                swComment.WriteLine("lUID is null!");
             swComment.Close();
             swComment.Dispose();
             lblCommentMessage.Text = robotComment.LogMessage;
