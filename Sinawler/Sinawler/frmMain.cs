@@ -791,6 +791,22 @@ namespace Sinawler
                 return;
             }
 
+            if (oAsyncWorkerUser == null && oAsyncWorkerComment == null && oAsyncWorkerStatus == null)  //如果另外三个机器人也已停止
+            {
+                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
+                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
+                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Enabled = true;
+                btnStartBySearch.Enabled = true;
+                btnStartByLast.Enabled = true;
+                rdNoPreLoad.Enabled = true;
+                rdPreLoadUID.Enabled = true;
+                rdPreLoadAllUID.Enabled = true;
+                btnPauseContinue.Enabled = false;
+                btnPauseContinue.Text = "暂停/停止";
+
+                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+            }
             oAsyncWorkerFreqAdjust = null;
         }
 

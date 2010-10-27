@@ -35,7 +35,11 @@ namespace Sinawler
         public void Start()
         {
             //不加载用户队列，完全依靠UserRobot传递过来
-            while (lstWaitingID.Count == 0) Thread.Sleep( 1 );   //若队列为空，则等待
+            while (lstWaitingID.Count == 0)
+            {
+                if (blnAsyncCancelled) return;
+                Thread.Sleep(1);   //若队列为空，则等待
+            }
             long lStartUID = lstWaitingID.First.Value;
             long lCurrentUID = 0;
             long lHead = 0;
