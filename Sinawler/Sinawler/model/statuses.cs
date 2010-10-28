@@ -74,6 +74,7 @@ namespace Sinawler.Model
 		private long _retweeted_status_id=0;
         private int _iteration;
         private string _update_time;
+        private Status _retweeted_status;
 		/// <summary>
 		/// Î¢²©ID£¨XMLÖÐÎªid£©
 		/// </summary>
