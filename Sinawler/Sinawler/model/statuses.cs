@@ -71,10 +71,9 @@ namespace Sinawler.Model
 		private string _bmiddle_pic="";
 		private string _original_pic="";
 		private long _uid;
-		private long _retweeted_status_id=0;
+        private Status _retweeted_status = null;
         private int _iteration;
         private string _update_time;
-        private Status _retweeted_status;
 		/// <summary>
 		/// 微博ID（XML中为id）
 		/// </summary>
@@ -195,14 +194,14 @@ namespace Sinawler.Model
 			set{ _uid=value;}
 			get{return _uid;}
 		}
-		/// <summary>
-		/// 同时转发的微博ID
-		/// </summary>
-		public long retweeted_status_id
-		{
-			set{ _retweeted_status_id=value;}
-			get{return _retweeted_status_id;}
-		}
+        /// <summary>
+        /// 同时转发的微博
+        /// </summary>
+        public Status retweeted_status
+        {
+            set { _retweeted_status = value; }
+            get { return _retweeted_status; }
+        }
         /// <summary>
         /// 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
         /// </summary>
@@ -272,7 +271,10 @@ namespace Sinawler.Model
                 htValues.Add( "bmiddle_pic", "'" + _bmiddle_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "original_pic", "'" + _original_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "uid", _uid );
-                htValues.Add( "retweeted_status_id", _retweeted_status_id );
+                if(_retweeted_status!=null)
+                    htValues.Add( "retweeted_status_id", _retweeted_status.status_id );
+                else
+                    htValues.Add( "retweeted_status_id", 0 );
                 htValues.Add( "iteration", iteration );
                 htValues.Add( "update_time", _update_time );
 

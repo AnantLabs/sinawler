@@ -19,6 +19,8 @@ namespace Sinawler
         private int iRemainingHits = 1000; //当前小时内剩余请求次数
         private int iResetTimeInSeconds = 3600; //剩余秒数
 
+        private bool blnStopCrawling = false;   //是否停止爬行
+
         public SinaMBCrawler ( SinaApiService oApi )
         {
             api = oApi;
@@ -40,6 +42,12 @@ namespace Sinawler
         {
             set { iResetTimeInSeconds = value; }
             get { return iResetTimeInSeconds; }
+        }
+
+        public bool StopCrawling
+        {
+            set { blnStopCrawling = true; }
+            get { return blnStopCrawling; }
         }
 
         private int CompareStatus ( Status x, Status y )
@@ -139,14 +147,19 @@ namespace Sinawler
         //根据UID抓取用户信息
         public User GetUserInfo ( long lUid )
         {
+            User user = new User();
+            user.uid = -1;
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_show( lUid );
-            while (strResult == null)
+            while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid );
+            if (blnStopCrawling)
+                return user;
+
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            User user = new User();
+            
             user.uid = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
@@ -185,14 +198,19 @@ namespace Sinawler
         //根据用户昵称抓取用户信息
         public User GetUserInfo ( string strScreenName )
         {
+            User user = new User();
+            user.uid = -1;
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_show( strScreenName );
-            while (strResult == null)
+            while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( strScreenName );
+            if (blnStopCrawling)
+                return user;
+
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            User user = new User();
+            
             user.uid = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
@@ -231,14 +249,19 @@ namespace Sinawler
         //同时根据UID和用户昵称抓取用户信息
         public User GetUserInfo ( long lUid, string strScreenName )
         {
+            User user = new User();
+            user.uid = -1;
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_show( lUid, strScreenName );
-            while (strResult == null)
+            while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid, strScreenName );
+            if (blnStopCrawling)
+                return user;
+
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            User user = new User();
+            
             user.uid = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
@@ -359,7 +382,69 @@ namespace Sinawler
                         status.uid = Convert.ToInt64( node.ChildNodes[0].InnerText );
                         break;
                     case "retweeted_status":
-                        status.retweeted_status_id = Convert.ToInt64( node.ChildNodes[1].InnerText );
+                        status.retweeted_status = new Status();
+                        status.retweeted_status.status_id = Convert.ToInt64( node.ChildNodes[1].InnerText );
+                        foreach (XmlNode retweeted_node in node.ChildNodes)
+                        {
+                            switch (retweeted_node.Name.ToLower())
+                            {
+                                case "created_at":
+                                    status.retweeted_status.created_at = PubHelper.ParseDateTime( retweeted_node.InnerText );
+                                    break;
+                                case "id":
+                                    status.retweeted_status.status_id = Convert.ToInt64( retweeted_node.InnerText );
+                                    break;
+                                case "text":
+                                    status.retweeted_status.content = retweeted_node.InnerText;
+                                    break;
+                                case "source":
+                                    status.retweeted_status.source_name = node.ChildNodes[3].ChildNodes[0].InnerText;
+                                    status.retweeted_status.source_url = node.ChildNodes[3].ChildNodes[0].Attributes["href"].Value;
+                                    break;
+                                case "favorited":
+                                    if (retweeted_node.InnerText == "false")
+                                        status.retweeted_status.favorited = false;
+                                    else
+                                        status.retweeted_status.favorited = true;
+                                    break;
+                                case "truncated":
+                                    if (retweeted_node.InnerText == "false")
+                                        status.retweeted_status.truncated = false;
+                                    else
+                                        status.retweeted_status.truncated = true;
+                                    break;
+                                case "geo":
+                                    status.retweeted_status.geo = retweeted_node.InnerText;
+                                    break;
+                                case "in_reply_to_status_id":
+                                    if (retweeted_node.InnerText == "")
+                                        status.retweeted_status.in_reply_to_status_id = 0;
+                                    else
+                                        status.retweeted_status.in_reply_to_status_id = Convert.ToInt64( retweeted_node.InnerText );
+                                    break;
+                                case "in_reply_to_user_id":
+                                    if (retweeted_node.InnerText == "")
+                                        status.retweeted_status.in_reply_to_user_id = 0;
+                                    else
+                                        status.retweeted_status.in_reply_to_user_id = Convert.ToInt64( retweeted_node.InnerText );
+                                    break;
+                                case "in_reply_to_screen_name":
+                                    status.retweeted_status.in_reply_to_screen_name = retweeted_node.InnerText;
+                                    break;
+                                case "thumbnail_pic":
+                                    status.retweeted_status.thumbnail_pic = retweeted_node.InnerText;
+                                    break;
+                                case "bmiddle_pic":
+                                    status.retweeted_status.bmiddle_pic = retweeted_node.InnerText;
+                                    break;
+                                case "original_pic":
+                                    status.retweeted_status.original_pic = retweeted_node.InnerText;
+                                    break;
+                                case "user":
+                                    status.retweeted_status.uid = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
+                                    break;
+                            }
+                        }
                         break;
                 }
             }
@@ -377,7 +462,7 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_timeline( lUid, lSinceSid );
-            while (strResult == null)
+            while (strResult == null && !blnStopCrawling)
                 strResult = api.user_timeline( lUid, lSinceSid );
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();
@@ -447,12 +532,75 @@ namespace Sinawler
                             status.uid = Convert.ToInt64( node.ChildNodes[0].InnerText );
                             break;
                         case "retweeted_status":
-                            status.retweeted_status_id = Convert.ToInt64( node.ChildNodes[1].InnerText );
+                            status.retweeted_status = new Status();
+                            status.retweeted_status.status_id = Convert.ToInt64( node.ChildNodes[1].InnerText );
+                            foreach (XmlNode retweeted_node in node.ChildNodes)
+                            {
+                                switch (retweeted_node.Name.ToLower())
+                                {
+                                    case "created_at":
+                                        status.retweeted_status.created_at = PubHelper.ParseDateTime( retweeted_node.InnerText );
+                                        break;
+                                    case "id":
+                                        status.retweeted_status.status_id = Convert.ToInt64( retweeted_node.InnerText );
+                                        break;
+                                    case "text":
+                                        status.retweeted_status.content = retweeted_node.InnerText;
+                                        break;
+                                    case "source":
+                                        status.retweeted_status.source_name = node.ChildNodes[3].ChildNodes[0].InnerText;
+                                        status.retweeted_status.source_url = node.ChildNodes[3].ChildNodes[0].Attributes["href"].Value;
+                                        break;
+                                    case "favorited":
+                                        if (retweeted_node.InnerText == "false")
+                                            status.retweeted_status.favorited = false;
+                                        else
+                                            status.retweeted_status.favorited = true;
+                                        break;
+                                    case "truncated":
+                                        if (retweeted_node.InnerText == "false")
+                                            status.retweeted_status.truncated = false;
+                                        else
+                                            status.retweeted_status.truncated = true;
+                                        break;
+                                    case "geo":
+                                        status.retweeted_status.geo = retweeted_node.InnerText;
+                                        break;
+                                    case "in_reply_to_status_id":
+                                        if (retweeted_node.InnerText == "")
+                                            status.retweeted_status.in_reply_to_status_id = 0;
+                                        else
+                                            status.retweeted_status.in_reply_to_status_id = Convert.ToInt64( retweeted_node.InnerText );
+                                        break;
+                                    case "in_reply_to_user_id":
+                                        if (retweeted_node.InnerText == "")
+                                            status.retweeted_status.in_reply_to_user_id = 0;
+                                        else
+                                            status.retweeted_status.in_reply_to_user_id = Convert.ToInt64( retweeted_node.InnerText );
+                                        break;
+                                    case "in_reply_to_screen_name":
+                                        status.retweeted_status.in_reply_to_screen_name = retweeted_node.InnerText;
+                                        break;
+                                    case "thumbnail_pic":
+                                        status.retweeted_status.thumbnail_pic = retweeted_node.InnerText;
+                                        break;
+                                    case "bmiddle_pic":
+                                        status.retweeted_status.bmiddle_pic = retweeted_node.InnerText;
+                                        break;
+                                    case "original_pic":
+                                        status.retweeted_status.original_pic = retweeted_node.InnerText;
+                                        break;
+                                    case "user":
+                                        status.retweeted_status.uid = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
+                                        break;
+                                }
+                            }
                             break;
                     }
                 }
                 status.iteration = 0;
                 lstStatuses.Add( status );
+                if (status.retweeted_status != null) lstStatuses.Add( status.retweeted_status );
             }
             lstStatuses.Sort( CompareStatus );
             return lstStatuses;
@@ -469,7 +617,7 @@ namespace Sinawler
             int iPage = 1;
             System.Threading.Thread.Sleep( iSleep );
             string strResult = api.comments( lStatusID, iPage );
-            while (strResult == null)
+            while (strResult == null && !blnStopCrawling)
                 strResult = api.comments( lStatusID, iPage );
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
             XmlDocument xmlDoc = new XmlDocument();

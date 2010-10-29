@@ -127,67 +127,39 @@ namespace Sinawler
                         Thread.Sleep(50);
                         status.Add();
                     }
-                    //若该微博有转发，将转发微博ID入队
-                    if (status.retweeted_status_id > 0)
-                    {
-                        //日志
-                        strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status_id.ToString() + "加入队列等待爬取...";
-                        bwAsync.ReportProgress(0);
-                        Thread.Sleep(50);
-                        lstRetweetedStatus.AddLast( status.retweeted_status_id );
-                    }
-                }
-                #endregion                
-                #region 爬取获取的转发微博
-                //日志
-                strLog = DateTime.Now.ToString() + "  " + "所有"+lstStatus.Count.ToString()+"条微博爬取完毕，共获得"+lstRetweetedStatus.Count.ToString()+"条转发微博。";
-                bwAsync.ReportProgress(0);
-                Thread.Sleep(50);
-                if(lstRetweetedStatus.Count>0)
-                {
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "开始爬取获得的" + lstRetweetedStatus.Count.ToString() + "条转发微博...";
-                    bwAsync.ReportProgress(0);
-                    Thread.Sleep(50);
-                }
-                while(lstRetweetedStatus.Count>0)
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
+                    
+                    //若该微博有转发，将转发微博保存
+                    if (status.retweeted_status != null)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(10);
-                    }
-
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
-                    bwAsync.ReportProgress( 0 );
-                    Thread.Sleep( 50 );
-
-                    lCurrentID = lstRetweetedStatus.First.Value;
-                    lstRetweetedStatus.RemoveFirst();
-
-                    Status status = crawler.GetStatus(lCurrentID);
-                    if(status!=null)
-                    {
-                        //记录转发微博的UID
-                        lRetweetedUID = status.uid;
-                        if (!Status.Exists(lCurrentID))
+                        while (blnSuspending)
                         {
-                            //日志
-                            strLog = DateTime.Now.ToString() + "  " + "将微博" + lCurrentID.ToString() + "存入数据库...";
-                            bwAsync.ReportProgress(0);
-                            Thread.Sleep(50);
-                            status.Add();
+                            if (blnAsyncCancelled) return;
+                            Thread.Sleep( 10 );
                         }
-                        //若该微博有转发，将转发微博ID入队
-                        if (status.retweeted_status_id > 0)
+
+                        //日志
+                        strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status.status_id.ToString() + "存入数据库...";
+                        bwAsync.ReportProgress(0);
+                        Thread.Sleep(50);
+
+                        if (!Status.Exists( status.retweeted_status.status_id ))
+                        {
+                            lCurrentID = status.retweeted_status.status_id;
+                            lRetweetedUID = status.retweeted_status.uid;
+                            status.retweeted_status.Add();
+
+                            //日志
+                            strLog = DateTime.Now.ToString() + "  " + "转发微博" + status.retweeted_status.status_id.ToString() + "已保存。";
+                            bwAsync.ReportProgress( 0 );
+                            Thread.Sleep( 50 );
+                        }
+                        else
                         {
                             //日志
-                            strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status_id.ToString() + "加入微博队列...";
-                            bwAsync.ReportProgress(0);
-                            Thread.Sleep(50);
-                            lstRetweetedStatus.AddLast( status.retweeted_status_id );
+                            strLog = DateTime.Now.ToString() + "  " + "转发微博" + status.retweeted_status.status_id.ToString() + "已存在。";
+                            bwAsync.ReportProgress( 0 );
+                            Thread.Sleep( 50 );
                         }
                     }
                 }

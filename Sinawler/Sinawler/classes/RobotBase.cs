@@ -42,7 +42,11 @@ namespace Sinawler
 
         public bool AsyncCancelled
         {
-            set { blnAsyncCancelled = value; }
+            set 
+            { 
+                blnAsyncCancelled = value;
+                crawler.StopCrawling = value;
+            }
             get { return blnAsyncCancelled; }
         }
 

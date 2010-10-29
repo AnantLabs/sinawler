@@ -361,6 +361,7 @@ namespace Sina.Api
         */
         public LinkedList<long> followers_ids ( long user_id, int cursor )
         {
+            LinkedList<long> ids = new LinkedList<long>();
             try
             {
                 string url = "http://api.t.sina.com.cn/followers/ids/"+user_id.ToString()+"." + Format;
@@ -369,16 +370,15 @@ namespace Sina.Api
 
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(response);
-                LinkedList<long> ids = new LinkedList<long>();
+                
                 XmlNodeList nodes = xmlDoc.GetElementsByTagName("id");
                 for (int i = 0; i < nodes.Count; i++)
                 {
                     ids.AddLast( Convert.ToInt64( nodes[i].InnerText ) );
                 }
-                return ids;
             }
-            catch
-            { return null; }
+            catch{}
+            return ids;
         }
 
         //发送一条私信

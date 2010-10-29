@@ -44,6 +44,7 @@ namespace Sinawler
             if (lStartUID == 0) return;
 
             long lQueueFirst = 0;   //队头值
+            User user;
 
             //根据选项，选择加载用户队列的方法
             DataTable dtUID=new DataTable();
@@ -174,22 +175,26 @@ namespace Sinawler
                     Thread.Sleep(10);
                 }
 
-                //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
-                if (!User.Exists( lCurrentID ))
+                user = crawler.GetUserInfo( lCurrentID );
+                if (user.uid > 0)
                 {
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "将用户" + lCurrentID.ToString() + "存入数据库...";
-                    bwAsync.ReportProgress(0);
-                    crawler.GetUserInfo( lCurrentID ).Add();
+                    //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
+                    if (!User.Exists( lCurrentID ))
+                    {
+                        //日志
+                        strLog = DateTime.Now.ToString() + "  " + "将用户" + lCurrentID.ToString() + "存入数据库...";
+                        bwAsync.ReportProgress( 0 );
+                        user.Add();
+                    }
+                    else
+                    {
+                        //日志
+                        strLog = DateTime.Now.ToString() + "  " + "更新用户" + lCurrentID.ToString() + "的数据...";
+                        bwAsync.ReportProgress( 0 );
+                        user.Update();
+                    }
+                    Thread.Sleep( 50 );
                 }
-                else
-                {
-                    //日志
-                    strLog = DateTime.Now.ToString() + "  " + "更新用户" + lCurrentID.ToString() + "的数据...";
-                    bwAsync.ReportProgress(0);
-                    crawler.GetUserInfo( lCurrentID ).Update();
-                }
-                Thread.Sleep(50);
 
                 //日志
                 strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
