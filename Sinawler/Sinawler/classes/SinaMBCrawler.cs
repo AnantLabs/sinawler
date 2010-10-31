@@ -147,9 +147,9 @@ namespace Sinawler
         //根据UID抓取用户信息
         public User GetUserInfo ( long lUid )
         {
+            System.Threading.Thread.Sleep( iSleep );
             User user = new User();
             user.uid = -1;
-            System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_show( lUid );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid );
@@ -157,6 +157,7 @@ namespace Sinawler
                 return user;
 
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            if (strResult.Trim() == "") return user;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             
@@ -198,9 +199,9 @@ namespace Sinawler
         //根据用户昵称抓取用户信息
         public User GetUserInfo ( string strScreenName )
         {
+            System.Threading.Thread.Sleep( iSleep );
             User user = new User();
             user.uid = -1;
-            System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_show( strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( strScreenName );
@@ -208,6 +209,7 @@ namespace Sinawler
                 return user;
 
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            if (strResult.Trim() == "") return user;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             
@@ -249,9 +251,9 @@ namespace Sinawler
         //同时根据UID和用户昵称抓取用户信息
         public User GetUserInfo ( long lUid, string strScreenName )
         {
+            System.Threading.Thread.Sleep( iSleep );
             User user = new User();
             user.uid = -1;
-            System.Threading.Thread.Sleep( iSleep );
             string strResult = api.user_show( lUid, strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid, strScreenName );
@@ -259,6 +261,7 @@ namespace Sinawler
                 return user;
 
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            if (strResult.Trim() == "") return user;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             
@@ -317,6 +320,7 @@ namespace Sinawler
             string strResult = api.statuses_show( lStatusID );
             if (strResult == null) return null;
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            if (strResult.Trim() == "") return null;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
 
@@ -461,13 +465,15 @@ namespace Sinawler
         public List<Status> GetStatusesOfSince ( long lUid, long lSinceSid )
         {
             System.Threading.Thread.Sleep( iSleep );
+            List<Status> lstStatuses = new List<Status>();
             string strResult = api.user_timeline( lUid, lSinceSid );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_timeline( lUid, lSinceSid );
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            if (strResult.Trim() == "") return lstStatuses;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            List<Status> lstStatuses = new List<Status>();
+            
             XmlNodeList nodes = xmlDoc.GetElementsByTagName( "status" );
             foreach (XmlNode nodeStatus in nodes)
             {
@@ -613,13 +619,14 @@ namespace Sinawler
         /// <returns>评论列表</returns>
         public List<Comment> GetCommentsOf ( long lStatusID )
         {
+            System.Threading.Thread.Sleep( iSleep );
             List<Comment> lstComments = new List<Comment>();
             int iPage = 1;
-            System.Threading.Thread.Sleep( iSleep );
             string strResult = api.comments( lStatusID, iPage );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.comments( lStatusID, iPage );
             strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
+            if (strResult.Trim() == "") return lstComments;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             XmlNodeList nodes = xmlDoc.GetElementsByTagName( "comment" );
