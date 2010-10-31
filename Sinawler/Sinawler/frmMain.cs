@@ -792,8 +792,6 @@ namespace Sinawler
                 rdPreLoadAllUID.Enabled = true;
                 btnPauseContinue.Enabled = false;
                 btnPauseContinue.Text = "暂停/停止";
-
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
             }
             oAsyncWorkerFreqAdjust = null;
         }
