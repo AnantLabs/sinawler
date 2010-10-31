@@ -56,16 +56,15 @@ namespace Sinawler
                 //将队头取出
                 lCurrentUID = lstWaitingID.First.Value;
                 //从数据库队列缓存中移入元素
-                //只有内存队列不满时才移入
                 lHead = queueBuffer.FirstValue;
-                if (lHead > 0 && lstWaitingID.Count < iQueueLength)
+                if (lHead > 0)
                 {
                     lstWaitingID.AddLast( lHead );
                     queueBuffer.Remove( lHead );
                 }
-                //从队头移除，并移入队尾
-                lstWaitingID.RemoveFirst();
+                //移入队尾，并从队头移除
                 Enqueue( lCurrentUID );
+                lstWaitingID.RemoveFirst();
 
                 #region 预处理
                 if (lCurrentUID == lStartUID)  //说明经过一次循环迭代
