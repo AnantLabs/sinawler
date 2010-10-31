@@ -673,10 +673,6 @@ namespace Sinawler
             if (lUID > 0 && oAsyncWorkerUser != null)
                 robotUser.Enqueue( lUID );
 
-            StreamWriter swStatus = File.AppendText( robotStatus.LogFile );
-            swStatus.WriteLine( robotStatus.LogMessage );
-            swStatus.Close();
-            swStatus.Dispose();
             lblStatusMessage.Text = robotStatus.LogMessage;
             lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + robotStatus.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotStatus.LengthOfQueueInDB.ToString() + "个用户。";
         }
@@ -724,10 +720,6 @@ namespace Sinawler
             if (lUID!=null && lUID > 0 && oAsyncWorkerUser != null)
                 robotUser.Enqueue( lUID );
 
-            StreamWriter swComment = File.AppendText( robotComment.LogFile );
-            swComment.WriteLine( robotComment.LogMessage );
-            swComment.Close();
-            swComment.Dispose();
             lblCommentMessage.Text = robotComment.LogMessage;
             lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + robotComment.LengthOfQueueInMem.ToString() + "条微博，数据库队列中有" + robotComment.LengthOfQueueInDB.ToString() + "条微博。";
         }
