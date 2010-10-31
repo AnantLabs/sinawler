@@ -137,7 +137,10 @@ namespace Sinawler
                     queueBuffer.Remove( lHead );
                 }
                 //移入队尾，并从队头移除
-                Enqueue( lCurrentID );
+                if (lstWaitingID.Count <= iQueueLength)
+                    lstWaitingID.AddLast( lCurrentID );
+                else
+                    queueBuffer.Enqueue( lCurrentID );
                 lstWaitingID.RemoveFirst();
                 
                 #region 预处理
