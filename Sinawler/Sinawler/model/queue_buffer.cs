@@ -27,6 +27,38 @@ namespace Sinawler.Model
             _target = target;
         }
 
+        /// <summary>
+        /// 队头值
+        /// </summary>
+        public long FirstValue
+        {
+            get
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                DataRow dr;
+                long lResultID = 0;
+                switch (_target)
+                {
+                    case QueueBufferTarget.FOR_USER:
+                        dr = db.GetDataRow( "select top 1 uid from queue_buffer_for_user order by enqueue_time" );
+                        if (dr == null) return 0;
+                        lResultID = Convert.ToInt64( dr["uid"] );
+                        break;
+                    case QueueBufferTarget.FOR_STATUS:
+                        dr = db.GetDataRow( "select top 1 uid from queue_buffer_for_status order by enqueue_time" );
+                        if (dr == null) return 0;
+                        lResultID = Convert.ToInt64( dr["uid"] );
+                        break;
+                    case QueueBufferTarget.FOR_COMMENT:
+                        dr = db.GetDataRow( "select top 1 status_id from queue_buffer_for_comment order by enqueue_time" );
+                        if (dr == null) return 0;
+                        lResultID = Convert.ToInt64( dr["status_id"] );
+                        break;
+                }
+                return lResultID;
+            }
+        }
+
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
@@ -79,31 +111,9 @@ namespace Sinawler.Model
 		/// </summary>
 		public long Dequeue()
 		{
-            Database db = DatabaseFactory.CreateDatabase();
             //先获取头节点,再删除头节点
-            DataRow dr;
-            long lResultID=0;
-            switch (_target)
-            {
-                case QueueBufferTarget.FOR_USER:
-                    dr = db.GetDataRow( "select top 1 uid from queue_buffer_for_user order by enqueue_time" );
-                    if (dr == null) return 0;
-                    lResultID = Convert.ToInt64(dr["uid"]);
-                    db.CountByExecuteSQL("delete from queue_buffer_for_user where uid=" + lResultID.ToString());
-                    break;
-                case QueueBufferTarget.FOR_STATUS:
-                    dr = db.GetDataRow( "select top 1 uid from queue_buffer_for_status order by enqueue_time" );
-                    if (dr == null) return 0;
-                    lResultID = Convert.ToInt64(dr["uid"]);
-                    db.CountByExecuteSQL("delete from queue_buffer_for_status where uid=" + lResultID.ToString());
-                    break;
-                case QueueBufferTarget.FOR_COMMENT:
-                    dr = db.GetDataRow( "select top 1 status_id from queue_buffer_for_comment order by enqueue_time" );
-                    if (dr == null) return 0;
-                    lResultID = Convert.ToInt64(dr["status_id"]);
-                    db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id=" + lResultID.ToString());
-                    break;
-            }
+            long lResultID = this.FirstValue;
+            this.Remove( lResultID );
             return lResultID;
 		}
 

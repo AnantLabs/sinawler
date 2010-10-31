@@ -34,7 +34,7 @@ namespace Sinawler
             while (lstWaitingID.Count == 0)
             {
                 if (blnAsyncCancelled) return;
-                Thread.Sleep(1);   //若队列为空，则等待
+                Thread.Sleep(10);   //若队列为空，则等待
             }
             long lStartSID = lstWaitingID.First.Value;
             long lCurrentSID = 0;
@@ -48,15 +48,21 @@ namespace Sinawler
                     if (blnAsyncCancelled) return;
                     Thread.Sleep(50);
                 }
+
                 //将队头取出
                 lCurrentSID = lstWaitingID.First.Value;
-                lstWaitingID.RemoveFirst();
                 //从数据库队列缓存中移入元素
-                lHead = queueBuffer.Dequeue();
-                if (lHead > 0)
-                    lstWaitingID.AddLast(lHead);
-                //移入队尾
+                //只有内存队列不满时才移入
+                lHead = queueBuffer.FirstValue;
+                if (lHead > 0 && lstWaitingID.Count < iQueueLength)
+                {
+                    lstWaitingID.AddLast( lHead );
+                    queueBuffer.Remove( lHead );
+                }
+                //从队头移除，并移入队尾
+                lstWaitingID.RemoveFirst();
                 Enqueue( lCurrentSID );
+
                 #region 预处理
                 if (lCurrentSID == lStartSID)  //说明经过一次循环迭代
                 {
@@ -68,9 +74,7 @@ namespace Sinawler
                     }
 
                     //日志
-                    strLog = DateTime.Now.ToString() + "  " + "开始爬行之前增加迭代次数...";
-                    bwAsync.ReportProgress(0);
-                    Thread.Sleep(50);
+                    Log("开始爬行之前增加迭代次数...");
                     Comment.NewIterate();
                 }
                 #endregion
@@ -83,15 +87,11 @@ namespace Sinawler
                 }
 
                 //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬取微博" + lCurrentSID.ToString() + "的评论...";
-                bwAsync.ReportProgress(0);
-                Thread.Sleep(50);
+                Log("爬取微博" + lCurrentSID.ToString() + "的评论...");
                 //爬取当前微博的评论
                 List<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
                 //日志
-                strLog = DateTime.Now.ToString() + "  " + "爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。";
-                bwAsync.ReportProgress(0);
-                Thread.Sleep(50);
+                Log("爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。");
 
                 foreach (Comment comment in lstComment)
                 {
@@ -106,23 +106,16 @@ namespace Sinawler
                     if (!Comment.Exists(lCurrentID))
                     {
                         //日志
-                        strLog = DateTime.Now.ToString() + "  " + "将评论" + lCurrentID.ToString() + "存入数据库...";
-                        bwAsync.ReportProgress(0);
-                        Thread.Sleep(50);
+                        Log("将评论" + lCurrentID.ToString() + "存入数据库...");
                         comment.Add();
                     }
                 }
                 #endregion
                 //最后再将刚刚爬行完的StatusID加入队尾
                 //日志
-                strLog = DateTime.Now.ToString() + "  " + "微博" + lCurrentSID.ToString() + "的评论已爬取完毕。";
-                bwAsync.ReportProgress(0);
-                Thread.Sleep(50);
-
+                Log("微博" + lCurrentSID.ToString() + "的评论已爬取完毕。");
                 //日志
-                strLog = DateTime.Now.ToString() + "  " + "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次";
-                bwAsync.ReportProgress(0);
-                Thread.Sleep(50);
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
             }
         }
 

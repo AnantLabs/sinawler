@@ -16,7 +16,7 @@ namespace Sinawler
         protected SinaApiService api;
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
-        protected string strLog = "";                 //日志内容
+        private string strLogMessage = "";          //日志内容
 
         protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UID，也可能是StatusID等
         protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
@@ -58,8 +58,7 @@ namespace Sinawler
 
         public string LogMessage
         {
-            set { strLog = value; }
-            get { return strLog; }
+            get { return strLogMessage; }
         }
 
         public int QueueLength
@@ -115,6 +114,21 @@ namespace Sinawler
             crawler.SleepTime = rf.Interval;
             crawler.RemainingHits = rf.RemainingHits;
             crawler.ResetTimeInSeconds = rf.ResetTimeInSeconds;
+        }
+
+        /// <summary>
+        /// 记录日志
+        /// </summary>
+        /// <param name="strLog">日志内容</param>
+        protected void Log(string strLog)
+        {
+            strLogMessage = DateTime.Now.ToString() + "  " + strLog;
+            StreamWriter swComment = File.AppendText( strLogFile );
+            swComment.WriteLine( strLogMessage );
+            swComment.Close();
+
+            bwAsync.ReportProgress( 0 );
+            Thread.Sleep( 50 );
         }
 
         public virtual void Initialize (){}

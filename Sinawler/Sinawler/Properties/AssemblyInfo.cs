@@ -30,6 +30,6 @@ using System.Resources;
 //      内部版本号
 //      修订号
 //
-[assembly: AssemblyVersion( "3.5.0.15" )]
-[assembly: AssemblyFileVersion( "3.5.0.15" )]
+[assembly: AssemblyVersion( "3.6.0.1" )]
+[assembly: AssemblyFileVersion( "3.6.0.1" )]
 [assembly: NeutralResourcesLanguageAttribute("zh-CHS")]

@@ -622,10 +622,6 @@ namespace Sinawler
             if (lUID > 0 && oAsyncWorkerStatus != null)
                 robotStatus.Enqueue( lUID );
 
-            StreamWriter swUser = File.AppendText( robotUser.LogFile );
-            swUser.WriteLine( robotUser.LogMessage );
-            swUser.Close();
-            swUser.Dispose();
             lblUserMessage.Text = robotUser.LogMessage;
             lblUserQueueInfo.Text = "用户机器人的内存队列中有" + robotUser.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotUser.LengthOfQueueInDB.ToString() + "个用户。";
         }
