@@ -18,7 +18,7 @@ namespace Sinawler
         protected string strLogFile = "";             //日志文件
         private string strLogMessage = "";          //日志内容
 
-        protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UID，也可能是StatusID等
+        protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UserID，也可能是StatusID等
         protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
 
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
@@ -98,6 +98,7 @@ namespace Sinawler
         /// <param name="lid"></param>
         public void Enqueue ( long lID)
         {
+            if (lID <= 0) return;
             if (!QueueExists(lID))
             {   
                 //若内存中已达到上限，则使用数据库队列缓存
@@ -128,7 +129,7 @@ namespace Sinawler
             swComment.Close();
 
             bwAsync.ReportProgress( 0 );
-            Thread.Sleep( 50 );
+            Thread.Sleep(50);
         }
 
         public virtual void Initialize (){}

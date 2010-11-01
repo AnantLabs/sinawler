@@ -42,24 +42,24 @@ namespace Sinawler.Model
 		#region  成员方法
 
 		/// <summary>
-        /// 记录当前爬行的UID
+        /// 记录当前爬行的UserID
 		/// </summary>
-		static public void SetCurrentUID(long lUID)
+		static public void SetCurrentUserID(long lUserID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "delete from sys_args where arg_name='current_uid'";
+            string strSQL = "delete from sys_args where arg_name='current_user_id'";
             db.CountByExecuteSQL(strSQL);
-            strSQL = "insert into sys_args(arg_name,arg_value) values('current_uid','" + lUID.ToString() + "')";
+            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id','" + lUserID.ToString() + "')";
             db.CountByExecuteSQL(strSQL);
 		}
 
         /// <summary>
-        /// 获取当前爬行的UID（若爬行中止，则为上次中止处的用户）
+        /// 获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
         /// </summary>
-        static public long GetCurrentUID ()
+        static public long GetCurrentUserID ()
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_uid'";
+            string strSQL = "select arg_value from sys_args where arg_name='current_user_id'";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr["arg_value"] );

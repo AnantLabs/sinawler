@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Sinawler
 {
-    public enum EnumPreLoadQueue { NO_PRELOAD = 1, PRELOAD_UID = 2, PRELOAD_ALL_UID = 3 };
+    public enum EnumPreLoadQueue { NO_PRELOAD = 1, PRELOAD_USER_ID = 2, PRELOAD_ALL_USER_ID = 3 };
 
     public struct RequestFrequency
     {

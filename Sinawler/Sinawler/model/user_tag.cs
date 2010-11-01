@@ -13,15 +13,15 @@ namespace Sinawler.Model
         public user_tag()
         { }
 		#region Model
-		private long _uid;
+		private long _user_id;
 		private long _tag_id;
 		/// <summary>
 		/// 
 		/// </summary>
-		public long uid
+		public long user_id
 		{
-			set{ _uid=value;}
-			get{return _uid;}
+			set{ _user_id=value;}
+			get{return _user_id;}
 		}
 		/// <summary>
 		/// 标签ID
@@ -38,22 +38,22 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public user_tag(long uid,long tag_id)
+		public user_tag(long user_id,long tag_id)
 		{
             //StringBuilder strSql=new StringBuilder();
-            //strSql.Append("select uid,tag_id ");
+            //strSql.Append("select user_id,tag_id ");
             //strSql.Append(" FROM user_tag ");
-            //strSql.Append(" where uid=@uid and tag_id=@tag_id ");
+            //strSql.Append(" where user_id=@user_id and tag_id=@tag_id ");
             //SqlParameter[] parameters = {
-            //        new SqlParameter("@uid", SqlDbType.BigInt),
+            //        new SqlParameter("@user_id", SqlDbType.BigInt),
             //        new SqlParameter("@tag_id", SqlDbType.BigInt)};
-            //parameters[0].Value = uid;
+            //parameters[0].Value = user_id;
             //parameters[1].Value = tag_id;
 
             //DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
             //if(ds.Tables[0].Rows.Count>0)
             //{
-            //    _uid=ds.Tables[0].Rows[0]["uid"].ToString();
+            //    _user_id=ds.Tables[0].Rows[0]["user_id"].ToString();
             //    _tag_id=ds.Tables[0].Rows[0]["tag_id"].ToString();
             //}
 		}
@@ -61,16 +61,16 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(long uid,long tag_id)
+		public bool Exists(long user_id,long tag_id)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("select count(1) from user_tag");
-			strSql.Append(" where uid=@uid and tag_id=@tag_id ");
+			strSql.Append(" where user_id=@user_id and tag_id=@tag_id ");
 
 			SqlParameter[] parameters = {
-					new SqlParameter("@uid", SqlDbType.BigInt),
+					new SqlParameter("@user_id", SqlDbType.BigInt),
 					new SqlParameter("@tag_id", SqlDbType.BigInt)};
-			parameters[0].Value = uid;
+			parameters[0].Value = user_id;
 			parameters[1].Value = tag_id;
 
 			return true;
@@ -84,13 +84,13 @@ namespace Sinawler.Model
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("insert into user_tag(");
-			strSql.Append("uid,tag_id)");
+			strSql.Append("user_id,tag_id)");
 			strSql.Append(" values (");
-			strSql.Append("@uid,@tag_id)");
+			strSql.Append("@user_id,@tag_id)");
 			SqlParameter[] parameters = {
-					new SqlParameter("@uid", SqlDbType.BigInt,8),
+					new SqlParameter("@user_id", SqlDbType.BigInt,8),
 					new SqlParameter("@tag_id", SqlDbType.BigInt,8)};
-			parameters[0].Value = uid;
+			parameters[0].Value = user_id;
 			parameters[1].Value = tag_id;
 
 			//DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -103,11 +103,11 @@ namespace Sinawler.Model
 //            StringBuilder strSql=new StringBuilder();
 //            strSql.Append("update user_tag set ");
 //");
-//            strSql.Append(" where uid=@uid and tag_id=@tag_id ");
+//            strSql.Append(" where user_id=@user_id and tag_id=@tag_id ");
 //            SqlParameter[] parameters = {
-//                    new SqlParameter("@uid", SqlDbType.BigInt,8),
+//                    new SqlParameter("@user_id", SqlDbType.BigInt,8),
 //                    new SqlParameter("@tag_id", SqlDbType.BigInt,8)};
-//            parameters[0].Value = uid;
+//            parameters[0].Value = user_id;
 //            parameters[1].Value = tag_id;
 
 //            DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -116,15 +116,15 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 删除一条数据
 		/// </summary>
-		public void Delete(long uid,long tag_id)
+		public void Delete(long user_id,long tag_id)
 		{
 			StringBuilder strSql=new StringBuilder();
 			strSql.Append("delete from user_tag ");
-			strSql.Append(" where uid=@uid and tag_id=@tag_id ");
+			strSql.Append(" where user_id=@user_id and tag_id=@tag_id ");
 			SqlParameter[] parameters = {
-					new SqlParameter("@uid", SqlDbType.BigInt),
+					new SqlParameter("@user_id", SqlDbType.BigInt),
 					new SqlParameter("@tag_id", SqlDbType.BigInt)};
-			parameters[0].Value = uid;
+			parameters[0].Value = user_id;
 			parameters[1].Value = tag_id;
 
 			//DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
@@ -134,24 +134,24 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 得到一个对象实体
 		/// </summary>
-		public void GetModel(long uid,long tag_id)
+		public void GetModel(long user_id,long tag_id)
 		{
             //StringBuilder strSql = new StringBuilder();
-            //strSql.Append("select  top 1 uid,tag_id ");
+            //strSql.Append("select  top 1 user_id,tag_id ");
             //strSql.Append(" FROM user_tag ");
-            //strSql.Append(" where uid=@uid and tag_id=@tag_id ");
+            //strSql.Append(" where user_id=@user_id and tag_id=@tag_id ");
             //SqlParameter[] parameters = {
-            //        new SqlParameter("@uid", SqlDbType.BigInt),
+            //        new SqlParameter("@user_id", SqlDbType.BigInt),
             //        new SqlParameter("@tag_id", SqlDbType.BigInt)};
-            //parameters[0].Value = uid;
+            //parameters[0].Value = user_id;
             //parameters[1].Value = tag_id;
 
             //DataSet ds = DbHelperSQL.Query(strSql.ToString(), parameters);
             //if (ds.Tables[0].Rows.Count > 0)
             //{
-            //    if (ds.Tables[0].Rows[0]["uid"].ToString() != "")
+            //    if (ds.Tables[0].Rows[0]["user_id"].ToString() != "")
             //    {
-            //        model.uid = long.Parse(ds.Tables[0].Rows[0]["uid"].ToString());
+            //        model.user_id = long.Parse(ds.Tables[0].Rows[0]["user_id"].ToString());
             //    }
             //    if (ds.Tables[0].Rows[0]["tag_id"].ToString() != "")
             //    {

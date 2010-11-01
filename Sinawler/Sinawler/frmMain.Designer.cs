@@ -40,11 +40,11 @@
             this.lblGender = new System.Windows.Forms.Label();
             this.lblLocation = new System.Windows.Forms.Label();
             this.lblName = new System.Windows.Forms.Label();
-            this.lblUID = new System.Windows.Forms.Label();
+            this.lblUserID = new System.Windows.Forms.Label();
             this.btnStartBySearch = new System.Windows.Forms.Button();
-            this.lblSearchUID = new System.Windows.Forms.Label();
+            this.lblSearchUserID = new System.Windows.Forms.Label();
             this.lblSearchName = new System.Windows.Forms.Label();
-            this.txtUID = new System.Windows.Forms.TextBox();
+            this.txtUserID = new System.Windows.Forms.TextBox();
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.btnSearchOnline = new System.Windows.Forms.Button();
             this.btnSearchOffLine = new System.Windows.Forms.Button();
@@ -59,15 +59,15 @@
             this.lblCGender = new System.Windows.Forms.Label();
             this.lblCLocation = new System.Windows.Forms.Label();
             this.lblCName = new System.Windows.Forms.Label();
-            this.lblCUID = new System.Windows.Forms.Label();
+            this.lblCUserID = new System.Windows.Forms.Label();
             this.btnStartByCurrent = new System.Windows.Forms.Button();
             this.grpSearch = new System.Windows.Forms.GroupBox();
             this.btnExit = new System.Windows.Forms.Button();
             this.grpControl = new System.Windows.Forms.GroupBox();
             this.btnPauseContinue = new System.Windows.Forms.Button();
             this.lblPreLoad = new System.Windows.Forms.Label();
-            this.rdPreLoadAllUID = new System.Windows.Forms.RadioButton();
-            this.rdPreLoadUID = new System.Windows.Forms.RadioButton();
+            this.rdPreLoadAllUserID = new System.Windows.Forms.RadioButton();
+            this.rdPreLoadUserID = new System.Windows.Forms.RadioButton();
             this.rdNoPreLoad = new System.Windows.Forms.RadioButton();
             this.gpSetting = new System.Windows.Forms.GroupBox();
             this.btnLoad = new System.Windows.Forms.Button();
@@ -133,7 +133,7 @@
             this.grpUserInfo.Controls.Add( this.lblGender );
             this.grpUserInfo.Controls.Add( this.lblLocation );
             this.grpUserInfo.Controls.Add( this.lblName );
-            this.grpUserInfo.Controls.Add( this.lblUID );
+            this.grpUserInfo.Controls.Add( this.lblUserID );
             this.grpUserInfo.Location = new System.Drawing.Point( 11, 82 );
             this.grpUserInfo.Name = "grpUserInfo";
             this.grpUserInfo.Size = new System.Drawing.Size( 806, 75 );
@@ -222,14 +222,14 @@
             this.lblName.TabIndex = 1;
             this.lblName.Text = "用户昵称：";
             // 
-            // lblUID
+            // lblUserID
             // 
-            this.lblUID.AutoSize = true;
-            this.lblUID.Location = new System.Drawing.Point( 9, 21 );
-            this.lblUID.Name = "lblUID";
-            this.lblUID.Size = new System.Drawing.Size( 53, 12 );
-            this.lblUID.TabIndex = 0;
-            this.lblUID.Text = "用户ID：";
+            this.lblUserID.AutoSize = true;
+            this.lblUserID.Location = new System.Drawing.Point( 9, 21 );
+            this.lblUserID.Name = "lblUserID";
+            this.lblUserID.Size = new System.Drawing.Size( 53, 12 );
+            this.lblUserID.TabIndex = 0;
+            this.lblUserID.Text = "用户ID：";
             // 
             // btnStartBySearch
             // 
@@ -241,14 +241,14 @@
             this.btnStartBySearch.UseVisualStyleBackColor = true;
             this.btnStartBySearch.Click += new System.EventHandler( this.btnStartBySearch_Click );
             // 
-            // lblSearchUID
+            // lblSearchUserID
             // 
-            this.lblSearchUID.AutoSize = true;
-            this.lblSearchUID.Location = new System.Drawing.Point( 13, 25 );
-            this.lblSearchUID.Name = "lblSearchUID";
-            this.lblSearchUID.Size = new System.Drawing.Size( 53, 12 );
-            this.lblSearchUID.TabIndex = 2;
-            this.lblSearchUID.Text = "用户ID：";
+            this.lblSearchUserID.AutoSize = true;
+            this.lblSearchUserID.Location = new System.Drawing.Point( 13, 25 );
+            this.lblSearchUserID.Name = "lblSearchUserID";
+            this.lblSearchUserID.Size = new System.Drawing.Size( 53, 12 );
+            this.lblSearchUserID.TabIndex = 2;
+            this.lblSearchUserID.Text = "用户ID：";
             // 
             // lblSearchName
             // 
@@ -259,13 +259,13 @@
             this.lblSearchName.TabIndex = 3;
             this.lblSearchName.Text = "用户昵称：";
             // 
-            // txtUID
+            // txtUserID
             // 
-            this.txtUID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtUID.Location = new System.Drawing.Point( 64, 20 );
-            this.txtUID.Name = "txtUID";
-            this.txtUID.Size = new System.Drawing.Size( 155, 21 );
-            this.txtUID.TabIndex = 4;
+            this.txtUserID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtUserID.Location = new System.Drawing.Point( 64, 20 );
+            this.txtUserID.Name = "txtUserID";
+            this.txtUserID.Size = new System.Drawing.Size( 155, 21 );
+            this.txtUserID.TabIndex = 4;
             // 
             // txtUserName
             // 
@@ -299,9 +299,9 @@
             // 
             this.grpSearchCondition.Controls.Add( this.btnSearchOffLine );
             this.grpSearchCondition.Controls.Add( this.btnSearchOnline );
-            this.grpSearchCondition.Controls.Add( this.txtUID );
+            this.grpSearchCondition.Controls.Add( this.txtUserID );
             this.grpSearchCondition.Controls.Add( this.txtUserName );
-            this.grpSearchCondition.Controls.Add( this.lblSearchUID );
+            this.grpSearchCondition.Controls.Add( this.lblSearchUserID );
             this.grpSearchCondition.Controls.Add( this.lblSearchName );
             this.grpSearchCondition.Location = new System.Drawing.Point( 11, 20 );
             this.grpSearchCondition.Name = "grpSearchCondition";
@@ -321,7 +321,7 @@
             this.grpCurrentUser.Controls.Add( this.lblCGender );
             this.grpCurrentUser.Controls.Add( this.lblCLocation );
             this.grpCurrentUser.Controls.Add( this.lblCName );
-            this.grpCurrentUser.Controls.Add( this.lblCUID );
+            this.grpCurrentUser.Controls.Add( this.lblCUserID );
             this.grpCurrentUser.Location = new System.Drawing.Point( 4, 12 );
             this.grpCurrentUser.Name = "grpCurrentUser";
             this.grpCurrentUser.Size = new System.Drawing.Size( 827, 71 );
@@ -410,14 +410,14 @@
             this.lblCName.TabIndex = 1;
             this.lblCName.Text = "用户昵称：";
             // 
-            // lblCUID
+            // lblCUserID
             // 
-            this.lblCUID.AutoSize = true;
-            this.lblCUID.Location = new System.Drawing.Point( 9, 21 );
-            this.lblCUID.Name = "lblCUID";
-            this.lblCUID.Size = new System.Drawing.Size( 53, 12 );
-            this.lblCUID.TabIndex = 0;
-            this.lblCUID.Text = "用户ID：";
+            this.lblCUserID.AutoSize = true;
+            this.lblCUserID.Location = new System.Drawing.Point( 9, 21 );
+            this.lblCUserID.Name = "lblCUserID";
+            this.lblCUserID.Size = new System.Drawing.Size( 53, 12 );
+            this.lblCUserID.TabIndex = 0;
+            this.lblCUserID.Text = "用户ID：";
             // 
             // btnStartByCurrent
             // 
@@ -456,8 +456,8 @@
             // 
             this.grpControl.Controls.Add( this.btnPauseContinue );
             this.grpControl.Controls.Add( this.lblPreLoad );
-            this.grpControl.Controls.Add( this.rdPreLoadAllUID );
-            this.grpControl.Controls.Add( this.rdPreLoadUID );
+            this.grpControl.Controls.Add( this.rdPreLoadAllUserID );
+            this.grpControl.Controls.Add( this.rdPreLoadUserID );
             this.grpControl.Controls.Add( this.rdNoPreLoad );
             this.grpControl.Controls.Add( this.btnStartByCurrent );
             this.grpControl.Controls.Add( this.btnStartBySearch );
@@ -490,27 +490,27 @@
             this.lblPreLoad.Text = "预加载用户队列选项：";
             this.lblPreLoad.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // rdPreLoadAllUID
+            // rdPreLoadAllUserID
             // 
-            this.rdPreLoadAllUID.AutoSize = true;
-            this.rdPreLoadAllUID.Location = new System.Drawing.Point( 523, 15 );
-            this.rdPreLoadAllUID.Name = "rdPreLoadAllUID";
-            this.rdPreLoadAllUID.Size = new System.Drawing.Size( 239, 16 );
-            this.rdPreLoadAllUID.TabIndex = 14;
-            this.rdPreLoadAllUID.Text = "从数据库全范围内预加载用户队列（慢）";
-            this.rdPreLoadAllUID.UseVisualStyleBackColor = true;
-            this.rdPreLoadAllUID.Click += new System.EventHandler( this.rdPreLoadAllUID_Click );
+            this.rdPreLoadAllUserID.AutoSize = true;
+            this.rdPreLoadAllUserID.Location = new System.Drawing.Point( 523, 15 );
+            this.rdPreLoadAllUserID.Name = "rdPreLoadAllUserID";
+            this.rdPreLoadAllUserID.Size = new System.Drawing.Size( 239, 16 );
+            this.rdPreLoadAllUserID.TabIndex = 14;
+            this.rdPreLoadAllUserID.Text = "从数据库全范围内预加载用户队列（慢）";
+            this.rdPreLoadAllUserID.UseVisualStyleBackColor = true;
+            this.rdPreLoadAllUserID.Click += new System.EventHandler( this.rdPreLoadAllUserID_Click );
             // 
-            // rdPreLoadUID
+            // rdPreLoadUserID
             // 
-            this.rdPreLoadUID.AutoSize = true;
-            this.rdPreLoadUID.Location = new System.Drawing.Point( 314, 15 );
-            this.rdPreLoadUID.Name = "rdPreLoadUID";
-            this.rdPreLoadUID.Size = new System.Drawing.Size( 203, 16 );
-            this.rdPreLoadUID.TabIndex = 13;
-            this.rdPreLoadUID.Text = "从用户表预加载用户队列（较快）";
-            this.rdPreLoadUID.UseVisualStyleBackColor = true;
-            this.rdPreLoadUID.Click += new System.EventHandler( this.rdPreLoadUID_Click );
+            this.rdPreLoadUserID.AutoSize = true;
+            this.rdPreLoadUserID.Location = new System.Drawing.Point( 314, 15 );
+            this.rdPreLoadUserID.Name = "rdPreLoadUserID";
+            this.rdPreLoadUserID.Size = new System.Drawing.Size( 203, 16 );
+            this.rdPreLoadUserID.TabIndex = 13;
+            this.rdPreLoadUserID.Text = "从用户表预加载用户队列（较快）";
+            this.rdPreLoadUserID.UseVisualStyleBackColor = true;
+            this.rdPreLoadUserID.Click += new System.EventHandler( this.rdPreLoadUserID_Click );
             // 
             // rdNoPreLoad
             // 
@@ -903,7 +903,7 @@
         private System.Windows.Forms.Button btnStartByLast;
         private System.Windows.Forms.GroupBox grpUserInfo;
         private System.Windows.Forms.Label lblName;
-        private System.Windows.Forms.Label lblUID;
+        private System.Windows.Forms.Label lblUserID;
         private System.Windows.Forms.Label lblStatusesCount;
         private System.Windows.Forms.Label lblCreatedAt;
         private System.Windows.Forms.Label lblFriendsCount;
@@ -913,9 +913,9 @@
         private System.Windows.Forms.Label lblFollowing;
         private System.Windows.Forms.Label lblVerified;
         private System.Windows.Forms.Button btnStartBySearch;
-        private System.Windows.Forms.Label lblSearchUID;
+        private System.Windows.Forms.Label lblSearchUserID;
         private System.Windows.Forms.Label lblSearchName;
-        private System.Windows.Forms.TextBox txtUID;
+        private System.Windows.Forms.TextBox txtUserID;
         private System.Windows.Forms.TextBox txtUserName;
         private System.Windows.Forms.Button btnSearchOnline;
         private System.Windows.Forms.Button btnSearchOffLine;
@@ -931,7 +931,7 @@
         private System.Windows.Forms.Label lblCGender;
         private System.Windows.Forms.Label lblCLocation;
         private System.Windows.Forms.Label lblCName;
-        private System.Windows.Forms.Label lblCUID;
+        private System.Windows.Forms.Label lblCUserID;
         private System.Windows.Forms.GroupBox grpSearch;
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.GroupBox grpControl;
@@ -958,8 +958,8 @@
         private System.Windows.Forms.Label lblDBName;
         private System.Windows.Forms.TextBox txtDBName;
         private System.Windows.Forms.Button btnPost;
-        private System.Windows.Forms.RadioButton rdPreLoadAllUID;
-        private System.Windows.Forms.RadioButton rdPreLoadUID;
+        private System.Windows.Forms.RadioButton rdPreLoadAllUserID;
+        private System.Windows.Forms.RadioButton rdPreLoadUserID;
         private System.Windows.Forms.RadioButton rdNoPreLoad;
         private System.Windows.Forms.Label lblPreLoad;
         private System.Windows.Forms.Button btnPauseContinue;

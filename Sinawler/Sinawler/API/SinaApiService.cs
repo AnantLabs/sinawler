@@ -96,7 +96,7 @@ namespace Sina.Api
             }
             catch { return null; }
         }
-        /*指定UID的指定微博ID之后的微博列表*/
+        /*指定UserID的指定微博ID之后的微博列表*/
         public string user_timeline(long lUid, long lSinceID)
         {
             try
@@ -179,11 +179,11 @@ namespace Sina.Api
             { return null; }
         }
         /*获取单条ID的微博信息*/
-        public string statuses_id(string id, string uid)
+        public string statuses_id(string id, string user_id)
         {
             try
             {
-                string url = "http://api.t.sina.com.cn/" + uid + "/statuses/" + id;
+                string url = "http://api.t.sina.com.cn/" + user_id + "/statuses/" + id;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -269,10 +269,10 @@ namespace Sina.Api
             { return false; }
         }
 
-        /*获取用户关注对象uid列表 */
+        /*获取用户关注对象user_id列表 */
         /*
          * friends/ids 
-        返回用户关注对象uid列表 
+        返回用户关注对象user_id列表 
 
         URL
         http://api.t.sina.com.cn/friends/ids.format 
@@ -287,10 +287,10 @@ namespace Sina.Api
         false 
 
         请求参数
-        id. 选填参数. 要获取好友的UID或微博昵称 
+        id. 选填参数. 要获取好友的UserID或微博昵称 
         o 示例: http://api.t.sina.com.cn/friends/ids/12345.xml or http://api.t.sina.com.cn/statuses/friends/bob.xml 
 
-        user_id. 选填参数. 要获取的UID 
+        user_id. 选填参数. 要获取的UserID 
         o 示例: http://api.t.sina.com.cn/friends/ids.xml?user_id=1401881 
 
         screen_name. 选填参数. 要获取的微博昵称 
@@ -327,10 +327,10 @@ namespace Sina.Api
             return ids;
         }
 
-        /*获取用户粉丝对象uid列表 */
+        /*获取用户粉丝对象user_id列表 */
         /*
          * followers/ids 
-        返回用户粉丝uid列表，注意目前接口最多只返回5000个粉丝。 
+        返回用户粉丝user_id列表，注意目前接口最多只返回5000个粉丝。 
 
         URL
         http://api.t.sina.com.cn/followers/ids.format 
@@ -345,9 +345,9 @@ namespace Sina.Api
         false 
 
         请求参数
-        id. 选填参数. 要获取好友的UID或微博昵称 
+        id. 选填参数. 要获取好友的UserID或微博昵称 
         o 示例: http://api.t.sina.com.cn/followers/ids/12345.xml or http://api.t.sina.com.cn/statuses/friends/bob.xml 
-        user_id. 选填参数，要获取的UID 
+        user_id. 选填参数，要获取的UserID 
         o 示例: http://api.t.sina.com.cn/followers/ids.xml?user_id=1401881 
         screen_name. 选填参数，要获取的微博昵称 
         o 示例: http://api.t.sina.com.cn/followers/ids.xml?screen_name=101010 

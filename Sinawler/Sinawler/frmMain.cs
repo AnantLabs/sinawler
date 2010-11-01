@@ -124,7 +124,7 @@ namespace Sinawler
         {
             if (oCurrentUser != null)
             {
-                lblCUID.Text = "用户ID：" + oCurrentUser.uid.ToString();
+                lblCUserID.Text = "用户ID：" + oCurrentUser.user_id.ToString();
                 lblCName.Text = "用户昵称：" + oCurrentUser.screen_name;
                 if (oCurrentUser.gender == "m")
                     lblCGender.Text = "性别：男";
@@ -148,7 +148,7 @@ namespace Sinawler
             }
             else
             {
-                lblCUID.Text = "用户ID：";
+                lblCUserID.Text = "用户ID：";
                 lblCName.Text = "用户昵称：";
                 lblCGender.Text = "性别：";
                 lblCVerified.Text = "是否微博认证用户：";
@@ -166,7 +166,7 @@ namespace Sinawler
         {
             if (oSearchedUser != null)
             {
-                lblUID.Text = "用户ID：" + oSearchedUser.uid.ToString();
+                lblUserID.Text = "用户ID：" + oSearchedUser.user_id.ToString();
                 lblName.Text = "用户昵称：" + oSearchedUser.screen_name;
                 if (oSearchedUser.gender == "m")
                     lblGender.Text = "性别：男";
@@ -190,7 +190,7 @@ namespace Sinawler
             }
             else
             {
-                lblUID.Text = "用户ID：";
+                lblUserID.Text = "用户ID：";
                 lblName.Text = "用户昵称：";
                 lblGender.Text = "性别：";
                 lblVerified.Text = "是否微博认证用户：";
@@ -221,28 +221,28 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
-                if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
+                if (txtUserID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
                 {
                     MessageBox.Show( "请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫" );
-                    txtUID.Focus();
+                    txtUserID.Focus();
                     return;
                 }
-                string strUID = txtUID.Text.Trim();
+                string strUserID = txtUserID.Text.Trim();
                 string strScreenName = txtUserName.Text.Trim();
                 long lBuffer;
-                if (strUID != "" && !long.TryParse( strUID, out lBuffer ))
+                if (strUserID != "" && !long.TryParse( strUserID, out lBuffer ))
                 {
                     MessageBox.Show( "请输入正确的用户ID。", "新浪微博爬虫" );
                     return;
                 }
                 SinaMBCrawler crawler = new SinaMBCrawler( api );
                 crawler.SleepTime = 0;  //这里不等待
-                if (strUID != "" && strScreenName == "")
-                    oSearchedUser = crawler.GetUserInfo( Convert.ToInt64( strUID ) );
-                if (strUID == "" && strScreenName != "")
+                if (strUserID != "" && strScreenName == "")
+                    oSearchedUser = crawler.GetUserInfo( Convert.ToInt64( strUserID ) );
+                if (strUserID == "" && strScreenName != "")
                     oSearchedUser = crawler.GetUserInfo( strScreenName );
-                if (strUID != "" && strScreenName != "")
-                    oSearchedUser = crawler.GetUserInfo( Convert.ToInt64( strUID ), strScreenName );
+                if (strUserID != "" && strScreenName != "")
+                    oSearchedUser = crawler.GetUserInfo( Convert.ToInt64( strUserID ), strScreenName );
                 if (oSearchedUser == null) MessageBox.Show( "未搜索到指定用户。", "新浪微博爬虫" );
                 ShowSearchedUser();
             }
@@ -258,10 +258,10 @@ namespace Sinawler
 
         private void btnSearchOffLine_Click ( object sender, EventArgs e )
         {
-            if (txtUID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
+            if (txtUserID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
             {
                 MessageBox.Show( "请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫" );
-                txtUID.Focus();
+                txtUserID.Focus();
                 return;
             }
             strDataBaseStatus = PubHelper.TestDataBase();
@@ -270,28 +270,28 @@ namespace Sinawler
                 MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫" );
                 return;
             }
-            string strUID = txtUID.Text.Trim();
+            string strUserID = txtUserID.Text.Trim();
             string strScreenName = txtUserName.Text.Trim();
             long lBuffer;
-            if (strUID != "" && !long.TryParse( strUID, out lBuffer ))
+            if (strUserID != "" && !long.TryParse( strUserID, out lBuffer ))
             {
                 MessageBox.Show( "请输入正确的用户ID。", "新浪微博爬虫" );
                 return;
             }
-            if (strUID != "" && strScreenName == "")
-                if (!oSearchedUser.GetModel( Convert.ToInt64( strUID ) ))
+            if (strUserID != "" && strScreenName == "")
+                if (!oSearchedUser.GetModel( Convert.ToInt64( strUserID ) ))
                 {
                     MessageBox.Show( "未搜索到指定用户。", "新浪微博爬虫" );
                     oSearchedUser = null;
                 }
-            if (strUID == "" && strScreenName != "")
+            if (strUserID == "" && strScreenName != "")
                 if (!oSearchedUser.GetModel( strScreenName ))
                 {
                     MessageBox.Show( "未搜索到指定用户。", "新浪微博爬虫" );
                     oSearchedUser = null;
                 }
-            if (strUID != "" && strScreenName != "")
-                if (!oSearchedUser.GetModel( Convert.ToInt64( strUID ), strScreenName ))
+            if (strUserID != "" && strScreenName != "")
+                if (!oSearchedUser.GetModel( Convert.ToInt64( strUserID ), strScreenName ))
                 {
                     MessageBox.Show( "未搜索到指定用户。", "新浪微博爬虫" );
                     oSearchedUser = null;
@@ -392,8 +392,8 @@ namespace Sinawler
                 else
                 {
                     rdNoPreLoad.Enabled = false;
-                    rdPreLoadUID.Enabled = false;
-                    rdPreLoadAllUID.Enabled = false;
+                    rdPreLoadUserID.Enabled = false;
+                    rdPreLoadAllUserID.Enabled = false;
                     btnStartByCurrent.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -488,8 +488,8 @@ namespace Sinawler
                 else
                 {
                     rdNoPreLoad.Enabled = false;
-                    rdPreLoadUID.Enabled = false;
-                    rdPreLoadAllUID.Enabled = false;
+                    rdPreLoadUserID.Enabled = false;
+                    rdPreLoadAllUserID.Enabled = false;
                     btnStartBySearch.Text = "停止爬行";
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -514,7 +514,7 @@ namespace Sinawler
                     MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫" );
                     return;
                 }
-                if (SysArg.GetCurrentUID() == 0)
+                if (SysArg.GetCurrentUserID() == 0)
                 {
                     MessageBox.Show( this, "无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫" );
                     return;
@@ -584,8 +584,8 @@ namespace Sinawler
                 else
                 {
                     rdNoPreLoad.Enabled = false;
-                    rdPreLoadUID.Enabled = false;
-                    rdPreLoadAllUID.Enabled = false;
+                    rdPreLoadUserID.Enabled = false;
+                    rdPreLoadAllUserID.Enabled = false;
                     btnStartByLast.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
@@ -601,26 +601,31 @@ namespace Sinawler
 
         private void StartCrawUserByCurrentUser ( Object sender, DoWorkEventArgs e )
         {
-            robotUser.Start( oCurrentUser.uid );
+            robotUser.Start( oCurrentUser.user_id );
         }
 
         private void StartCrawUserBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
-            robotUser.Start( oSearchedUser.uid );
+            robotUser.Start( oSearchedUser.user_id );
         }
 
         private void StartCrawUserByLastUser ( Object sender, DoWorkEventArgs e )
         {
-            long lLastUID = SysArg.GetCurrentUID(); //能走到这一步，说明lLastUID没问题，故不用验证
-            robotUser.Start( lLastUID );
+            long lLastUserID = SysArg.GetCurrentUserID(); //能走到这一步，说明lLastUserID没问题，故不用验证
+            robotUser.Start( lLastUserID );
         }
 
         private void UserProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
             //传递给StatusRobot
-            long lUID = robotUser.CurrentUID;
-            if (lUID > 0 && oAsyncWorkerStatus != null)
-                robotStatus.Enqueue( lUID );
+            long lUserID = robotUser.CurrentUserID;
+            long lQueueBufferUserID = robotUser.QueueBufferFirstUserID;
+
+            if (oAsyncWorkerStatus != null)
+            {
+                robotStatus.Enqueue( lUserID );
+                robotStatus.Enqueue( lQueueBufferUserID );
+            }
 
             lblUserMessage.Text = robotUser.LogMessage;
             lblUserQueueInfo.Text = "用户机器人的内存队列中有" + robotUser.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotUser.LengthOfQueueInDB.ToString() + "个用户。";
@@ -646,10 +651,10 @@ namespace Sinawler
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 rdNoPreLoad.Enabled = true;
-                rdPreLoadUID.Enabled = true;
-                rdPreLoadAllUID.Enabled = true;
+                rdPreLoadUserID.Enabled = true;
+                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/停止";
+                btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
@@ -665,13 +670,13 @@ namespace Sinawler
         {
             //传递给CommentRobot
             long lSID = robotStatus.CurrentSID;
-            if (lSID > 0 && oAsyncWorkerComment != null)
-                robotComment.Enqueue( lSID );
-
             //传递给UserRobot
-            long lUID = robotStatus.CurrentRetweetedUID;
-            if (lUID > 0 && oAsyncWorkerUser != null)
-                robotUser.Enqueue( lUID );
+            long lUserID = robotStatus.CurrentRetweetedUserID;
+
+            if (oAsyncWorkerComment != null)
+                robotComment.Enqueue( lSID );
+            if (oAsyncWorkerUser != null)
+                robotUser.Enqueue( lUserID );
 
             lblStatusMessage.Text = robotStatus.LogMessage;
             lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + robotStatus.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotStatus.LengthOfQueueInDB.ToString() + "个用户。";
@@ -697,10 +702,10 @@ namespace Sinawler
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 rdNoPreLoad.Enabled = true;
-                rdPreLoadUID.Enabled = true;
-                rdPreLoadAllUID.Enabled = true;
+                rdPreLoadUserID.Enabled = true;
+                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/停止";
+                btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
@@ -715,10 +720,11 @@ namespace Sinawler
         private void CommentProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
             //传递给UserRobot
-            long lUID = robotComment.CurrentUID;
-            if (lUID == null) lUID = 0;
-            if (lUID!=null && lUID > 0 && oAsyncWorkerUser != null)
-                robotUser.Enqueue( lUID );
+            long lUserID = robotComment.CurrentUserID;
+            if (oAsyncWorkerUser != null)
+                robotUser.Enqueue( lUserID );
+            if (oAsyncWorkerStatus != null)
+                robotStatus.Enqueue( lUserID );
 
             lblCommentMessage.Text = robotComment.LogMessage;
             lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + robotComment.LengthOfQueueInMem.ToString() + "条微博，数据库队列中有" + robotComment.LengthOfQueueInDB.ToString() + "条微博。";
@@ -744,10 +750,10 @@ namespace Sinawler
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 rdNoPreLoad.Enabled = true;
-                rdPreLoadUID.Enabled = true;
-                rdPreLoadAllUID.Enabled = true;
+                rdPreLoadUserID.Enabled = true;
+                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/停止";
+                btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
@@ -788,10 +794,10 @@ namespace Sinawler
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 rdNoPreLoad.Enabled = true;
-                rdPreLoadUID.Enabled = true;
-                rdPreLoadAllUID.Enabled = true;
+                rdPreLoadUserID.Enabled = true;
+                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/停止";
+                btnPauseContinue.Text = "暂停/继续";
             }
             oAsyncWorkerFreqAdjust = null;
         }
@@ -862,26 +868,26 @@ namespace Sinawler
 
         private void rdNoPreLoad_Click ( object sender, EventArgs e )
         {
-            rdPreLoadUID.Checked = !rdNoPreLoad.Checked;
-            rdPreLoadAllUID.Checked = !rdNoPreLoad.Checked;
+            rdPreLoadUserID.Checked = !rdNoPreLoad.Checked;
+            rdPreLoadAllUserID.Checked = !rdNoPreLoad.Checked;
             if (rdNoPreLoad.Checked)
                 robotUser.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
         }
 
-        private void rdPreLoadUID_Click ( object sender, EventArgs e )
+        private void rdPreLoadUserID_Click ( object sender, EventArgs e )
         {
-            rdNoPreLoad.Checked = !rdPreLoadUID.Checked;
-            rdPreLoadAllUID.Checked = !rdPreLoadUID.Checked;
-            if (rdPreLoadUID.Checked)
-                robotUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_UID;
+            rdNoPreLoad.Checked = !rdPreLoadUserID.Checked;
+            rdPreLoadAllUserID.Checked = !rdPreLoadUserID.Checked;
+            if (rdPreLoadUserID.Checked)
+                robotUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_USER_ID;
         }
 
-        private void rdPreLoadAllUID_Click ( object sender, EventArgs e )
+        private void rdPreLoadAllUserID_Click ( object sender, EventArgs e )
         {
-            rdNoPreLoad.Checked = !rdPreLoadAllUID.Checked;
-            rdPreLoadUID.Checked = !rdPreLoadAllUID.Checked;
-            if (rdPreLoadAllUID.Checked)
-                robotUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_UID;
+            rdNoPreLoad.Checked = !rdPreLoadAllUserID.Checked;
+            rdPreLoadUserID.Checked = !rdPreLoadAllUserID.Checked;
+            if (rdPreLoadAllUserID.Checked)
+                robotUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_USER_ID;
         }
 
         private void btnPauseContinue_Click ( object sender, EventArgs e )

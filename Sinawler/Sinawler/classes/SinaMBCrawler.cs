@@ -121,7 +121,7 @@ namespace Sinawler
         }
 
         /// <summary>
-        /// 获取指定UID的指定个数的好友（即该用户所关注的人）ID列表
+        /// 获取指定UserID的指定个数的好友（即该用户所关注的人）ID列表
         /// </summary>
         /// <param name="lUid">要获取好友的用户ID</param>
         /// <param name="lCursor">分页时指示游标位置，详见API文档</param>
@@ -133,7 +133,7 @@ namespace Sinawler
         }
 
         /// <summary>
-        /// 获取指定UID的指定个数的粉丝ID列表
+        /// 获取指定UserID的指定个数的粉丝ID列表
         /// </summary>
         /// <param name="lUid">要获取好友的用户ID</param>
         /// <param name="lCursor">分页时指示游标位置，详见API文档</param>
@@ -144,12 +144,12 @@ namespace Sinawler
             return api.followers_ids( lUid, iCursor );
         }
 
-        //根据UID抓取用户信息
+        //根据UserID抓取用户信息
         public User GetUserInfo ( long lUid )
         {
             System.Threading.Thread.Sleep( iSleep );
             User user = new User();
-            user.uid = -1;
+            user.user_id = -1;
             string strResult = api.user_show( lUid );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid );
@@ -161,7 +161,7 @@ namespace Sinawler
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             
-            user.uid = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
+            user.user_id = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
             user.province = xmlDoc.GetElementsByTagName( "province" )[0].InnerText;
@@ -201,7 +201,7 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep( iSleep );
             User user = new User();
-            user.uid = -1;
+            user.user_id = -1;
             string strResult = api.user_show( strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( strScreenName );
@@ -213,7 +213,7 @@ namespace Sinawler
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             
-            user.uid = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
+            user.user_id = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
             user.province = xmlDoc.GetElementsByTagName( "province" )[0].InnerText;
@@ -248,12 +248,12 @@ namespace Sinawler
             return user;
         }
 
-        //同时根据UID和用户昵称抓取用户信息
+        //同时根据UserID和用户昵称抓取用户信息
         public User GetUserInfo ( long lUid, string strScreenName )
         {
             System.Threading.Thread.Sleep( iSleep );
             User user = new User();
-            user.uid = -1;
+            user.user_id = -1;
             string strResult = api.user_show( lUid, strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid, strScreenName );
@@ -265,7 +265,7 @@ namespace Sinawler
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
             
-            user.uid = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
+            user.user_id = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
             user.province = xmlDoc.GetElementsByTagName( "province" )[0].InnerText;
@@ -304,9 +304,9 @@ namespace Sinawler
         public User GetCurrentUserInfo ()
         {
             System.Threading.Thread.Sleep( iSleep );
-            long lCurrentUID = api.account_verify_credentials();
-            if (lCurrentUID == 0) return null;
-            else return this.GetUserInfo( lCurrentUID );
+            long lCurrentUserID = api.account_verify_credentials();
+            if (lCurrentUserID == 0) return null;
+            else return this.GetUserInfo( lCurrentUserID );
         }
 
         /// <summary>
@@ -383,7 +383,7 @@ namespace Sinawler
                         status.original_pic = node.InnerText;
                         break;
                     case "user":
-                        status.uid = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                        status.user_id = Convert.ToInt64( node.ChildNodes[0].InnerText );
                         break;
                     case "retweeted_status":
                         status.retweeted_status = new Status();
@@ -445,7 +445,7 @@ namespace Sinawler
                                     status.retweeted_status.original_pic = retweeted_node.InnerText;
                                     break;
                                 case "user":
-                                    status.retweeted_status.uid = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
+                                    status.retweeted_status.user_id = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
                                     break;
                             }
                         }
@@ -457,9 +457,9 @@ namespace Sinawler
         }
 
         /// <summary>
-        /// 获取指定UID的指定微博ID之后的微博
+        /// 获取指定UserID的指定微博ID之后的微博
         /// </summary>
-        /// <param name="lUid">要获取微博内容的UID</param>
+        /// <param name="lUid">要获取微博内容的UserID</param>
         /// <param name="lSinceSid">只返回ID比lSinceSid大（比lSinceSid时间晚的）的微博信息内容</param>
         /// <returns>微博列表</returns>
         public List<Status> GetStatusesOfSince ( long lUid, long lSinceSid )
@@ -535,7 +535,7 @@ namespace Sinawler
                             status.original_pic = node.InnerText;
                             break;
                         case "user":
-                            status.uid = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                            status.user_id = Convert.ToInt64( node.ChildNodes[0].InnerText );
                             break;
                         case "retweeted_status":
                             status.retweeted_status = new Status();
@@ -597,7 +597,7 @@ namespace Sinawler
                                         status.retweeted_status.original_pic = retweeted_node.InnerText;
                                         break;
                                     case "user":
-                                        status.retweeted_status.uid = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
+                                        status.retweeted_status.user_id = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
                                         break;
                                 }
                             }
@@ -650,7 +650,7 @@ namespace Sinawler
                                 comment.content = node.InnerText;
                                 break;
                             case "user":
-                                comment.uid = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                                comment.user_id = Convert.ToInt64( node.ChildNodes[0].InnerText );
                                 break;
                         }
                     }

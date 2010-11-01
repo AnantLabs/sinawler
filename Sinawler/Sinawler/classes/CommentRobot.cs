@@ -13,10 +13,10 @@ namespace Sinawler
 {
     class CommentRobot : RobotBase
     {
-        private long lCommentUID = 0;    //评论人的UID
+        private long lCommentUserID = 0;    //评论人的UserID
 
-        public long CurrentUID
-        { get { return lCommentUID; } }
+        public long CurrentUserID
+        { get { return lCommentUserID; } }
 
         //构造函数，需要传入相应的新浪微博API
         public CommentRobot(SinaApiService oAPI) : base(oAPI)
@@ -34,7 +34,7 @@ namespace Sinawler
             while (lstWaitingID.Count == 0)
             {
                 if (blnAsyncCancelled) return;
-                Thread.Sleep(10);   //若队列为空，则等待
+                Thread.Sleep(50);   //若队列为空，则等待
             }
             long lStartSID = lstWaitingID.First.Value;
             long lCurrentSID = 0;
@@ -104,7 +104,7 @@ namespace Sinawler
                         Thread.Sleep(50);
                     }
                     lCurrentID = comment.comment_id;
-                    lCommentUID = comment.uid;
+                    lCommentUserID = comment.user_id;
                     if (!Comment.Exists(lCurrentID))
                     {
                         //日志

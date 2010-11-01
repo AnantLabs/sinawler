@@ -70,7 +70,7 @@ namespace Sinawler.Model
 		private string _thumbnail_pic="";
 		private string _bmiddle_pic="";
 		private string _original_pic="";
-		private long _uid;
+		private long _user_id;
         private Status _retweeted_status = null;
         private int _iteration;
         private string _update_time;
@@ -147,7 +147,7 @@ namespace Sinawler.Model
 			get{return _in_reply_to_status_id;}
 		}
 		/// <summary>
-		/// 回复人UID
+		/// 回复人UserID
 		/// </summary>
 		public long in_reply_to_user_id
 		{
@@ -189,10 +189,10 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 用户ID
 		/// </summary>
-		public long uid
+		public long user_id
 		{
-			set{ _uid=value;}
-			get{return _uid;}
+			set{ _user_id=value;}
+			get{return _user_id;}
 		}
         /// <summary>
         /// 同时转发的微博
@@ -270,7 +270,7 @@ namespace Sinawler.Model
                 htValues.Add( "thumbnail_pic", "'" + _thumbnail_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "bmiddle_pic", "'" + _bmiddle_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "original_pic", "'" + _original_pic.Replace( "'", "''" ) + "'" );
-                htValues.Add( "uid", _uid );
+                htValues.Add( "user_id", _user_id );
                 if(_retweeted_status!=null)
                     htValues.Add( "retweeted_status_id", _retweeted_status.status_id );
                 else
@@ -296,7 +296,7 @@ namespace Sinawler.Model
         static public long GetLastStatusIDOf(long lUid)
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select top 1 status_id from statuses where uid="+lUid.ToString()+" order by created_at desc";
+            string strSQL = "select top 1 status_id from statuses where user_id="+lUid.ToString()+" order by created_at desc";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr[0] );

@@ -31,7 +31,7 @@ namespace Sinawler.Model
     //<allow_all_act_msg>false</allow_all_act_msg> 
     //<geo_enabled>false</geo_enabled> 
     
-    //id: 用户UID
+    //id: 用户UserID
     //screen_name: 微博昵称
     //name: 友好显示名称，如Tim Yang(此特性暂不支持)
     //province:省份编码（参考省份编码表）
@@ -59,7 +59,7 @@ namespace Sinawler.Model
         {  }
 
 		#region Model
-		private long _uid=0;
+		private long _user_id=0;
 		private string _screen_name;
 		private string _name;
 		private string _province;
@@ -82,12 +82,12 @@ namespace Sinawler.Model
         private int _iteration;
         private string _update_time;
 		/// <summary>
-		/// 用户UID（XML中为id）
+		/// 用户UserID（XML中为id）
 		/// </summary>
-		public long uid
+		public long user_id
 		{
-			set{ _uid=value;}
-			get{return _uid;}
+			set{ _user_id=value;}
+			get{return _user_id;}
 		}
 		/// <summary>
 		/// 微博昵称
@@ -275,7 +275,7 @@ namespace Sinawler.Model
 		static public bool Exists(long lUid)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select count(uid) from users where uid=" + lUid.ToString() );
+            int count = db.CountByExecuteSQLSelect( "select count(user_id) from users where user_id=" + lUid.ToString() );
             return count > 0;
 		}
 
@@ -298,7 +298,7 @@ namespace Sinawler.Model
                 Database db = DatabaseFactory.CreateDatabase();
                 Hashtable htValues = new Hashtable();
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
-                htValues.Add( "uid", _uid );
+                htValues.Add( "user_id", _user_id );
                 htValues.Add( "screen_name", "'" + _screen_name.Replace( "'", "''" ) + "'" );
                 htValues.Add( "name", "'" + _name.Replace( "'", "''" ) + "'" );
                 htValues.Add( "province", "'" + _province + "'" );
@@ -383,27 +383,27 @@ namespace Sinawler.Model
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
 
-                db.Update( "users", htValues,"uid="+_uid.ToString() );
+                db.Update( "users", htValues,"user_id="+_user_id.ToString() );
             }
             catch
             { return; }
         }
 
 		/// <summary>
-		/// 根据UID得到一个对象实体
+		/// 根据UserID得到一个对象实体
 		/// </summary>
 		public bool GetModel(long lUid)
 		{
             Database db = DatabaseFactory.CreateDatabase();
             StringBuilder strSql = new StringBuilder();
-            strSql.Append( "select  top 1 uid,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
+            strSql.Append( "select  top 1 user_id,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
             strSql.Append( " FROM users " );
-            strSql.Append( " where uid="+lUid.ToString() );
+            strSql.Append( " where user_id="+lUid.ToString() );
 
             DataRow dr=db.GetDataRow( strSql.ToString() );
             if (dr != null)
             {
-                _uid = Convert.ToInt64( dr["uid"] );
+                _user_id = Convert.ToInt64( dr["user_id"] );
                 _screen_name = dr["screen_name"].ToString();
                 _name = dr["name"].ToString();
                 _province = dr["province"].ToString();
@@ -490,14 +490,14 @@ namespace Sinawler.Model
         {
             Database db = DatabaseFactory.CreateDatabase();
             StringBuilder strSql = new StringBuilder();
-            strSql.Append( "select  top 1 uid,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
+            strSql.Append( "select  top 1 user_id,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
             strSql.Append( " FROM users " );
             strSql.Append( " where screen_name='" + strScreenName+"'" );
 
             DataRow dr = db.GetDataRow( strSql.ToString() );
             if (dr != null)
             {
-                _uid = Convert.ToInt64( dr["uid"] );
+                _user_id = Convert.ToInt64( dr["user_id"] );
                 _screen_name = dr["screen_name"].ToString();
                 _name = dr["name"].ToString();
                 _province = dr["province"].ToString();
@@ -583,12 +583,12 @@ namespace Sinawler.Model
         public bool GetModel ( long lUid,string strScreenName )
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSql = "select  top 1 * FROM users where uid="+lUid.ToString()+" and screen_name='" + strScreenName + "'";
+            string strSql = "select  top 1 * FROM users where user_id="+lUid.ToString()+" and screen_name='" + strScreenName + "'";
 
             DataRow dr = db.GetDataRow( strSql );
             if (dr != null)
             {
-                _uid = Convert.ToInt64( dr["uid"] );
+                _user_id = Convert.ToInt64( dr["user_id"] );
                 _screen_name = dr["screen_name"].ToString();
                 _name = dr["name"].ToString();
                 _province = dr["province"].ToString();
@@ -669,13 +669,13 @@ namespace Sinawler.Model
         }
 
         /// <summary>
-        /// 获得用户表中已爬取所有UID
+        /// 获得用户表中已爬取所有UserID
         /// 返回DataTable，以便于调用者观察进度——本不应该将DataTable暴露给上层的，无奈
         /// </summary>
-        static public DataTable GetCrawedUIDTable()
+        static public DataTable GetCrawedUserIDTable()
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select uid from users order by update_time";
+            string strSQL = "select user_id from users order by update_time";
             DataSet ds = db.GetDataSet(strSQL);
             if (ds == null) return null;
             else return ds.Tables[0];

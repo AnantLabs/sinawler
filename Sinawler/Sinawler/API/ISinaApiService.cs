@@ -33,7 +33,7 @@ namespace Sina.Api
         /*获取单条ID的微博信息*/
         string statuses_show(string id);
         /*获取单条ID的微博信息*/
-        string statuses_id(string id, string uid);
+        string statuses_id(string id, string user_id);
         /*发布一条微博信息*/
         string statuses_update(string status);
         /*上传图片并发布一条微博信息*/
@@ -82,9 +82,9 @@ namespace Sina.Api
         #endregion
 
         #region Social Graph接口
-        /*获取用户关注对象uid列表*/
+        /*获取用户关注对象user_id列表*/
         string friends_ids(int user_id);
-        /*获取用户粉丝对象uid列表*/
+        /*获取用户粉丝对象user_id列表*/
         string followers_ids(int user_id);
         #endregion
 
