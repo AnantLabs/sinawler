@@ -308,6 +308,7 @@ namespace Sinawler
             //初始化相应变量
             blnAsyncCancelled = false;
             blnSuspending = false;
+            crawler.StopCrawling = false;
             queueUserForUserRobot.Initialize();
             queueUserForStatusRobot.Initialize();
         }

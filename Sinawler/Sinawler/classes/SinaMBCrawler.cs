@@ -46,7 +46,7 @@ namespace Sinawler
 
         public bool StopCrawling
         {
-            set { blnStopCrawling = true; }
+            set { blnStopCrawling = value; }
             get { return blnStopCrawling; }
         }
 
