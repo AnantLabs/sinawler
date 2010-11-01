@@ -170,7 +170,7 @@ namespace Sinawler
                     if (blnAsyncCancelled) return;
                     Thread.Sleep(10);
                 }
-
+                Log( "爬取用户" + lCurrentID.ToString() +"的基本信息...");
                 user = crawler.GetUserInfo( lCurrentID );
                 if (user.uid > 0)
                 {
