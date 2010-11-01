@@ -1,0 +1,132 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.IO;
+using Sinawler.Model;
+
+namespace Sinawler
+{
+    public class QueueBase
+    {
+        protected string strLogFile = "";             //日志文件
+        private string strLogMessage = "";          //日志内容
+
+        protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UserID，也可能是StatusID等
+        protected int iMaxLengthInMem = 5000;               //内存中队列长度上限，默认5000
+        protected QueueBuffer lstWaitingIDInDB;              //数据库队列缓存
+
+        protected Object oLock = new Object();                    //锁。用于各机器人线程之间同步
+        
+        //构造函数
+        public QueueBase()
+        {
+            SettingItems settings = AppSettings.Load();
+            if (settings == null) settings = AppSettings.LoadDefault();
+            iMaxLengthInMem = settings.MaxLengthInMem;
+        }
+
+        public string LogFile
+        {
+            set { strLogFile = value; }
+            get { return strLogFile; }
+        }
+
+        public string LogMessage
+        {
+            get { return strLogMessage; }
+        }
+
+        public int MaxLengthInMem
+        { set { iMaxLengthInMem = value; } }
+
+        public int CountInMem
+        { get { return lstWaitingID.Count; } }
+
+        public int CountInDB
+        { get { return lstWaitingIDInDB.Count; } }
+
+        public int Count
+        {
+            get { return lstWaitingID.Count + lstWaitingIDInDB.Count; }
+        }
+
+        public long FirstValue
+        {
+            get 
+            {
+                if (lstWaitingID.Count > 0)
+                    return lstWaitingID.First.Value;
+                else
+                    return 0;
+            }
+        }
+
+        public Object Lock
+        { get{ return oLock; }}
+
+        /// <summary>
+        /// 从外部调用判断队列中是否存在指定ID
+        /// </summary>
+        /// <param name="lUid"></param>
+        public bool QueueExists(long lID)
+        {
+            return (lstWaitingID.Contains( lID ) || lstWaitingIDInDB.Contains( lID ));
+        }
+
+        /// <summary>
+        /// 取出队头，并放在队尾
+        /// </summary>
+        public long RollQueue () 
+        {
+            if (lstWaitingID.Count == 0) return 0;
+            //记录队头
+            long lFirstValue = lstWaitingID.First.Value;
+            lock (oLock)
+            {
+                //从数据库队列缓存中移入元素
+                long lHead = lstWaitingIDInDB.FirstValue;
+                if (lHead > 0)
+                {
+                    lstWaitingID.AddLast( lHead );
+                    lstWaitingIDInDB.Remove( lHead );
+                }
+                //移入队尾，并从队头移除
+                if (lstWaitingID.Count <= iMaxLengthInMem)
+                    lstWaitingID.AddLast( lFirstValue );
+                else
+                    lstWaitingIDInDB.Enqueue( lFirstValue );
+                lstWaitingID.RemoveFirst();
+            }
+            return lFirstValue;
+        }
+
+        /// <summary>
+        /// 将指定ID加到自己队列中，返回的布尔值表示是否做了入队操作
+        /// </summary>
+        /// <param name="lid"></param>
+        public bool Enqueue ( long lID)
+        {
+            if (lID <= 0) return false;
+            if (!QueueExists( lID ))
+            {
+                //若内存中已达到上限，则使用数据库队列缓存
+                //否则使用数据库队列缓存
+                if (lstWaitingID.Count < iMaxLengthInMem)
+                    lstWaitingID.AddLast( lID );
+                else
+                    lstWaitingIDInDB.Enqueue( lID );
+
+                return true;
+            }
+            else
+                return false;
+        }
+
+        public void Initialize ()
+        {
+            if (lstWaitingID != null) lstWaitingID.Clear();
+            //清空数据库队列缓存
+            if (lstWaitingIDInDB != null) lstWaitingIDInDB.Clear();
+        }
+    }
+}

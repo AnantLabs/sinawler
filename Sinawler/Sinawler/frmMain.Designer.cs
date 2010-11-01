@@ -681,7 +681,7 @@
             this.lblQueueLength.Name = "lblQueueLength";
             this.lblQueueLength.Size = new System.Drawing.Size( 281, 12 );
             this.lblQueueLength.TabIndex = 0;
-            this.lblQueueLength.Text = "用户队列长度（较大值提高性能，但占内存较多）：";
+            this.lblQueueLength.Text = "内存队列长度（较大值提高性能，但占内存较多）：";
             // 
             // tbQueueLength
             // 

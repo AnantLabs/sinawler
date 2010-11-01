@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Sinawler.Model
 {
-    public enum QueueBufferTarget {FOR_USER=0,FOR_STATUS=1,FOR_COMMENT=2};
+    public enum QueueBufferFor {USER=0,STATUS=1,COMMENT=2};
 
 	/// <summary>
 	/// 类QueueBuffer，当内存中的待爬行的UserID队列长度超过指定长度时，开始使用数据库保存队列。
@@ -17,12 +17,12 @@ namespace Sinawler.Model
 	/// </summary>
     public class QueueBuffer
 	{
-        private QueueBufferTarget _target=QueueBufferTarget.FOR_USER;
+        private QueueBufferFor _target = QueueBufferFor.USER;
         
         #region  成员方法
         ///构造函数
         ///<param name="target">要操作的目标</param>
-        public QueueBuffer(QueueBufferTarget target)
+        public QueueBuffer ( QueueBufferFor target )
         {
             _target = target;
         }
@@ -39,17 +39,17 @@ namespace Sinawler.Model
                 long lResultID = 0;
                 switch (_target)
                 {
-                    case QueueBufferTarget.FOR_USER:
+                    case QueueBufferFor.USER:
                         dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_user order by enqueue_time" );
                         if (dr == null) return 0;
                         lResultID = Convert.ToInt64( dr["user_id"] );
                         break;
-                    case QueueBufferTarget.FOR_STATUS:
+                    case QueueBufferFor.STATUS:
                         dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_status order by enqueue_time" );
                         if (dr == null) return 0;
                         lResultID = Convert.ToInt64( dr["user_id"] );
                         break;
-                    case QueueBufferTarget.FOR_COMMENT:
+                    case QueueBufferFor.COMMENT:
                         dr = db.GetDataRow( "select top 1 status_id from queue_buffer_for_comment order by enqueue_time" );
                         if (dr == null) return 0;
                         lResultID = Convert.ToInt64( dr["status_id"] );
@@ -68,13 +68,13 @@ namespace Sinawler.Model
             int count=0;
             switch(_target)
             {
-                case QueueBufferTarget.FOR_USER:
+                case QueueBufferFor.USER:
                     count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_user where user_id="+id.ToString() );
                     break;
-                case QueueBufferTarget.FOR_STATUS:
+                case QueueBufferFor.STATUS:
                     count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_status where user_id=" + id.ToString() );
                     break;
-                case QueueBufferTarget.FOR_COMMENT:
+                case QueueBufferFor.COMMENT:
                     count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_comment where status_id=" + id.ToString() );
                     break;
             }   
@@ -91,15 +91,15 @@ namespace Sinawler.Model
             htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
             switch(_target)
             {
-                case QueueBufferTarget.FOR_USER:
+                case QueueBufferFor.USER:
                     htValues.Add( "user_id", id );
                     db.Insert( "queue_buffer_for_user", htValues );
                     break;
-                case QueueBufferTarget.FOR_STATUS:
+                case QueueBufferFor.STATUS:
                     htValues.Add( "user_id", id );
                     db.Insert( "queue_buffer_for_status", htValues );
                     break;
-                case QueueBufferTarget.FOR_COMMENT:
+                case QueueBufferFor.COMMENT:
                     htValues.Add( "status_id", id );
                     db.Insert( "queue_buffer_for_comment", htValues );
                     break;
@@ -128,17 +128,17 @@ namespace Sinawler.Model
             htValues.Add( "enqueue_time", "'" + enqueue_time + "'" );
             switch (_target)
             {
-                case QueueBufferTarget.FOR_USER:
+                case QueueBufferFor.USER:
                     htValues.Add("user_id", id);
                     db.Insert("queue_buffer_for_user", htValues);
                     break;
-                case QueueBufferTarget.FOR_STATUS:
+                case QueueBufferFor.STATUS:
                     htValues.Add("user_id", id);
                     db.Insert("queue_buffer_for_status", htValues);
                     break;
-                case QueueBufferTarget.FOR_COMMENT:
-                    htValues.Add("status_id", id);
-                    db.Insert("queue_buffer_for_comment", htValues);
+                case QueueBufferFor.COMMENT:
+                    htValues.Add( "status_id", id );
+                    db.Insert( "queue_buffer_for_comment", htValues );
                     break;
             }
         }
@@ -151,14 +151,14 @@ namespace Sinawler.Model
             Database db = DatabaseFactory.CreateDatabase();
             switch (_target)
             {
-                case QueueBufferTarget.FOR_USER:
+                case QueueBufferFor.USER:
                     db.CountByExecuteSQL("delete from queue_buffer_for_user where user_id=" + id.ToString());
                     break;
-                case QueueBufferTarget.FOR_STATUS:
+                case QueueBufferFor.STATUS:
                     db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id=" + id.ToString());
                     break;
-                case QueueBufferTarget.FOR_COMMENT:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id=" + id.ToString());
+                case QueueBufferFor.COMMENT:
+                    db.CountByExecuteSQL( "delete from queue_buffer_for_comment where status_id=" + id.ToString() );
                     break;
             }
         }
@@ -171,14 +171,14 @@ namespace Sinawler.Model
             Database db = DatabaseFactory.CreateDatabase();
             switch (_target)
             {
-                case QueueBufferTarget.FOR_USER:
+                case QueueBufferFor.USER:
                     db.CountByExecuteSQL("delete from queue_buffer_for_user");
                     break;
-                case QueueBufferTarget.FOR_STATUS:
+                case QueueBufferFor.STATUS:
                     db.CountByExecuteSQL("delete from queue_buffer_for_status");
                     break;
-                case QueueBufferTarget.FOR_COMMENT:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_comment");
+                case QueueBufferFor.COMMENT:
+                    db.CountByExecuteSQL( "delete from queue_buffer_for_comment" );
                     break;
             }
         }
@@ -191,14 +191,14 @@ namespace Sinawler.Model
                 int count=0;
                 switch (_target)
                 {
-                    case QueueBufferTarget.FOR_USER:
+                    case QueueBufferFor.USER:
                         count = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_user");
                         break;
-                    case QueueBufferTarget.FOR_STATUS:
-                        count = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_status");
+                    case QueueBufferFor.STATUS:
+                        count = db.CountByExecuteSQLSelect( "select count(user_id) as cnt from queue_buffer_for_status" );
                         break;
-                    case QueueBufferTarget.FOR_COMMENT:
-                        count = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_comment");
+                    case QueueBufferFor.COMMENT:
+                        count = db.CountByExecuteSQLSelect("select count(status_id) as cnt from queue_buffer_for_comment");
                         break;
                 }
                 if (count == -1) return 0;

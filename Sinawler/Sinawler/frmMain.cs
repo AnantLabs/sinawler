@@ -32,10 +32,11 @@ namespace Sinawler
         private UserRobot robotUser;
         private StatusRobot robotStatus;
         private CommentRobot robotComment;
+        private UserQueue queueUserForUserRobot = new UserQueue();  //用户机器人使用的用户队列
+        private UserQueue queueUserForStatusRobot = new UserQueue();  //微博机器人使用的用户队列
+        private StatusQueue queueStatus = new StatusQueue();  //微博队列
 
         private string strDataBaseStatus = "";      //数据库测试状态结果，OK为正常
-
-        private Object objLockMe = new Object();
 
         public frmMain ()
         {
@@ -94,17 +95,17 @@ namespace Sinawler
                     btnStartBySearch.Enabled = true;
 
                     if (robotUser == null)
-                        robotUser = new UserRobot( api );
+                        robotUser = new UserRobot( api,queueUserForUserRobot,queueUserForStatusRobot );
                     else
                         robotUser.SinaAPI = api;
 
                     if (robotStatus == null)
-                        robotStatus = new StatusRobot( api );
+                        robotStatus = new StatusRobot( api,queueUserForUserRobot,queueUserForStatusRobot,queueStatus );
                     else
                         robotStatus.SinaAPI = api;
 
                     if (robotComment == null)
-                        robotComment = new CommentRobot( api );
+                        robotComment = new CommentRobot( api,queueUserForUserRobot,queueUserForStatusRobot,queueStatus );
                     else
                         robotComment.SinaAPI = api;
                 }
@@ -212,7 +213,6 @@ namespace Sinawler
 
         private void btnExit_Click ( object sender, EventArgs e )
         {
-            //if (CanBeClosed()) Application.Exit();
             Application.Exit();
         }
 
@@ -306,14 +306,15 @@ namespace Sinawler
             robotStatus.Initialize();
             robotComment.Initialize();
 
+            robotUser.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_user.log";
+            robotStatus.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
+            robotComment.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
+
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            robotUser.QueueLength = settings.QueueLength;
-            robotUser.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_user.log";
-            robotStatus.QueueLength = settings.QueueLength;
-            robotStatus.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
-            robotComment.QueueLength = settings.QueueLength;
-            robotComment.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
+            queueUserForUserRobot.MaxLengthInMem = settings.MaxLengthInMem;
+            queueUserForStatusRobot.MaxLengthInMem = settings.MaxLengthInMem;
+            queueStatus.MaxLengthInMem = settings.MaxLengthInMem;
         }
 
         private void btnStartByCurrent_Click ( object sender, EventArgs e )
@@ -617,18 +618,8 @@ namespace Sinawler
 
         private void UserProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
-            //传递给StatusRobot
-            long lUserID = robotUser.CurrentUserID;
-            long lQueueBufferUserID = robotUser.QueueBufferFirstUserID;
-
-            if (oAsyncWorkerStatus != null)
-            {
-                robotStatus.Enqueue( lUserID );
-                robotStatus.Enqueue( lQueueBufferUserID );
-            }
-
             lblUserMessage.Text = robotUser.LogMessage;
-            lblUserQueueInfo.Text = "用户机器人的内存队列中有" + robotUser.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotUser.LengthOfQueueInDB.ToString() + "个用户。";
+            lblUserQueueInfo.Text = "用户机器人的内存队列中有" + queueUserForUserRobot.CountInMem.ToString() + "个用户，数据库队列中有" + queueUserForUserRobot.CountInDB.ToString() + "个用户。";
         }
 
         private void UserCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -668,18 +659,8 @@ namespace Sinawler
 
         private void StatusProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
-            //传递给CommentRobot
-            long lSID = robotStatus.CurrentSID;
-            //传递给UserRobot
-            long lUserID = robotStatus.CurrentRetweetedUserID;
-
-            if (oAsyncWorkerComment != null)
-                robotComment.Enqueue( lSID );
-            if (oAsyncWorkerUser != null)
-                robotUser.Enqueue( lUserID );
-
             lblStatusMessage.Text = robotStatus.LogMessage;
-            lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + robotStatus.LengthOfQueueInMem.ToString() + "个用户，数据库队列中有" + robotStatus.LengthOfQueueInDB.ToString() + "个用户。";
+            lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + queueUserForStatusRobot.CountInMem.ToString() + "个用户，数据库队列中有" + queueUserForStatusRobot.CountInDB.ToString() + "个用户。";
         }
 
         private void StatusCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -719,15 +700,8 @@ namespace Sinawler
 
         private void CommentProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
-            //传递给UserRobot
-            long lUserID = robotComment.CurrentUserID;
-            if (oAsyncWorkerUser != null)
-                robotUser.Enqueue( lUserID );
-            if (oAsyncWorkerStatus != null)
-                robotStatus.Enqueue( lUserID );
-
             lblCommentMessage.Text = robotComment.LogMessage;
-            lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + robotComment.LengthOfQueueInMem.ToString() + "条微博，数据库队列中有" + robotComment.LengthOfQueueInDB.ToString() + "条微博。";
+            lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + queueStatus.CountInMem.ToString() + "条微博，数据库队列中有" + queueStatus.CountInDB.ToString() + "条微博。";
         }
 
         private void CommentCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
@@ -739,7 +713,6 @@ namespace Sinawler
             }
             robotComment.Initialize();
             lblCommentMessage.Text = "停止。";
-            lblCommentQueueInfo.Text = "评论机器人的内存队列中有0条微博，数据库队列中有0条微博。";
 
             if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null)  //如果另外两个机器人也已停止
             {
@@ -804,8 +777,8 @@ namespace Sinawler
 
         private void ShowSettings ( SettingItems settings )
         {
-            tbQueueLength.Value = settings.QueueLength;
-            numQueueLength.Value = settings.QueueLength;
+            tbQueueLength.Value = settings.MaxLengthInMem;
+            numQueueLength.Value = settings.MaxLengthInMem;
 
             if (settings.DBType == "SQL Server")
                 drplstDBType.SelectedIndex = 0;
@@ -832,7 +805,7 @@ namespace Sinawler
         private void btnSave_Click ( object sender, EventArgs e )
         {
             SettingItems settings = new SettingItems();
-            settings.QueueLength = tbQueueLength.Value;
+            settings.MaxLengthInMem = tbQueueLength.Value;
             settings.DBType = drplstDBType.SelectedItem.ToString();
             settings.DBServer = txtDBServer.Text.Trim();
             settings.DBUserName = txtDBUserName.Text.Trim();
@@ -871,7 +844,7 @@ namespace Sinawler
             rdPreLoadUserID.Checked = !rdNoPreLoad.Checked;
             rdPreLoadAllUserID.Checked = !rdNoPreLoad.Checked;
             if (rdNoPreLoad.Checked)
-                robotUser.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
+                queueUserForUserRobot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
         }
 
         private void rdPreLoadUserID_Click ( object sender, EventArgs e )
@@ -879,7 +852,7 @@ namespace Sinawler
             rdNoPreLoad.Checked = !rdPreLoadUserID.Checked;
             rdPreLoadAllUserID.Checked = !rdPreLoadUserID.Checked;
             if (rdPreLoadUserID.Checked)
-                robotUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_USER_ID;
+                queueUserForUserRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_USER_ID;
         }
 
         private void rdPreLoadAllUserID_Click ( object sender, EventArgs e )
@@ -887,7 +860,7 @@ namespace Sinawler
             rdNoPreLoad.Checked = !rdPreLoadAllUserID.Checked;
             rdPreLoadUserID.Checked = !rdPreLoadAllUserID.Checked;
             if (rdPreLoadAllUserID.Checked)
-                robotUser.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_USER_ID;
+                queueUserForUserRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_USER_ID;
         }
 
         private void btnPauseContinue_Click ( object sender, EventArgs e )

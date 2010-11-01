@@ -13,16 +13,18 @@ namespace Sinawler
 {
     class CommentRobot : RobotBase
     {
-        private long lCommentUserID = 0;    //评论人的UserID
-
-        public long CurrentUserID
-        { get { return lCommentUserID; } }
+        private UserQueue queueUserForUserRobot;            //用户机器人使用的用户队列引用
+        private UserQueue queueUserForStatusRobot;            //微博机器人使用的用户队列引用
+        private StatusQueue queueStatus;        //微博队列引用
 
         //构造函数，需要传入相应的新浪微博API
-        public CommentRobot(SinaApiService oAPI) : base(oAPI)
+        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus ) : base( oAPI )
         {
-            queueBuffer = new QueueBuffer(QueueBufferTarget.FOR_COMMENT);
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
+
+            queueUserForUserRobot = qUserForUserRobot;
+            queueUserForStatusRobot = qUserForStatusRobot;
+            queueStatus = qStatus;
         }
 
         /// <summary>
@@ -30,15 +32,14 @@ namespace Sinawler
         /// </summary>
         public void Start()
         {
-            //不加载用户队列，完全依靠UserRobot传递过来
-            while (lstWaitingID.Count == 0)
+            //不加载用户队列
+            while (queueStatus.Count == 0)
             {
                 if (blnAsyncCancelled) return;
                 Thread.Sleep(50);   //若队列为空，则等待
             }
-            long lStartSID = lstWaitingID.First.Value;
+            long lStartSID = queueStatus.FirstValue;
             long lCurrentSID = 0;
-            long lHead = 0;
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
             {
@@ -50,20 +51,7 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentSID = lstWaitingID.First.Value;
-                //从数据库队列缓存中移入元素
-                lHead = queueBuffer.FirstValue;
-                if (lHead > 0)
-                {
-                    lstWaitingID.AddLast( lHead );
-                    queueBuffer.Remove( lHead );
-                }
-                //移入队尾，并从队头移除
-                if (lstWaitingID.Count <= iQueueLength)
-                    lstWaitingID.AddLast( lCurrentSID );
-                else
-                    queueBuffer.Enqueue( lCurrentSID );
-                lstWaitingID.RemoveFirst();
+                lCurrentSID = queueStatus.RollQueue();
 
                 #region 预处理
                 if (lCurrentSID == lStartSID)  //说明经过一次循环迭代
@@ -103,14 +91,17 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep(50);
                     }
-                    lCurrentID = comment.comment_id;
-                    lCommentUserID = comment.user_id;
-                    if (!Comment.Exists(lCurrentID))
+                    if (!Comment.Exists( comment.comment_id ))
                     {
                         //日志
-                        Log("将评论" + lCurrentID.ToString() + "存入数据库...");
+                        Log( "将评论" + comment.comment_id.ToString() + "存入数据库..." );
                         comment.Add();
                     }
+
+                    if (queueUserForUserRobot.Enqueue( comment.user_id ))
+                        Log( "将评论人" + comment.user_id.ToString() + "加入用户机器人的用户队列。" );
+                    if (queueUserForStatusRobot.Enqueue( comment.user_id ))
+                        Log( "将评论人" + comment.user_id.ToString() + "加入微博机器人的用户队列。" );
                 }
                 #endregion
                 //最后再将刚刚爬行完的StatusID加入队尾
@@ -126,10 +117,10 @@ namespace Sinawler
             //初始化相应变量
             blnAsyncCancelled = false;
             blnSuspending = false;
-            if (lstWaitingID != null) lstWaitingID.Clear();
 
-            //清空数据库队列缓存
-            queueBuffer.Clear();
+            queueUserForUserRobot.Initialize();
+            queueUserForStatusRobot.Initialize();
+            queueStatus.Initialize();
         }
     }
 }

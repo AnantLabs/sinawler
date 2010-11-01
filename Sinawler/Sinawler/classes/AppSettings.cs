@@ -33,7 +33,7 @@ namespace Sinawler
         private string _db_username = "sa";             //数据库用户名
         private string _db_pwd = "sa";                  //数据库密码
         private string _db_name = "Sinawler";           //数据库名称
-        private int _queue_length = 5000;               //用户队列长度
+        private int _max_length_in_mem = 5000;          //内存中列最大长度
 
         public SettingItems()
         {
@@ -81,10 +81,10 @@ namespace Sinawler
             set { _db_name = value; }
         }
 
-        public int QueueLength
+        public int MaxLengthInMem
         {
-            get { return _queue_length; }
-            set { _queue_length = value; }
+            get { return _max_length_in_mem; }
+            set { _max_length_in_mem = value; }
         }
     }
 

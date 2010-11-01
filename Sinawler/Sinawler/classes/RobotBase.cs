@@ -5,7 +5,6 @@ using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
-using System.Windows.Forms;
 using Sinawler.Model;
 using System.Data;
 
@@ -17,14 +16,8 @@ namespace Sinawler
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
         private string strLogMessage = "";          //日志内容
-
-        protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UserID，也可能是StatusID等
-        protected int iQueueLength = 5000;               //内存中队列长度上限，默认5000
-
         protected bool blnSuspending = false;         //是否暂停，默认为“否”
-
         protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
-        protected QueueBuffer queueBuffer;              //数据库队列缓存
         protected long lCurrentID = 0;               //当前爬取的用户或微博ID，随时抛出传递给另外的机器人，由各子类决定由其暴露的属性名
         protected BackgroundWorker bwAsync = null;
 
@@ -32,11 +25,6 @@ namespace Sinawler
         public RobotBase ( SinaApiService oAPI )
         {
             this.api = oAPI;
-
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            iQueueLength = settings.QueueLength;
-
             crawler = new SinaMBCrawler( this.api );
         }
 
@@ -61,15 +49,6 @@ namespace Sinawler
             get { return strLogMessage; }
         }
 
-        public int QueueLength
-        { set { iQueueLength = value; } }
-
-        public int LengthOfQueueInMem
-        { get { return lstWaitingID.Count; } }
-
-        public int LengthOfQueueInDB
-        { get { return queueBuffer.Count; } }
-
         public bool Suspending
         {
             get { return blnSuspending; }
@@ -82,33 +61,6 @@ namespace Sinawler
 
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
-
-        /// <summary>
-        /// 从外部调用判断队列中是否存在指定ID
-        /// </summary>
-        /// <param name="lUid"></param>
-        public bool QueueExists(long lID)
-        {
-            return (lstWaitingID.Contains( lID ) || queueBuffer.Contains( lID ));
-        }
-
-        /// <summary>
-        /// 将指定ID加到自己队列中
-        /// </summary>
-        /// <param name="lid"></param>
-        public void Enqueue ( long lID)
-        {
-            if (lID <= 0) return;
-            if (!QueueExists(lID))
-            {   
-                //若内存中已达到上限，则使用数据库队列缓存
-                //否则使用数据库队列缓存
-                if (lstWaitingID.Count < iQueueLength)
-                    lstWaitingID.AddLast( lID );
-                else
-                    queueBuffer.Enqueue( lID );
-            }
-        }
 
         public void SetRequestFrequency(RequestFrequency rf)
         {

@@ -13,20 +13,17 @@ namespace Sinawler
 {
     class StatusRobot:RobotBase
     {
-        private LinkedList<long> lstRetweetedStatus = new LinkedList<long>();   //转发微博ID
-        private long lRetweetedUserID = 0;     //转发微博的UserID，用于传递给用户机器人
-
-        public long CurrentSID
-        { get { return lCurrentID; } }
-
-        public long CurrentRetweetedUserID
-        { get { return lRetweetedUserID; } }
+        private UserQueue queueUserForUserRobot;            //用户机器人使用的用户队列引用
+        private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
+        private StatusQueue queueStatus;        //微博队列引用
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public StatusRobot ( SinaApiService oAPI ):base(oAPI)
+        public StatusRobot ( SinaApiService oAPI,UserQueue qUserForUserRobot, UserQueue qUserForStatusRobot,StatusQueue qStatus ):base(oAPI)
         {
-            queueBuffer = new QueueBuffer( QueueBufferTarget.FOR_STATUS );
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
+            queueUserForUserRobot = qUserForUserRobot;
+            queueUserForStatusRobot = qUserForStatusRobot;
+            queueStatus = qStatus;
         }
 
         /// <summary>
@@ -34,15 +31,13 @@ namespace Sinawler
         /// </summary>
         public void Start()
         {
-            //不加载用户队列，完全依靠UserRobot传递过来
-            while (lstWaitingID.Count == 0)
+            while (queueUserForStatusRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
                 Thread.Sleep(50);   //若队列为空，则等待
             }
-            long lStartUserID = lstWaitingID.First.Value;
+            long lStartUserID = queueUserForStatusRobot.FirstValue;
             long lCurrentUserID = 0;
-            long lHead = 0;
             //对队列无限循环爬行，直至有操作暂停或停止
             while(true)
             {
@@ -54,20 +49,7 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentUserID = lstWaitingID.First.Value;
-                //从数据库队列缓存中移入元素
-                lHead = queueBuffer.FirstValue;
-                if (lHead > 0)
-                {
-                    lstWaitingID.AddLast( lHead );
-                    queueBuffer.Remove( lHead );
-                }
-                //移入队尾，并从队头移除
-                if (lstWaitingID.Count <= iQueueLength)
-                    lstWaitingID.AddLast( lCurrentUserID );
-                else
-                    queueBuffer.Enqueue( lCurrentUserID );
-                lstWaitingID.RemoveFirst();
+                lCurrentUserID = queueUserForStatusRobot.RollQueue();
 
                 #region 预处理
                 if (lCurrentUserID == lStartUserID)  //说明经过一次循环迭代
@@ -125,6 +107,11 @@ namespace Sinawler
                         Log("将微博" + lCurrentID.ToString() + "存入数据库...");
                         status.Add();
                     }
+
+                    if(queueStatus.Enqueue(lCurrentID))
+                        Log( "将微博" + lCurrentID.ToString() + "加入微博队列。" );
+                    else
+                        Log( "微博" + lCurrentID.ToString() + "已在微博队列中。" );
                     
                     //若该微博有转发，将转发微博保存
                     if (status.retweeted_status != null)
@@ -139,8 +126,6 @@ namespace Sinawler
                         //日志
                         Log("微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status.status_id.ToString() + "存入数据库...");
 
-                        lCurrentID = status.retweeted_status.status_id;
-                        lRetweetedUserID = status.retweeted_status.user_id;
                         if (!Status.Exists( status.retweeted_status.status_id ))
                         {   
                             status.retweeted_status.Add();
@@ -154,21 +139,22 @@ namespace Sinawler
                             Log("转发微博" + status.retweeted_status.status_id.ToString() + "已存在。");
                         }
 
-                        //下面这段入队，其实就是函数Enqueue的调用，但为了记录日志，不调用该函数，而是自己实现
-                        if (!QueueExists( lRetweetedUserID ))
-                        {
-                            Log( "将用户" + lRetweetedUserID.ToString() + "加入队列..." );
-                            if (lstWaitingID.Count < iQueueLength)
-                                lstWaitingID.AddLast( lRetweetedUserID );
-                            else
-                                queueBuffer.Enqueue( lRetweetedUserID );
-                        }
+                        if (queueStatus.Enqueue( status.retweeted_status.status_id ))
+                            Log( "将转发微博" + status.retweeted_status.status_id.ToString() + "加入微博队列。" );
                         else
-                            Log( "用户" + lRetweetedUserID.ToString() + "已在队列中。" );
+                            Log( "转发微博" + status.retweeted_status.status_id.ToString() + "已在微博队列中。" );
+
+                        if (queueUserForUserRobot.Enqueue( status.retweeted_status.user_id ))
+                            Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入微博机器人的用户队列。" );
+                        else
+                            Log( "用户" + status.retweeted_status.user_id.ToString() + "已在微博机器人的用户队列中。" );
+                        if (queueUserForStatusRobot.Enqueue( status.retweeted_status.user_id ))
+                            Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入微博机器人的用户队列。" );
+                        else
+                            Log( "用户" + status.retweeted_status.user_id.ToString() + "已在微博机器人的用户队列中。" );
                     }
                 }
                 #endregion
-                //最后再将刚刚爬行完的UserID加入队尾
                 //日志
                 Log("用户" + lCurrentUserID.ToString() + "的数据已爬取完毕。");
                 //日志
@@ -181,11 +167,10 @@ namespace Sinawler
             //初始化相应变量
             blnAsyncCancelled = false;
             blnSuspending = false;
-            if (lstWaitingID != null) lstWaitingID.Clear();
-            if (lstRetweetedStatus != null) lstRetweetedStatus.Clear();
 
-            //清空数据库队列缓存
-            queueBuffer.Clear();
+            queueUserForUserRobot.Initialize();
+            queueUserForStatusRobot.Initialize();
+            queueStatus.Initialize();
         }
     }
 }
