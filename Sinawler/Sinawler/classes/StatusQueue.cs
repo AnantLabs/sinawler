@@ -11,7 +11,7 @@ namespace Sinawler
         public StatusQueue ()
             : base()
         {
-            lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.STATUS );
+            lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.COMMENT );
         }
     }
 }

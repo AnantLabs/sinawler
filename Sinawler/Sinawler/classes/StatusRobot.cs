@@ -145,9 +145,10 @@ namespace Sinawler
                             Log( "转发微博" + status.retweeted_status.status_id.ToString() + "已在微博队列中。" );
 
                         if (queueUserForUserRobot.Enqueue( status.retweeted_status.user_id ))
-                            Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入微博机器人的用户队列。" );
+                            Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户机器人的用户队列。" );
                         else
-                            Log( "用户" + status.retweeted_status.user_id.ToString() + "已在微博机器人的用户队列中。" );
+                            Log( "用户" + status.retweeted_status.user_id.ToString() + "已在用户机器人的用户队列中。" );
+
                         if (queueUserForStatusRobot.Enqueue( status.retweeted_status.user_id ))
                             Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入微博机器人的用户队列。" );
                         else

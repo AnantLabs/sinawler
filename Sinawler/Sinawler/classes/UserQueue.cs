@@ -17,10 +17,13 @@ namespace Sinawler
             set { iPreLoadQueue = value; }
         }
 
-        public UserQueue ()
+        public UserQueue (QueueBufferFor who)
             : base()
         {
-            lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.USER );
+            if(who==QueueBufferFor.COMMENT) //Ä¬ÈÏÎªUSER
+                lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.USER );
+            else
+                lstWaitingIDInDB = new QueueBuffer(who);
         }
     }
 }

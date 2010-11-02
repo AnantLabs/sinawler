@@ -32,8 +32,8 @@ namespace Sinawler
         private UserRobot robotUser;
         private StatusRobot robotStatus;
         private CommentRobot robotComment;
-        private UserQueue queueUserForUserRobot = new UserQueue();  //用户机器人使用的用户队列
-        private UserQueue queueUserForStatusRobot = new UserQueue();  //微博机器人使用的用户队列
+        private UserQueue queueUserForUserRobot = new UserQueue(QueueBufferFor.USER);  //用户机器人使用的用户队列
+        private UserQueue queueUserForStatusRobot = new UserQueue(QueueBufferFor.STATUS);  //微博机器人使用的用户队列
         private StatusQueue queueStatus = new StatusQueue();  //微博队列
 
         private string strDataBaseStatus = "";      //数据库测试状态结果，OK为正常

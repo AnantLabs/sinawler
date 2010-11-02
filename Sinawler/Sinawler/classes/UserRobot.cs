@@ -83,9 +83,9 @@ namespace Sinawler
                         Log( "将用户" + lUserID.ToString() + "加入微博机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
                 }
                 dtUserID.Dispose();
+                //日志
+                Log( "预加载用户队列完成。" );
             }
-            //日志
-            Log( "预加载用户队列完成。" );
             #endregion
             
             lCurrentID = lStartUserID;
