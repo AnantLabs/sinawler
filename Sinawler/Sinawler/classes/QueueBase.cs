@@ -70,7 +70,12 @@ namespace Sinawler
         /// <param name="lUid"></param>
         public bool QueueExists(long lID)
         {
-            return (PubHelper.ContainsInQueue<long>(lstWaitingID,lID ) || lstWaitingIDInDB.Contains( lID ));
+            bool blnResult = false;
+            lock(oLock)
+            {
+                blnResult=PubHelper.ContainsInQueue<long>(lstWaitingID,lID ) || lstWaitingIDInDB.Contains( lID );
+            }
+            return blnResult;
         }
 
         /// <summary>
