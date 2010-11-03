@@ -25,9 +25,9 @@ namespace Sinawler
         /// </summary>
         /// <param name="strDateTime">抓取的日期字符串</param>
         /// <returns>整理后的yyyy-mm-dd hh:mm:ss格式的日期和时间</returns>
-        static public string ParseDateTime ( string strDateTime )
+        static public string ParseDateTime(string strDateTime)
         {
-            string[] s = strDateTime.Split( ' ' );
+            string[] s = strDateTime.Split(' ');
             string strBuffer = s[5] + "-";
             switch (s[1])
             {
@@ -78,7 +78,7 @@ namespace Sinawler
         /// 测试数据库连接
         /// </summary>
         /// <returns>成功提示或者错误信息</returns>
-        static public string TestDataBase ()
+        static public string TestDataBase()
         {
             string strResult;
             Database db = DatabaseFactory.CreateDatabase();
@@ -95,20 +95,20 @@ namespace Sinawler
         }
 
         //整数到字节数组的转换   
-        static public byte[] intToByte ( int number )
+        static public byte[] intToByte(int number)
         {
             int temp = number;
             byte[] b = new byte[4];
             for (int i = b.Length - 1; i > -1; i--)
             {
-                b[i] = Convert.ToByte( temp & 0xff );             //将最高位保存在最低位   
+                b[i] = Convert.ToByte(temp & 0xff);             //将最高位保存在最低位   
                 temp = temp >> 8;               //向右移8位   
             }
             return b;
         }
 
         //字节数组到整数的转换   
-        static public int byteToInt ( byte[] b )
+        static public int byteToInt(byte[] b)
         {
             int s = 0;
             for (int i = 0; i < 3; i++)
@@ -127,11 +127,11 @@ namespace Sinawler
         }
 
         //发一条微博帮忙推广
-        static public bool PostAdvertisement ( SinaApiService api )
+        static public bool PostAdvertisement(SinaApiService api)
         {
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            string strResult = api.statuses_update( "（" + DateTime.Now.ToString() + "）我正在使用开源应用“新浪微博爬虫Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。Project页面：http://code.google.com/p/sinawler/" );
+            string strResult = api.statuses_update("（" + DateTime.Now.ToString() + "）我正在使用开源应用“新浪微博爬虫Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。Project页面：http://code.google.com/p/sinawler/");
             if (strResult == null) return false;
             else return true;
         }
@@ -147,7 +147,7 @@ namespace Sinawler
         *            The String whose non-valid characters we want to remove.
         * @return The in String, stripped of non-valid characters.
         */
-        static public string stripNonValidXMLCharacters ( String value )
+        static public string stripNonValidXMLCharacters(String value)
         {
             StringBuilder strResult = new StringBuilder(); // Used to hold the output.
             char current; // Used to reference the current character.
@@ -161,13 +161,13 @@ namespace Sinawler
                         || ((current >= 0x20) && (current <= 0xD7FF))
                         || ((current >= 0xE000) && (current <= 0xFFFD))
                         || ((current >= 0x10000) && (current <= 0x10FFFF)))
-                    strResult.Append( current );
+                    strResult.Append(current);
             }
             return strResult.ToString();
         }
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        static public RequestFrequency AdjustFreq ( SinaApiService api, int iSleep )
+        static public RequestFrequency AdjustFreq(SinaApiService api, int iSleep)
         {
             if (iSleep <= 0) iSleep = 3000; //默认值
 
@@ -179,10 +179,10 @@ namespace Sinawler
             string strResult = api.check_hits_limit();
             if (strResult == null) return rf;
             XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml( strResult );
+            xmlDoc.LoadXml(strResult);
 
-            int iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
-            int iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
+            int iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
+            int iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
 
             //若已无剩余次数，直接返回剩余时间
             if (iRemainingHits == 0)
@@ -195,7 +195,7 @@ namespace Sinawler
             }
 
             //计算
-            iSleep=Convert.ToInt32(iResetTimeInSeconds*1000/iRemainingHits);
+            iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
             if (iSleep <= 0) iSleep = 1;
 
             rf.Interval = iSleep;
@@ -203,6 +203,28 @@ namespace Sinawler
             rf.ResetTimeInSeconds = iResetTimeInSeconds;
 
             return rf;
+        }
+
+        //自己实现队列的Contains操作，从头尾同时找，效率提高一倍
+        static public bool ContainsInQueue<T>(LinkedList<T> list, T value)
+        {
+            if (list == null || value==null) return false;
+            if (list.Count == 0) return false;
+            if (list.Count == 1) return list.First.Value.Equals(value);
+
+            LinkedListNode<T> nodeHead = list.First;
+            LinkedListNode<T> nodeTail = list.Last;
+            if (nodeHead.Next == nodeTail) return (nodeHead.Value.Equals(value) || nodeTail.Value.Equals(value));
+
+            while (nodeHead.Next != nodeTail && nodeHead != nodeTail)
+            {
+                if (nodeHead.Value.Equals(value)) return true;
+                else nodeHead = nodeHead.Next;
+
+                if (nodeTail.Value.Equals(value)) return true;
+                else nodeTail = nodeTail.Previous;
+            }
+            return (nodeHead.Value.Equals(value) || nodeTail.Value.Equals(value));
         }
     }
 }

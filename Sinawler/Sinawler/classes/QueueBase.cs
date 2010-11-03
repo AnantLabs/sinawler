@@ -70,7 +70,7 @@ namespace Sinawler
         /// <param name="lUid"></param>
         public bool QueueExists(long lID)
         {
-            return (lstWaitingID.Contains( lID ) || lstWaitingIDInDB.Contains( lID ));
+            return (PubHelper.ContainsInQueue<long>(lstWaitingID,lID ) || lstWaitingIDInDB.Contains( lID ));
         }
 
         /// <summary>
@@ -111,10 +111,13 @@ namespace Sinawler
             {
                 //若内存中已达到上限，则使用数据库队列缓存
                 //否则使用数据库队列缓存
-                if (lstWaitingID.Count < iMaxLengthInMem)
-                    lstWaitingID.AddLast( lID );
-                else
-                    lstWaitingIDInDB.Enqueue( lID );
+                lock (oLock)
+                {
+                    if (lstWaitingID.Count < iMaxLengthInMem)
+                        lstWaitingID.AddLast(lID);
+                    else
+                        lstWaitingIDInDB.Enqueue(lID);
+                }
 
                 return true;
             }
