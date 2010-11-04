@@ -21,6 +21,11 @@ namespace Sinawler.Model
         private int iCount = 0;     //队列长度
         private long lFirstValue = 0;   //首节点值
 
+        public long FirstValue
+        {
+            get { return lFirstValue; }
+        }
+
         #region  成员方法
         ///构造函数
         ///<param name="target">要操作的目标</param>
@@ -30,33 +35,29 @@ namespace Sinawler.Model
         }
 
         /// <summary>
-        /// 队头值
+        /// 从数据库中读取队头值
         /// </summary>
-        public long FirstValue
+        private void GetFirstValue ()
         {
-            get
+            Database db = DatabaseFactory.CreateDatabase();
+            DataRow dr;
+            switch (_target)
             {
-                Database db = DatabaseFactory.CreateDatabase();
-                DataRow dr;
-                switch (_target)
-                {
-                    case QueueBufferFor.USER:
-                        dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_user order by enqueue_time" );
-                        if (dr == null) return 0;
-                        lFirstValue = Convert.ToInt64( dr["user_id"] );
-                        break;
-                    case QueueBufferFor.STATUS:
-                        dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_status order by enqueue_time" );
-                        if (dr == null) return 0;
-                        lFirstValue = Convert.ToInt64( dr["user_id"] );
-                        break;
-                    case QueueBufferFor.COMMENT:
-                        dr = db.GetDataRow( "select top 1 status_id from queue_buffer_for_comment order by enqueue_time" );
-                        if (dr == null) return 0;
-                        lFirstValue = Convert.ToInt64( dr["status_id"] );
-                        break;
-                }
-                return lFirstValue;
+                case QueueBufferFor.USER:
+                    dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_user order by enqueue_time" );
+                    if (dr == null) return;
+                    lFirstValue = Convert.ToInt64( dr["user_id"] );
+                    break;
+                case QueueBufferFor.STATUS:
+                    dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_status order by enqueue_time" );
+                    if (dr == null) return;
+                    lFirstValue = Convert.ToInt64( dr["user_id"] );
+                    break;
+                case QueueBufferFor.COMMENT:
+                    dr = db.GetDataRow( "select top 1 status_id from queue_buffer_for_comment order by enqueue_time" );
+                    if (dr == null) return;
+                    lFirstValue = Convert.ToInt64( dr["status_id"] );
+                    break;
             }
         }
 
@@ -83,11 +84,33 @@ namespace Sinawler.Model
         }
 
         /// <summary>
-        /// 一个UserID入队
+        /// 一个ID入队（注意与Add函数在FirstValue处的区别）
         /// </summary>
         public void Enqueue ( long id )
         {
-            Add( id, DateTime.Now.ToString() );
+            Database db = DatabaseFactory.CreateDatabase();
+            Hashtable htValues = new Hashtable();
+
+            htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
+            switch (_target)
+            {
+                case QueueBufferFor.USER:
+                    htValues.Add( "user_id", id );
+                    db.Insert( "queue_buffer_for_user", htValues );
+                    break;
+                case QueueBufferFor.STATUS:
+                    htValues.Add( "user_id", id );
+                    db.Insert( "queue_buffer_for_status", htValues );
+                    break;
+                case QueueBufferFor.COMMENT:
+                    htValues.Add( "status_id", id );
+                    db.Insert( "queue_buffer_for_comment", htValues );
+                    break;
+            }
+            iCount++;
+            //更新新的队头值
+            if (iCount == 1)
+                lFirstValue = id;
         }
 
         /// <summary>
@@ -95,14 +118,14 @@ namespace Sinawler.Model
         /// </summary>
         public long Dequeue ()
         {
-            //先获取头节点,再删除头节点
-            long lResultID = this.FirstValue;
+            //先记录头节点,再删除头节点
+            long lResultID = lFirstValue;
             this.Remove( lResultID );
             return lResultID;
         }
 
         /// <summary>
-        /// 增加指定节点
+        /// 增加指定节点，带有入队时间，所以增加的节点可能在队列的任何位置（注意与Enqueue的区别）
         /// </summary>
         public void Add ( long id, string enqueue_time )
         {
@@ -130,7 +153,7 @@ namespace Sinawler.Model
             if (iCount == 1)
                 lFirstValue = id;
             else
-                lFirstValue = this.FirstValue;
+                GetFirstValue();
         }
 
         /// <summary>
@@ -152,8 +175,9 @@ namespace Sinawler.Model
                     break;
             }
             iCount--;
-            //更新新的队头值
-            lFirstValue = this.FirstValue;
+            if(lFirstValue==id)
+                //更新新的队头值
+                GetFirstValue();
         }
 
         /// <summary>
