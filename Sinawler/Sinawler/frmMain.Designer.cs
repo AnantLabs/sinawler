@@ -92,16 +92,16 @@
             this.grpStatus = new System.Windows.Forms.GroupBox();
             this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.lblStatusQueueInfo = new System.Windows.Forms.Label();
+            this.lblUserRelationQueueInfo = new System.Windows.Forms.Label();
             this.lblUserInfoQueueInfo = new System.Windows.Forms.Label();
             this.lblCommentMessage = new System.Windows.Forms.Label();
             this.lblCommentTitle = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.lblUserRelationMessage = new System.Windows.Forms.Label();
             this.lblUserInfoMessage = new System.Windows.Forms.Label();
+            this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.lblUserRelationTitle = new System.Windows.Forms.Label();
-            this.lblUserRelationMessage = new System.Windows.Forms.Label();
-            this.lblUserRelationQueueInfo = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -747,7 +747,7 @@
             // lblUserInfoTitle
             // 
             this.lblUserInfoTitle.AutoSize = true;
-            this.lblUserInfoTitle.Location = new System.Drawing.Point( 11, 21 );
+            this.lblUserInfoTitle.Location = new System.Drawing.Point( 11, 20 );
             this.lblUserInfoTitle.Name = "lblUserInfoTitle";
             this.lblUserInfoTitle.Size = new System.Drawing.Size( 125, 12 );
             this.lblUserInfoTitle.TabIndex = 16;
@@ -770,7 +770,7 @@
             this.grpStatus.Controls.Add( this.lblUserInfoTitle );
             this.grpStatus.Location = new System.Drawing.Point( 5, 524 );
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size( 827, 173 );
+            this.grpStatus.Size = new System.Drawing.Size( 827, 177 );
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
@@ -778,7 +778,7 @@
             // lblCommentQueueInfo
             // 
             this.lblCommentQueueInfo.AutoSize = true;
-            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 151 );
+            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 155 );
             this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
             this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
             this.lblCommentQueueInfo.TabIndex = 24;
@@ -787,16 +787,25 @@
             // lblStatusQueueInfo
             // 
             this.lblStatusQueueInfo.AutoSize = true;
-            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 132 );
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 135 );
             this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
             this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
             this.lblStatusQueueInfo.TabIndex = 23;
             this.lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
+            // lblUserRelationQueueInfo
+            // 
+            this.lblUserRelationQueueInfo.AutoSize = true;
+            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 115 );
+            this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
+            this.lblUserRelationQueueInfo.Size = new System.Drawing.Size( 365, 12 );
+            this.lblUserRelationQueueInfo.TabIndex = 22;
+            this.lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
             // lblUserInfoQueueInfo
             // 
             this.lblUserInfoQueueInfo.AutoSize = true;
-            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 97 );
+            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 95 );
             this.lblUserInfoQueueInfo.Name = "lblUserInfoQueueInfo";
             this.lblUserInfoQueueInfo.Size = new System.Drawing.Size( 365, 12 );
             this.lblUserInfoQueueInfo.TabIndex = 22;
@@ -805,7 +814,7 @@
             // lblCommentMessage
             // 
             this.lblCommentMessage.AutoSize = true;
-            this.lblCommentMessage.Location = new System.Drawing.Point( 131, 77 );
+            this.lblCommentMessage.Location = new System.Drawing.Point( 130, 77 );
             this.lblCommentMessage.Name = "lblCommentMessage";
             this.lblCommentMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblCommentMessage.TabIndex = 21;
@@ -825,27 +834,47 @@
             // lblStatusMessage
             // 
             this.lblStatusMessage.AutoSize = true;
-            this.lblStatusMessage.Location = new System.Drawing.Point( 131, 58 );
+            this.lblStatusMessage.Location = new System.Drawing.Point( 130, 60 );
             this.lblStatusMessage.Name = "lblStatusMessage";
             this.lblStatusMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblStatusMessage.TabIndex = 17;
             this.lblStatusMessage.Text = "停止。";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblUserRelationMessage
+            // 
+            this.lblUserRelationMessage.AutoSize = true;
+            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 40 );
+            this.lblUserRelationMessage.Name = "lblUserRelationMessage";
+            this.lblUserRelationMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblUserRelationMessage.TabIndex = 17;
+            this.lblUserRelationMessage.Text = "停止。";
+            this.lblUserRelationMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // lblUserInfoMessage
             // 
             this.lblUserInfoMessage.AutoSize = true;
-            this.lblUserInfoMessage.Location = new System.Drawing.Point( 130, 21 );
+            this.lblUserInfoMessage.Location = new System.Drawing.Point( 130, 20 );
             this.lblUserInfoMessage.Name = "lblUserInfoMessage";
             this.lblUserInfoMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblUserInfoMessage.TabIndex = 17;
             this.lblUserInfoMessage.Text = "停止。";
             this.lblUserInfoMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblUserRelationTitle
+            // 
+            this.lblUserRelationTitle.AutoSize = true;
+            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 40 );
+            this.lblUserRelationTitle.Name = "lblUserRelationTitle";
+            this.lblUserRelationTitle.Size = new System.Drawing.Size( 125, 12 );
+            this.lblUserRelationTitle.TabIndex = 16;
+            this.lblUserRelationTitle.Text = "用户关系机器人状态：";
+            this.lblUserRelationTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // lblStatusTitle
             // 
             this.lblStatusTitle.AutoSize = true;
-            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 58 );
+            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 60 );
             this.lblStatusTitle.Name = "lblStatusTitle";
             this.lblStatusTitle.Size = new System.Drawing.Size( 101, 12 );
             this.lblStatusTitle.TabIndex = 16;
@@ -861,35 +890,6 @@
             this.btnPost.Text = "发一条微博帮忙推广：）3Q";
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
-            // 
-            // lblUserRelationTitle
-            // 
-            this.lblUserRelationTitle.AutoSize = true;
-            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 40 );
-            this.lblUserRelationTitle.Name = "lblUserRelationTitle";
-            this.lblUserRelationTitle.Size = new System.Drawing.Size( 125, 12 );
-            this.lblUserRelationTitle.TabIndex = 16;
-            this.lblUserRelationTitle.Text = "用户关系机器人状态：";
-            this.lblUserRelationTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblUserRelationMessage
-            // 
-            this.lblUserRelationMessage.AutoSize = true;
-            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 40 );
-            this.lblUserRelationMessage.Name = "lblUserRelationMessage";
-            this.lblUserRelationMessage.Size = new System.Drawing.Size( 41, 12 );
-            this.lblUserRelationMessage.TabIndex = 17;
-            this.lblUserRelationMessage.Text = "停止。";
-            this.lblUserRelationMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblUserRelationQueueInfo
-            // 
-            this.lblUserRelationQueueInfo.AutoSize = true;
-            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 114 );
-            this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
-            this.lblUserRelationQueueInfo.Size = new System.Drawing.Size( 365, 12 );
-            this.lblUserRelationQueueInfo.TabIndex = 22;
-            this.lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // frmMain
             // 
