@@ -78,13 +78,14 @@
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
     <Compile Include="classes\UserQueue.cs" />
-    <Compile Include="classes\UserRobot.cs" />
+    <Compile Include="classes\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="classes\StatusRobot.cs" />
     <Compile Include="classes\RobotBase.cs" />
     <Compile Include="classes\CommentRobot.cs" />
     <Compile Include="classes\QueueBase.cs" />
     <Compile Include="classes\StatusQueue.cs" />
+    <Compile Include="classes\UserRelationRobot.cs" />
     <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
@@ -155,7 +156,7 @@
     <Content Include="sqlscripts\sqlserver\all_uid.VIW" />
     <Content Include="sqlscripts\sqlserver\comments.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_comment.TAB" />
-    <Content Include="sqlscripts\sqlserver\queue_buffer_for_user.TAB" />
+    <Content Include="sqlscripts\sqlserver\queue_buffer_for_userInfo.TAB" />
     <Content Include="sqlscripts\sqlserver\statuses.TAB" />
     <Content Include="sqlscripts\sqlserver\sys_args.TAB" />
     <Content Include="sqlscripts\sqlserver\tags.TAB" />
@@ -163,6 +164,7 @@
     <Content Include="sqlscripts\sqlserver\user_relation.TAB" />
     <Content Include="sqlscripts\sqlserver\user_tag.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_status.TAB" />
+    <Content Include="sqlscripts\sqlserver\queue_buffer_for_userRelation.TAB" />
     <Content Include="sqlscripts\testsql.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -21,18 +21,21 @@ namespace Sinawler
         private User oCurrentUser;     //当前登录用户
         private User oSearchedUser;    //搜索到的用户
 
-        //分别用于三个机器人的线程
-        private BackgroundWorker oAsyncWorkerUser = null;
+        //分别用于四个机器人的线程
+        private BackgroundWorker oAsyncWorkerUserInfo = null;
+        private BackgroundWorker oAsyncWorkerUserRelation = null;
         private BackgroundWorker oAsyncWorkerStatus = null;
         private BackgroundWorker oAsyncWorkerComment = null;
         //调整请求频率的线程
         private BackgroundWorker oAsyncWorkerFreqAdjust = null;
 
-        //爬虫机器人，一个是爬取用户信息的，一个是爬取微博数据的，一个是爬取评论数据的，分别在三个线程中运行
-        private UserRobot robotUser;
+        //爬虫机器人，一个是爬取用户信息的，一个是爬取用户关系的，一个是爬取微博数据的，一个是爬取评论数据的，分别在三个线程中运行
+        private UserInfoRobot robotUserInfo;
+        private UserRelationRobot robotUserRelation;
         private StatusRobot robotStatus;
         private CommentRobot robotComment;
-        private UserQueue queueUserForUserRobot = new UserQueue(QueueBufferFor.USER);  //用户机器人使用的用户队列
+        private UserQueue queueUserForUserInfoRobot = new UserQueue(QueueBufferFor.USER_INFO);  //用户信息机器人使用的用户队列
+        private UserQueue queueUserForUserRelationRobot = new UserQueue( QueueBufferFor.USER_RELATION );  //用户关系机器人使用的用户队列
         private UserQueue queueUserForStatusRobot = new UserQueue(QueueBufferFor.STATUS);  //微博机器人使用的用户队列
         private StatusQueue queueStatus = new StatusQueue();  //微博队列
 
@@ -58,16 +61,18 @@ namespace Sinawler
         //关闭窗口时调用
         private bool CanBeClosed ()
         {
-            if (robotUser != null && robotStatus != null && robotComment != null)
+            if (robotUserInfo != null && robotUserRelation != null && robotStatus != null && robotComment != null)
             {
                 if (!btnStartByCurrent.Enabled || !btnStartBySearch.Enabled || !btnStartByLast.Enabled)
                 {
-                    robotUser.Suspending = true;    //先暂停
+                    robotUserInfo.Suspending = true;    //先暂停
+                    robotUserRelation.Suspending = true;    //先暂停
                     robotStatus.Suspending = true;    //先暂停
                     robotComment.Suspending = true; //先暂停
                     if (MessageBox.Show( "爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
                     {
-                        robotUser.Suspending = false;
+                        robotUserInfo.Suspending = false;
+                        robotUserRelation.Suspending = false;
                         robotStatus.Suspending = false;
                         robotComment.Suspending = false;
                         return false;
@@ -94,18 +99,23 @@ namespace Sinawler
                     btnStartByCurrent.Enabled = true;
                     btnStartBySearch.Enabled = true;
 
-                    if (robotUser == null)
-                        robotUser = new UserRobot( api,queueUserForUserRobot,queueUserForStatusRobot );
+                    if (robotUserInfo == null)
+                        robotUserInfo = new UserInfoRobot( api,queueUserForUserInfoRobot,queueUserForUserRelationRobot,queueUserForStatusRobot );
                     else
-                        robotUser.SinaAPI = api;
+                        robotUserInfo.SinaAPI = api;
+
+                    if (robotUserRelation == null)
+                        robotUserRelation = new UserRelationRobot( api, queueUserForUserInfoRobot, queueUserForUserRelationRobot, queueUserForStatusRobot );
+                    else
+                        robotUserRelation.SinaAPI = api;
 
                     if (robotStatus == null)
-                        robotStatus = new StatusRobot( api,queueUserForUserRobot,queueUserForStatusRobot,queueStatus );
+                        robotStatus = new StatusRobot( api,queueUserForUserInfoRobot,queueUserForUserRelationRobot,queueUserForStatusRobot,queueStatus );
                     else
                         robotStatus.SinaAPI = api;
 
                     if (robotComment == null)
-                        robotComment = new CommentRobot( api,queueUserForUserRobot,queueUserForStatusRobot,queueStatus );
+                        robotComment = new CommentRobot( api,queueUserForUserInfoRobot,queueUserForUserRelationRobot,queueUserForStatusRobot,queueStatus );
                     else
                         robotComment.SinaAPI = api;
                 }
@@ -302,17 +312,20 @@ namespace Sinawler
         //开始任务前初始化robot等
         private void PrepareToStart ()
         {
-            robotUser.Initialize();
+            robotUserInfo.Initialize();
+            robotUserRelation.Initialize();
             robotStatus.Initialize();
             robotComment.Initialize();
 
-            robotUser.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_user.log";
+            robotUserInfo.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
+            robotUserRelation.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userRelation.log";
             robotStatus.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
             robotComment.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
 
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            queueUserForUserRobot.MaxLengthInMem = settings.MaxLengthInMem;
+            queueUserForUserInfoRobot.MaxLengthInMem = settings.MaxLengthInMem;
+            queueUserForUserRelationRobot.MaxLengthInMem = settings.MaxLengthInMem;
             queueUserForStatusRobot.MaxLengthInMem = settings.MaxLengthInMem;
             queueStatus.MaxLengthInMem = settings.MaxLengthInMem;
         }
@@ -329,16 +342,24 @@ namespace Sinawler
                     return;
                 }
 
-                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
+                if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
                 {
                     PrepareToStart();
-                    oAsyncWorkerUser = new BackgroundWorker();
-                    oAsyncWorkerUser.WorkerReportsProgress = true;
-                    oAsyncWorkerUser.WorkerSupportsCancellation = true;
-                    oAsyncWorkerUser.ProgressChanged += new ProgressChangedEventHandler( UserProgressChanged );
-                    oAsyncWorkerUser.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserCompleteWork );
-                    oAsyncWorkerUser.DoWork += new DoWorkEventHandler( StartCrawUserByCurrentUser );
-                    robotUser.AsyncWorker = oAsyncWorkerUser;
+                    oAsyncWorkerUserInfo = new BackgroundWorker();
+                    oAsyncWorkerUserInfo.WorkerReportsProgress = true;
+                    oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
+                    oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler( UserInfoProgressChanged );
+                    oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserInfoCompleteWork );
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserByCurrentUser );
+                    robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
+
+                    oAsyncWorkerUserRelation = new BackgroundWorker();
+                    oAsyncWorkerUserRelation.WorkerReportsProgress = true;
+                    oAsyncWorkerUserRelation.WorkerSupportsCancellation = true;
+                    oAsyncWorkerUserRelation.ProgressChanged += new ProgressChangedEventHandler( UserRelationProgressChanged );
+                    oAsyncWorkerUserRelation.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserRelationCompleteWork );
+                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelation );
+                    robotUserRelation.AsyncWorker = oAsyncWorkerUserRelation;
 
                     oAsyncWorkerStatus = new BackgroundWorker();
                     oAsyncWorkerStatus.WorkerReportsProgress = true;
@@ -362,19 +383,22 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUserInfo.IsBusy || oAsyncWorkerUserRelation.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
                 {
                     //记录原状态
-                    bool userState = robotUser.Suspending;
+                    bool userInfoState = robotUserInfo.Suspending;
+                    bool userRelationState = robotUserRelation.Suspending;
                     bool statusState = robotStatus.Suspending;
                     bool commentState = robotComment.Suspending;
-                    robotUser.Suspending = true;    //暂停
+                    robotUserInfo.Suspending = true;    //暂停
+                    robotUserRelation.Suspending = true;    //暂停
                     robotStatus.Suspending = true;    //暂停
                     robotComment.Suspending = true; //暂停
                     if (MessageBox.Show( "您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
                     {
                         //恢复状态
-                        robotUser.Suspending = userState;
+                        robotUserInfo.Suspending = userInfoState;
+                        robotUserRelation.Suspending = userRelationState;
                         robotStatus.Suspending = statusState;
                         robotComment.Suspending = commentState;
                         return;
@@ -382,10 +406,12 @@ namespace Sinawler
                     btnStartByCurrent.Enabled = false;
                     btnStartByCurrent.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
-                    robotUser.AsyncCancelled = true;
+                    robotUserInfo.AsyncCancelled = true;
+                    robotUserRelation.AsyncCancelled = true;
                     robotStatus.AsyncCancelled = true;
                     robotComment.AsyncCancelled = true;
-                    oAsyncWorkerUser.CancelAsync();
+                    oAsyncWorkerUserInfo.CancelAsync();
+                    oAsyncWorkerUserRelation.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
                     oAsyncWorkerComment.CancelAsync();
                     oAsyncWorkerFreqAdjust.CancelAsync();
@@ -400,7 +426,8 @@ namespace Sinawler
                     btnStartByLast.Enabled = false;
                     btnPauseContinue.Text = "暂停";
                     btnPauseContinue.Enabled = true;
-                    oAsyncWorkerUser.RunWorkerAsync();
+                    oAsyncWorkerUserInfo.RunWorkerAsync();
+                    oAsyncWorkerUserRelation.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
                     oAsyncWorkerComment.RunWorkerAsync();
                     oAsyncWorkerFreqAdjust.RunWorkerAsync();
@@ -425,16 +452,24 @@ namespace Sinawler
                     return;
                 }
 
-                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
+                if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
                 {
                     PrepareToStart();
-                    oAsyncWorkerUser = new BackgroundWorker();
-                    oAsyncWorkerUser.WorkerReportsProgress = true;
-                    oAsyncWorkerUser.WorkerSupportsCancellation = true;
-                    oAsyncWorkerUser.ProgressChanged += new ProgressChangedEventHandler( UserProgressChanged );
-                    oAsyncWorkerUser.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserCompleteWork );
-                    oAsyncWorkerUser.DoWork += new DoWorkEventHandler( StartCrawUserBySearchedUser );
-                    robotUser.AsyncWorker = oAsyncWorkerUser;
+                    oAsyncWorkerUserInfo = new BackgroundWorker();
+                    oAsyncWorkerUserInfo.WorkerReportsProgress = true;
+                    oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
+                    oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler( UserInfoProgressChanged );
+                    oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserInfoCompleteWork );
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserBySearchedUser );
+                    robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
+
+                    oAsyncWorkerUserRelation = new BackgroundWorker();
+                    oAsyncWorkerUserRelation.WorkerReportsProgress = true;
+                    oAsyncWorkerUserRelation.WorkerSupportsCancellation = true;
+                    oAsyncWorkerUserRelation.ProgressChanged += new ProgressChangedEventHandler( UserRelationProgressChanged );
+                    oAsyncWorkerUserRelation.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserRelationCompleteWork );
+                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelation );
+                    robotUserRelation.AsyncWorker = oAsyncWorkerUserRelation;
 
                     oAsyncWorkerStatus = new BackgroundWorker();
                     oAsyncWorkerStatus.WorkerReportsProgress = true;
@@ -458,19 +493,22 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUserInfo.IsBusy || oAsyncWorkerUserRelation.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
                 {
                     //记录原状态
-                    bool userState = robotUser.Suspending;
+                    bool userInfoState = robotUserInfo.Suspending;
+                    bool userRelationState = robotUserRelation.Suspending;
                     bool statusState = robotStatus.Suspending;
                     bool commentState = robotComment.Suspending;
-                    robotUser.Suspending = true;    //暂停
+                    robotUserInfo.Suspending = true;    //暂停
+                    robotUserRelation.Suspending = true;    //暂停
                     robotStatus.Suspending = true;    //暂停
                     robotComment.Suspending = true; //暂停
                     if (MessageBox.Show( "您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
                     {
                         //恢复状态
-                        robotUser.Suspending = userState;
+                        robotUserInfo.Suspending = userInfoState;
+                        robotUserRelation.Suspending = userRelationState;
                         robotStatus.Suspending = statusState;
                         robotComment.Suspending = commentState;
                         return;
@@ -478,10 +516,12 @@ namespace Sinawler
                     btnStartBySearch.Enabled = false;
                     btnStartBySearch.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
-                    robotUser.AsyncCancelled = true;
+                    robotUserInfo.AsyncCancelled = true;
+                    robotUserRelation.AsyncCancelled = true;
                     robotStatus.AsyncCancelled = true;
                     robotComment.AsyncCancelled = true;
-                    oAsyncWorkerUser.CancelAsync();
+                    oAsyncWorkerUserInfo.CancelAsync();
+                    oAsyncWorkerUserRelation.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
                     oAsyncWorkerComment.CancelAsync();
                     oAsyncWorkerFreqAdjust.CancelAsync();
@@ -496,7 +536,8 @@ namespace Sinawler
                     btnStartByLast.Enabled = false;
                     btnPauseContinue.Text = "暂停";
                     btnPauseContinue.Enabled = true;
-                    oAsyncWorkerUser.RunWorkerAsync();
+                    oAsyncWorkerUserInfo.RunWorkerAsync();
+                    oAsyncWorkerUserRelation.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
                     oAsyncWorkerComment.RunWorkerAsync();
                     oAsyncWorkerFreqAdjust.RunWorkerAsync();
@@ -521,16 +562,24 @@ namespace Sinawler
                     return;
                 }
 
-                if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
+                if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
                 {
                     PrepareToStart();
-                    oAsyncWorkerUser = new BackgroundWorker();
-                    oAsyncWorkerUser.WorkerReportsProgress = true;
-                    oAsyncWorkerUser.WorkerSupportsCancellation = true;
-                    oAsyncWorkerUser.ProgressChanged += new ProgressChangedEventHandler( UserProgressChanged );
-                    oAsyncWorkerUser.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserCompleteWork );
-                    oAsyncWorkerUser.DoWork += new DoWorkEventHandler( StartCrawUserByLastUser );
-                    robotUser.AsyncWorker = oAsyncWorkerUser;
+                    oAsyncWorkerUserInfo = new BackgroundWorker();
+                    oAsyncWorkerUserInfo.WorkerReportsProgress = true;
+                    oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
+                    oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler( UserInfoProgressChanged );
+                    oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserInfoCompleteWork );
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserByLastUser );
+                    robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
+
+                    oAsyncWorkerUserRelation = new BackgroundWorker();
+                    oAsyncWorkerUserRelation.WorkerReportsProgress = true;
+                    oAsyncWorkerUserRelation.WorkerSupportsCancellation = true;
+                    oAsyncWorkerUserRelation.ProgressChanged += new ProgressChangedEventHandler( UserRelationProgressChanged );
+                    oAsyncWorkerUserRelation.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserRelationCompleteWork );
+                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelation );
+                    robotUserRelation.AsyncWorker = oAsyncWorkerUserRelation;
 
                     oAsyncWorkerStatus = new BackgroundWorker();
                     oAsyncWorkerStatus.WorkerReportsProgress = true;
@@ -554,19 +603,22 @@ namespace Sinawler
                     oAsyncWorkerFreqAdjust.RunWorkerCompleted += new RunWorkerCompletedEventHandler( StopAdjustFrequency );
                     oAsyncWorkerFreqAdjust.DoWork += new DoWorkEventHandler(StartAdjustFrequency);                    
                 }
-                if (oAsyncWorkerUser.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
+                if (oAsyncWorkerUserInfo.IsBusy || oAsyncWorkerUserRelation.IsBusy || oAsyncWorkerStatus.IsBusy || oAsyncWorkerComment.IsBusy)
                 {
                     //记录原状态
-                    bool userState = robotUser.Suspending;
+                    bool userInfoState = robotUserInfo.Suspending;
+                    bool userRelationState = robotUserRelation.Suspending;
                     bool statusState = robotStatus.Suspending;
                     bool commentState = robotComment.Suspending;
-                    robotUser.Suspending = true;    //暂停
+                    robotUserInfo.Suspending = true;    //暂停
+                    robotUserRelation.Suspending = true;    //暂停
                     robotStatus.Suspending = true;    //暂停
                     robotComment.Suspending = true; //暂停
                     if (MessageBox.Show( "您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo ) == DialogResult.No)
                     {
                         //恢复状态
-                        robotUser.Suspending = userState;
+                        robotUserInfo.Suspending = userInfoState;
+                        robotUserRelation.Suspending = userRelationState;
                         robotStatus.Suspending = statusState;
                         robotComment.Suspending = commentState;
                         return;
@@ -574,13 +626,15 @@ namespace Sinawler
                     btnStartByLast.Enabled = false;
                     btnStartByLast.Text = "正在停止，请稍候...";
                     btnPauseContinue.Enabled = false;
-                    robotUser.AsyncCancelled = true;
+                    robotUserInfo.AsyncCancelled = true;
+                    robotUserRelation.AsyncCancelled = true;
                     robotStatus.AsyncCancelled = true;
                     robotComment.AsyncCancelled = true;
-                    oAsyncWorkerFreqAdjust.CancelAsync();
-                    oAsyncWorkerUser.CancelAsync();
+                    oAsyncWorkerUserInfo.CancelAsync();
+                    oAsyncWorkerUserRelation.CancelAsync();
                     oAsyncWorkerStatus.CancelAsync();
                     oAsyncWorkerComment.CancelAsync();
+                    oAsyncWorkerFreqAdjust.CancelAsync();
                 }
                 else
                 {
@@ -592,7 +646,8 @@ namespace Sinawler
                     btnStartByCurrent.Enabled = false;
                     btnPauseContinue.Text = "暂停";
                     btnPauseContinue.Enabled = true;
-                    oAsyncWorkerUser.RunWorkerAsync();
+                    oAsyncWorkerUserInfo.RunWorkerAsync();
+                    oAsyncWorkerUserRelation.RunWorkerAsync();
                     oAsyncWorkerStatus.RunWorkerAsync();
                     oAsyncWorkerComment.RunWorkerAsync();
                     oAsyncWorkerFreqAdjust.RunWorkerAsync();
@@ -602,38 +657,43 @@ namespace Sinawler
 
         private void StartCrawUserByCurrentUser ( Object sender, DoWorkEventArgs e )
         {
-            robotUser.Start( oCurrentUser.user_id );
+            robotUserInfo.Start( oCurrentUser.user_id );
         }
 
         private void StartCrawUserBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
-            robotUser.Start( oSearchedUser.user_id );
+            robotUserInfo.Start( oSearchedUser.user_id );
         }
 
         private void StartCrawUserByLastUser ( Object sender, DoWorkEventArgs e )
         {
-            long lLastUserID = SysArg.GetCurrentUserID(); //能走到这一步，说明lLastUserID没问题，故不用验证
-            robotUser.Start( lLastUserID );
+            long lLastUserID = SysArg.GetCurrentUserID();
+            if(lLastUserID==0)
+            {
+                MessageBox.Show( this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫" );
+                return;
+            }
+            robotUserInfo.Start( lLastUserID );
         }
 
-        private void UserProgressChanged ( Object sender, ProgressChangedEventArgs e )
+        private void UserInfoProgressChanged ( Object sender, ProgressChangedEventArgs e )
         {
-            lblUserMessage.Text = robotUser.LogMessage;
-            lblUserQueueInfo.Text = "用户机器人的内存队列中有" + queueUserForUserRobot.CountInMem.ToString() + "个用户，数据库队列中有" + queueUserForUserRobot.CountInDB.ToString() + "个用户。";
+            lblUserInfoMessage.Text = robotUserInfo.LogMessage;
+            lblUserInfoQueueInfo.Text = "用户信息机器人的内存队列中有" + queueUserForUserInfoRobot.CountInMem.ToString() + "个用户，数据库队列中有" + queueUserForUserInfoRobot.CountInDB.ToString() + "个用户。";
         }
 
-        private void UserCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
+        private void UserInfoCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
         {
             if (e.Error != null)
             {
                 MessageBox.Show( this, e.Error.Message );
                 return;
             }
-            robotUser.Initialize();
-            lblUserMessage.Text = "停止。";
-            lblUserQueueInfo.Text = "用户机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            robotUserInfo.Initialize();
+            lblUserInfoMessage.Text = "停止。";
+            lblUserInfoQueueInfo.Text = "用户信息机器人的内存队列中有0个用户，数据库队列中有0个用户。";
 
-            if (oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外两个机器人也已停止
+            if (oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外三个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -649,7 +709,48 @@ namespace Sinawler
 
                 MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
             }
-            oAsyncWorkerUser = null;
+            oAsyncWorkerUserInfo = null;
+        }
+
+        private void StartCrawUserRelation ( Object sender, DoWorkEventArgs e )
+        {
+            robotUserRelation.Start();
+        }
+
+        private void UserRelationProgressChanged ( Object sender, ProgressChangedEventArgs e )
+        {
+            lblUserRelationMessage.Text = robotUserRelation.LogMessage;
+            lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有" + queueUserForUserRelationRobot.CountInMem.ToString() + "个用户，数据库队列中有" + queueUserForUserRelationRobot.CountInDB.ToString() + "个用户。";
+        }
+
+        private void UserRelationCompleteWork ( Object sender, RunWorkerCompletedEventArgs e )
+        {
+            if (e.Error != null)
+            {
+                MessageBox.Show( this, e.Error.Message );
+                return;
+            }
+            robotUserRelation.Initialize();
+            lblUserRelationMessage.Text = "停止。";
+            lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+
+            if (oAsyncWorkerUserInfo == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外三个机器人也已停止
+            {
+                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
+                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
+                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Enabled = true;
+                btnStartBySearch.Enabled = true;
+                btnStartByLast.Enabled = true;
+                rdNoPreLoad.Enabled = true;
+                rdPreLoadUserID.Enabled = true;
+                rdPreLoadAllUserID.Enabled = true;
+                btnPauseContinue.Enabled = false;
+                btnPauseContinue.Text = "暂停/继续";
+
+                MessageBox.Show( this, "爬虫已停止。", "新浪微博爬虫" );
+            }
+            oAsyncWorkerUserRelation = null;
         }
 
         private void StartCrawStatus ( Object sender, DoWorkEventArgs e )
@@ -674,7 +775,7 @@ namespace Sinawler
             lblStatusMessage.Text = "停止。";
             lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
 
-            if (oAsyncWorkerUser == null && oAsyncWorkerComment == null)  //如果另外两个机器人也已停止
+            if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerComment == null)  //如果另外三个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -714,7 +815,7 @@ namespace Sinawler
             robotComment.Initialize();
             lblCommentMessage.Text = "停止。";
 
-            if (oAsyncWorkerUser == null && oAsyncWorkerStatus == null)  //如果另外两个机器人也已停止
+            if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null)  //如果另外三个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -742,7 +843,8 @@ namespace Sinawler
 
                 RequestFrequency rf = PubHelper.AdjustFreq(api, iSleep);
                 iSleep = rf.Interval;
-                robotUser.SetRequestFrequency(rf);
+                robotUserInfo.SetRequestFrequency(rf);
+                robotUserRelation.SetRequestFrequency( rf );
                 robotStatus.SetRequestFrequency(rf);
                 robotComment.SetRequestFrequency(rf);
 
@@ -758,7 +860,7 @@ namespace Sinawler
                 return;
             }
 
-            if (oAsyncWorkerUser == null && oAsyncWorkerComment == null && oAsyncWorkerStatus == null)  //如果另外三个机器人也已停止
+            if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerComment == null && oAsyncWorkerStatus == null)  //如果另外四个机器人也已停止
             {
                 btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
                 btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
@@ -844,7 +946,7 @@ namespace Sinawler
             rdPreLoadUserID.Checked = !rdNoPreLoad.Checked;
             rdPreLoadAllUserID.Checked = !rdNoPreLoad.Checked;
             if (rdNoPreLoad.Checked)
-                queueUserForUserRobot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
+                queueUserForUserInfoRobot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
         }
 
         private void rdPreLoadUserID_Click ( object sender, EventArgs e )
@@ -852,7 +954,7 @@ namespace Sinawler
             rdNoPreLoad.Checked = !rdPreLoadUserID.Checked;
             rdPreLoadAllUserID.Checked = !rdPreLoadUserID.Checked;
             if (rdPreLoadUserID.Checked)
-                queueUserForUserRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_USER_ID;
+                queueUserForUserInfoRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_USER_ID;
         }
 
         private void rdPreLoadAllUserID_Click ( object sender, EventArgs e )
@@ -860,7 +962,7 @@ namespace Sinawler
             rdNoPreLoad.Checked = !rdPreLoadAllUserID.Checked;
             rdPreLoadUserID.Checked = !rdPreLoadAllUserID.Checked;
             if (rdPreLoadAllUserID.Checked)
-                queueUserForUserRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_USER_ID;
+                queueUserForUserInfoRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_USER_ID;
         }
 
         private void btnPauseContinue_Click ( object sender, EventArgs e )
@@ -869,7 +971,8 @@ namespace Sinawler
                 btnPauseContinue.Text = "继续";
             else
                 btnPauseContinue.Text = "暂停";
-            robotUser.Suspending = !robotUser.Suspending;
+            robotUserInfo.Suspending = !robotUserInfo.Suspending;
+            robotUserRelation.Suspending = !robotUserRelation.Suspending;
             robotStatus.Suspending = !robotStatus.Suspending;
             robotComment.Suspending = !robotComment.Suspending;
         }

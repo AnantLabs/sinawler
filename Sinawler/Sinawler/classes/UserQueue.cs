@@ -20,8 +20,8 @@ namespace Sinawler
         public UserQueue (QueueBufferFor who)
             : base()
         {
-            if(who==QueueBufferFor.COMMENT) //默认为USER
-                lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.USER );
+            if(who==QueueBufferFor.COMMENT) //默认为USER_INFO
+                lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.USER_INFO );
             else
                 lstWaitingIDInDB = new QueueBuffer(who);
         }
