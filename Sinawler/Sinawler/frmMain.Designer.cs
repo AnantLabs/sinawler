@@ -778,7 +778,7 @@
             // lblCommentQueueInfo
             // 
             this.lblCommentQueueInfo.AutoSize = true;
-            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 155 );
+            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 157 );
             this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
             this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
             this.lblCommentQueueInfo.TabIndex = 24;
@@ -787,7 +787,7 @@
             // lblStatusQueueInfo
             // 
             this.lblStatusQueueInfo.AutoSize = true;
-            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 135 );
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 138 );
             this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
             this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
             this.lblStatusQueueInfo.TabIndex = 23;
@@ -796,7 +796,7 @@
             // lblUserRelationQueueInfo
             // 
             this.lblUserRelationQueueInfo.AutoSize = true;
-            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 115 );
+            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 119 );
             this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
             this.lblUserRelationQueueInfo.Size = new System.Drawing.Size( 365, 12 );
             this.lblUserRelationQueueInfo.TabIndex = 22;
@@ -805,7 +805,7 @@
             // lblUserInfoQueueInfo
             // 
             this.lblUserInfoQueueInfo.AutoSize = true;
-            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 95 );
+            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 100 );
             this.lblUserInfoQueueInfo.Name = "lblUserInfoQueueInfo";
             this.lblUserInfoQueueInfo.Size = new System.Drawing.Size( 365, 12 );
             this.lblUserInfoQueueInfo.TabIndex = 22;
