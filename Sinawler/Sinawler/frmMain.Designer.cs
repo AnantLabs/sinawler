@@ -834,7 +834,7 @@
             // lblStatusMessage
             // 
             this.lblStatusMessage.AutoSize = true;
-            this.lblStatusMessage.Location = new System.Drawing.Point( 130, 60 );
+            this.lblStatusMessage.Location = new System.Drawing.Point( 130, 58 );
             this.lblStatusMessage.Name = "lblStatusMessage";
             this.lblStatusMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblStatusMessage.TabIndex = 17;
@@ -844,7 +844,7 @@
             // lblUserRelationMessage
             // 
             this.lblUserRelationMessage.AutoSize = true;
-            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 40 );
+            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 39 );
             this.lblUserRelationMessage.Name = "lblUserRelationMessage";
             this.lblUserRelationMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblUserRelationMessage.TabIndex = 17;
@@ -864,7 +864,7 @@
             // lblUserRelationTitle
             // 
             this.lblUserRelationTitle.AutoSize = true;
-            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 40 );
+            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 39 );
             this.lblUserRelationTitle.Name = "lblUserRelationTitle";
             this.lblUserRelationTitle.Size = new System.Drawing.Size( 125, 12 );
             this.lblUserRelationTitle.TabIndex = 16;
@@ -874,7 +874,7 @@
             // lblStatusTitle
             // 
             this.lblStatusTitle.AutoSize = true;
-            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 60 );
+            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 58 );
             this.lblStatusTitle.Name = "lblStatusTitle";
             this.lblStatusTitle.Size = new System.Drawing.Size( 101, 12 );
             this.lblStatusTitle.TabIndex = 16;
