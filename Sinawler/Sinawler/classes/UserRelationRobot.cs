@@ -32,14 +32,14 @@ namespace Sinawler
         /// 以指定的UserID为起点开始爬行
         /// </summary>
         /// <param name="lUid"></param>
-        public void Start()
+        public void Start ( long lStartUserID )
         {
-            while (queueUserForUserRelationRobot.Count == 0)
-            {
-                if (blnAsyncCancelled) return;
-                Thread.Sleep( 50 );   //若队列为空，则等待
-            }
-            long lStartUserID = queueUserForUserRelationRobot.FirstValue;
+            if (lStartUserID == 0) return;
+            //将起始UserID入队
+            queueUserForUserRelationRobot.Enqueue( lStartUserID );
+            queueUserForUserInfoRobot.Enqueue( lStartUserID );
+            queueUserForStatusRobot.Enqueue( lStartUserID );
+            lCurrentID = lStartUserID;
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
             {
@@ -69,7 +69,7 @@ namespace Sinawler
                 }
                 //日志
                 Log("记录当前用户ID：" + lCurrentID.ToString());
-                SysArg.SetCurrentUserID( lCurrentID );
+                SysArg.SetCurrentUserIDForUserRelation( lCurrentID );
                 #endregion
                 #region 用户关注列表
                 if (blnAsyncCancelled) return;

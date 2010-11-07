@@ -35,7 +35,9 @@ namespace Sinawler
         /// </summary>
         public void Start()
         {
-            //不加载用户队列
+            //获取上次中止处的微博ID并入队
+            long lLastStatusID = SysArg.GetCurrentStatusID();
+            if (lLastStatusID > 0) queueStatus.Enqueue( lLastStatusID );
             while (queueStatus.Count == 0)
             {
                 if (blnAsyncCancelled) return;
@@ -70,6 +72,9 @@ namespace Sinawler
                     Log("开始爬行之前增加迭代次数...");
                     Comment.NewIterate();
                 }
+                //日志
+                Log( "记录当前微博ID：" + lCurrentSID.ToString() );
+                SysArg.SetCurrentStatusID( lCurrentSID );
                 #endregion
                 #region 微博相应评论
                 if (blnAsyncCancelled) return;

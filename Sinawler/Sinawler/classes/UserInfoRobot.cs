@@ -96,7 +96,7 @@ namespace Sinawler
             
             lCurrentID = lStartUserID;
             //对队列循环爬行
-            while (queueUserForUserInfoRobot.Count > 0)
+            while (true)
             {
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
@@ -124,7 +124,7 @@ namespace Sinawler
                 }
                 //日志
                 Log("记录当前用户ID：" + lCurrentID.ToString());
-                SysArg.SetCurrentUserID( lCurrentID );
+                SysArg.SetCurrentUserIDForUserInfo( lCurrentID );
                 #endregion
                 #region 用户基本信息
                 if (blnAsyncCancelled) return;

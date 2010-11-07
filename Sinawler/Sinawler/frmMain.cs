@@ -350,7 +350,7 @@ namespace Sinawler
                     oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler( UserInfoProgressChanged );
                     oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserInfoCompleteWork );
-                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserByCurrentUser );
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserInfoByCurrentUser );
                     robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
 
                     oAsyncWorkerUserRelation = new BackgroundWorker();
@@ -358,7 +358,7 @@ namespace Sinawler
                     oAsyncWorkerUserRelation.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserRelation.ProgressChanged += new ProgressChangedEventHandler( UserRelationProgressChanged );
                     oAsyncWorkerUserRelation.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserRelationCompleteWork );
-                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelation );
+                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelationByCurrentUser );
                     robotUserRelation.AsyncWorker = oAsyncWorkerUserRelation;
 
                     oAsyncWorkerStatus = new BackgroundWorker();
@@ -460,7 +460,7 @@ namespace Sinawler
                     oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler( UserInfoProgressChanged );
                     oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserInfoCompleteWork );
-                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserBySearchedUser );
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserInfoBySearchedUser );
                     robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
 
                     oAsyncWorkerUserRelation = new BackgroundWorker();
@@ -468,7 +468,7 @@ namespace Sinawler
                     oAsyncWorkerUserRelation.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserRelation.ProgressChanged += new ProgressChangedEventHandler( UserRelationProgressChanged );
                     oAsyncWorkerUserRelation.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserRelationCompleteWork );
-                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelation );
+                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelationBySearchedUser );
                     robotUserRelation.AsyncWorker = oAsyncWorkerUserRelation;
 
                     oAsyncWorkerStatus = new BackgroundWorker();
@@ -556,7 +556,7 @@ namespace Sinawler
                     MessageBox.Show( "数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫" );
                     return;
                 }
-                if (SysArg.GetCurrentUserID() == 0)
+                if (SysArg.GetCurrentUserIDForUserInfo() == 0 && SysArg.GetCurrentUserIDForUserRelation()==0)
                 {
                     MessageBox.Show( this, "无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫" );
                     return;
@@ -570,7 +570,7 @@ namespace Sinawler
                     oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler( UserInfoProgressChanged );
                     oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserInfoCompleteWork );
-                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserByLastUser );
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler( StartCrawUserInfoByLastUser );
                     robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
 
                     oAsyncWorkerUserRelation = new BackgroundWorker();
@@ -578,7 +578,7 @@ namespace Sinawler
                     oAsyncWorkerUserRelation.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserRelation.ProgressChanged += new ProgressChangedEventHandler( UserRelationProgressChanged );
                     oAsyncWorkerUserRelation.RunWorkerCompleted += new RunWorkerCompletedEventHandler( UserRelationCompleteWork );
-                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelation );
+                    oAsyncWorkerUserRelation.DoWork += new DoWorkEventHandler( StartCrawUserRelationByLastUser );
                     robotUserRelation.AsyncWorker = oAsyncWorkerUserRelation;
 
                     oAsyncWorkerStatus = new BackgroundWorker();
@@ -655,23 +655,28 @@ namespace Sinawler
             }
         }
 
-        private void StartCrawUserByCurrentUser ( Object sender, DoWorkEventArgs e )
+        #region 用户信息机器人
+        private void StartCrawUserInfoByCurrentUser ( Object sender, DoWorkEventArgs e )
         {
             robotUserInfo.Start( oCurrentUser.user_id );
         }
 
-        private void StartCrawUserBySearchedUser ( Object sender, DoWorkEventArgs e )
+        private void StartCrawUserInfoBySearchedUser ( Object sender, DoWorkEventArgs e )
         {
             robotUserInfo.Start( oSearchedUser.user_id );
         }
 
-        private void StartCrawUserByLastUser ( Object sender, DoWorkEventArgs e )
+        private void StartCrawUserInfoByLastUser ( Object sender, DoWorkEventArgs e )
         {
-            long lLastUserID = SysArg.GetCurrentUserID();
-            if(lLastUserID==0)
+            long lLastUserID = SysArg.GetCurrentUserIDForUserInfo();
+            if (lLastUserID == 0)
             {
-                MessageBox.Show( this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫" );
-                return;
+                lLastUserID = SysArg.GetCurrentUserIDForUserRelation();
+                if(lLastUserID==0)
+                {
+                    MessageBox.Show( this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫" );
+                    return;
+                }
             }
             robotUserInfo.Start( lLastUserID );
         }
@@ -711,10 +716,32 @@ namespace Sinawler
             }
             oAsyncWorkerUserInfo = null;
         }
+        #endregion
 
-        private void StartCrawUserRelation ( Object sender, DoWorkEventArgs e )
+        #region 用户关系机器人
+        private void StartCrawUserRelationByCurrentUser ( Object sender, DoWorkEventArgs e )
         {
-            robotUserRelation.Start();
+            robotUserRelation.Start( oCurrentUser.user_id );
+        }
+
+        private void StartCrawUserRelationBySearchedUser ( Object sender, DoWorkEventArgs e )
+        {
+            robotUserRelation.Start( oSearchedUser.user_id );
+        }
+
+        private void StartCrawUserRelationByLastUser ( Object sender, DoWorkEventArgs e )
+        {
+            long lLastUserID = SysArg.GetCurrentUserIDForUserRelation();
+            if (lLastUserID == 0)
+            {
+                lLastUserID = SysArg.GetCurrentUserIDForUserInfo();
+                if (lLastUserID == 0)
+                {
+                    MessageBox.Show( this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫" );
+                    return;
+                }
+            }
+            robotUserRelation.Start( lLastUserID );
         }
 
         private void UserRelationProgressChanged ( Object sender, ProgressChangedEventArgs e )
@@ -752,7 +779,9 @@ namespace Sinawler
             }
             oAsyncWorkerUserRelation = null;
         }
+        #endregion
 
+        #region 微博机器人
         private void StartCrawStatus ( Object sender, DoWorkEventArgs e )
         {
             robotStatus.Start();
@@ -793,7 +822,9 @@ namespace Sinawler
             }
             oAsyncWorkerStatus = null;
         }
+        #endregion
 
+        #region 微博评论机器人
         private void StartCrawComment ( Object sender, DoWorkEventArgs e )
         {
             robotComment.Start();
@@ -833,7 +864,9 @@ namespace Sinawler
             }
             oAsyncWorkerComment = null;
         }
+        #endregion
 
+        #region 请求频率调节
         private void StartAdjustFrequency(Object sender, DoWorkEventArgs e)
         {
             int iSleep = 3000;
@@ -876,7 +909,7 @@ namespace Sinawler
             }
             oAsyncWorkerFreqAdjust = null;
         }
-
+        #endregion
         private void ShowSettings ( SettingItems settings )
         {
             tbQueueLength.Value = settings.MaxLengthInMem;

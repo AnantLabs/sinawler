@@ -42,24 +42,72 @@ namespace Sinawler.Model
 		#region  成员方法
 
 		/// <summary>
-        /// 记录当前爬行的UserID
+        /// 记录用户信息机器人当前爬行的UserID
 		/// </summary>
-		static public void SetCurrentUserID(long lUserID)
+		static public void SetCurrentUserIDForUserInfo(long lUserID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "delete from sys_args where arg_name='current_user_id'";
+            string strSQL = "delete from sys_args where arg_name='current_user_id_userInfo'";
             db.CountByExecuteSQL(strSQL);
-            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id','" + lUserID.ToString() + "')";
+            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userInfo','" + lUserID.ToString() + "')";
             db.CountByExecuteSQL(strSQL);
 		}
 
         /// <summary>
-        /// 获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
+        /// 为用户信息机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
         /// </summary>
-        static public long GetCurrentUserID ()
+        static public long GetCurrentUserIDForUserInfo ()
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_user_id'";
+            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userInfo'";
+            DataRow dr = db.GetDataRow( strSQL );
+            if (dr == null) return 0;
+            else return Convert.ToInt64( dr["arg_value"] );
+        }
+
+        /// <summary>
+        /// 记录用户关系机器人当前爬行的UserID
+        /// </summary>
+        static public void SetCurrentUserIDForUserRelation ( long lUserID )
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            string strSQL = "delete from sys_args where arg_name='current_user_id_userRelation'";
+            db.CountByExecuteSQL( strSQL );
+            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userRelation','" + lUserID.ToString() + "')";
+            db.CountByExecuteSQL( strSQL );
+        }
+
+        /// <summary>
+        /// 为用户关系机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
+        /// </summary>
+        static public long GetCurrentUserIDForUserRelation ()
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userRelation'";
+            DataRow dr = db.GetDataRow( strSQL );
+            if (dr == null) return 0;
+            else return Convert.ToInt64( dr["arg_value"] );
+        }
+
+        /// <summary>
+        /// 记录微博评论机器人当前爬行的StatusID
+        /// </summary>
+        static public void SetCurrentStatusID ( long lStatusID )
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            string strSQL = "delete from sys_args where arg_name='current_status_id'";
+            db.CountByExecuteSQL( strSQL );
+            strSQL = "insert into sys_args(arg_name,arg_value) values('current_status_id','" + lStatusID.ToString() + "')";
+            db.CountByExecuteSQL( strSQL );
+        }
+
+        /// <summary>
+        /// 为微博评论机器人获取当前爬行的StatusID（若爬行中止，则为上次中止处的微博）
+        /// </summary>
+        static public long GetCurrentStatusID()
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            string strSQL = "select arg_value from sys_args where arg_name='current_status_id'";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr["arg_value"] );
