@@ -600,13 +600,12 @@ namespace Sinawler
                                         status.retweeted_status.user_id = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
                                         break;
                                 }
-                            }
+                            }//for
                             break;
                     }
                 }
                 status.iteration = 0;
                 lstStatuses.Add( status );
-                if (status.retweeted_status != null) lstStatuses.Add( status.retweeted_status );
             }
             lstStatuses.Sort( CompareStatus );
             return lstStatuses;
