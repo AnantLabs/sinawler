@@ -845,6 +845,7 @@ namespace Sinawler
             }
             robotComment.Initialize();
             lblCommentMessage.Text = "停止。";
+            lblCommentQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
 
             if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null)  //如果另外三个机器人也已停止
             {
@@ -1013,6 +1014,15 @@ namespace Sinawler
         private void frmMain_FormClosing ( object sender, FormClosingEventArgs e )
         {
             if (!CanBeClosed()) e.Cancel = true;
+        }
+
+        private void button1_Click ( object sender, EventArgs e )
+        {
+            string strURL = "http://t.sina.com.cn/login.php";
+            //string strHTML = api.oAuthWebRequest( oAuthSina.Method.POST, strURL, "loginname=sizheng0320&password=sizhengpass" );
+            string strHTML = api.WebRequest( oAuthSina.Method.POST, strURL, "loginname=sizheng0320&password=sizhengpass" );
+            int a;
+            a = 0;
         }
     }
 }

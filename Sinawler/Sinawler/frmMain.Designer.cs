@@ -102,6 +102,7 @@
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -530,6 +531,7 @@
             // 
             // gpSetting
             // 
+            this.gpSetting.Controls.Add( this.button1 );
             this.gpSetting.Controls.Add( this.btnLoad );
             this.gpSetting.Controls.Add( this.grpDBSettings );
             this.gpSetting.Controls.Add( this.grpQueueLength );
@@ -891,6 +893,17 @@
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point( 741, 36 );
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size( 75, 23 );
+            this.button1.TabIndex = 15;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
+            this.button1.Click += new System.EventHandler( this.button1_Click );
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
@@ -1008,6 +1021,7 @@
         private System.Windows.Forms.Label lblUserRelationMessage;
         private System.Windows.Forms.Label lblUserRelationTitle;
         private System.Windows.Forms.Label lblUserRelationQueueInfo;
+        private System.Windows.Forms.Button button1;
     }
 }
 

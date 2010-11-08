@@ -77,6 +77,7 @@
     <Compile Include="API\SinaApiService.cs" />
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
+    <Compile Include="classes\HttpRec.cs" />
     <Compile Include="classes\UserQueue.cs" />
     <Compile Include="classes\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
