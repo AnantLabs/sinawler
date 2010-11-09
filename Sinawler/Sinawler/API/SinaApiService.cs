@@ -11,6 +11,19 @@ namespace Sina.Api
 {
     public class SinaApiService : oAuthSina//,ISinaApiService
     {
+        private string strUserName = "";    //登录帐号
+        private string strPassWord = "";         //登录密码
+
+        public string UserName
+        {
+            get { return strUserName; }
+        }
+
+        public string PassWord
+        {
+            get { return strPassWord; }
+        }
+
         public SinaApiService()
         {
             //default format
@@ -34,6 +47,8 @@ namespace Sina.Api
         {
             try
             {
+                strUserName = userid;
+                strPassWord = passwd;
                 string authLink = AuthorizationGet();
                 authLink += "&userId=" + userid + "&passwd=" + passwd + "&action=submit&oauth_callback=none";
                 string html = WebRequest(Method.POST, authLink, null);

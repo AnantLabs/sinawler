@@ -102,7 +102,9 @@
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.lblTagTitle = new System.Windows.Forms.Label();
+            this.lblTagMessage = new System.Windows.Forms.Label();
+            this.lblTagQueueInfo = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -138,9 +140,9 @@
             this.grpUserInfo.Controls.Add( this.lblLocation );
             this.grpUserInfo.Controls.Add( this.lblName );
             this.grpUserInfo.Controls.Add( this.lblUserID );
-            this.grpUserInfo.Location = new System.Drawing.Point( 11, 82 );
+            this.grpUserInfo.Location = new System.Drawing.Point( 11, 81 );
             this.grpUserInfo.Name = "grpUserInfo";
-            this.grpUserInfo.Size = new System.Drawing.Size( 806, 75 );
+            this.grpUserInfo.Size = new System.Drawing.Size( 806, 63 );
             this.grpUserInfo.TabIndex = 1;
             this.grpUserInfo.TabStop = false;
             this.grpUserInfo.Text = "搜索结果";
@@ -166,7 +168,7 @@
             // lblStatusesCount
             // 
             this.lblStatusesCount.AutoSize = true;
-            this.lblStatusesCount.Location = new System.Drawing.Point( 430, 48 );
+            this.lblStatusesCount.Location = new System.Drawing.Point( 430, 41 );
             this.lblStatusesCount.Name = "lblStatusesCount";
             this.lblStatusesCount.Size = new System.Drawing.Size( 77, 12 );
             this.lblStatusesCount.TabIndex = 7;
@@ -175,7 +177,7 @@
             // lblCreatedAt
             // 
             this.lblCreatedAt.AutoSize = true;
-            this.lblCreatedAt.Location = new System.Drawing.Point( 593, 48 );
+            this.lblCreatedAt.Location = new System.Drawing.Point( 593, 41 );
             this.lblCreatedAt.Name = "lblCreatedAt";
             this.lblCreatedAt.Size = new System.Drawing.Size( 89, 12 );
             this.lblCreatedAt.TabIndex = 6;
@@ -184,7 +186,7 @@
             // lblFriendsCount
             // 
             this.lblFriendsCount.AutoSize = true;
-            this.lblFriendsCount.Location = new System.Drawing.Point( 302, 48 );
+            this.lblFriendsCount.Location = new System.Drawing.Point( 302, 41 );
             this.lblFriendsCount.Name = "lblFriendsCount";
             this.lblFriendsCount.Size = new System.Drawing.Size( 65, 12 );
             this.lblFriendsCount.TabIndex = 5;
@@ -193,7 +195,7 @@
             // lblFollowersCount
             // 
             this.lblFollowersCount.AutoSize = true;
-            this.lblFollowersCount.Location = new System.Drawing.Point( 154, 48 );
+            this.lblFollowersCount.Location = new System.Drawing.Point( 154, 41 );
             this.lblFollowersCount.Name = "lblFollowersCount";
             this.lblFollowersCount.Size = new System.Drawing.Size( 65, 12 );
             this.lblFollowersCount.TabIndex = 4;
@@ -211,7 +213,7 @@
             // lblLocation
             // 
             this.lblLocation.AutoSize = true;
-            this.lblLocation.Location = new System.Drawing.Point( 9, 48 );
+            this.lblLocation.Location = new System.Drawing.Point( 9, 41 );
             this.lblLocation.Name = "lblLocation";
             this.lblLocation.Size = new System.Drawing.Size( 53, 12 );
             this.lblLocation.TabIndex = 2;
@@ -328,7 +330,7 @@
             this.grpCurrentUser.Controls.Add( this.lblCUserID );
             this.grpCurrentUser.Location = new System.Drawing.Point( 4, 12 );
             this.grpCurrentUser.Name = "grpCurrentUser";
-            this.grpCurrentUser.Size = new System.Drawing.Size( 827, 71 );
+            this.grpCurrentUser.Size = new System.Drawing.Size( 827, 61 );
             this.grpCurrentUser.TabIndex = 9;
             this.grpCurrentUser.TabStop = false;
             this.grpCurrentUser.Text = "当前登录帐号信息";
@@ -354,7 +356,7 @@
             // lblCStatusesCount
             // 
             this.lblCStatusesCount.AutoSize = true;
-            this.lblCStatusesCount.Location = new System.Drawing.Point( 430, 48 );
+            this.lblCStatusesCount.Location = new System.Drawing.Point( 430, 41 );
             this.lblCStatusesCount.Name = "lblCStatusesCount";
             this.lblCStatusesCount.Size = new System.Drawing.Size( 77, 12 );
             this.lblCStatusesCount.TabIndex = 7;
@@ -363,7 +365,7 @@
             // lblCCreatedAt
             // 
             this.lblCCreatedAt.AutoSize = true;
-            this.lblCCreatedAt.Location = new System.Drawing.Point( 593, 48 );
+            this.lblCCreatedAt.Location = new System.Drawing.Point( 593, 41 );
             this.lblCCreatedAt.Name = "lblCCreatedAt";
             this.lblCCreatedAt.Size = new System.Drawing.Size( 89, 12 );
             this.lblCCreatedAt.TabIndex = 6;
@@ -372,7 +374,7 @@
             // lblCFriendsCount
             // 
             this.lblCFriendsCount.AutoSize = true;
-            this.lblCFriendsCount.Location = new System.Drawing.Point( 302, 48 );
+            this.lblCFriendsCount.Location = new System.Drawing.Point( 302, 41 );
             this.lblCFriendsCount.Name = "lblCFriendsCount";
             this.lblCFriendsCount.Size = new System.Drawing.Size( 65, 12 );
             this.lblCFriendsCount.TabIndex = 5;
@@ -381,7 +383,7 @@
             // lblCFollowersCount
             // 
             this.lblCFollowersCount.AutoSize = true;
-            this.lblCFollowersCount.Location = new System.Drawing.Point( 154, 48 );
+            this.lblCFollowersCount.Location = new System.Drawing.Point( 154, 41 );
             this.lblCFollowersCount.Name = "lblCFollowersCount";
             this.lblCFollowersCount.Size = new System.Drawing.Size( 65, 12 );
             this.lblCFollowersCount.TabIndex = 4;
@@ -399,7 +401,7 @@
             // lblCLocation
             // 
             this.lblCLocation.AutoSize = true;
-            this.lblCLocation.Location = new System.Drawing.Point( 9, 48 );
+            this.lblCLocation.Location = new System.Drawing.Point( 9, 41 );
             this.lblCLocation.Name = "lblCLocation";
             this.lblCLocation.Size = new System.Drawing.Size( 53, 12 );
             this.lblCLocation.TabIndex = 2;
@@ -439,16 +441,16 @@
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.grpSearch.Controls.Add( this.grpSearchCondition );
             this.grpSearch.Controls.Add( this.grpUserInfo );
-            this.grpSearch.Location = new System.Drawing.Point( 4, 89 );
+            this.grpSearch.Location = new System.Drawing.Point( 4, 76 );
             this.grpSearch.Name = "grpSearch";
-            this.grpSearch.Size = new System.Drawing.Size( 827, 166 );
+            this.grpSearch.Size = new System.Drawing.Size( 827, 151 );
             this.grpSearch.TabIndex = 10;
             this.grpSearch.TabStop = false;
             this.grpSearch.Text = "搜索用户";
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point( 453, 717 );
+            this.btnExit.Location = new System.Drawing.Point( 453, 690 );
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size( 170, 23 );
             this.btnExit.TabIndex = 11;
@@ -466,7 +468,7 @@
             this.grpControl.Controls.Add( this.btnStartByCurrent );
             this.grpControl.Controls.Add( this.btnStartBySearch );
             this.grpControl.Controls.Add( this.btnStartByLast );
-            this.grpControl.Location = new System.Drawing.Point( 5, 442 );
+            this.grpControl.Location = new System.Drawing.Point( 5, 407 );
             this.grpControl.Name = "grpControl";
             this.grpControl.Size = new System.Drawing.Size( 827, 77 );
             this.grpControl.TabIndex = 14;
@@ -531,15 +533,14 @@
             // 
             // gpSetting
             // 
-            this.gpSetting.Controls.Add( this.button1 );
             this.gpSetting.Controls.Add( this.btnLoad );
             this.gpSetting.Controls.Add( this.grpDBSettings );
             this.gpSetting.Controls.Add( this.grpQueueLength );
             this.gpSetting.Controls.Add( this.btnDefault );
             this.gpSetting.Controls.Add( this.btnSave );
-            this.gpSetting.Location = new System.Drawing.Point( 5, 261 );
+            this.gpSetting.Location = new System.Drawing.Point( 5, 232 );
             this.gpSetting.Name = "gpSetting";
-            this.gpSetting.Size = new System.Drawing.Size( 826, 175 );
+            this.gpSetting.Size = new System.Drawing.Size( 826, 170 );
             this.gpSetting.TabIndex = 15;
             this.gpSetting.TabStop = false;
             this.gpSetting.Text = "设置（改变设置后请点击“保存”）";
@@ -761,18 +762,21 @@
             this.grpStatus.Controls.Add( this.lblCommentQueueInfo );
             this.grpStatus.Controls.Add( this.lblStatusQueueInfo );
             this.grpStatus.Controls.Add( this.lblUserRelationQueueInfo );
+            this.grpStatus.Controls.Add( this.lblTagQueueInfo );
             this.grpStatus.Controls.Add( this.lblUserInfoQueueInfo );
             this.grpStatus.Controls.Add( this.lblCommentMessage );
             this.grpStatus.Controls.Add( this.lblCommentTitle );
             this.grpStatus.Controls.Add( this.lblStatusMessage );
             this.grpStatus.Controls.Add( this.lblUserRelationMessage );
+            this.grpStatus.Controls.Add( this.lblTagMessage );
             this.grpStatus.Controls.Add( this.lblUserInfoMessage );
             this.grpStatus.Controls.Add( this.lblUserRelationTitle );
+            this.grpStatus.Controls.Add( this.lblTagTitle );
             this.grpStatus.Controls.Add( this.lblStatusTitle );
             this.grpStatus.Controls.Add( this.lblUserInfoTitle );
-            this.grpStatus.Location = new System.Drawing.Point( 5, 524 );
+            this.grpStatus.Location = new System.Drawing.Point( 5, 487 );
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size( 827, 177 );
+            this.grpStatus.Size = new System.Drawing.Size( 827, 185 );
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
@@ -780,7 +784,7 @@
             // lblCommentQueueInfo
             // 
             this.lblCommentQueueInfo.AutoSize = true;
-            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 157 );
+            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 166 );
             this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
             this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
             this.lblCommentQueueInfo.TabIndex = 24;
@@ -789,7 +793,7 @@
             // lblStatusQueueInfo
             // 
             this.lblStatusQueueInfo.AutoSize = true;
-            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 138 );
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 150 );
             this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
             this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
             this.lblStatusQueueInfo.TabIndex = 23;
@@ -798,7 +802,7 @@
             // lblUserRelationQueueInfo
             // 
             this.lblUserRelationQueueInfo.AutoSize = true;
-            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 119 );
+            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 134 );
             this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
             this.lblUserRelationQueueInfo.Size = new System.Drawing.Size( 365, 12 );
             this.lblUserRelationQueueInfo.TabIndex = 22;
@@ -807,7 +811,7 @@
             // lblUserInfoQueueInfo
             // 
             this.lblUserInfoQueueInfo.AutoSize = true;
-            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 100 );
+            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 102 );
             this.lblUserInfoQueueInfo.Name = "lblUserInfoQueueInfo";
             this.lblUserInfoQueueInfo.Size = new System.Drawing.Size( 365, 12 );
             this.lblUserInfoQueueInfo.TabIndex = 22;
@@ -816,7 +820,7 @@
             // lblCommentMessage
             // 
             this.lblCommentMessage.AutoSize = true;
-            this.lblCommentMessage.Location = new System.Drawing.Point( 130, 77 );
+            this.lblCommentMessage.Location = new System.Drawing.Point( 130, 84 );
             this.lblCommentMessage.Name = "lblCommentMessage";
             this.lblCommentMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblCommentMessage.TabIndex = 21;
@@ -826,7 +830,7 @@
             // lblCommentTitle
             // 
             this.lblCommentTitle.AutoSize = true;
-            this.lblCommentTitle.Location = new System.Drawing.Point( 35, 77 );
+            this.lblCommentTitle.Location = new System.Drawing.Point( 35, 84 );
             this.lblCommentTitle.Name = "lblCommentTitle";
             this.lblCommentTitle.Size = new System.Drawing.Size( 101, 12 );
             this.lblCommentTitle.TabIndex = 20;
@@ -836,7 +840,7 @@
             // lblStatusMessage
             // 
             this.lblStatusMessage.AutoSize = true;
-            this.lblStatusMessage.Location = new System.Drawing.Point( 130, 58 );
+            this.lblStatusMessage.Location = new System.Drawing.Point( 130, 68 );
             this.lblStatusMessage.Name = "lblStatusMessage";
             this.lblStatusMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblStatusMessage.TabIndex = 17;
@@ -846,7 +850,7 @@
             // lblUserRelationMessage
             // 
             this.lblUserRelationMessage.AutoSize = true;
-            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 39 );
+            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 52 );
             this.lblUserRelationMessage.Name = "lblUserRelationMessage";
             this.lblUserRelationMessage.Size = new System.Drawing.Size( 41, 12 );
             this.lblUserRelationMessage.TabIndex = 17;
@@ -866,7 +870,7 @@
             // lblUserRelationTitle
             // 
             this.lblUserRelationTitle.AutoSize = true;
-            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 39 );
+            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 52 );
             this.lblUserRelationTitle.Name = "lblUserRelationTitle";
             this.lblUserRelationTitle.Size = new System.Drawing.Size( 125, 12 );
             this.lblUserRelationTitle.TabIndex = 16;
@@ -876,7 +880,7 @@
             // lblStatusTitle
             // 
             this.lblStatusTitle.AutoSize = true;
-            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 58 );
+            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 68 );
             this.lblStatusTitle.Name = "lblStatusTitle";
             this.lblStatusTitle.Size = new System.Drawing.Size( 101, 12 );
             this.lblStatusTitle.TabIndex = 16;
@@ -885,7 +889,7 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point( 212, 717 );
+            this.btnPost.Location = new System.Drawing.Point( 212, 690 );
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size( 170, 23 );
             this.btnPost.TabIndex = 18;
@@ -893,22 +897,40 @@
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
             // 
-            // button1
+            // lblTagTitle
             // 
-            this.button1.Location = new System.Drawing.Point( 741, 36 );
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size( 75, 23 );
-            this.button1.TabIndex = 15;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Visible = false;
-            this.button1.Click += new System.EventHandler( this.button1_Click );
+            this.lblTagTitle.AutoSize = true;
+            this.lblTagTitle.Location = new System.Drawing.Point( 35, 36 );
+            this.lblTagTitle.Name = "lblTagTitle";
+            this.lblTagTitle.Size = new System.Drawing.Size( 101, 12 );
+            this.lblTagTitle.TabIndex = 16;
+            this.lblTagTitle.Text = "标签机器人状态：";
+            this.lblTagTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblTagMessage
+            // 
+            this.lblTagMessage.AutoSize = true;
+            this.lblTagMessage.Location = new System.Drawing.Point( 130, 36 );
+            this.lblTagMessage.Name = "lblTagMessage";
+            this.lblTagMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblTagMessage.TabIndex = 17;
+            this.lblTagMessage.Text = "停止。";
+            this.lblTagMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblTagQueueInfo
+            // 
+            this.lblTagQueueInfo.AutoSize = true;
+            this.lblTagQueueInfo.Location = new System.Drawing.Point( 11, 118 );
+            this.lblTagQueueInfo.Name = "lblTagQueueInfo";
+            this.lblTagQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblTagQueueInfo.TabIndex = 22;
+            this.lblTagQueueInfo.Text = "标签机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size( 837, 757 );
+            this.ClientSize = new System.Drawing.Size( 837, 733 );
             this.Controls.Add( this.btnPost );
             this.Controls.Add( this.grpStatus );
             this.Controls.Add( this.gpSetting );
@@ -1021,7 +1043,9 @@
         private System.Windows.Forms.Label lblUserRelationMessage;
         private System.Windows.Forms.Label lblUserRelationTitle;
         private System.Windows.Forms.Label lblUserRelationQueueInfo;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lblTagQueueInfo;
+        private System.Windows.Forms.Label lblTagMessage;
+        private System.Windows.Forms.Label lblTagTitle;
     }
 }
 

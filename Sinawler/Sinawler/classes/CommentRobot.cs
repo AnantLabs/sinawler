@@ -14,17 +14,19 @@ namespace Sinawler
     class CommentRobot : RobotBase
     {
         private UserQueue queueUserForUserInfoRobot;          //用户信息机器人使用的用户队列引用
+        private UserQueue queueUserForTagRobot;               //标签机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;      //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;            //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;        //微博队列引用
 
         //构造函数，需要传入相应的新浪微博API
-        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
-            : base( oAPI )
+        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForTagRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
+            : base( oAPI,false )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
 
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
+            queueUserForTagRobot = qUserForTagRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
             queueStatus = qStatus;
@@ -87,11 +89,11 @@ namespace Sinawler
                 //日志
                 Log("爬取微博" + lCurrentSID.ToString() + "的评论...");
                 //爬取当前微博的评论
-                List<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
+                LinkedList<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
                 //日志
                 Log("爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。");
-
-                foreach (Comment comment in lstComment)
+                Comment comment;
+                while(lstComment.Count>0)
                 {
                     if (blnAsyncCancelled) return;
                     while (blnSuspending)
@@ -99,6 +101,7 @@ namespace Sinawler
                         if (blnAsyncCancelled) return;
                         Thread.Sleep(50);
                     }
+                    comment = lstComment.First.Value;
                     if (!Comment.Exists( comment.comment_id ))
                     {
                         //日志
@@ -108,10 +111,14 @@ namespace Sinawler
 
                     if (queueUserForUserInfoRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入用户信息机器人的用户队列。" );
+                    if (queueUserForTagRobot.Enqueue( comment.user_id ))
+                        Log( "将评论人" + comment.user_id.ToString() + "加入标签机器人的用户队列。" );
                     if (queueUserForUserRelationRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入用户关系机器人的用户队列。" );
                     if (queueUserForStatusRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入微博机器人的用户队列。" );
+
+                    lstComment.RemoveFirst();
                 }
                 #endregion
                 //最后再将刚刚爬行完的StatusID加入队尾

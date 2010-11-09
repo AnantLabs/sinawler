@@ -4,6 +4,7 @@ using System.Text;
 using Sina.Api;
 using System.Xml;
 using Sinawler.Model;
+using System.Windows.Forms;
 
 namespace Sinawler
 {
@@ -15,16 +16,129 @@ namespace Sinawler
         ///后经测试，此值还可缩小。2010-10-11定为最小值2000，可调整
         ///2010-10-12定为不设下限
         private int iSleep = 3000;
-
         private int iRemainingHits = 1000; //当前小时内剩余请求次数
         private int iResetTimeInSeconds = 3600; //剩余秒数
-
         private bool blnStopCrawling = false;   //是否停止爬行
 
-        public SinaMBCrawler ( SinaApiService oApi )
+        private WebBrowser wbBrowser = new WebBrowser();  //用于爬取web页面的浏览器对象
+        //private LinkedList<long> lstStatusIDByWeb = new LinkedList<long>();    //通过web页面抓取的微博ID列表
+        private LinkedList<Tag> lstTagsByWeb = new LinkedList<Tag>();    //通过web页面抓取的微博ID列表
+        private bool blnAllTagsFetched = false; //已获取所有TAG的标记
+        private int iTagCount = 0;              //标签数量
+
+        public SinaMBCrawler ( SinaApiService oApi,bool blnInitBrowser )
         {
             api = oApi;
+            if(blnInitBrowser)
+            {
+                //wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( LoginPageLoaded );
+                //wbBrowser.Navigate( "http://t.sina.com.cn/login.php" );
+            }
         }
+
+        #region 通过浏览器对象抓取web页面信息相关函数
+
+        private void WebLogin ()
+        {
+            if (wbBrowser.Url.ToString().Contains( "http://t.sina.com.cn/login.php" ) || wbBrowser.Url.ToString() == "http://t.sina.com.cn/")
+            {
+                wbBrowser.Document.All["loginname"].SetAttribute( "value", api.UserName );
+                wbBrowser.Document.All["password"].SetAttribute( "value", api.PassWord );
+                wbBrowser.Document.All["login_submit_btn"].InvokeMember( "Click" );
+            }
+        }
+
+        //登录页面已加载，登录
+        private void LoginPageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
+        {
+            WebLogin();
+        }
+
+        #region 通过web页面获取用户tag
+        private void ProfilePageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
+        {
+            WebLogin();
+            System.Threading.Thread.Sleep( 3000 );
+            HtmlDocument html = wbBrowser.Document;
+            string strBodyHTML = html.Body.InnerHtml;
+            int iStart = strBodyHTML.IndexOf( "scope.$tags = [" ) + 15;
+            int iEnd = strBodyHTML.IndexOf( "}];" );
+            string strTags = strBodyHTML.Substring( iStart, iEnd - iStart + 1 );
+            HtmlElement elemTags = html.GetElementById( "module_tags" );
+            if (elemTags != null)
+            {
+                HtmlElementCollection elems = elemTags.GetElementsByTagName( "A" );
+                foreach (HtmlElement elem in elems)
+                {
+                    Tag tag = new Tag();
+                    tag.tag_id = Convert.ToInt64(elem.GetAttribute( "tagid" ));
+                    tag.tag = elem.InnerText;
+                    tag.iteration = 0;
+                    lstTagsByWeb.AddLast( tag );
+                }
+            }
+            blnAllTagsFetched = true;
+        }
+
+        /// <summary>
+        /// 通过Web页面抓取指定UserID的所有微博ID
+        /// </summary>
+        /// <param name="lUid">要获取微博内容的UserID</param>
+        /// <returns>微博列表</returns>
+        public LinkedList<Tag> GetTagsByWeb ( long lUid )
+        {
+            lstTagsByWeb.Clear();
+            wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( ProfilePageLoaded );
+            wbBrowser.Navigate( "http://t.sina.com.cn/" + lUid.ToString() + "/profile" );
+            System.Threading.Thread.Sleep( 30000 );
+            while (lstTagsByWeb.Count < iTagCount && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
+            blnAllTagsFetched = false;
+            return lstTagsByWeb;
+        }
+        #endregion
+
+        #region 微博在页面上的ID不是实际的ID，暂时搁置
+        //private void StatusPageLoaded ( object sender, WebBrowserDocumentCompletedEventArgs e )
+        //{
+        //    WebLogin();
+        //    HtmlDocument html = wbBrowser.Document;
+        //    HtmlElementCollection elemStatusIDs = html.GetElementsByTagName( "LI" );
+        //    foreach (HtmlElement elem in elemStatusIDs)
+        //    {
+        //        if (elem.Id != null && elem.Id.Contains( "mid_" ))
+        //        {
+        //            long lStatusID = Convert.ToInt64( elem.Id.Substring( 4 ) );
+        //            lstStatusIDByWeb.AddLast( lStatusID );
+        //        }
+        //    }
+        //    HtmlElementCollection elems = html.GetElementsByTagName( "EM" );
+        //    foreach (HtmlElement elem in elems)
+        //    {
+        //        if (elem.InnerText == "下一页")    //说明还有下一页
+        //        {
+        //            iWebPageNum++;
+        //            wbBrowser.Navigate( "http://t.sina.com.cn/profile.php?uid=" + lIDForWeb.ToString() + "&page=" + iWebPageNum.ToString() );
+        //        }
+        //    }
+        //}
+
+        ///// <summary>
+        ///// 通过Web页面抓取指定UserID的所有微博ID
+        ///// </summary>
+        ///// <param name="lUid">要获取微博内容的UserID</param>
+        ///// <returns>微博列表</returns>
+        //public LinkedList<long> GetStatusesByWeb ( long lUid, int iStatusCount )
+        //{
+        //    lIDForWeb = lUid;
+        //    lstStatusIDByWeb.Clear();
+        //    wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( StatusPageLoaded );
+        //    wbBrowser.Navigate( "http://t.sina.com.cn/profile.php?uid=" + lIDForWeb.ToString() + "&page=" + iWebPageNum.ToString() );
+        //    while (lstStatusIDByWeb.Count<iStatusCount && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
+        //    return lstStatusIDByWeb;
+        //}
+        #endregion
+
+        #endregion
 
         public int SleepTime
         {
@@ -48,76 +162,6 @@ namespace Sinawler
         {
             set { blnStopCrawling = value; }
             get { return blnStopCrawling; }
-        }
-
-        private int CompareStatus ( Status x, Status y )
-        {
-            if (x == null)
-            {
-                if (y == null)
-                {
-                    // If x is null and y is null, they're equal. 
-                    return 0;
-                }
-                else
-                {
-                    // If x is null and y is not null, y is greater. 
-                    return -1;
-                }
-            }
-            else
-            {
-                // If x is not null...
-                if (y == null)  // ...and y is null, x is greater.
-                {
-                    return 1;
-                }
-                else
-                {
-                    // ...and y is not null, compare their status_id
-                    if (x.status_id > y.status_id)
-                        return 1;
-                    else if (x.status_id == y.status_id)
-                        return 0;
-                    else
-                        return -1;
-                }
-            }
-        }
-
-        private int CompareComment ( Comment x, Comment y )
-        {
-            if (x == null)
-            {
-                if (y == null)
-                {
-                    // If x is null and y is null, they're equal. 
-                    return 0;
-                }
-                else
-                {
-                    // If x is null and y is not null, y is greater. 
-                    return -1;
-                }
-            }
-            else
-            {
-                // If x is not null...
-                if (y == null)  // ...and y is null, x is greater.
-                {
-                    return 1;
-                }
-                else
-                {
-                    // ...and y is not null, compare their comment_id
-                    if (x.comment_id > y.comment_id)
-                        return 1;
-                    else if (x.comment_id == y.comment_id)
-                        return 0;
-                    else
-                        return -1;
-                }
-            }
         }
 
         /// <summary>
@@ -160,7 +204,7 @@ namespace Sinawler
             if (strResult.Trim() == "") return user;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            
+
             user.user_id = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
@@ -212,7 +256,7 @@ namespace Sinawler
             if (strResult.Trim() == "") return user;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            
+
             user.user_id = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
@@ -264,7 +308,7 @@ namespace Sinawler
             if (strResult.Trim() == "") return user;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            
+
             user.user_id = Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
             user.screen_name = xmlDoc.GetElementsByTagName( "screen_name" )[0].InnerText;
             user.name = xmlDoc.GetElementsByTagName( "name" )[0].InnerText;
@@ -462,10 +506,10 @@ namespace Sinawler
         /// <param name="lUid">要获取微博内容的UserID</param>
         /// <param name="lSinceSid">只返回ID比lSinceSid大（比lSinceSid时间晚的）的微博信息内容</param>
         /// <returns>微博列表</returns>
-        public List<Status> GetStatusesOfSince ( long lUid, long lSinceSid )
+        public LinkedList<Status> GetStatusesOfSince ( long lUid, long lSinceSid )
         {
             System.Threading.Thread.Sleep( iSleep );
-            List<Status> lstStatuses = new List<Status>();
+            LinkedList<Status> lstStatuses = new LinkedList<Status>();
             string strResult = api.user_timeline( lUid, lSinceSid );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_timeline( lUid, lSinceSid );
@@ -473,7 +517,7 @@ namespace Sinawler
             if (strResult.Trim() == "") return lstStatuses;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml( strResult );
-            
+
             XmlNodeList nodes = xmlDoc.GetElementsByTagName( "status" );
             foreach (XmlNode nodeStatus in nodes)
             {
@@ -605,9 +649,8 @@ namespace Sinawler
                     }
                 }
                 status.iteration = 0;
-                lstStatuses.Add( status );
+                lstStatuses.AddLast( status );
             }
-            lstStatuses.Sort( CompareStatus );
             return lstStatuses;
         }
 
@@ -616,10 +659,10 @@ namespace Sinawler
         /// </summary>
         /// <param name="lStatusID">要获取评论内容的微博ID</param>
         /// <returns>评论列表</returns>
-        public List<Comment> GetCommentsOf ( long lStatusID )
+        public LinkedList<Comment> GetCommentsOf ( long lStatusID )
         {
             System.Threading.Thread.Sleep( iSleep );
-            List<Comment> lstComments = new List<Comment>();
+            LinkedList<Comment> lstComments = new LinkedList<Comment>();
             int iPage = 1;
             string strResult = api.comments( lStatusID, iPage );
             while (strResult == null && !blnStopCrawling)
@@ -654,17 +697,16 @@ namespace Sinawler
                         }
                     }
                     comment.iteration = 0;
-                    lstComments.Add( comment );
+                    lstComments.AddLast( comment );
                 }
                 iPage++;
                 System.Threading.Thread.Sleep( iSleep );
                 strResult = api.comments( lStatusID, iPage );
-                while (strResult == null)
+                while (strResult == null && !blnStopCrawling)
                     strResult = api.comments( lStatusID, iPage );
                 xmlDoc.LoadXml( strResult );
                 nodes = xmlDoc.GetElementsByTagName( "comment" );
             }
-            lstComments.Sort( CompareComment );
             return lstComments;
         }
     };

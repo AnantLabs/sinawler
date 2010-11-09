@@ -1,21 +1,24 @@
 using System;
 using System.Data;
 using System.Text;
-using System.Data.SqlClient;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Sinawler.Model
 {
 	/// <summary>
 	/// 类tags。
 	/// </summary>
-    public class tags
+    public class Tag
 	{
-        public tags()
+        public Tag()
         { }
 
 		#region Model
 		private long _tag_id;
 		private string _tag;
+        private int _iteration;
+        private string _update_time;
 		/// <summary>
 		/// 
 		/// </summary>
@@ -32,137 +35,66 @@ namespace Sinawler.Model
 			set{ _tag=value;}
 			get{return _tag;}
 		}
+        /// <summary>
+        /// 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
+        /// </summary>
+        public int iteration
+        {
+            set { _iteration = value; }
+            get { return _iteration; }
+        }
+        /// <summary>
+        /// 记录更新时间
+        /// </summary>
+        public string update_time
+        {
+            set { _update_time = value; }
+            get { return _update_time; }
+        }
 		#endregion Model
 
 		#region  成员方法
 
 		/// <summary>
-		/// 得到一个对象实体
-		/// </summary>
-		public tags(long tag_id)
-		{
-            //StringBuilder strSql=new StringBuilder();
-            //strSql.Append("select tag_id,tag ");
-            //strSql.Append(" FROM tags ");
-            //strSql.Append(" where tag_id=@tag_id ");
-            //SqlParameter[] parameters = {
-            //        new SqlParameter("@tag_id", SqlDbType.BigInt)};
-            //parameters[0].Value = tag_id;
-
-            //DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
-            //if(ds.Tables[0].Rows.Count>0)
-            //{
-            //    tag_id=ds.Tables[0].Rows[0]["tag_id"].ToString();
-            //    tag=ds.Tables[0].Rows[0]["tag"].ToString();
-            //}
-		}
-
-		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		public bool Exists(long tag_id)
-		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select count(1) from tags");
-			strSql.Append(" where tag_id=@tag_id ");
+        static public bool Exists ( long lTagID )
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            db = DatabaseFactory.CreateDatabase();
+            int count = db.CountByExecuteSQLSelect( "select count(tag_id) from tags where tag_id=" + lTagID.ToString() );
+            return count > 0;
+        }
 
-			SqlParameter[] parameters = {
-					new SqlParameter("@tag_id", SqlDbType.BigInt)};
-			parameters[0].Value = tag_id;
-
-			return true;
-		}
-
+        /// <summary>
+        /// 更新数据库中已有数据的迭代次数
+        /// </summary>
+        static public void NewIterate ()
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            db = DatabaseFactory.CreateDatabase();
+            db.CountByExecuteSQL( "update tags set iteration=iteration+1" );
+        }
 
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
 		public void Add()
 		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("insert into tags(");
-			strSql.Append("tag_id,tag)");
-			strSql.Append(" values (");
-			strSql.Append("@tag_id,@tag)");
-			SqlParameter[] parameters = {
-					new SqlParameter("@tag_id", SqlDbType.BigInt,8),
-					new SqlParameter("@tag", SqlDbType.VarChar,50)};
-			parameters[0].Value = tag_id;
-			parameters[1].Value = tag;
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                Hashtable htValues = new Hashtable();
+                _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
+                htValues.Add( "tag_id", _tag_id );
+                htValues.Add( "tag", "'"+_tag+"'" );
+                htValues.Add( "iteration", iteration );
+                htValues.Add( "update_time", _update_time );
 
-			//DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
-		}
-		/// <summary>
-		/// 更新一条数据
-		/// </summary>
-		public void Update()
-		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("update tags set ");
-			strSql.Append("tag=@tag");
-			strSql.Append(" where tag_id=@tag_id ");
-			SqlParameter[] parameters = {
-					new SqlParameter("@tag_id", SqlDbType.BigInt,8),
-					new SqlParameter("@tag", SqlDbType.VarChar,50)};
-			parameters[0].Value = tag_id;
-			parameters[1].Value = tag;
-
-			//DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
-		}
-
-		/// <summary>
-		/// 删除一条数据
-		/// </summary>
-		public void Delete(long tag_id)
-		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("delete from tags ");
-			strSql.Append(" where tag_id=@tag_id ");
-			SqlParameter[] parameters = {
-					new SqlParameter("@tag_id", SqlDbType.BigInt)};
-			parameters[0].Value = tag_id;
-
-			//DbHelperSQL.ExecuteSql(strSql.ToString(),parameters);
-		}
-
-
-		/// <summary>
-		/// 得到一个对象实体
-		/// </summary>
-		public void GetModel(long tag_id)
-		{
-            //StringBuilder strSql=new StringBuilder();
-            //strSql.Append("select  top 1 tag_id,tag ");
-            //strSql.Append(" FROM tags ");
-            //strSql.Append(" where tag_id=@tag_id ");
-            //SqlParameter[] parameters = {
-            //        new SqlParameter("@tag_id", SqlDbType.BigInt)};
-            //parameters[0].Value = tag_id;
-
-            //DataSet ds=DbHelperSQL.Query(strSql.ToString(),parameters);
-            //if(ds.Tables[0].Rows.Count>0)
-            //{
-            //    if(ds.Tables[0].Rows[0]["tag_id"].ToString()!="")
-            //    {
-            //        model.tag_id=long.Parse(ds.Tables[0].Rows[0]["tag_id"].ToString());
-            //    }
-            //    model.tag=ds.Tables[0].Rows[0]["tag"].ToString();
-            //}
-		}
-
-		/// <summary>
-		/// 获得数据列表
-		/// </summary>
-		public DataSet GetList(string strWhere)
-		{
-			StringBuilder strSql=new StringBuilder();
-			strSql.Append("select * ");
-			strSql.Append(" FROM tags ");
-			if(strWhere.Trim()!="")
-			{
-				strSql.Append(" where "+strWhere);
-			}
-			return null;
+                db.Insert( "tags", htValues );
+            }
+            catch
+            { return; }
 		}
 
 		#endregion  成员方法

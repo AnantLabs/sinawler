@@ -284,12 +284,6 @@ namespace Sinawler.Model
             { return; }
 		}
 
-		/// <summary>
-		/// 得到一个对象实体
-		/// </summary>
-		public void GetModel(long status_id)
-		{}
-
         /// <summary>
         /// 获得数据库中指定用户最新一条微博ID
         /// </summary>

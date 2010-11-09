@@ -87,6 +87,7 @@
     <Compile Include="classes\QueueBase.cs" />
     <Compile Include="classes\StatusQueue.cs" />
     <Compile Include="classes\UserRelationRobot.cs" />
+    <Compile Include="classes\TagRobot.cs" />
     <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
@@ -166,6 +167,7 @@
     <Content Include="sqlscripts\sqlserver\user_tag.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_status.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_userRelation.TAB" />
+    <Content Include="sqlscripts\sqlserver\queue_buffer_for_tag.TAB" />
     <Content Include="sqlscripts\testsql.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

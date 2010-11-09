@@ -22,10 +22,10 @@ namespace Sinawler
         protected BackgroundWorker bwAsync = null;
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public RobotBase ( SinaApiService oAPI )
+        public RobotBase ( SinaApiService oAPI,bool blnInitBrowser )
         {
             this.api = oAPI;
-            crawler = new SinaMBCrawler( this.api );
+            crawler = new SinaMBCrawler( this.api, blnInitBrowser );            
         }
 
         public bool AsyncCancelled
