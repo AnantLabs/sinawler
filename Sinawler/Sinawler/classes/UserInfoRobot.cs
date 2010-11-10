@@ -14,7 +14,6 @@ namespace Sinawler
     class UserInfoRobot:RobotBase
     {
         private UserQueue queueUserForUserInfoRobot;            //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForTagRobot;                 //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private int iInitQueueLength = 100;          //初始队列长度
@@ -23,12 +22,11 @@ namespace Sinawler
         { get { return iInitQueueLength; } }
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserInfoRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForTagRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot )
-            : base( oAPI,false )
+        public UserInfoRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot )
+            : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForTagRobot = qUserForTagRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
         }
@@ -45,7 +43,6 @@ namespace Sinawler
 
             //将起始UserID入队
             queueUserForUserInfoRobot.Enqueue( lStartUserID );
-            queueUserForTagRobot.Enqueue( lStartUserID );
             queueUserForUserRelationRobot.Enqueue( lStartUserID );
             queueUserForStatusRobot.Enqueue( lStartUserID );
 

@@ -14,19 +14,17 @@ namespace Sinawler
     class CommentRobot : RobotBase
     {
         private UserQueue queueUserForUserInfoRobot;          //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForTagRobot;               //标签机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;      //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;            //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;        //微博队列引用
 
         //构造函数，需要传入相应的新浪微博API
-        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForTagRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
-            : base( oAPI,false )
+        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
+            : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
 
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForTagRobot = qUserForTagRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
             queueStatus = qStatus;
@@ -111,8 +109,6 @@ namespace Sinawler
 
                     if (queueUserForUserInfoRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入用户信息机器人的用户队列。" );
-                    if (queueUserForTagRobot.Enqueue( comment.user_id ))
-                        Log( "将评论人" + comment.user_id.ToString() + "加入标签机器人的用户队列。" );
                     if (queueUserForUserRelationRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入用户关系机器人的用户队列。" );
                     if (queueUserForStatusRobot.Enqueue( comment.user_id ))

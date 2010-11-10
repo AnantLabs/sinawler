@@ -17,7 +17,7 @@ namespace Sinawler
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public TagRobot ( SinaApiService oAPI, UserQueue qUserForTagRobot )
-            : base( oAPI,true )
+            : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_tag.log";
             queueUserForTagRobot = qUserForTagRobot;
@@ -63,55 +63,55 @@ namespace Sinawler
                     UserTag.NewIterate();
                 }
                 #endregion
-                #region 用户标签信息
-                if (blnAsyncCancelled) return;
-                while (blnSuspending)
-                {
-                    if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
-                }
+                //#region 用户标签信息
+                //if (blnAsyncCancelled) return;
+                //while (blnSuspending)
+                //{
+                //    if (blnAsyncCancelled) return;
+                //    Thread.Sleep( 50 );
+                //}
 
-                //日志
-                Log( "爬取用户" + lCurrentID.ToString() + "的标签..." );
-                LinkedList<Tag> lstTag = crawler.GetTagsByWeb( lCurrentID );
-                //日志
-                Log( "爬得" + lstTag.Count.ToString() + "个标签。" );
+                ////日志
+                //Log( "爬取用户" + lCurrentID.ToString() + "的标签..." );
+                //LinkedList<Tag> lstTag = crawler.GetTagsByWeb( lCurrentID );
+                ////日志
+                //Log( "爬得" + lstTag.Count.ToString() + "个标签。" );
 
-                while (lstTag.Count > 0)
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
-                    }
-                    Tag tag = lstTag.First.Value;
-                    if (!Tag.Exists( tag.tag_id ))
-                    {
-                        //日志
-                        Log( "将标签" + tag.tag_id.ToString() + "存入数据库..." );
-                        tag.Add();
-                    }
-                    else
-                        //日志
-                        Log( "标签" + tag.tag_id.ToString() + "已存在。" );
+                //while (lstTag.Count > 0)
+                //{
+                //    if (blnAsyncCancelled) return;
+                //    while (blnSuspending)
+                //    {
+                //        if (blnAsyncCancelled) return;
+                //        Thread.Sleep( 50 );
+                //    }
+                //    Tag tag = lstTag.First.Value;
+                //    if (!Tag.Exists( tag.tag_id ))
+                //    {
+                //        //日志
+                //        Log( "将标签" + tag.tag_id.ToString() + "存入数据库..." );
+                //        tag.Add();
+                //    }
+                //    else
+                //        //日志
+                //        Log( "标签" + tag.tag_id.ToString() + "已存在。" );
 
-                    if (!UserTag.Exists( lCurrentID, tag.tag_id ))
-                    {
-                        //日志
-                        Log( "记录用户" + lCurrentID.ToString() + "拥有标签" + tag.tag_id.ToString() + "..." );
-                        UserTag user_tag = new UserTag();
-                        user_tag.user_id = lCurrentID;
-                        user_tag.tag_id = tag.tag_id;
-                        user_tag.Add();
-                    }
-                    else
-                        //日志
-                        Log( "用户" + lCurrentID.ToString() + "拥有标签" + tag.tag_id.ToString() + "已存在。" );
+                //    if (!UserTag.Exists( lCurrentID, tag.tag_id ))
+                //    {
+                //        //日志
+                //        Log( "记录用户" + lCurrentID.ToString() + "拥有标签" + tag.tag_id.ToString() + "..." );
+                //        UserTag user_tag = new UserTag();
+                //        user_tag.user_id = lCurrentID;
+                //        user_tag.tag_id = tag.tag_id;
+                //        user_tag.Add();
+                //    }
+                //    else
+                //        //日志
+                //        Log( "用户" + lCurrentID.ToString() + "拥有标签" + tag.tag_id.ToString() + "已存在。" );
 
-                    lstTag.RemoveFirst();
-                }
-                #endregion
+                //    lstTag.RemoveFirst();
+                //}
+                //#endregion
                 //日志
                 Log( "用户" + lCurrentID.ToString() + "的标签数据已爬取完毕。" );
                 //日志

@@ -14,18 +14,16 @@ namespace Sinawler
     class UserRelationRobot:RobotBase
     {
         private UserQueue queueUserForUserInfoRobot;        //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForTagRobot;             //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private long lQueueBufferFirst = 0;   //用于记录获取的关注用户列表、粉丝用户列表的队头值
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserRelationRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForTagRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot )
-            : base( oAPI,false )
+        public UserRelationRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot )
+            : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userRelation.log";
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForTagRobot = qUserForTagRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
         }
@@ -40,7 +38,6 @@ namespace Sinawler
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue( lStartUserID );
             queueUserForUserInfoRobot.Enqueue( lStartUserID );
-            queueUserForTagRobot.Enqueue( lStartUserID );
             queueUserForStatusRobot.Enqueue( lStartUserID );
             lCurrentID = lStartUserID;
             //对队列无限循环爬行，直至有操作暂停或停止
@@ -132,16 +129,6 @@ namespace Sinawler
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );
                     }
-                    if (!queueUserForTagRobot.Enqueue( lQueueBufferFirst ))
-                    {
-                        //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在标签机器人的用户队列中..." );
-                    }
-                    else
-                    {
-                        //日志
-                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入标签机器人的用户队列。" );
-                    }
                     if (!queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
                     {
                         //日志
@@ -225,16 +212,6 @@ namespace Sinawler
                     {
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );
-                    }
-                    if (!queueUserForTagRobot.Enqueue( lQueueBufferFirst ))
-                    {
-                        //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在标签机器人的用户队列中..." );
-                    }
-                    else
-                    {
-                        //日志
-                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入标签机器人的用户队列。" );
                     }
                     if (!queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
                     {
