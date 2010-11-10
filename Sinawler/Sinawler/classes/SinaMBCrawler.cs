@@ -31,8 +31,8 @@ namespace Sinawler
             api = oApi;
             if(blnInitBrowser)
             {
-                //wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( LoginPageLoaded );
-                //wbBrowser.Navigate( "http://t.sina.com.cn/login.php" );
+                wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( LoginPageLoaded );
+                wbBrowser.Navigate( "http://t.sina.com.cn/login.php" );
             }
         }
 
@@ -51,6 +51,7 @@ namespace Sinawler
         //登录页面已加载，登录
         private void LoginPageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
         {
+            if (wbBrowser.ReadyState != WebBrowserReadyState.Complete || e.Url.ToString() != wbBrowser.Url.ToString()) return;
             WebLogin();
         }
 
@@ -58,7 +59,7 @@ namespace Sinawler
         private void ProfilePageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
         {
             WebLogin();
-            System.Threading.Thread.Sleep( 3000 );
+            if (wbBrowser.ReadyState != WebBrowserReadyState.Complete || e.Url.ToString() != wbBrowser.Url.ToString()) return;
             HtmlDocument html = wbBrowser.Document;
             string strBodyHTML = html.Body.InnerHtml;
             int iStart = strBodyHTML.IndexOf( "scope.$tags = [" ) + 15;
@@ -90,8 +91,9 @@ namespace Sinawler
             lstTagsByWeb.Clear();
             wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( ProfilePageLoaded );
             wbBrowser.Navigate( "http://t.sina.com.cn/" + lUid.ToString() + "/profile" );
-            System.Threading.Thread.Sleep( 30000 );
-            while (lstTagsByWeb.Count < iTagCount && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
+            //System.Threading.Thread.Sleep( 30000 );
+            //while (lstTagsByWeb.Count < iTagCount && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
+            while (wbBrowser.ReadyState != WebBrowserReadyState.Complete) System.Threading.Thread.Sleep(50);
             blnAllTagsFetched = false;
             return lstTagsByWeb;
         }
