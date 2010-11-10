@@ -61,10 +61,6 @@ namespace Sinawler
             WebLogin();
             if (wbBrowser.ReadyState != WebBrowserReadyState.Complete || e.Url.ToString() != wbBrowser.Url.ToString()) return;
             HtmlDocument html = wbBrowser.Document;
-            string strBodyHTML = html.Body.InnerHtml;
-            int iStart = strBodyHTML.IndexOf( "scope.$tags = [" ) + 15;
-            int iEnd = strBodyHTML.IndexOf( "}];" );
-            string strTags = strBodyHTML.Substring( iStart, iEnd - iStart + 1 );
             HtmlElement elemTags = html.GetElementById( "module_tags" );
             if (elemTags != null)
             {
@@ -91,9 +87,9 @@ namespace Sinawler
             lstTagsByWeb.Clear();
             wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( ProfilePageLoaded );
             wbBrowser.Navigate( "http://t.sina.com.cn/" + lUid.ToString() + "/profile" );
-            //System.Threading.Thread.Sleep( 30000 );
-            //while (lstTagsByWeb.Count < iTagCount && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
-            while (wbBrowser.ReadyState != WebBrowserReadyState.Complete) System.Threading.Thread.Sleep(50);
+            while (!blnAllTagsFetched && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
+            if (blnStopCrawling) return lstTagsByWeb;
+            
             blnAllTagsFetched = false;
             return lstTagsByWeb;
         }
