@@ -20,62 +20,20 @@ namespace Sinawler
         private int iResetTimeInSeconds = 3600; //剩余秒数
         private bool blnStopCrawling = false;   //是否停止爬行
 
-        private WebBrowser wbBrowser = new WebBrowser();  //用于爬取web页面的浏览器对象
         //private LinkedList<long> lstStatusIDByWeb = new LinkedList<long>();    //通过web页面抓取的微博ID列表
+        private HttpClient httpClient = new HttpClient();
         private LinkedList<Tag> lstTagsByWeb = new LinkedList<Tag>();    //通过web页面抓取的微博ID列表
         private bool blnAllTagsFetched = false; //已获取所有TAG的标记
-        private int iTagCount = 0;              //标签数量
 
         public SinaMBCrawler ( SinaApiService oApi,bool blnInitBrowser )
         {
             api = oApi;
-            if(blnInitBrowser)
-            {
-                wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( LoginPageLoaded );
-                wbBrowser.Navigate( "http://t.sina.com.cn/login.php" );
-            }
+            HttpClientContext context = new HttpClientContext();
+            context.Cookies = api.Cookies;
+            httpClient.Context = context;
         }
 
         #region 通过浏览器对象抓取web页面信息相关函数
-
-        private void WebLogin ()
-        {
-            if (wbBrowser.Url.ToString().Contains( "http://t.sina.com.cn/login.php" ) || wbBrowser.Url.ToString() == "http://t.sina.com.cn/")
-            {
-                wbBrowser.Document.All["loginname"].SetAttribute( "value", api.UserName );
-                wbBrowser.Document.All["password"].SetAttribute( "value", api.PassWord );
-                wbBrowser.Document.All["login_submit_btn"].InvokeMember( "Click" );
-            }
-        }
-
-        //登录页面已加载，登录
-        private void LoginPageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
-        {
-            if (wbBrowser.ReadyState != WebBrowserReadyState.Complete || e.Url.ToString() != wbBrowser.Url.ToString()) return;
-            WebLogin();
-        }
-
-        #region 通过web页面获取用户tag
-        private void ProfilePageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
-        {
-            WebLogin();
-            if (wbBrowser.ReadyState != WebBrowserReadyState.Complete || e.Url.ToString() != wbBrowser.Url.ToString()) return;
-            HtmlDocument html = wbBrowser.Document;
-            HtmlElement elemTags = html.GetElementById( "module_tags" );
-            if (elemTags != null)
-            {
-                HtmlElementCollection elems = elemTags.GetElementsByTagName( "A" );
-                foreach (HtmlElement elem in elems)
-                {
-                    Tag tag = new Tag();
-                    tag.tag_id = Convert.ToInt64(elem.GetAttribute( "tagid" ));
-                    tag.tag = elem.InnerText;
-                    tag.iteration = 0;
-                    lstTagsByWeb.AddLast( tag );
-                }
-            }
-            blnAllTagsFetched = true;
-        }
 
         /// <summary>
         /// 通过Web页面抓取指定UserID的所有微博ID
@@ -85,15 +43,10 @@ namespace Sinawler
         public LinkedList<Tag> GetTagsByWeb ( long lUid )
         {
             lstTagsByWeb.Clear();
-            wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( ProfilePageLoaded );
-            wbBrowser.Navigate( "http://t.sina.com.cn/" + lUid.ToString() + "/profile" );
-            while (!blnAllTagsFetched && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
-            if (blnStopCrawling) return lstTagsByWeb;
-            
-            blnAllTagsFetched = false;
+            httpClient.Url = "http://t.sina.com.cn/"+lUid.ToString()+"/profile";
+            string strHTML = httpClient.GetString();
             return lstTagsByWeb;
         }
-        #endregion
 
         #region 微博在页面上的ID不是实际的ID，暂时搁置
         //private void StatusPageLoaded ( object sender, WebBrowserDocumentCompletedEventArgs e )

@@ -5,6 +5,8 @@ using System.Threading;
 using System.ComponentModel;
 using Sina.Api;
 using System.Xml;
+using System.Net;
+using System.IO;
 
 namespace Sinawler
 {
