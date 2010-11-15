@@ -207,7 +207,6 @@ namespace Sinawler.Model
         /// </summary>
         public int iteration
         {
-            set { _iteration = value; }
             get { return _iteration; }
         }
         /// <summary>
@@ -275,7 +274,7 @@ namespace Sinawler.Model
                     htValues.Add( "retweeted_status_id", _retweeted_status.status_id );
                 else
                     htValues.Add( "retweeted_status_id", 0 );
-                htValues.Add( "iteration", iteration );
+                htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
 
                 db.Insert( "statuses", htValues );

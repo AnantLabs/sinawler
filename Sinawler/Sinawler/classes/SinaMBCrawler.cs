@@ -58,7 +58,21 @@ namespace Sinawler
         public LinkedList<long> GetFriendsOf ( long lUid, int iCursor )
         {
             System.Threading.Thread.Sleep( iSleep );
-            return api.friends_ids( lUid, iCursor );
+            LinkedList<long> ids = new LinkedList<long>();
+            string strResult= api.friends_ids( lUid, iCursor );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );
+            if(strResult!=null && strResult!="")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(strResult);
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName( "id" );
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    ids.AddLast( Convert.ToInt64( nodes[i].InnerText ) );
+                }
+            }
+            return ids;
         }
 
         /// <summary>
@@ -70,7 +84,21 @@ namespace Sinawler
         public LinkedList<long> GetFollowersOf ( long lUid, int iCursor )
         {
             System.Threading.Thread.Sleep( iSleep );
-            return api.followers_ids( lUid, iCursor );
+            LinkedList<long> ids = new LinkedList<long>();
+            string strResult = api.followers_ids( lUid, iCursor );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );
+            if (strResult != null && strResult != "")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml( strResult );
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName( "id" );
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    ids.AddLast( Convert.ToInt64( nodes[i].InnerText ) );
+                }
+            }
+            return ids;
         }
 
         //根据UserID抓取用户信息
@@ -381,7 +409,6 @@ namespace Sinawler
                         break;
                 }
             }
-            status.iteration = 0;
             return status;
         }
 
@@ -533,7 +560,6 @@ namespace Sinawler
                             break;
                     }
                 }
-                status.iteration = 0;
                 lstStatuses.AddLast( status );
             }
             return lstStatuses;
@@ -581,7 +607,6 @@ namespace Sinawler
                                 break;
                         }
                     }
-                    comment.iteration = 0;
                     lstComments.AddLast( comment );
                 }
                 iPage++;
@@ -589,10 +614,50 @@ namespace Sinawler
                 strResult = api.comments( lStatusID, iPage );
                 while (strResult == null && !blnStopCrawling)
                     strResult = api.comments( lStatusID, iPage );
+                strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
                 xmlDoc.LoadXml( strResult );
                 nodes = xmlDoc.GetElementsByTagName( "comment" );
             }
             return lstComments;
+        }
+
+        /// <summary>
+        /// 获取指定用户的标签
+        /// </summary>
+        /// <param name="lUserID">要获取标签的用户ID</param>
+        /// <returns>标签</returns>
+        public LinkedList<Tag> GetTagsOf(long lUserID)
+        {
+            System.Threading.Thread.Sleep( iSleep );
+            LinkedList<Tag> lstTags = new LinkedList<Tag>();
+
+            string strResult = api.tags_of( lUserID );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );
+            if (strResult != null && strResult != "")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml( strResult );
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName( "tag" );
+                foreach (XmlNode node in nodes)
+                {
+                    Tag tag = new Tag();
+                    foreach (XmlNode attr in node.ChildNodes)
+                    {
+                        switch (attr.Name.ToLower())
+                        {
+                            case "id":
+                                tag.tag_id = Convert.ToInt64( attr.InnerText );
+                                break;
+                            case "value":
+                                tag.tag = attr.InnerText;
+                                break;
+                        }
+                    }
+                    lstTags.AddLast( tag );
+                }
+            }
+            return lstTags;
         }
     };
 }

@@ -15,17 +15,19 @@ namespace Sinawler
     {
         private UserQueue queueUserForUserInfoRobot;          //用户信息机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;      //用户关系机器人使用的用户队列引用
+        private UserQueue queueUserForUserTagRobot;           //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;            //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;        //微博队列引用
 
         //构造函数，需要传入相应的新浪微博API
-        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
+        public CommentRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
             : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
 
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
+            queueUserForUserTagRobot = qUserForUserTagRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
             queueStatus = qStatus;
         }
@@ -111,6 +113,8 @@ namespace Sinawler
                         Log( "将评论人" + comment.user_id.ToString() + "加入用户信息机器人的用户队列。" );
                     if (queueUserForUserRelationRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入用户关系机器人的用户队列。" );
+                    if (queueUserForUserTagRobot.Enqueue( comment.user_id ))
+                        Log( "将评论人" + comment.user_id.ToString() + "加入用户标签机器人的用户队列。" );
                     if (queueUserForStatusRobot.Enqueue( comment.user_id ))
                         Log( "将评论人" + comment.user_id.ToString() + "加入微博机器人的用户队列。" );
 

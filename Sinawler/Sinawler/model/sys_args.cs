@@ -78,12 +78,24 @@ namespace Sinawler.Model
         }
 
         /// <summary>
-        /// 为标签机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
+        /// 为用户关系机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
         /// </summary>
-        static public long GetCurrentUserIDForTag ()
+        static public long GetCurrentUserIDForUserRelation ()
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_tag'";
+            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userRelation'";
+            DataRow dr = db.GetDataRow( strSQL );
+            if (dr == null) return 0;
+            else return Convert.ToInt64( dr["arg_value"] );
+        }
+
+        /// <summary>
+        /// 为标签机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
+        /// </summary>
+        static public long SetCurrentUserIDForUserTag ()
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userTag'";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr["arg_value"] );
@@ -92,10 +104,10 @@ namespace Sinawler.Model
         /// <summary>
         /// 为用户关系机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
         /// </summary>
-        static public long GetCurrentUserIDForUserRelation ()
+        static public long GetCurrentUserIDForUserTag ()
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userRelation'";
+            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userTag'";
             DataRow dr = db.GetDataRow( strSQL );
             if (dr == null) return 0;
             else return Convert.ToInt64( dr["arg_value"] );

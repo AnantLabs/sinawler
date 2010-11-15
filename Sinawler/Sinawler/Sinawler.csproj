@@ -77,7 +77,6 @@
     <Compile Include="API\SinaApiService.cs" />
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
-    <Compile Include="classes\HttpRec.cs" />
     <Compile Include="classes\UserQueue.cs" />
     <Compile Include="classes\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
@@ -87,7 +86,7 @@
     <Compile Include="classes\QueueBase.cs" />
     <Compile Include="classes\StatusQueue.cs" />
     <Compile Include="classes\UserRelationRobot.cs" />
-    <Compile Include="classes\TagRobot.cs" />
+    <Compile Include="classes\UserTagRobot.cs" />
     <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">

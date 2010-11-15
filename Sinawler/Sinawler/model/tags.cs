@@ -40,7 +40,6 @@ namespace Sinawler.Model
         /// </summary>
         public int iteration
         {
-            set { _iteration = value; }
             get { return _iteration; }
         }
         /// <summary>
@@ -88,7 +87,7 @@ namespace Sinawler.Model
                 _update_time = "'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'";
                 htValues.Add( "tag_id", _tag_id );
                 htValues.Add( "tag", "'"+_tag+"'" );
-                htValues.Add( "iteration", iteration );
+                htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
 
                 db.Insert( "tags", htValues );

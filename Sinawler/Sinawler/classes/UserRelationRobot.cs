@@ -15,16 +15,18 @@ namespace Sinawler
     {
         private UserQueue queueUserForUserInfoRobot;        //用户信息机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
+        private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private long lQueueBufferFirst = 0;   //用于记录获取的关注用户列表、粉丝用户列表的队头值
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserRelationRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot )
+        public UserRelationRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot )
             : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userRelation.log";
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
+            queueUserForUserTagRobot = qUserForUserTagRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
         }
 
@@ -38,6 +40,7 @@ namespace Sinawler
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue( lStartUserID );
             queueUserForUserInfoRobot.Enqueue( lStartUserID );
+            queueUserForUserTagRobot.Enqueue( lStartUserID );
             queueUserForStatusRobot.Enqueue( lStartUserID );
             lCurrentID = lStartUserID;
             //对队列无限循环爬行，直至有操作暂停或停止
@@ -109,7 +112,6 @@ namespace Sinawler
                         ur.source_user_id = lCurrentID;
                         ur.target_user_id = lstBuffer.First.Value;
                         ur.relation_state = Convert.ToInt32( RelationState.RelationExists );
-                        ur.iteration = 0;
                         ur.Add();
                     }
                     if (blnAsyncCancelled) return;
@@ -119,36 +121,18 @@ namespace Sinawler
                         Thread.Sleep(50);
                     }
                     //加入队列
-                    if (!queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
-                    {
-                        //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在用户信息机器人的用户队列中..." );
-                    }
-                    else
-                    {
+                    if (queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );
-                    }
-                    if (!queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
-                    {
-                        //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在用户关系机器人的用户队列中..." );
-                    }
-                    else
-                    {
+                    if (queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。" );
-                    }
-                    if (!queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
-                    {
+                    if (queueUserForUserTagRobot.Enqueue( lQueueBufferFirst ))
                         //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在微博机器人的用户队列中..." );
-                    }
-                    else
-                    {
+                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户标签机器人的用户队列。" );
+                    if (queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入微博机器人的用户队列。" );
-                    }
                     lstBuffer.RemoveFirst();
                 }
 
@@ -193,7 +177,6 @@ namespace Sinawler
                         ur.source_user_id = lstBuffer.First.Value;
                         ur.target_user_id = lCurrentID;
                         ur.relation_state = Convert.ToInt32( RelationState.RelationExists );
-                        ur.iteration = 0;
                         ur.Add();
                     }
                     if (blnAsyncCancelled) return;
@@ -203,36 +186,18 @@ namespace Sinawler
                         Thread.Sleep(50);
                     }
                     //加入队列
-                    if (!queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
-                    {
-                        //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在用户信息机器人的用户队列中。" );
-                    }
-                    else
-                    {
+                    if (queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );
-                    }
-                    if (!queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
-                    {
-                        //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在用户关系机器人的用户队列中。" );
-                    }
-                    else
-                    {
+                    if (queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。" );
-                    }
-                    if (!queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
-                    {
+                    if (queueUserForUserTagRobot.Enqueue( lQueueBufferFirst ))
                         //日志
-                        Log( "用户" + lQueueBufferFirst.ToString() + "已在微博机器人的用户队列中。" );
-                    }
-                    else
-                    {
+                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户标签机器人的用户队列。" );
+                    if (queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入微博机器人的用户队列。" );
-                    }
                     lstBuffer.RemoveFirst();
                 }
                 #endregion

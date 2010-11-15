@@ -15,6 +15,7 @@ namespace Sinawler
     {
         private UserQueue queueUserForUserInfoRobot;            //用户信息机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
+        private UserQueue queueUserForUserTagRobot;             //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private int iInitQueueLength = 100;          //初始队列长度
 
@@ -22,12 +23,13 @@ namespace Sinawler
         { get { return iInitQueueLength; } }
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserInfoRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot )
+        public UserInfoRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot )
             : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
+            queueUserForUserTagRobot = qUserForUserTagRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
         }
 
@@ -44,6 +46,7 @@ namespace Sinawler
             //将起始UserID入队
             queueUserForUserInfoRobot.Enqueue( lStartUserID );
             queueUserForUserRelationRobot.Enqueue( lStartUserID );
+            queueUserForUserTagRobot.Enqueue( lStartUserID );
             queueUserForStatusRobot.Enqueue( lStartUserID );
 
             #region 预加载队列
@@ -84,6 +87,9 @@ namespace Sinawler
                     if (queueUserForUserRelationRobot.Enqueue( lUserID ))
                         //日志
                         Log( "将用户" + lUserID.ToString() + "加入用户关系机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
+                    if (queueUserForUserTagRobot.Enqueue( lUserID ))
+                        //日志
+                        Log( "将用户" + lUserID.ToString() + "加入用户标签机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
                     if (queueUserForStatusRobot.Enqueue( lUserID ))
                         //日志
                         Log( "将用户" + lUserID.ToString() + "加入微博机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
