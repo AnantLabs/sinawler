@@ -6,6 +6,7 @@ using System.Text;
 using System.Xml;
 using System.Web;
 using Sinawler;
+using System.Net;
 
 namespace Sina.Api
 {
@@ -13,6 +14,7 @@ namespace Sina.Api
     {
         private string strUserName = "";    //登录帐号
         private string strPassWord = "";         //登录密码
+        private CookieCollection cookies = new CookieCollection();  //登录后的Cookie，都保存在此
 
         public string UserName
         {
@@ -22,6 +24,25 @@ namespace Sina.Api
         public string PassWord
         {
             get { return strPassWord; }
+        }
+
+        public void SetCookies(string strCookieString)
+        {
+            string[] strCookies = strCookieString.Split( ';' );
+            foreach (string strCookie in strCookies)
+            {
+                string[] str = strCookie.Split( '=' );
+                string strCookieName = str[0].Trim();
+                string strCookieValue = str[1].Trim().Replace(",","%2C");
+                Cookie cookie = new Cookie( strCookieName, strCookieValue );
+                cookie.Domain = "http://t.sina.com.cn";
+                cookies.Add( cookie );
+            }
+        }
+
+        public CookieCollection Cookies
+        {
+            get { return cookies; }
         }
 
         public SinaApiService()
