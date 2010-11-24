@@ -62,6 +62,9 @@ namespace Sinawler
                     Tag.NewIterate();
                     UserTag.NewIterate();
                 }
+                //日志
+                Log( "记录当前用户ID：" + lCurrentID.ToString() );
+                SysArg.SetCurrentUserIDForUserTag( lCurrentID );
                 #endregion
                 #region 用户标签信息
                 if (blnAsyncCancelled) return;
