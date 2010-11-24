@@ -6,7 +6,6 @@ using System.Text;
 using System.Xml;
 using System.Web;
 using Sinawler;
-using System.Net;
 
 namespace Sina.Api
 {
@@ -14,7 +13,6 @@ namespace Sina.Api
     {
         private string strUserName = "";    //登录帐号
         private string strPassWord = "";         //登录密码
-        private CookieCollection cookies = new CookieCollection();  //登录后的Cookie，都保存在此
 
         public string UserName
         {
@@ -24,25 +22,6 @@ namespace Sina.Api
         public string PassWord
         {
             get { return strPassWord; }
-        }
-
-        public void SetCookies(string strCookieString)
-        {
-            string[] strCookies = strCookieString.Split( ';' );
-            foreach (string strCookie in strCookies)
-            {
-                string[] str = strCookie.Split( '=' );
-                string strCookieName = str[0].Trim();
-                string strCookieValue = str[1].Trim().Replace(",","%2C");
-                Cookie cookie = new Cookie( strCookieName, strCookieValue );
-                cookie.Domain = "http://t.sina.com.cn";
-                cookies.Add( cookie );
-            }
-        }
-
-        public CookieCollection Cookies
-        {
-            get { return cookies; }
         }
 
         public SinaApiService()
@@ -95,9 +74,15 @@ namespace Sina.Api
             try
             {
                 string url = "http://api.t.sina.com.cn/users/show." + Format + "?user_id=" + user_id.ToString();
-                return oAuthWebRequest( Method.GET, url, String.Empty );
+                return oAuthWebRequest( Method.GET, url, String.Empty );;
             }
-            catch { return null; }
+            catch(Exception ex) 
+            {
+                if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
+                    return "User Not Exist";
+                else
+                    return null; 
+            }
         }
 
         /*指定用户详细信息*/
@@ -108,7 +93,13 @@ namespace Sina.Api
                 string url = "http://api.t.sina.com.cn/users/show." + Format + "?screen_name=" + screen_name;
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
+                    return "User Not Exist";
+                else
+                    return null;
+            }
         }
 
         /*指定用户详细信息*/
@@ -119,7 +110,13 @@ namespace Sina.Api
                 string url = "http://api.t.sina.com.cn/users/show." + Format + "?user_id="+user_id.ToString()+"&screen_name=" + screen_name;
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
+                    return "User Not Exist";
+                else
+                    return null;
+            }
         }
 
         /*最新关注人微博*/

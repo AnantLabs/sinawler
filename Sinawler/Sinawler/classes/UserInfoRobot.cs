@@ -141,7 +141,7 @@ namespace Sinawler
                 }
                 Log( "爬取用户" + lCurrentID.ToString() +"的基本信息...");
                 user = crawler.GetUserInfo( lCurrentID );
-                if (user.user_id > 0)
+                if (user!=null && user.user_id > 0)
                 {
                     //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
                     if (!User.Exists( lCurrentID ))
@@ -156,11 +156,21 @@ namespace Sinawler
                         Log("更新用户" + lCurrentID.ToString() + "的数据...");
                         user.Update();
                     }
+                    //日志
+                    Log( "用户" + lCurrentID.ToString() + "的基本信息已爬取完毕。" );
+                }
+                else if(user==null) //用户不存在
+                {
+                    //日志
+                    Log( "用户" + lCurrentID.ToString() + "不存在，将其从队列中移除..." );
+                    //将该用户ID从各个队列中去掉
+                    queueUserForUserInfoRobot.Remove( lCurrentID );
+                    queueUserForUserRelationRobot.Remove( lCurrentID );
+                    queueUserForUserTagRobot.Remove( lCurrentID );
+                    queueUserForStatusRobot.Remove( lCurrentID );
                 }
                 #endregion
-                //最后再将刚刚爬行完的UserID加入队尾
-                //日志
-                Log("用户" + lCurrentID.ToString() + "的基本信息已爬取完毕。");
+                
                 //日志
                 Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
             }

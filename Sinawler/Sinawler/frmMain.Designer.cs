@@ -92,19 +92,19 @@
             this.grpStatus = new System.Windows.Forms.GroupBox();
             this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.lblStatusQueueInfo = new System.Windows.Forms.Label();
+            this.lblUserTagQueueInfo = new System.Windows.Forms.Label();
             this.lblUserRelationQueueInfo = new System.Windows.Forms.Label();
             this.lblUserInfoQueueInfo = new System.Windows.Forms.Label();
             this.lblCommentMessage = new System.Windows.Forms.Label();
             this.lblCommentTitle = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.lblUserTagMessage = new System.Windows.Forms.Label();
             this.lblUserRelationMessage = new System.Windows.Forms.Label();
+            this.lblUserTagTitle = new System.Windows.Forms.Label();
             this.lblUserInfoMessage = new System.Windows.Forms.Label();
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.lblUserTagTitle = new System.Windows.Forms.Label();
-            this.lblUserTagMessage = new System.Windows.Forms.Label();
-            this.lblUserTagQueueInfo = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -123,7 +123,7 @@
             this.btnStartByLast.Location = new System.Drawing.Point( 467, 39 );
             this.btnStartByLast.Name = "btnStartByLast";
             this.btnStartByLast.Size = new System.Drawing.Size( 225, 30 );
-            this.btnStartByLast.TabIndex = 0;
+            this.btnStartByLast.TabIndex = 19;
             this.btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
             this.btnStartByLast.UseVisualStyleBackColor = true;
             this.btnStartByLast.Click += new System.EventHandler( this.btnStartByLast_Click );
@@ -242,7 +242,7 @@
             this.btnStartBySearch.Location = new System.Drawing.Point( 237, 39 );
             this.btnStartBySearch.Name = "btnStartBySearch";
             this.btnStartBySearch.Size = new System.Drawing.Size( 225, 30 );
-            this.btnStartBySearch.TabIndex = 10;
+            this.btnStartBySearch.TabIndex = 18;
             this.btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
             this.btnStartBySearch.UseVisualStyleBackColor = true;
             this.btnStartBySearch.Click += new System.EventHandler( this.btnStartBySearch_Click );
@@ -271,7 +271,7 @@
             this.txtUserID.Location = new System.Drawing.Point( 64, 20 );
             this.txtUserID.Name = "txtUserID";
             this.txtUserID.Size = new System.Drawing.Size( 155, 21 );
-            this.txtUserID.TabIndex = 4;
+            this.txtUserID.TabIndex = 0;
             // 
             // txtUserName
             // 
@@ -279,14 +279,14 @@
             this.txtUserName.Location = new System.Drawing.Point( 295, 20 );
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size( 178, 21 );
-            this.txtUserName.TabIndex = 5;
+            this.txtUserName.TabIndex = 1;
             // 
             // btnSearchOnline
             // 
             this.btnSearchOnline.Location = new System.Drawing.Point( 485, 18 );
             this.btnSearchOnline.Name = "btnSearchOnline";
             this.btnSearchOnline.Size = new System.Drawing.Size( 148, 23 );
-            this.btnSearchOnline.TabIndex = 6;
+            this.btnSearchOnline.TabIndex = 2;
             this.btnSearchOnline.Text = "在新浪微博中搜索用户";
             this.btnSearchOnline.UseVisualStyleBackColor = true;
             this.btnSearchOnline.Click += new System.EventHandler( this.btnSearchOnline_Click );
@@ -296,7 +296,7 @@
             this.btnSearchOffLine.Location = new System.Drawing.Point( 645, 18 );
             this.btnSearchOffLine.Name = "btnSearchOffLine";
             this.btnSearchOffLine.Size = new System.Drawing.Size( 148, 23 );
-            this.btnSearchOffLine.TabIndex = 7;
+            this.btnSearchOffLine.TabIndex = 3;
             this.btnSearchOffLine.Text = "在数据库中搜索用户";
             this.btnSearchOffLine.UseVisualStyleBackColor = true;
             this.btnSearchOffLine.Click += new System.EventHandler( this.btnSearchOffLine_Click );
@@ -430,7 +430,7 @@
             this.btnStartByCurrent.Location = new System.Drawing.Point( 6, 39 );
             this.btnStartByCurrent.Name = "btnStartByCurrent";
             this.btnStartByCurrent.Size = new System.Drawing.Size( 225, 30 );
-            this.btnStartByCurrent.TabIndex = 10;
+            this.btnStartByCurrent.TabIndex = 17;
             this.btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
             this.btnStartByCurrent.UseVisualStyleBackColor = true;
             this.btnStartByCurrent.Click += new System.EventHandler( this.btnStartByCurrent_Click );
@@ -453,7 +453,7 @@
             this.btnExit.Location = new System.Drawing.Point( 453, 690 );
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size( 170, 23 );
-            this.btnExit.TabIndex = 11;
+            this.btnExit.TabIndex = 22;
             this.btnExit.Text = "退出程序";
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler( this.btnExit_Click );
@@ -481,7 +481,7 @@
             this.btnPauseContinue.Location = new System.Drawing.Point( 699, 39 );
             this.btnPauseContinue.Name = "btnPauseContinue";
             this.btnPauseContinue.Size = new System.Drawing.Size( 120, 30 );
-            this.btnPauseContinue.TabIndex = 16;
+            this.btnPauseContinue.TabIndex = 20;
             this.btnPauseContinue.Text = "暂停/继续";
             this.btnPauseContinue.UseVisualStyleBackColor = true;
             this.btnPauseContinue.Click += new System.EventHandler( this.btnPauseContinue_Click );
@@ -502,7 +502,7 @@
             this.rdPreLoadAllUserID.Location = new System.Drawing.Point( 523, 15 );
             this.rdPreLoadAllUserID.Name = "rdPreLoadAllUserID";
             this.rdPreLoadAllUserID.Size = new System.Drawing.Size( 239, 16 );
-            this.rdPreLoadAllUserID.TabIndex = 14;
+            this.rdPreLoadAllUserID.TabIndex = 16;
             this.rdPreLoadAllUserID.Text = "从数据库全范围内预加载用户队列（慢）";
             this.rdPreLoadAllUserID.UseVisualStyleBackColor = true;
             this.rdPreLoadAllUserID.Click += new System.EventHandler( this.rdPreLoadAllUserID_Click );
@@ -513,7 +513,7 @@
             this.rdPreLoadUserID.Location = new System.Drawing.Point( 314, 15 );
             this.rdPreLoadUserID.Name = "rdPreLoadUserID";
             this.rdPreLoadUserID.Size = new System.Drawing.Size( 203, 16 );
-            this.rdPreLoadUserID.TabIndex = 13;
+            this.rdPreLoadUserID.TabIndex = 15;
             this.rdPreLoadUserID.Text = "从用户表预加载用户队列（较快）";
             this.rdPreLoadUserID.UseVisualStyleBackColor = true;
             this.rdPreLoadUserID.Click += new System.EventHandler( this.rdPreLoadUserID_Click );
@@ -525,7 +525,7 @@
             this.rdNoPreLoad.Location = new System.Drawing.Point( 153, 15 );
             this.rdNoPreLoad.Name = "rdNoPreLoad";
             this.rdNoPreLoad.Size = new System.Drawing.Size( 155, 16 );
-            this.rdNoPreLoad.TabIndex = 12;
+            this.rdNoPreLoad.TabIndex = 14;
             this.rdNoPreLoad.TabStop = true;
             this.rdNoPreLoad.Text = "不预加载用户队列（快）";
             this.rdNoPreLoad.UseVisualStyleBackColor = true;
@@ -550,7 +550,7 @@
             this.btnLoad.Location = new System.Drawing.Point( 741, 111 );
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size( 75, 23 );
-            this.btnLoad.TabIndex = 14;
+            this.btnLoad.TabIndex = 12;
             this.btnLoad.Text = "加载最新值";
             this.btnLoad.UseVisualStyleBackColor = true;
             this.btnLoad.Click += new System.EventHandler( this.btnLoad_Click );
@@ -581,7 +581,7 @@
             this.txtDBName.MaxLength = 30;
             this.txtDBName.Name = "txtDBName";
             this.txtDBName.Size = new System.Drawing.Size( 143, 21 );
-            this.txtDBName.TabIndex = 15;
+            this.txtDBName.TabIndex = 10;
             // 
             // lblDBName
             // 
@@ -603,7 +603,7 @@
             this.drplstDBType.Location = new System.Drawing.Point( 101, 16 );
             this.drplstDBType.Name = "drplstDBType";
             this.drplstDBType.Size = new System.Drawing.Size( 121, 20 );
-            this.drplstDBType.TabIndex = 13;
+            this.drplstDBType.TabIndex = 6;
             // 
             // txtDBPwd
             // 
@@ -613,7 +613,7 @@
             this.txtDBPwd.Name = "txtDBPwd";
             this.txtDBPwd.PasswordChar = '*';
             this.txtDBPwd.Size = new System.Drawing.Size( 145, 21 );
-            this.txtDBPwd.TabIndex = 11;
+            this.txtDBPwd.TabIndex = 9;
             // 
             // txtDBUserName
             // 
@@ -622,7 +622,7 @@
             this.txtDBUserName.MaxLength = 20;
             this.txtDBUserName.Name = "txtDBUserName";
             this.txtDBUserName.Size = new System.Drawing.Size( 123, 21 );
-            this.txtDBUserName.TabIndex = 10;
+            this.txtDBUserName.TabIndex = 8;
             // 
             // txtDBServer
             // 
@@ -630,7 +630,7 @@
             this.txtDBServer.Location = new System.Drawing.Point( 438, 16 );
             this.txtDBServer.Name = "txtDBServer";
             this.txtDBServer.Size = new System.Drawing.Size( 145, 21 );
-            this.txtDBServer.TabIndex = 9;
+            this.txtDBServer.TabIndex = 7;
             // 
             // lblDBType
             // 
@@ -732,7 +732,7 @@
             this.btnDefault.Location = new System.Drawing.Point( 741, 82 );
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size( 75, 23 );
-            this.btnDefault.TabIndex = 3;
+            this.btnDefault.TabIndex = 11;
             this.btnDefault.Text = "加载默认值";
             this.btnDefault.UseVisualStyleBackColor = true;
             this.btnDefault.Click += new System.EventHandler( this.btnDefault_Click );
@@ -742,7 +742,7 @@
             this.btnSave.Location = new System.Drawing.Point( 741, 140 );
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size( 75, 23 );
-            this.btnSave.TabIndex = 2;
+            this.btnSave.TabIndex = 13;
             this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler( this.btnSave_Click );
@@ -799,6 +799,15 @@
             this.lblStatusQueueInfo.TabIndex = 23;
             this.lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
+            // lblUserTagQueueInfo
+            // 
+            this.lblUserTagQueueInfo.AutoSize = true;
+            this.lblUserTagQueueInfo.Location = new System.Drawing.Point( 11, 134 );
+            this.lblUserTagQueueInfo.Name = "lblUserTagQueueInfo";
+            this.lblUserTagQueueInfo.Size = new System.Drawing.Size( 365, 12 );
+            this.lblUserTagQueueInfo.TabIndex = 22;
+            this.lblUserTagQueueInfo.Text = "用户标签机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
             // lblUserRelationQueueInfo
             // 
             this.lblUserRelationQueueInfo.AutoSize = true;
@@ -847,6 +856,16 @@
             this.lblStatusMessage.Text = "停止。";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblUserTagMessage
+            // 
+            this.lblUserTagMessage.AutoSize = true;
+            this.lblUserTagMessage.Location = new System.Drawing.Point( 130, 52 );
+            this.lblUserTagMessage.Name = "lblUserTagMessage";
+            this.lblUserTagMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblUserTagMessage.TabIndex = 17;
+            this.lblUserTagMessage.Text = "停止。";
+            this.lblUserTagMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // lblUserRelationMessage
             // 
             this.lblUserRelationMessage.AutoSize = true;
@@ -856,6 +875,16 @@
             this.lblUserRelationMessage.TabIndex = 17;
             this.lblUserRelationMessage.Text = "停止。";
             this.lblUserRelationMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblUserTagTitle
+            // 
+            this.lblUserTagTitle.AutoSize = true;
+            this.lblUserTagTitle.Location = new System.Drawing.Point( 11, 52 );
+            this.lblUserTagTitle.Name = "lblUserTagTitle";
+            this.lblUserTagTitle.Size = new System.Drawing.Size( 125, 12 );
+            this.lblUserTagTitle.TabIndex = 16;
+            this.lblUserTagTitle.Text = "用户标签机器人状态：";
+            this.lblUserTagTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblUserInfoMessage
             // 
@@ -892,39 +921,10 @@
             this.btnPost.Location = new System.Drawing.Point( 212, 690 );
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size( 170, 23 );
-            this.btnPost.TabIndex = 18;
+            this.btnPost.TabIndex = 21;
             this.btnPost.Text = "发一条微博帮忙推广：）3Q";
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
-            // 
-            // lblUserTagTitle
-            // 
-            this.lblUserTagTitle.AutoSize = true;
-            this.lblUserTagTitle.Location = new System.Drawing.Point( 11, 52 );
-            this.lblUserTagTitle.Name = "lblUserTagTitle";
-            this.lblUserTagTitle.Size = new System.Drawing.Size( 125, 12 );
-            this.lblUserTagTitle.TabIndex = 16;
-            this.lblUserTagTitle.Text = "用户标签机器人状态：";
-            this.lblUserTagTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblUserTagMessage
-            // 
-            this.lblUserTagMessage.AutoSize = true;
-            this.lblUserTagMessage.Location = new System.Drawing.Point( 130, 52 );
-            this.lblUserTagMessage.Name = "lblUserTagMessage";
-            this.lblUserTagMessage.Size = new System.Drawing.Size( 41, 12 );
-            this.lblUserTagMessage.TabIndex = 17;
-            this.lblUserTagMessage.Text = "停止。";
-            this.lblUserTagMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblUserTagQueueInfo
-            // 
-            this.lblUserTagQueueInfo.AutoSize = true;
-            this.lblUserTagQueueInfo.Location = new System.Drawing.Point( 11, 134 );
-            this.lblUserTagQueueInfo.Name = "lblUserTagQueueInfo";
-            this.lblUserTagQueueInfo.Size = new System.Drawing.Size( 365, 12 );
-            this.lblUserTagQueueInfo.TabIndex = 22;
-            this.lblUserTagQueueInfo.Text = "用户标签机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // frmMain
             // 

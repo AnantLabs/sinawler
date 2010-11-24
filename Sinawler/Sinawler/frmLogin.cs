@@ -33,7 +33,6 @@ namespace Sinawler
         private void ProfilePageLoaded ( Object sender, WebBrowserDocumentCompletedEventArgs e )
         {
             if (wbBrowser.ReadyState != WebBrowserReadyState.Complete) return;
-            _api.SetCookies(wbBrowser.Document.Cookie);
             wbBrowser.DocumentCompleted -= new WebBrowserDocumentCompletedEventHandler( ProfilePageLoaded );
             wbBrowser.DocumentCompleted -= new WebBrowserDocumentCompletedEventHandler( LoginPageLoaded );
             this.DialogResult = DialogResult.OK;

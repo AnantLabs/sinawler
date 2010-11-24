@@ -110,6 +110,8 @@ namespace Sinawler
             string strResult = api.user_show( lUid );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid );
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (blnStopCrawling)
                 return user;
 
@@ -162,6 +164,8 @@ namespace Sinawler
             string strResult = api.user_show( strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( strScreenName );
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (blnStopCrawling)
                 return user;
 
@@ -214,6 +218,8 @@ namespace Sinawler
             string strResult = api.user_show( lUid, strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid, strScreenName );
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (blnStopCrawling)
                 return user;
 
