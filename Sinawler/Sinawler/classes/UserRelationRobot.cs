@@ -137,6 +137,7 @@ namespace Sinawler
                 }
 
                 //日志
+                AdjustFreq();
                 Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
                 #endregion
                 #region 用户粉丝列表
@@ -205,6 +206,7 @@ namespace Sinawler
                 //日志
                 Log("用户" + lCurrentID.ToString() + "的关系已爬取完毕。");
                 //日志
+                AdjustFreq();
                 Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
             }
         }

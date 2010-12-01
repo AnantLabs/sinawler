@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.IO;
 using Sinawler.Model;
 using System.Data;
+using System.Xml;
 
 namespace Sinawler
 {
@@ -62,13 +63,6 @@ namespace Sinawler
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
 
-        public void SetRequestFrequency(RequestFrequency rf)
-        {
-            crawler.SleepTime = rf.Interval;
-            crawler.RemainingHits = rf.RemainingHits;
-            crawler.ResetTimeInSeconds = rf.ResetTimeInSeconds;
-        }
-
         /// <summary>
         /// 记录日志
         /// </summary>
@@ -82,6 +76,36 @@ namespace Sinawler
 
             bwAsync.ReportProgress( 0 );
             Thread.Sleep(50);
+        }
+
+        //检查请求限制剩余次数，并根据情况调整访问频度并返回
+        protected void AdjustFreq()
+        {
+            string strResult = api.check_hits_limit();
+            if (strResult == null) return;
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml( strResult );
+
+            int iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
+            int iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
+
+            //若已无剩余次数，直接等待剩余时间
+            if (iRemainingHits == 0)
+            {
+                crawler.SleepTime = iResetTimeInSeconds * 1000;
+                crawler.RemainingHits = iRemainingHits;
+                crawler.ResetTimeInSeconds = iResetTimeInSeconds;
+            }
+            else
+            {
+                //计算
+                int iSleep = Convert.ToInt32( iResetTimeInSeconds * 1000 / iRemainingHits );
+                if (iSleep <= 0) iSleep = 1;
+
+                crawler.SleepTime = iSleep;
+                crawler.RemainingHits = iRemainingHits;
+                crawler.ResetTimeInSeconds = iResetTimeInSeconds;
+            }
         }
 
         public virtual void Initialize (){}

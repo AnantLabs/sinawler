@@ -168,43 +168,6 @@ namespace Sinawler
             return strResult.ToString();
         }
 
-        //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        static public RequestFrequency AdjustFreq(SinaApiService api)
-        {
-            RequestFrequency rf;
-            rf.Interval = 3000;
-            rf.RemainingHits = 1000;
-            rf.ResetTimeInSeconds = 3600;
-
-            string strResult = api.check_hits_limit();
-            if (strResult == null) return rf;
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(strResult);
-
-            int iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
-            int iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
-
-            //若已无剩余次数，直接返回剩余时间
-            if (iRemainingHits == 0)
-            {
-                rf.Interval = iResetTimeInSeconds * 1000;
-                rf.RemainingHits = iRemainingHits;
-                rf.ResetTimeInSeconds = iResetTimeInSeconds;
-
-                return rf;
-            }
-
-            //计算
-            int iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
-            if (iSleep <= 0) iSleep = 1;
-
-            rf.Interval = iSleep;
-            rf.RemainingHits = iRemainingHits;
-            rf.ResetTimeInSeconds = iResetTimeInSeconds;
-
-            return rf;
-        }
-
         //自己实现队列的Contains操作，从头尾同时找，效率提高一倍
         static public bool ContainsInQueue<T>(LinkedList<T> list, T value)
         {

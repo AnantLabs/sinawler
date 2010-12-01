@@ -207,6 +207,7 @@ namespace Sinawler
                 //日志
                 Log( "用户" + lCurrentUserID.ToString() + "的微博数据已爬取完毕。" );
                 //日志
+                AdjustFreq();
                 Log( "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次" );
             }
         }
