@@ -169,10 +169,8 @@ namespace Sinawler
         }
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        static public RequestFrequency AdjustFreq(SinaApiService api, int iSleep)
+        static public RequestFrequency AdjustFreq(SinaApiService api)
         {
-            if (iSleep <= 0) iSleep = 3000; //默认值
-
             RequestFrequency rf;
             rf.Interval = 3000;
             rf.RemainingHits = 1000;
@@ -197,7 +195,7 @@ namespace Sinawler
             }
 
             //计算
-            iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
+            int iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
             if (iSleep <= 0) iSleep = 1;
 
             rf.Interval = iSleep;

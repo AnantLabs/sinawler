@@ -1002,20 +1002,18 @@ namespace Sinawler
         #region 请求频率调节
         private void StartAdjustFrequency ( Object sender, DoWorkEventArgs e )
         {
-            int iSleep = 3000;
             while (true)
             {
                 if (oAsyncWorkerFreqAdjust.CancellationPending) return;
 
-                RequestFrequency rf = PubHelper.AdjustFreq( api, iSleep );
-                iSleep = rf.Interval;
+                RequestFrequency rf = PubHelper.AdjustFreq( api );
                 robotUserInfo.SetRequestFrequency( rf );
                 robotUserRelation.SetRequestFrequency( rf );
                 robotUserTag.SetRequestFrequency( rf );
                 robotStatus.SetRequestFrequency( rf );
                 robotComment.SetRequestFrequency( rf );
 
-                Thread.Sleep( 5000 );
+                Thread.Sleep( 3000 );
             }
         }
 
