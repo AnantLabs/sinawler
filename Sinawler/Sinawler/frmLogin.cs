@@ -28,14 +28,18 @@ namespace Sinawler
             btnCancel.Enabled = false;
             string strUserID = txtUserID.Text;
             string strPWD = txtPWD.Text;
-            if (!_api.oAuthDesktop(strUserID, strPWD))
+            if (!_api.oAuthDesktop( strUserID, strPWD ))
             {
-                MessageBox.Show("登录失败。请重试。","新浪微博爬虫");
+                MessageBox.Show( "登录失败。请重试。", "新浪微博爬虫" );
                 txtUserID.Enabled = true;
                 txtPWD.Enabled = true;
                 btnLogin.Enabled = true;
                 btnCancel.Enabled = true;
+                btnLogin.Text = "登录";
+                return;
             }
+            else
+                this.DialogResult = DialogResult.OK;
         }
     }
 }
