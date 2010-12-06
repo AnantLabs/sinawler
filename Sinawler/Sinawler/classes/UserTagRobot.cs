@@ -14,13 +14,19 @@ namespace Sinawler
     class UserTagRobot : RobotBase
     {
         private UserQueue queueUserForUserTagRobot;        //用户标签机器人使用的用户队列引用
+        private UserQueue queueUserForUserInfoRobot;        //用户信息机器人使用的用户队列引用
+        private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
+        private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserTagRobot ( SinaApiService oAPI, UserQueue qUserForUserTagRobot )
+        public UserTagRobot(SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot)
             : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_tag.log";
+            queueUserForUserInfoRobot = qUserForUserInfoRobot;
+            queueUserForUserRelationRobot = qUserForUserRelationRobot;
             queueUserForUserTagRobot = qUserForUserTagRobot;
+            queueUserForStatusRobot = qUserForStatusRobot;
         }
 
         /// <summary>
@@ -31,7 +37,10 @@ namespace Sinawler
         {
             if (lStartUserID == 0) return;
             //将起始UserID入队
-            queueUserForUserTagRobot.Enqueue( lStartUserID );
+            queueUserForUserRelationRobot.Enqueue(lStartUserID);
+            queueUserForUserInfoRobot.Enqueue(lStartUserID);
+            queueUserForUserTagRobot.Enqueue(lStartUserID);
+            queueUserForStatusRobot.Enqueue(lStartUserID);
             lCurrentID = lStartUserID;
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)

@@ -114,7 +114,7 @@ namespace Sinawler
                         robotUserRelation.SinaAPI = api;
 
                     if (robotUserTag == null)
-                        robotUserTag = new UserTagRobot(api, queueUserForUserTagRobot);
+                        robotUserTag = new UserTagRobot(api, queueUserForUserInfoRobot, queueUserForUserRelationRobot, queueUserForUserTagRobot, queueUserForStatusRobot);
                     else
                         robotUserTag.SinaAPI = api;
 
