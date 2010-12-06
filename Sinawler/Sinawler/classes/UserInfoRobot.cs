@@ -48,57 +48,6 @@ namespace Sinawler
             queueUserForUserRelationRobot.Enqueue( lStartUserID );
             queueUserForUserTagRobot.Enqueue( lStartUserID );
             queueUserForStatusRobot.Enqueue( lStartUserID );
-
-            #region 预加载队列
-            //根据选项，选择加载用户队列的方法
-            DataTable dtUserID=new DataTable();
-
-            switch (queueUserForUserInfoRobot.PreLoadQueue)
-            {
-                case EnumPreLoadQueue.PRELOAD_USER_ID:
-                    //日志
-                    Log("获取已爬取数据的用户的ID，并加入内存队列...");
-                    dtUserID = User.GetCrawedUserIDTable();
-                    break;
-                case EnumPreLoadQueue.PRELOAD_ALL_USER_ID:
-                    //日志
-                    Log("获取数据库中所有用户的ID，并加入内存队列...");
-                    dtUserID = UserRelation.GetAllUserIDTable();
-                    break;
-            }
-
-            if (dtUserID != null)
-            {
-                iInitQueueLength = dtUserID.Rows.Count;
-                long lUserID;
-                int i;
-                for (i = 0; i < dtUserID.Rows.Count; i++)
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep(50);
-                    }
-                    lUserID = Convert.ToInt64( dtUserID.Rows[i]["user_id"] );
-                    if (queueUserForUserInfoRobot.Enqueue( lUserID ))
-                        //日志
-                        Log( "将用户" + lUserID.ToString() + "加入用户信息机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
-                    if (queueUserForUserRelationRobot.Enqueue( lUserID ))
-                        //日志
-                        Log( "将用户" + lUserID.ToString() + "加入用户关系机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
-                    if (queueUserForUserTagRobot.Enqueue( lUserID ))
-                        //日志
-                        Log( "将用户" + lUserID.ToString() + "加入用户标签机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
-                    if (queueUserForStatusRobot.Enqueue( lUserID ))
-                        //日志
-                        Log( "将用户" + lUserID.ToString() + "加入微博机器人的用户队列。进度：" + ((int)((float)((i + 1) * 100) / (float)iInitQueueLength)).ToString() + "%" );
-                }
-                dtUserID.Dispose();
-                //日志
-                Log( "预加载用户队列完成。" );
-            }
-            #endregion
             
             lCurrentID = lStartUserID;
             //对队列循环爬行

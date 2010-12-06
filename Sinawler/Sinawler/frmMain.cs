@@ -436,9 +436,6 @@ namespace Sinawler
                 }
                 else
                 {
-                    rdNoPreLoad.Enabled = false;
-                    rdPreLoadUserID.Enabled = false;
-                    rdPreLoadAllUserID.Enabled = false;
                     btnStartByCurrent.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -552,9 +549,6 @@ namespace Sinawler
                 }
                 else
                 {
-                    rdNoPreLoad.Enabled = false;
-                    rdPreLoadUserID.Enabled = false;
-                    rdPreLoadAllUserID.Enabled = false;
                     btnStartBySearch.Text = "停止爬行";
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
@@ -668,9 +662,6 @@ namespace Sinawler
                 }
                 else
                 {
-                    rdNoPreLoad.Enabled = false;
-                    rdPreLoadUserID.Enabled = false;
-                    rdPreLoadAllUserID.Enabled = false;
                     btnStartByLast.Text = "停止爬行";
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
@@ -740,9 +731,6 @@ namespace Sinawler
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
-                rdNoPreLoad.Enabled = true;
-                rdPreLoadUserID.Enabled = true;
-                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
                 btnPauseContinue.Text = "暂停/继续";
 
@@ -807,9 +795,6 @@ namespace Sinawler
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
-                rdNoPreLoad.Enabled = true;
-                rdPreLoadUserID.Enabled = true;
-                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
                 btnPauseContinue.Text = "暂停/继续";
 
@@ -874,9 +859,6 @@ namespace Sinawler
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
-                rdNoPreLoad.Enabled = true;
-                rdPreLoadUserID.Enabled = true;
-                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
                 btnPauseContinue.Text = "暂停/继续";
 
@@ -917,9 +899,6 @@ namespace Sinawler
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
-                rdNoPreLoad.Enabled = true;
-                rdPreLoadUserID.Enabled = true;
-                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
                 btnPauseContinue.Text = "暂停/继续";
 
@@ -960,9 +939,6 @@ namespace Sinawler
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
-                rdNoPreLoad.Enabled = true;
-                rdPreLoadUserID.Enabled = true;
-                rdPreLoadAllUserID.Enabled = true;
                 btnPauseContinue.Enabled = false;
                 btnPauseContinue.Text = "暂停/继续";
 
@@ -1040,30 +1016,6 @@ namespace Sinawler
                     else
                         MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。", "新浪微博爬虫");
             }
-        }
-
-        private void rdNoPreLoad_Click(object sender, EventArgs e)
-        {
-            rdPreLoadUserID.Checked = !rdNoPreLoad.Checked;
-            rdPreLoadAllUserID.Checked = !rdNoPreLoad.Checked;
-            if (rdNoPreLoad.Checked)
-                queueUserForUserInfoRobot.PreLoadQueue = EnumPreLoadQueue.NO_PRELOAD;
-        }
-
-        private void rdPreLoadUserID_Click(object sender, EventArgs e)
-        {
-            rdNoPreLoad.Checked = !rdPreLoadUserID.Checked;
-            rdPreLoadAllUserID.Checked = !rdPreLoadUserID.Checked;
-            if (rdPreLoadUserID.Checked)
-                queueUserForUserInfoRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_USER_ID;
-        }
-
-        private void rdPreLoadAllUserID_Click(object sender, EventArgs e)
-        {
-            rdNoPreLoad.Checked = !rdPreLoadAllUserID.Checked;
-            rdPreLoadUserID.Checked = !rdPreLoadAllUserID.Checked;
-            if (rdPreLoadAllUserID.Checked)
-                queueUserForUserInfoRobot.PreLoadQueue = EnumPreLoadQueue.PRELOAD_ALL_USER_ID;
         }
 
         private void btnPauseContinue_Click(object sender, EventArgs e)
