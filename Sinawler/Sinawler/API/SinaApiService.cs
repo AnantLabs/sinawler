@@ -78,7 +78,7 @@ namespace Sina.Api
             }
             catch(Exception ex) 
             {
-                if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
+                if (ex.Message.IndexOf( "(400)" ) > 0 || ex.Message.IndexOf("(500)")>0)   //返回400或500，认为用户不存在
                     return "User Not Exist";
                 else
                     return null; 
@@ -95,7 +95,7 @@ namespace Sina.Api
             }
             catch (Exception ex)
             {
-                if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
+                if (ex.Message.IndexOf("(400)") > 0 || ex.Message.IndexOf("(500)") > 0)   //返回400或500，认为用户不存在
                     return "User Not Exist";
                 else
                     return null;

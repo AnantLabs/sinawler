@@ -1029,7 +1029,7 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
-                if (PubHelper.PostAdvertisement( api ))
+                if (PubHelper.PostAdvertisement( api,queueUserForUserInfoRobot.Count,queueStatus.Count ))
                     MessageBox.Show( "您已经帮忙发布了一条推广此应用的微博。\n感谢您对本应用的支持！", "新浪微博爬虫" );
                 else
                     MessageBox.Show( "对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。", "新浪微博爬虫" );

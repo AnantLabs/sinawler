@@ -129,11 +129,11 @@ namespace Sinawler
         }
 
         //发一条微博帮忙推广
-        static public bool PostAdvertisement(SinaApiService api)
+        static public bool PostAdvertisement(SinaApiService api,int UserCount, int StatusCount)
         {
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
-            string strResult = api.statuses_update("（" + DateTime.Now.ToString() + "）我正在使用开源应用“新浪微博爬虫Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。Project页面：http://code.google.com/p/sinawler/");
+            string strResult = api.statuses_update("（" + DateTime.Now.ToString() + "）我正在使用开源应用“爬虫小新Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。本次工作至今，用户队列中已有"+UserCount.ToString()+"个用户，微博队列中已有"+StatusCount.ToString()+"条微博！Project页面：http://code.google.com/p/sinawler/");
             if (strResult == null) return false;
             else return true;
         }
