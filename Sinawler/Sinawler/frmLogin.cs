@@ -30,7 +30,7 @@ namespace Sinawler
             string strPWD = txtPWD.Text;
             if (!_api.oAuthDesktop( strUserID, strPWD ))
             {
-                MessageBox.Show( "登录失败。请重试。", "新浪微博爬虫" );
+                MessageBox.Show( "登录失败。请重试。", "爬虫小新" );
                 txtUserID.Enabled = true;
                 txtPWD.Enabled = true;
                 btnLogin.Enabled = true;
