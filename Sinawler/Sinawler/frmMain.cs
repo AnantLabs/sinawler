@@ -442,6 +442,7 @@ namespace Sinawler
                 else
                 {
                     btnStartByCurrent.Text = "停止爬行";
+                    btnStartByCurrent.Enabled = true;
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
                     btnPauseContinue.Text = "暂停";
@@ -560,6 +561,7 @@ namespace Sinawler
                 else
                 {
                     btnStartBySearch.Text = "停止爬行";
+                    btnStartBySearch.Enabled = true;
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
                     btnPauseContinue.Text = "暂停";
@@ -678,6 +680,7 @@ namespace Sinawler
                 else
                 {
                     btnStartByLast.Text = "停止爬行";
+                    btnStartByLast.Enabled = true;
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
                     btnPauseContinue.Text = "暂停";

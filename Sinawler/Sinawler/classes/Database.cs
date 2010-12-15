@@ -322,7 +322,7 @@ public class SqlDatabase : Database
         try
         {
             SqlCommand cmd = new SqlCommand( SqlString, _sql_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = cmd.ExecuteNonQuery();
         }
         catch (Exception ex)
@@ -348,7 +348,7 @@ public class SqlDatabase : Database
         try
         {
             SqlCommand cmd = new SqlCommand( SqlString, _sql_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = Convert.ToInt32( cmd.ExecuteScalar() );
         }
         catch
@@ -375,7 +375,7 @@ public class SqlDatabase : Database
         SqlTransaction trans = _sql_connection.BeginTransaction();
         cmd.Connection = _sql_connection;
         cmd.Transaction = trans;
-        cmd.CommandTimeout = 60;
+        cmd.CommandTimeout = 120;
         try
         {
             foreach (String str in SqlStrings)
@@ -542,7 +542,7 @@ public class OracleDatabase : Database
         try
         {
             OracleCommand cmd = new OracleCommand( SqlString, _oracle_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = cmd.ExecuteNonQuery();
         }
         catch (Exception ex)
@@ -568,7 +568,7 @@ public class OracleDatabase : Database
         try
         {
             OracleCommand cmd = new OracleCommand( SqlString, _oracle_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = Convert.ToInt32( cmd.ExecuteScalar() );
         }
         catch
@@ -595,7 +595,7 @@ public class OracleDatabase : Database
         OracleTransaction trans = _oracle_connection.BeginTransaction();
         cmd.Connection = _oracle_connection;
         cmd.Transaction = trans;
-        cmd.CommandTimeout = 60;
+        cmd.CommandTimeout = 120;
         try
         {
             foreach (String str in SqlStrings)
