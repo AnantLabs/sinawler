@@ -356,6 +356,11 @@ namespace Sinawler
 
                 if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerUserTag == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
                 {
+                    btnStartByCurrent.Text = "正在初始化，请稍候...";
+                    btnStartByCurrent.Enabled = false;
+                    btnStartBySearch.Enabled = false;
+                    btnStartByLast.Enabled = false;
+                    Application.DoEvents();
                     PrepareToStart();
                     oAsyncWorkerUserInfo = new BackgroundWorker();
                     oAsyncWorkerUserInfo.WorkerReportsProgress = true;
@@ -469,6 +474,11 @@ namespace Sinawler
 
                 if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerUserTag == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
                 {
+                    btnStartBySearch.Text = "正在初始化，请稍候...";
+                    btnStartBySearch.Enabled = false;
+                    btnStartByCurrent.Enabled = false;
+                    btnStartByLast.Enabled = false;
+                    Application.DoEvents();
                     PrepareToStart();
                     oAsyncWorkerUserInfo = new BackgroundWorker();
                     oAsyncWorkerUserInfo.WorkerReportsProgress = true;
@@ -582,6 +592,11 @@ namespace Sinawler
 
                 if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerUserTag == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)
                 {
+                    btnStartByLast.Text = "正在初始化，请稍候...";
+                    btnStartByLast.Enabled = false;
+                    btnStartBySearch.Enabled = false;
+                    btnStartByCurrent.Enabled = false;
+                    Application.DoEvents();
                     PrepareToStart();
                     oAsyncWorkerUserInfo = new BackgroundWorker();
                     oAsyncWorkerUserInfo.WorkerReportsProgress = true;
