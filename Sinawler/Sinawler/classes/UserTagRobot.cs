@@ -56,21 +56,21 @@ namespace Sinawler
                 lCurrentID = queueUserForUserTagRobot.RollQueue();
 
                 #region 预处理
-                if (lCurrentID == lStartUserID)  //说明经过一次循环迭代
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
-                    }
+                //if (lCurrentID == lStartUserID)  //说明经过一次循环迭代
+                //{
+                //    if (blnAsyncCancelled) return;
+                //    while (blnSuspending)
+                //    {
+                //        if (blnAsyncCancelled) return;
+                //        Thread.Sleep( 50 );
+                //    }
 
-                    //日志
-                    Log( "开始爬行之前增加迭代次数..." );
+                //    //日志
+                //    Log( "开始爬行之前增加迭代次数..." );
 
-                    Tag.NewIterate();
-                    UserTag.NewIterate();
-                }
+                //    Tag.NewIterate();
+                //    UserTag.NewIterate();
+                //}
                 //日志
                 Log( "记录当前用户ID：" + lCurrentID.ToString() );
                 SysArg.SetCurrentUserIDForUserTag( lCurrentID );
