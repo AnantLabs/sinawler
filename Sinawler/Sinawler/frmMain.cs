@@ -99,6 +99,7 @@ namespace Sinawler
                     crawler.SleepTime = 0;  //这里不等待
                     oCurrentUser = crawler.GetCurrentUserInfo();
                     ShowCurrentUser();
+                    oSearchedUser = oCurrentUser;
 
                     btnStartByCurrent.Enabled = true;
                     btnStartBySearch.Enabled = true;
@@ -298,24 +299,32 @@ namespace Sinawler
                 return;
             }
             if (strUserID != "" && strScreenName == "")
+            {
                 if (!oSearchedUser.GetModel(Convert.ToInt64(strUserID)))
                 {
                     MessageBox.Show("未搜索到指定用户。", "爬虫小新");
-                    oSearchedUser = null;
                 }
+                else
+                    ShowSearchedUser();
+            }
             if (strUserID == "" && strScreenName != "")
-                if (!oSearchedUser.GetModel(strScreenName))
+            {
+                if (!oSearchedUser.GetModel( strScreenName ))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "爬虫小新");
-                    oSearchedUser = null;
+                    MessageBox.Show( "未搜索到指定用户。", "爬虫小新" );
                 }
+                else
+                    ShowSearchedUser();
+            }
             if (strUserID != "" && strScreenName != "")
-                if (!oSearchedUser.GetModel(Convert.ToInt64(strUserID), strScreenName))
+            {
+                if (!oSearchedUser.GetModel( Convert.ToInt64( strUserID ), strScreenName ))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "爬虫小新");
-                    oSearchedUser = null;
+                    MessageBox.Show( "未搜索到指定用户。", "爬虫小新" );
                 }
-            ShowSearchedUser();
+                else
+                    ShowSearchedUser();
+            }
         }
 
         //开始任务前初始化robot等
