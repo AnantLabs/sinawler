@@ -87,7 +87,6 @@
     <Compile Include="classes\StatusQueue.cs" />
     <Compile Include="classes\UserRelationRobot.cs" />
     <Compile Include="classes\UserTagRobot.cs" />
-    <Compile Include="model\all_uid.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
       <SubType>Code</SubType>
@@ -154,7 +153,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Monsters21.ico" />
-    <Content Include="sqlscripts\sqlserver\all_uid.VIW" />
     <Content Include="sqlscripts\sqlserver\comments.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_comment.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_userInfo.TAB" />
