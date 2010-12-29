@@ -7,7 +7,7 @@ using System.Resources;
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle( "Sinawler" )]
-[assembly: AssemblyDescription("爬虫小新")]
+[assembly: AssemblyDescription("新浪微博爬虫")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BUCT")]
 [assembly: AssemblyProduct( "Sinawler" )]
@@ -30,6 +30,6 @@ using System.Resources;
 //      内部版本号
 //      修订号
 //
-[assembly: AssemblyVersion( "5.4.0.4" )]
-[assembly: AssemblyFileVersion( "5.4.0.4" )]
+[assembly: AssemblyVersion("5.4.0.5")]
+[assembly: AssemblyFileVersion("5.4.0.5")]
 [assembly: NeutralResourcesLanguageAttribute("zh-CHS")]
