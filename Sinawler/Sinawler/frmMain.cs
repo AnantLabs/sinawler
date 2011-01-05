@@ -18,8 +18,8 @@ namespace Sinawler
         private bool blnAuthorized = false;
         private SinaApiService api = new SinaApiService();
 
-        private User oCurrentUser;     //当前登录用户
-        private User oSearchedUser;    //搜索到的用户
+        private User oCurrentUser=new User();     //当前登录用户
+        private User oSearchedUser = new User();    //搜索到的用户
 
         //分别用于五个机器人的线程
         private BackgroundWorker oAsyncWorkerUserInfo = null;
@@ -129,14 +129,6 @@ namespace Sinawler
                     else
                         robotComment.SinaAPI = api;
                 }
-                else
-                {
-                    btnStartByCurrent.Enabled = false;
-                    btnStartBySearch.Enabled = false;
-                }
-                btnSearchOnline.Enabled = true;
-                btnSearchOffLine.Enabled = true;
-                btnStartByLast.Enabled = true;
             }
         }
 
