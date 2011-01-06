@@ -60,24 +60,10 @@ namespace Sinawler
                 //将队头取出
                 lCurrentSID = queueStatus.RollQueue();
 
-                #region 预处理
-                //if (lCurrentSID == lStartSID)  //说明经过一次循环迭代
-                //{
-                //    if (blnAsyncCancelled) return;
-                //    while (blnSuspending)
-                //    {
-                //        if (blnAsyncCancelled) return;
-                //        Thread.Sleep(50);
-                //    }
-
-                //    //日志
-                //    Log("开始爬行之前增加迭代次数...");
-                //    Comment.NewIterate();
-                //}
                 //日志
                 Log( "记录当前微博ID：" + lCurrentSID.ToString() );
                 SysArg.SetCurrentStatusID( lCurrentSID );
-                #endregion
+
                 #region 微博相应评论
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)

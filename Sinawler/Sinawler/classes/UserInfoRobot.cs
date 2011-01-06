@@ -62,25 +62,10 @@ namespace Sinawler
                 //将队头取出
                 lCurrentID = queueUserForUserInfoRobot.RollQueue();
                 
-                #region 预处理
-                //if (lCurrentID == lStartUserID)  //说明经过一次循环迭代
-                //{
-                //    if (blnAsyncCancelled) return;
-                //    while (blnSuspending)
-                //    {
-                //        if (blnAsyncCancelled) return;
-                //        Thread.Sleep(50);
-                //    }
-
-                //    //日志
-                //    Log("开始爬行之前增加迭代次数...");
-
-                //    User.NewIterate();
-                //}
                 //日志
                 Log("记录当前用户ID：" + lCurrentID.ToString());
                 SysArg.SetCurrentUserIDForUserInfo( lCurrentID );
-                #endregion
+
                 #region 用户基本信息
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)

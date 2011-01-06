@@ -112,22 +112,6 @@ namespace Sinawler
                 //将队头取出
                 lCurrentUserID = queueUserForStatusRobot.RollQueue();
 
-                #region 预处理
-                //if (lCurrentUserID == lStartUserID)  //说明经过一次循环迭代
-                //{
-                //    if (blnAsyncCancelled) return;
-                //    while (blnSuspending)
-                //    {
-                //        if (blnAsyncCancelled) return;
-                //        Thread.Sleep( 50 );
-                //    }
-
-                //    //日志
-                //    Log( "开始爬行之前增加迭代次数..." );
-
-                //    Status.NewIterate();
-                //}
-                #endregion
                 #region 用户微博信息
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
