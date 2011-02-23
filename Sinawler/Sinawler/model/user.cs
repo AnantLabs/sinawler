@@ -246,7 +246,6 @@ namespace Sinawler.Model
         /// </summary>
         public int iteration
         {
-            set { _iteration = value; }
             get { return _iteration; }
         }
         /// <summary>
@@ -396,8 +395,7 @@ namespace Sinawler.Model
 		{
             Database db = DatabaseFactory.CreateDatabase();
             StringBuilder strSql = new StringBuilder();
-            strSql.Append( "select  top 1 user_id,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
-            strSql.Append( " FROM users " );
+            strSql.Append( "select  top 1 * FROM users " );
             strSql.Append( " where user_id="+lUid.ToString() );
 
             DataRow dr=db.GetDataRow( strSql.ToString() );
@@ -490,8 +488,7 @@ namespace Sinawler.Model
         {
             Database db = DatabaseFactory.CreateDatabase();
             StringBuilder strSql = new StringBuilder();
-            strSql.Append( "select  top 1 user_id,screen_name,name,province,city,location,description,url,profile_image_url,domain,gender,followers_count,friends_count,statuses_count,favourites_count,created_at,following,verified,allow_all_act_msg,geo_enabled,iteration " );
-            strSql.Append( " FROM users " );
+            strSql.Append( "select  top 1 * FROM users " );
             strSql.Append( " where screen_name='" + strScreenName+"'" );
 
             DataRow dr = db.GetDataRow( strSql.ToString() );

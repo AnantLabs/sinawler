@@ -62,7 +62,6 @@ namespace Sinawler.Model
         /// </summary>
         public int iteration
         {
-            set { _iteration = value; }
             get { return _iteration; }
         }
         /// <summary>
@@ -91,7 +90,7 @@ namespace Sinawler.Model
         static public bool Exists ( long lSourceUserID, long lTargetUserID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select count(relation_state) from user_relation where source_user_id=" + lSourceUserID.ToString()+" and target_user_id="+lTargetUserID.ToString()+" and relation_state=1" );
+            int count = db.CountByExecuteSQLSelect( "select count(*) from user_relation where source_user_id=" + lSourceUserID.ToString()+" and target_user_id="+lTargetUserID.ToString() );
             return count > 0;
 		}
 

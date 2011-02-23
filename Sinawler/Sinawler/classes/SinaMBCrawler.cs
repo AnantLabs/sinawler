@@ -12,84 +12,23 @@ namespace Sinawler
     public class SinaMBCrawler
     {
         private SinaApiService api;
-        ///默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
+        ///默认请求之前等待3.6秒钟，此值根据每小时1000次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
         ///后经测试，此值还可缩小。2010-10-11定为最小值2000，可调整
         ///2010-10-12定为不设下限
         private int iSleep = 3000;
         private int iRemainingHits = 1000; //当前小时内剩余请求次数
         private int iResetTimeInSeconds = 3600; //剩余秒数
         private bool blnStopCrawling = false;   //是否停止爬行
+        private string strWebContent = "";  //web页面的HTML内容
+        private int iCurFollowerPage = 1;     //粉丝页面的页号，初始为1
+        private int iMaxFollowerPage = 1;     //粉丝页面的最大页号，初始为1
+        private bool blnPageGot = false;    //已获取页面内容的标记
+        private bool blnAllFollowersFetchedByWeb = false; //已通过web获取所有粉丝的标记
 
-        //private LinkedList<long> lstStatusIDByWeb = new LinkedList<long>();    //通过web页面抓取的微博ID列表
-        private HttpClient httpClient = new HttpClient();
-        private LinkedList<Tag> lstTagsByWeb = new LinkedList<Tag>();    //通过web页面抓取的微博ID列表
-        private bool blnAllTagsFetched = false; //已获取所有TAG的标记
-
-        public SinaMBCrawler ( SinaApiService oApi,bool blnInitBrowser )
+        public SinaMBCrawler ( SinaApiService oApi )
         {
             api = oApi;
-            HttpClientContext context = new HttpClientContext();
-            context.Cookies = api.Cookies;
-            httpClient.Context = context;
         }
-
-        #region 通过浏览器对象抓取web页面信息相关函数
-
-        /// <summary>
-        /// 通过Web页面抓取指定UserID的所有微博ID
-        /// </summary>
-        /// <param name="lUid">要获取微博内容的UserID</param>
-        /// <returns>微博列表</returns>
-        public LinkedList<Tag> GetTagsByWeb ( long lUid )
-        {
-            lstTagsByWeb.Clear();
-            httpClient.Url = "http://t.sina.com.cn/"+lUid.ToString()+"/profile";
-            string strHTML = httpClient.GetString();
-            return lstTagsByWeb;
-        }
-
-        #region 微博在页面上的ID不是实际的ID，暂时搁置
-        //private void StatusPageLoaded ( object sender, WebBrowserDocumentCompletedEventArgs e )
-        //{
-        //    WebLogin();
-        //    HtmlDocument html = wbBrowser.Document;
-        //    HtmlElementCollection elemStatusIDs = html.GetElementsByTagName( "LI" );
-        //    foreach (HtmlElement elem in elemStatusIDs)
-        //    {
-        //        if (elem.Id != null && elem.Id.Contains( "mid_" ))
-        //        {
-        //            long lStatusID = Convert.ToInt64( elem.Id.Substring( 4 ) );
-        //            lstStatusIDByWeb.AddLast( lStatusID );
-        //        }
-        //    }
-        //    HtmlElementCollection elems = html.GetElementsByTagName( "EM" );
-        //    foreach (HtmlElement elem in elems)
-        //    {
-        //        if (elem.InnerText == "下一页")    //说明还有下一页
-        //        {
-        //            iWebPageNum++;
-        //            wbBrowser.Navigate( "http://t.sina.com.cn/profile.php?uid=" + lIDForWeb.ToString() + "&page=" + iWebPageNum.ToString() );
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// 通过Web页面抓取指定UserID的所有微博ID
-        ///// </summary>
-        ///// <param name="lUid">要获取微博内容的UserID</param>
-        ///// <returns>微博列表</returns>
-        //public LinkedList<long> GetStatusesByWeb ( long lUid, int iStatusCount )
-        //{
-        //    lIDForWeb = lUid;
-        //    lstStatusIDByWeb.Clear();
-        //    wbBrowser.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler( StatusPageLoaded );
-        //    wbBrowser.Navigate( "http://t.sina.com.cn/profile.php?uid=" + lIDForWeb.ToString() + "&page=" + iWebPageNum.ToString() );
-        //    while (lstStatusIDByWeb.Count<iStatusCount && !blnStopCrawling) System.Threading.Thread.Sleep( 50 );
-        //    return lstStatusIDByWeb;
-        //}
-        #endregion
-
-        #endregion
 
         public int SleepTime
         {
@@ -124,7 +63,21 @@ namespace Sinawler
         public LinkedList<long> GetFriendsOf ( long lUid, int iCursor )
         {
             System.Threading.Thread.Sleep( iSleep );
-            return api.friends_ids( lUid, iCursor );
+            LinkedList<long> ids = new LinkedList<long>();
+            string strResult= api.friends_ids( lUid, iCursor );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );
+            if(strResult!=null && strResult!="")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(strResult);
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName( "id" );
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    ids.AddLast( Convert.ToInt64( nodes[i].InnerText ) );
+                }
+            }
+            return ids;
         }
 
         /// <summary>
@@ -136,7 +89,82 @@ namespace Sinawler
         public LinkedList<long> GetFollowersOf ( long lUid, int iCursor )
         {
             System.Threading.Thread.Sleep( iSleep );
-            return api.followers_ids( lUid, iCursor );
+            LinkedList<long> ids = new LinkedList<long>();
+            string strResult = api.followers_ids( lUid, iCursor );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );
+            if (strResult != null && strResult != "")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml( strResult );
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName( "id" );
+                for (int i = 0; i < nodes.Count; i++)
+                {
+                    ids.AddLast( Convert.ToInt64( nodes[i].InnerText ) );
+                }
+            }
+            return ids;
+        }
+
+        /// <summary>
+        /// 以Web方式获取指定UserID的所有粉丝ID列表
+        /// </summary>
+        /// <returns>粉丝ID列表</returns>
+        public LinkedList<long> GetFollowersOfByWeb(long lUid, WebBrowser wb)
+        {
+            System.Threading.Thread.Sleep(iSleep);
+            LinkedList<long> ids = new LinkedList<long>();
+
+            wb.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(FollowerPageLoaded);
+            wb.Navigate("http://t.sina.com.cn/attention/att_list.php?action=1&uid=" + lUid.ToString() + "&page=1");
+            while (!blnPageGot) { System.Threading.Thread.Sleep(50); }
+
+            //此时已获取第一页内容，循环，直到最大页
+            for (iCurFollowerPage = 2; iCurFollowerPage <= iMaxFollowerPage; iCurFollowerPage++)
+            {
+                blnPageGot = false;
+                wb.Navigate("http://t.sina.com.cn/attention/att_list.php?action=1&uid=" + lUid.ToString() + "&page=" + iCurFollowerPage.ToString());
+                while (!blnPageGot) { System.Threading.Thread.Sleep(50); }
+            }
+
+            //循环结束，已获取所有页面的粉丝。下面解析页面内容，提取粉丝ID
+            int index1 = strWebContent.IndexOf("uid=\"");
+            int index2 = strWebContent.IndexOf("\"", index1+5);
+            while (index1 != -1)
+            {
+                long user_id = Convert.ToInt64(strWebContent.Substring(index1 + 5, index2 - (index1 + 5)));
+                if(!ids.Contains(user_id))   ids.AddLast(user_id);
+
+                index1 = strWebContent.IndexOf("uid=\"",index2+1);
+                index2 = strWebContent.IndexOf("\"", index1 + 5);
+            }
+            return ids;
+        }
+
+        private void FollowerPageLoaded(Object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            WebBrowser wb = (WebBrowser)sender;
+            if (wb.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wb.Url.ToString())
+            {
+                strWebContent += wb.Document.Body.InnerHtml;
+
+                if (iCurFollowerPage == 1)    //如果是第一页，则获取总页数
+                {
+                    HtmlElementCollection hrefs = wb.Document.Body.GetElementsByTagName("a");
+                    foreach (HtmlElement href in hrefs)
+                    {
+                        string strHref = href.GetAttribute("href");
+                        if(strHref.Contains("/attention/att_list.php?action=1&uid="))
+                        {
+                            string[] strs=strHref.Replace("#","").Split('=');
+                            int i=Convert.ToInt32(strs[strs.Length-1]);  //最后一项为页数
+                            if (i > iMaxFollowerPage) iMaxFollowerPage = i;
+                        }
+                    }
+                }
+
+                blnPageGot = true;
+            }
         }
 
         //根据UserID抓取用户信息
@@ -148,6 +176,8 @@ namespace Sinawler
             string strResult = api.user_show( lUid );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid );
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (blnStopCrawling)
                 return user;
 
@@ -200,6 +230,8 @@ namespace Sinawler
             string strResult = api.user_show( strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( strScreenName );
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (blnStopCrawling)
                 return user;
 
@@ -252,6 +284,8 @@ namespace Sinawler
             string strResult = api.user_show( lUid, strScreenName );
             while (strResult == null && !blnStopCrawling)
                 strResult = api.user_show( lUid, strScreenName );
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (blnStopCrawling)
                 return user;
 
@@ -447,7 +481,6 @@ namespace Sinawler
                         break;
                 }
             }
-            status.iteration = 0;
             return status;
         }
 
@@ -599,7 +632,6 @@ namespace Sinawler
                             break;
                     }
                 }
-                status.iteration = 0;
                 lstStatuses.AddLast( status );
             }
             return lstStatuses;
@@ -647,7 +679,6 @@ namespace Sinawler
                                 break;
                         }
                     }
-                    comment.iteration = 0;
                     lstComments.AddLast( comment );
                 }
                 iPage++;
@@ -655,10 +686,50 @@ namespace Sinawler
                 strResult = api.comments( lStatusID, iPage );
                 while (strResult == null && !blnStopCrawling)
                     strResult = api.comments( lStatusID, iPage );
+                strResult = PubHelper.stripNonValidXMLCharacters( strResult );  //过滤XML中的无效字符
                 xmlDoc.LoadXml( strResult );
                 nodes = xmlDoc.GetElementsByTagName( "comment" );
             }
             return lstComments;
+        }
+
+        /// <summary>
+        /// 获取指定用户的标签
+        /// </summary>
+        /// <param name="lUserID">要获取标签的用户ID</param>
+        /// <returns>标签</returns>
+        public LinkedList<Tag> GetTagsOf(long lUserID)
+        {
+            System.Threading.Thread.Sleep( iSleep );
+            LinkedList<Tag> lstTags = new LinkedList<Tag>();
+
+            string strResult = api.tags_of( lUserID );
+            strResult = PubHelper.stripNonValidXMLCharacters( strResult );
+            if (strResult != null && strResult != "")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml( strResult );
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName( "tag" );
+                foreach (XmlNode node in nodes)
+                {
+                    Tag tag = new Tag();
+                    foreach (XmlNode attr in node.ChildNodes)
+                    {
+                        switch (attr.Name.ToLower())
+                        {
+                            case "id":
+                                tag.tag_id = Convert.ToInt64( attr.InnerText );
+                                break;
+                            case "value":
+                                tag.tag = attr.InnerText;
+                                break;
+                        }
+                    }
+                    lstTags.AddLast( tag );
+                }
+            }
+            return lstTags;
         }
     };
 }

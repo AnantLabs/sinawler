@@ -14,19 +14,19 @@ namespace Sinawler
     class StatusRobot : RobotBase
     {
         private UserQueue queueUserForUserInfoRobot;        //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForTagRobot;             //标签机器人使用的用户队列引用
         private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
+        private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;        //微博队列引用
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public StatusRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForTagRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
-            : base( oAPI,false )
+        public StatusRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
+            : base( oAPI )
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
             queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForTagRobot = qUserForTagRobot;
             queueUserForUserRelationRobot = qUserForUserRelationRobot;
+            queueUserForUserTagRobot = qUserForUserTagRobot;
             queueUserForStatusRobot = qUserForStatusRobot;
             queueStatus = qStatus;
         }
@@ -46,8 +46,6 @@ namespace Sinawler
 
             if (queueStatus.Enqueue( lCurrentID ))
                 Log( "将微博" + lCurrentID.ToString() + "加入微博队列。" );
-            else
-                Log( "微博" + lCurrentID.ToString() + "已在微博队列中。" );
 
             //若该微博有转发，将转发微博保存
             if (status.retweeted_status != null)
@@ -77,26 +75,15 @@ namespace Sinawler
 
                 if (queueStatus.Enqueue( status.retweeted_status.status_id ))
                     Log( "将转发微博" + status.retweeted_status.status_id.ToString() + "加入微博队列。" );
-                else
-                    Log( "转发微博" + status.retweeted_status.status_id.ToString() + "已在微博队列中。" );
 
                 if (queueUserForUserInfoRobot.Enqueue( status.retweeted_status.user_id ))
                     Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户信息机器人的用户队列。" );
-                else
-                    Log( "用户" + status.retweeted_status.user_id.ToString() + "已在用户信息机器人的用户队列中。" );
-                if (queueUserForTagRobot.Enqueue( status.retweeted_status.user_id ))
-                    Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入标签机器人的用户队列。" );
-                else
-                    Log( "用户" + status.retweeted_status.user_id.ToString() + "已在标签机器人的用户队列中。" );
                 if (queueUserForUserRelationRobot.Enqueue( status.retweeted_status.user_id ))
                     Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户关系机器人的用户队列。" );
-                else
-                    Log( "用户" + status.retweeted_status.user_id.ToString() + "已在用户关系机器人的用户队列中。" );
-
+                if (queueUserForUserTagRobot.Enqueue( status.retweeted_status.user_id ))
+                    Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户标签机器人的用户队列。" );
                 if (queueUserForStatusRobot.Enqueue( status.retweeted_status.user_id ))
                     Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入微博机器人的用户队列。" );
-                else
-                    Log( "用户" + status.retweeted_status.user_id.ToString() + "已在微博机器人的用户队列中。" );
             }
         }
 
@@ -125,22 +112,6 @@ namespace Sinawler
                 //将队头取出
                 lCurrentUserID = queueUserForStatusRobot.RollQueue();
 
-                #region 预处理
-                if (lCurrentUserID == lStartUserID)  //说明经过一次循环迭代
-                {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
-                    {
-                        if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
-                    }
-
-                    //日志
-                    Log( "开始爬行之前增加迭代次数..." );
-
-                    Status.NewIterate();
-                }
-                #endregion
                 #region 用户微博信息
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
@@ -220,6 +191,7 @@ namespace Sinawler
                 //日志
                 Log( "用户" + lCurrentUserID.ToString() + "的微博数据已爬取完毕。" );
                 //日志
+                AdjustFreq();
                 Log( "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次" );
             }
         }

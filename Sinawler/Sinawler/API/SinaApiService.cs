@@ -14,7 +14,8 @@ namespace Sina.Api
     {
         private string strUserName = "";    //登录帐号
         private string strPassWord = "";         //登录密码
-        private CookieCollection cookies = new CookieCollection();  //登录后的Cookie，都保存在此
+        //private CookieCollection cookies = new CookieCollection();  //登录后的Cookie，都保存在此
+        private CookieContainer cookies = new CookieContainer();   //登录后的Cookie，都保存在此
 
         public string UserName
         {
@@ -28,19 +29,21 @@ namespace Sina.Api
 
         public void SetCookies(string strCookieString)
         {
-            string[] strCookies = strCookieString.Split( ';' );
+            string[] strCookies = strCookieString.Split(';');
             foreach (string strCookie in strCookies)
             {
-                string[] str = strCookie.Split( '=' );
+                string[] str = strCookie.Split('=');
                 string strCookieName = str[0].Trim();
-                string strCookieValue = str[1].Trim().Replace(",","%2C");
-                Cookie cookie = new Cookie( strCookieName, strCookieValue );
-                cookie.Domain = "http://t.sina.com.cn";
-                cookies.Add( cookie );
+                string strCookieValue = str[1].Trim().Replace(",", "%2C");
+                Cookie cookie = new Cookie(strCookieName, strCookieValue);
+                cookie.Domain = "t.sina.com.cn";
+                cookie.Expires=DateTime.MaxValue;
+                cookies.Add(cookie);
             }
         }
 
-        public CookieCollection Cookies
+        //public CookieCollection Cookies
+        public CookieContainer Cookies
         {
             get { return cookies; }
         }
@@ -76,6 +79,8 @@ namespace Sina.Api
                 string pin = ParseHtml(html);
                 Verifier = pin;
                 AccessTokenGet(Token);
+
+                
                 return true;
             }
             catch(Exception ex)
@@ -95,9 +100,15 @@ namespace Sina.Api
             try
             {
                 string url = "http://api.t.sina.com.cn/users/show." + Format + "?user_id=" + user_id.ToString();
-                return oAuthWebRequest( Method.GET, url, String.Empty );
+                return oAuthWebRequest( Method.GET, url, String.Empty );;
             }
-            catch { return null; }
+            catch(Exception ex) 
+            {
+                if (ex.Message.IndexOf( "(400)" ) > 0 || ex.Message.IndexOf("(500)")>0)   //返回400或500，认为用户不存在
+                    return "User Not Exist";
+                else
+                    return null; 
+            }
         }
 
         /*指定用户详细信息*/
@@ -108,7 +119,13 @@ namespace Sina.Api
                 string url = "http://api.t.sina.com.cn/users/show." + Format + "?screen_name=" + screen_name;
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                if (ex.Message.IndexOf("(400)") > 0 || ex.Message.IndexOf("(500)") > 0)   //返回400或500，认为用户不存在
+                    return "User Not Exist";
+                else
+                    return null;
+            }
         }
 
         /*指定用户详细信息*/
@@ -119,7 +136,13 @@ namespace Sina.Api
                 string url = "http://api.t.sina.com.cn/users/show." + Format + "?user_id="+user_id.ToString()+"&screen_name=" + screen_name;
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
-            catch { return null; }
+            catch (Exception ex)
+            {
+                if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
+                    return "User Not Exist";
+                else
+                    return null;
+            }
         }
 
         /*最新关注人微博*/
@@ -340,27 +363,16 @@ namespace Sina.Api
 
         使用说明
         */
-        public LinkedList<long> friends_ids(long user_id,int cursor)
+        public string friends_ids(long user_id,int cursor)
         {
-            LinkedList<long> ids = new LinkedList<long>();
             try
             {
                 string url = "http://api.t.sina.com.cn/friends/ids/" + user_id.ToString() + "." + Format;
                 url+="?count=5000&cursor="+cursor.ToString();
-                string response = oAuthWebRequest(Method.GET,url,string.Empty);
-
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(response);
-                
-                XmlNodeList nodes = xmlDoc.GetElementsByTagName("id");
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    ids.AddLast(Convert.ToInt64(nodes[i].InnerText));
-                }
+                return oAuthWebRequest(Method.GET,url,string.Empty);
             }
             catch(Exception ex)
-            {  }
-            return ids;
+            { return null; }
         }
 
         /*获取用户粉丝对象user_id列表 */
@@ -395,26 +407,18 @@ namespace Sina.Api
         使用说明
         如果没有提供cursor参数，将只返回最前面的5000个粉丝id 
         */
-        public LinkedList<long> followers_ids ( long user_id, int cursor )
+        public string followers_ids ( long user_id, int cursor )
         {
-            LinkedList<long> ids = new LinkedList<long>();
             try
             {
                 string url = "http://api.t.sina.com.cn/followers/ids/"+user_id.ToString()+"." + Format;
                 url+="?cursor="+cursor.ToString()+"&count=5000";
-                string response = oAuthWebRequest(Method.GET, url,string.Empty);
-
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(response);
-                
-                XmlNodeList nodes = xmlDoc.GetElementsByTagName("id");
-                for (int i = 0; i < nodes.Count; i++)
-                {
-                    ids.AddLast( Convert.ToInt64( nodes[i].InnerText ) );
-                }
+                return oAuthWebRequest(Method.GET, url,string.Empty);
             }
-            catch{}
-            return ids;
+            catch
+            {
+                return null;
+            }
         }
 
         //发送一条私信
@@ -454,6 +458,42 @@ namespace Sina.Api
             {
                 string url = "http://api.t.sina.com.cn/account/rate_limit_status." + Format;
                 return oAuthWebRequest( Method.GET, url, String.Empty);
+            }
+            catch
+            { return null; }
+        }
+
+        /*返回指定用户的标签列表 */
+        /*
+         URL
+         http://api.t.sina.com.cn/tags.format 
+         格式
+         xml, json
+         HTTP请求方式
+         GET 
+         是否需要登录:
+         true 
+         
+         请求数限制
+         true 
+         
+         请求参数
+         user_id: 必填参数，查询用户的ID 
+         示例: http://api.t.sina.com.cn/tags.xml?user_id=142272 
+         count: 可选参数. 每次返回的最大记录数（即页面大小），不大于200，默认为20。 
+         示例: http://api.t.sina.com.cn/tags.xml?user_id=12345&count=200 
+         page: 可选参数. 返回结果的页序号。注意：有分页限制。 
+         示例: http://api.t.sina.com.cn/tags.xml?user_id=12345&page=3 
+         使用说明
+         缺少参数，将返回400错误 
+         用户ID不存在，将返回500错误 
+        */
+        public string tags_of(long lUid)
+        {
+            try
+            {
+                string url = "http://api.t.sina.com.cn/tags."+Format+"?user_id="+lUid.ToString();
+                return oAuthWebRequest( Method.GET, url, String.Empty );
             }
             catch
             { return null; }

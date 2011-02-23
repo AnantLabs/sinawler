@@ -44,7 +44,7 @@ public abstract class Database : IDisposable
     /// <summary>
     /// 加载数据库配置信息
     /// </summary>
-    public void LoadSettings()
+    public void LoadSettings ()
     {
         SettingItems settings = AppSettings.Load();
         if (settings == null) settings = AppSettings.LoadDefault();
@@ -112,13 +112,6 @@ public abstract class Database : IDisposable
     /// <param name="SqlString">Sql语句</param>
     /// <returns>对Select为影响到的行数，其他情况为-1</returns>
     public abstract int CountByExecuteSQLSelect ( String SqlString );
-
-    /// <summary>
-    /// 公有方法，执行一组Sql语句。
-    /// </summary>
-    /// <param name="SqlStrings">Sql语句组</param>
-    /// <returns>是否成功</returns>
-    public abstract bool ExecuteSQL ( ArrayList SqlStrings );
 
     /// <summary>
     /// 公有方法，在一个数据表中插入一条记录。
@@ -217,7 +210,7 @@ public class SqlDatabase : Database
         _database_type = "SQL Server";
         SettingItems settings = AppSettings.Load();
         if (settings == null) settings = AppSettings.LoadDefault();
-        _connection_string = "Data Source="+settings.DBServer+";User Id="+settings.DBUserName+";Password="+settings.DBPwd+";database="+settings.DBName;
+        _connection_string = "Data Source=" + settings.DBServer + ";User Id=" + settings.DBUserName + ";Password=" + settings.DBPwd + ";database=" + settings.DBName;
     }
 
     /// <summary>
@@ -299,13 +292,16 @@ public class SqlDatabase : Database
             //Thread.Sleep( 10 );
             SqlDataAdapter adapter = new SqlDataAdapter( SqlString, _sql_connection );
             adapter.Fill( dataset );
-            Close();
             //给足够的时间关闭连接，否则异常——无语……
             //Thread.Sleep( 10 );
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             dataset = null;
+        }
+        finally
+        {
+            Close();
         }
         return dataset;
     }
@@ -318,11 +314,11 @@ public class SqlDatabase : Database
     public override int CountByExecuteSQL ( String SqlString )
     {
         int count = -1;
-        Open();
         try
         {
+            Open();
             SqlCommand cmd = new SqlCommand( SqlString, _sql_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = cmd.ExecuteNonQuery();
         }
         catch (Exception ex)
@@ -344,11 +340,11 @@ public class SqlDatabase : Database
     public override int CountByExecuteSQLSelect ( String SqlString )
     {
         int count = -1;
-        Open();
         try
         {
+            Open();
             SqlCommand cmd = new SqlCommand( SqlString, _sql_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = Convert.ToInt32( cmd.ExecuteScalar() );
         }
         catch
@@ -360,41 +356,6 @@ public class SqlDatabase : Database
             Close();
         }
         return count;
-    }
-
-    /// <summary>
-    /// 公有方法，执行一组Sql语句。
-    /// </summary>
-    /// <param name="SqlStrings">Sql语句组</param>
-    /// <returns>是否成功</returns>
-    public override bool ExecuteSQL ( ArrayList SqlStrings )
-    {
-        bool success = true;
-        Open();
-        SqlCommand cmd = new SqlCommand();
-        SqlTransaction trans = _sql_connection.BeginTransaction();
-        cmd.Connection = _sql_connection;
-        cmd.Transaction = trans;
-        cmd.CommandTimeout = 60;
-        try
-        {
-            foreach (String str in SqlStrings)
-            {
-                cmd.CommandText = str;
-                cmd.ExecuteNonQuery();
-            }
-            trans.Commit();
-        }
-        catch
-        {
-            success = false;
-            trans.Rollback();
-        }
-        finally
-        {
-            Close();
-        }
-        return success;
     }
 
     /// <summary>
@@ -519,14 +480,24 @@ public class OracleDatabase : Database
     public override DataSet GetDataSet ( String SqlString )
     {
         DataSet dataset = new DataSet();
-        Open();
-        //给足够的时间打开连接，否则获取不到dataset——无语……
-        Thread.Sleep( 10 );
-        OracleDataAdapter adapter = new OracleDataAdapter( SqlString, _oracle_connection );
-        adapter.Fill( dataset );
-        Close();
+        try
+        {
+            Open();
+            //给足够的时间打开连接，否则获取不到dataset——无语……
+            //Thread.Sleep( 10 );
+            OracleDataAdapter adapter = new OracleDataAdapter( SqlString, _oracle_connection );
+            adapter.Fill( dataset );
+        }
+        catch
+        {
+            dataset = null;
+        }
+        finally
+        {
+            Close();
+        }
         //给足够的时间关闭连接，否则获取不到dataset——无语……
-        Thread.Sleep( 10 );
+        //Thread.Sleep( 10 );
         return dataset;
     }
 
@@ -538,11 +509,11 @@ public class OracleDatabase : Database
     public override int CountByExecuteSQL ( String SqlString )
     {
         int count = -1;
-        Open();
         try
         {
+            Open();
             OracleCommand cmd = new OracleCommand( SqlString, _oracle_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = cmd.ExecuteNonQuery();
         }
         catch (Exception ex)
@@ -564,11 +535,11 @@ public class OracleDatabase : Database
     public override int CountByExecuteSQLSelect ( String SqlString )
     {
         int count = -1;
-        Open();
         try
         {
+            Open();
             OracleCommand cmd = new OracleCommand( SqlString, _oracle_connection );
-            cmd.CommandTimeout = 60;
+            cmd.CommandTimeout = 120;
             count = Convert.ToInt32( cmd.ExecuteScalar() );
         }
         catch
@@ -580,41 +551,6 @@ public class OracleDatabase : Database
             Close();
         }
         return count;
-    }
-
-    /// <summary>
-    /// 公有方法，执行一组Sql语句。
-    /// </summary>
-    /// <param name="SqlStrings">Sql语句组</param>
-    /// <returns>是否成功</returns>
-    public override bool ExecuteSQL ( ArrayList SqlStrings )
-    {
-        bool success = true;
-        Open();
-        OracleCommand cmd = new OracleCommand();
-        OracleTransaction trans = _oracle_connection.BeginTransaction();
-        cmd.Connection = _oracle_connection;
-        cmd.Transaction = trans;
-        cmd.CommandTimeout = 60;
-        try
-        {
-            foreach (String str in SqlStrings)
-            {
-                cmd.CommandText = str;
-                cmd.ExecuteNonQuery();
-            }
-            trans.Commit();
-        }
-        catch
-        {
-            success = false;
-            trans.Rollback();
-        }
-        finally
-        {
-            Close();
-        }
-        return success;
     }
 
     /// <summary>

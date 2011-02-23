@@ -10,8 +10,6 @@ using System.IO;
 
 namespace Sinawler
 {
-    public enum EnumPreLoadQueue { NO_PRELOAD = 1, PRELOAD_USER_ID = 2, PRELOAD_ALL_USER_ID = 3 };
-
     public struct RequestFrequency
     {
         public int RemainingHits;
@@ -129,11 +127,9 @@ namespace Sinawler
         }
 
         //发一条微博帮忙推广
-        static public bool PostAdvertisement(SinaApiService api)
+        static public bool PostAdvertisement(SinaApiService api,int UserCount, int StatusCount)
         {
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            string strResult = api.statuses_update("（" + DateTime.Now.ToString() + "）我正在使用开源应用“新浪微博爬虫Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。Project页面：http://code.google.com/p/sinawler/");
+            string strResult = api.statuses_update("（" + DateTime.Now.ToString() + "）我正在使用开源应用“新浪微博爬虫Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "”。本次工作至今，用户队列中已有"+UserCount.ToString()+"个用户，微博队列中已有"+StatusCount.ToString()+"条微博！Project页面：http://code.google.com/p/sinawler/");
             if (strResult == null) return false;
             else return true;
         }
@@ -166,45 +162,6 @@ namespace Sinawler
                     strResult.Append(current);
             }
             return strResult.ToString();
-        }
-
-        //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        static public RequestFrequency AdjustFreq(SinaApiService api, int iSleep)
-        {
-            if (iSleep <= 0) iSleep = 3000; //默认值
-
-            RequestFrequency rf;
-            rf.Interval = 3000;
-            rf.RemainingHits = 1000;
-            rf.ResetTimeInSeconds = 3600;
-
-            string strResult = api.check_hits_limit();
-            if (strResult == null) return rf;
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(strResult);
-
-            int iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
-            int iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
-
-            //若已无剩余次数，直接返回剩余时间
-            if (iRemainingHits == 0)
-            {
-                rf.Interval = iResetTimeInSeconds * 1000;
-                rf.RemainingHits = iRemainingHits;
-                rf.ResetTimeInSeconds = iResetTimeInSeconds;
-
-                return rf;
-            }
-
-            //计算
-            iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
-            if (iSleep <= 0) iSleep = 1;
-
-            rf.Interval = iSleep;
-            rf.RemainingHits = iRemainingHits;
-            rf.ResetTimeInSeconds = iResetTimeInSeconds;
-
-            return rf;
         }
 
         //自己实现队列的Contains操作，从头尾同时找，效率提高一倍

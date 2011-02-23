@@ -75,7 +75,6 @@ namespace Sinawler.Model
         /// </summary>
         public int iteration
         {
-            set { _iteration = value; }
             get { return _iteration; }
         }
         /// <summary>
@@ -130,7 +129,7 @@ namespace Sinawler.Model
                 htValues.Add( "content", "'" + _content.Replace( "'", "''" ) + "'" );
                 htValues.Add( "user_id", _user_id );
                 htValues.Add( "status_id", _status_id );
-                htValues.Add( "iteration", iteration );
+                htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
 
                 db.Insert( "comments", htValues );

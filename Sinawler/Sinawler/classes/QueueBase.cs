@@ -130,6 +130,17 @@ namespace Sinawler
                 return false;
         }
 
+        /// <summary>
+        /// 将指定ID从队列中移除
+        /// </summary>
+        /// <param name="lid"></param>
+        public void Remove ( long lID )
+        {
+            if (lID <= 0) return;
+            lstWaitingID.Remove( lID );
+            lstWaitingIDInDB.Remove( lID );
+        }
+
         public void Initialize ()
         {
             if (lstWaitingID != null) lstWaitingID.Clear();

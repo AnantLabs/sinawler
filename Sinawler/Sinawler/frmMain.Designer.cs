@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager( typeof( frmMain ) );
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.btnStartByLast = new System.Windows.Forms.Button();
             this.grpUserInfo = new System.Windows.Forms.GroupBox();
             this.lblVerified = new System.Windows.Forms.Label();
@@ -65,10 +65,6 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.grpControl = new System.Windows.Forms.GroupBox();
             this.btnPauseContinue = new System.Windows.Forms.Button();
-            this.lblPreLoad = new System.Windows.Forms.Label();
-            this.rdPreLoadAllUserID = new System.Windows.Forms.RadioButton();
-            this.rdPreLoadUserID = new System.Windows.Forms.RadioButton();
-            this.rdNoPreLoad = new System.Windows.Forms.RadioButton();
             this.gpSetting = new System.Windows.Forms.GroupBox();
             this.btnLoad = new System.Windows.Forms.Button();
             this.grpDBSettings = new System.Windows.Forms.GroupBox();
@@ -92,19 +88,19 @@
             this.grpStatus = new System.Windows.Forms.GroupBox();
             this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.lblStatusQueueInfo = new System.Windows.Forms.Label();
+            this.lblUserTagQueueInfo = new System.Windows.Forms.Label();
             this.lblUserRelationQueueInfo = new System.Windows.Forms.Label();
             this.lblUserInfoQueueInfo = new System.Windows.Forms.Label();
             this.lblCommentMessage = new System.Windows.Forms.Label();
             this.lblCommentTitle = new System.Windows.Forms.Label();
             this.lblStatusMessage = new System.Windows.Forms.Label();
+            this.lblUserTagMessage = new System.Windows.Forms.Label();
             this.lblUserRelationMessage = new System.Windows.Forms.Label();
+            this.lblUserTagTitle = new System.Windows.Forms.Label();
             this.lblUserInfoMessage = new System.Windows.Forms.Label();
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.lblTagTitle = new System.Windows.Forms.Label();
-            this.lblTagMessage = new System.Windows.Forms.Label();
-            this.lblTagQueueInfo = new System.Windows.Forms.Label();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -120,29 +116,29 @@
             // 
             // btnStartByLast
             // 
-            this.btnStartByLast.Location = new System.Drawing.Point( 467, 39 );
+            this.btnStartByLast.Location = new System.Drawing.Point(467, 18);
             this.btnStartByLast.Name = "btnStartByLast";
-            this.btnStartByLast.Size = new System.Drawing.Size( 225, 30 );
-            this.btnStartByLast.TabIndex = 0;
+            this.btnStartByLast.Size = new System.Drawing.Size(225, 30);
+            this.btnStartByLast.TabIndex = 19;
             this.btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
             this.btnStartByLast.UseVisualStyleBackColor = true;
-            this.btnStartByLast.Click += new System.EventHandler( this.btnStartByLast_Click );
+            this.btnStartByLast.Click += new System.EventHandler(this.btnStartByLast_Click);
             // 
             // grpUserInfo
             // 
-            this.grpUserInfo.Controls.Add( this.lblVerified );
-            this.grpUserInfo.Controls.Add( this.lblFollowing );
-            this.grpUserInfo.Controls.Add( this.lblStatusesCount );
-            this.grpUserInfo.Controls.Add( this.lblCreatedAt );
-            this.grpUserInfo.Controls.Add( this.lblFriendsCount );
-            this.grpUserInfo.Controls.Add( this.lblFollowersCount );
-            this.grpUserInfo.Controls.Add( this.lblGender );
-            this.grpUserInfo.Controls.Add( this.lblLocation );
-            this.grpUserInfo.Controls.Add( this.lblName );
-            this.grpUserInfo.Controls.Add( this.lblUserID );
-            this.grpUserInfo.Location = new System.Drawing.Point( 11, 81 );
+            this.grpUserInfo.Controls.Add(this.lblVerified);
+            this.grpUserInfo.Controls.Add(this.lblFollowing);
+            this.grpUserInfo.Controls.Add(this.lblStatusesCount);
+            this.grpUserInfo.Controls.Add(this.lblCreatedAt);
+            this.grpUserInfo.Controls.Add(this.lblFriendsCount);
+            this.grpUserInfo.Controls.Add(this.lblFollowersCount);
+            this.grpUserInfo.Controls.Add(this.lblGender);
+            this.grpUserInfo.Controls.Add(this.lblLocation);
+            this.grpUserInfo.Controls.Add(this.lblName);
+            this.grpUserInfo.Controls.Add(this.lblUserID);
+            this.grpUserInfo.Location = new System.Drawing.Point(11, 81);
             this.grpUserInfo.Name = "grpUserInfo";
-            this.grpUserInfo.Size = new System.Drawing.Size( 806, 63 );
+            this.grpUserInfo.Size = new System.Drawing.Size(806, 63);
             this.grpUserInfo.TabIndex = 1;
             this.grpUserInfo.TabStop = false;
             this.grpUserInfo.Text = "搜索结果";
@@ -150,187 +146,187 @@
             // lblVerified
             // 
             this.lblVerified.AutoSize = true;
-            this.lblVerified.Location = new System.Drawing.Point( 430, 21 );
+            this.lblVerified.Location = new System.Drawing.Point(430, 21);
             this.lblVerified.Name = "lblVerified";
-            this.lblVerified.Size = new System.Drawing.Size( 113, 12 );
+            this.lblVerified.Size = new System.Drawing.Size(113, 12);
             this.lblVerified.TabIndex = 9;
             this.lblVerified.Text = "是否微博认证用户：";
             // 
             // lblFollowing
             // 
             this.lblFollowing.AutoSize = true;
-            this.lblFollowing.Location = new System.Drawing.Point( 593, 21 );
+            this.lblFollowing.Location = new System.Drawing.Point(593, 21);
             this.lblFollowing.Name = "lblFollowing";
-            this.lblFollowing.Size = new System.Drawing.Size( 185, 12 );
+            this.lblFollowing.Size = new System.Drawing.Size(185, 12);
             this.lblFollowing.TabIndex = 8;
             this.lblFollowing.Text = "当前登录帐号是否关注他（她）：";
             // 
             // lblStatusesCount
             // 
             this.lblStatusesCount.AutoSize = true;
-            this.lblStatusesCount.Location = new System.Drawing.Point( 430, 41 );
+            this.lblStatusesCount.Location = new System.Drawing.Point(430, 41);
             this.lblStatusesCount.Name = "lblStatusesCount";
-            this.lblStatusesCount.Size = new System.Drawing.Size( 77, 12 );
+            this.lblStatusesCount.Size = new System.Drawing.Size(77, 12);
             this.lblStatusesCount.TabIndex = 7;
             this.lblStatusesCount.Text = "已发微博数：";
             // 
             // lblCreatedAt
             // 
             this.lblCreatedAt.AutoSize = true;
-            this.lblCreatedAt.Location = new System.Drawing.Point( 593, 41 );
+            this.lblCreatedAt.Location = new System.Drawing.Point(593, 41);
             this.lblCreatedAt.Name = "lblCreatedAt";
-            this.lblCreatedAt.Size = new System.Drawing.Size( 89, 12 );
+            this.lblCreatedAt.Size = new System.Drawing.Size(89, 12);
             this.lblCreatedAt.TabIndex = 6;
             this.lblCreatedAt.Text = "帐号创建时间：";
             // 
             // lblFriendsCount
             // 
             this.lblFriendsCount.AutoSize = true;
-            this.lblFriendsCount.Location = new System.Drawing.Point( 302, 41 );
+            this.lblFriendsCount.Location = new System.Drawing.Point(302, 41);
             this.lblFriendsCount.Name = "lblFriendsCount";
-            this.lblFriendsCount.Size = new System.Drawing.Size( 65, 12 );
+            this.lblFriendsCount.Size = new System.Drawing.Size(65, 12);
             this.lblFriendsCount.TabIndex = 5;
             this.lblFriendsCount.Text = "关注人数：";
             // 
             // lblFollowersCount
             // 
             this.lblFollowersCount.AutoSize = true;
-            this.lblFollowersCount.Location = new System.Drawing.Point( 154, 41 );
+            this.lblFollowersCount.Location = new System.Drawing.Point(154, 41);
             this.lblFollowersCount.Name = "lblFollowersCount";
-            this.lblFollowersCount.Size = new System.Drawing.Size( 65, 12 );
+            this.lblFollowersCount.Size = new System.Drawing.Size(65, 12);
             this.lblFollowersCount.TabIndex = 4;
             this.lblFollowersCount.Text = "粉丝人数：";
             // 
             // lblGender
             // 
             this.lblGender.AutoSize = true;
-            this.lblGender.Location = new System.Drawing.Point( 326, 21 );
+            this.lblGender.Location = new System.Drawing.Point(326, 21);
             this.lblGender.Name = "lblGender";
-            this.lblGender.Size = new System.Drawing.Size( 41, 12 );
+            this.lblGender.Size = new System.Drawing.Size(41, 12);
             this.lblGender.TabIndex = 3;
             this.lblGender.Text = "性别：";
             // 
             // lblLocation
             // 
             this.lblLocation.AutoSize = true;
-            this.lblLocation.Location = new System.Drawing.Point( 9, 41 );
+            this.lblLocation.Location = new System.Drawing.Point(9, 41);
             this.lblLocation.Name = "lblLocation";
-            this.lblLocation.Size = new System.Drawing.Size( 53, 12 );
+            this.lblLocation.Size = new System.Drawing.Size(53, 12);
             this.lblLocation.TabIndex = 2;
             this.lblLocation.Text = "所在地：";
             // 
             // lblName
             // 
             this.lblName.AutoSize = true;
-            this.lblName.Location = new System.Drawing.Point( 154, 21 );
+            this.lblName.Location = new System.Drawing.Point(154, 21);
             this.lblName.Name = "lblName";
-            this.lblName.Size = new System.Drawing.Size( 65, 12 );
+            this.lblName.Size = new System.Drawing.Size(65, 12);
             this.lblName.TabIndex = 1;
             this.lblName.Text = "用户昵称：";
             // 
             // lblUserID
             // 
             this.lblUserID.AutoSize = true;
-            this.lblUserID.Location = new System.Drawing.Point( 9, 21 );
+            this.lblUserID.Location = new System.Drawing.Point(9, 21);
             this.lblUserID.Name = "lblUserID";
-            this.lblUserID.Size = new System.Drawing.Size( 53, 12 );
+            this.lblUserID.Size = new System.Drawing.Size(53, 12);
             this.lblUserID.TabIndex = 0;
             this.lblUserID.Text = "用户ID：";
             // 
             // btnStartBySearch
             // 
-            this.btnStartBySearch.Location = new System.Drawing.Point( 237, 39 );
+            this.btnStartBySearch.Location = new System.Drawing.Point(237, 18);
             this.btnStartBySearch.Name = "btnStartBySearch";
-            this.btnStartBySearch.Size = new System.Drawing.Size( 225, 30 );
-            this.btnStartBySearch.TabIndex = 10;
+            this.btnStartBySearch.Size = new System.Drawing.Size(225, 30);
+            this.btnStartBySearch.TabIndex = 18;
             this.btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
             this.btnStartBySearch.UseVisualStyleBackColor = true;
-            this.btnStartBySearch.Click += new System.EventHandler( this.btnStartBySearch_Click );
+            this.btnStartBySearch.Click += new System.EventHandler(this.btnStartBySearch_Click);
             // 
             // lblSearchUserID
             // 
             this.lblSearchUserID.AutoSize = true;
-            this.lblSearchUserID.Location = new System.Drawing.Point( 13, 25 );
+            this.lblSearchUserID.Location = new System.Drawing.Point(13, 25);
             this.lblSearchUserID.Name = "lblSearchUserID";
-            this.lblSearchUserID.Size = new System.Drawing.Size( 53, 12 );
+            this.lblSearchUserID.Size = new System.Drawing.Size(53, 12);
             this.lblSearchUserID.TabIndex = 2;
             this.lblSearchUserID.Text = "用户ID：";
             // 
             // lblSearchName
             // 
             this.lblSearchName.AutoSize = true;
-            this.lblSearchName.Location = new System.Drawing.Point( 233, 25 );
+            this.lblSearchName.Location = new System.Drawing.Point(233, 25);
             this.lblSearchName.Name = "lblSearchName";
-            this.lblSearchName.Size = new System.Drawing.Size( 65, 12 );
+            this.lblSearchName.Size = new System.Drawing.Size(65, 12);
             this.lblSearchName.TabIndex = 3;
             this.lblSearchName.Text = "用户昵称：";
             // 
             // txtUserID
             // 
             this.txtUserID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtUserID.Location = new System.Drawing.Point( 64, 20 );
+            this.txtUserID.Location = new System.Drawing.Point(64, 20);
             this.txtUserID.Name = "txtUserID";
-            this.txtUserID.Size = new System.Drawing.Size( 155, 21 );
-            this.txtUserID.TabIndex = 4;
+            this.txtUserID.Size = new System.Drawing.Size(155, 21);
+            this.txtUserID.TabIndex = 0;
             // 
             // txtUserName
             // 
             this.txtUserName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtUserName.Location = new System.Drawing.Point( 295, 20 );
+            this.txtUserName.Location = new System.Drawing.Point(295, 20);
             this.txtUserName.Name = "txtUserName";
-            this.txtUserName.Size = new System.Drawing.Size( 178, 21 );
-            this.txtUserName.TabIndex = 5;
+            this.txtUserName.Size = new System.Drawing.Size(178, 21);
+            this.txtUserName.TabIndex = 1;
             // 
             // btnSearchOnline
             // 
-            this.btnSearchOnline.Location = new System.Drawing.Point( 485, 18 );
+            this.btnSearchOnline.Location = new System.Drawing.Point(485, 18);
             this.btnSearchOnline.Name = "btnSearchOnline";
-            this.btnSearchOnline.Size = new System.Drawing.Size( 148, 23 );
-            this.btnSearchOnline.TabIndex = 6;
+            this.btnSearchOnline.Size = new System.Drawing.Size(148, 23);
+            this.btnSearchOnline.TabIndex = 2;
             this.btnSearchOnline.Text = "在新浪微博中搜索用户";
             this.btnSearchOnline.UseVisualStyleBackColor = true;
-            this.btnSearchOnline.Click += new System.EventHandler( this.btnSearchOnline_Click );
+            this.btnSearchOnline.Click += new System.EventHandler(this.btnSearchOnline_Click);
             // 
             // btnSearchOffLine
             // 
-            this.btnSearchOffLine.Location = new System.Drawing.Point( 645, 18 );
+            this.btnSearchOffLine.Location = new System.Drawing.Point(645, 18);
             this.btnSearchOffLine.Name = "btnSearchOffLine";
-            this.btnSearchOffLine.Size = new System.Drawing.Size( 148, 23 );
-            this.btnSearchOffLine.TabIndex = 7;
+            this.btnSearchOffLine.Size = new System.Drawing.Size(148, 23);
+            this.btnSearchOffLine.TabIndex = 3;
             this.btnSearchOffLine.Text = "在数据库中搜索用户";
             this.btnSearchOffLine.UseVisualStyleBackColor = true;
-            this.btnSearchOffLine.Click += new System.EventHandler( this.btnSearchOffLine_Click );
+            this.btnSearchOffLine.Click += new System.EventHandler(this.btnSearchOffLine_Click);
             // 
             // grpSearchCondition
             // 
-            this.grpSearchCondition.Controls.Add( this.btnSearchOffLine );
-            this.grpSearchCondition.Controls.Add( this.btnSearchOnline );
-            this.grpSearchCondition.Controls.Add( this.txtUserID );
-            this.grpSearchCondition.Controls.Add( this.txtUserName );
-            this.grpSearchCondition.Controls.Add( this.lblSearchUserID );
-            this.grpSearchCondition.Controls.Add( this.lblSearchName );
-            this.grpSearchCondition.Location = new System.Drawing.Point( 11, 20 );
+            this.grpSearchCondition.Controls.Add(this.btnSearchOffLine);
+            this.grpSearchCondition.Controls.Add(this.btnSearchOnline);
+            this.grpSearchCondition.Controls.Add(this.txtUserID);
+            this.grpSearchCondition.Controls.Add(this.txtUserName);
+            this.grpSearchCondition.Controls.Add(this.lblSearchUserID);
+            this.grpSearchCondition.Controls.Add(this.lblSearchName);
+            this.grpSearchCondition.Location = new System.Drawing.Point(11, 20);
             this.grpSearchCondition.Name = "grpSearchCondition";
-            this.grpSearchCondition.Size = new System.Drawing.Size( 806, 56 );
+            this.grpSearchCondition.Size = new System.Drawing.Size(806, 56);
             this.grpSearchCondition.TabIndex = 8;
             this.grpSearchCondition.TabStop = false;
             this.grpSearchCondition.Text = "搜索条件";
             // 
             // grpCurrentUser
             // 
-            this.grpCurrentUser.Controls.Add( this.lblCVerified );
-            this.grpCurrentUser.Controls.Add( this.lblCFollowing );
-            this.grpCurrentUser.Controls.Add( this.lblCStatusesCount );
-            this.grpCurrentUser.Controls.Add( this.lblCCreatedAt );
-            this.grpCurrentUser.Controls.Add( this.lblCFriendsCount );
-            this.grpCurrentUser.Controls.Add( this.lblCFollowersCount );
-            this.grpCurrentUser.Controls.Add( this.lblCGender );
-            this.grpCurrentUser.Controls.Add( this.lblCLocation );
-            this.grpCurrentUser.Controls.Add( this.lblCName );
-            this.grpCurrentUser.Controls.Add( this.lblCUserID );
-            this.grpCurrentUser.Location = new System.Drawing.Point( 4, 12 );
+            this.grpCurrentUser.Controls.Add(this.lblCVerified);
+            this.grpCurrentUser.Controls.Add(this.lblCFollowing);
+            this.grpCurrentUser.Controls.Add(this.lblCStatusesCount);
+            this.grpCurrentUser.Controls.Add(this.lblCCreatedAt);
+            this.grpCurrentUser.Controls.Add(this.lblCFriendsCount);
+            this.grpCurrentUser.Controls.Add(this.lblCFollowersCount);
+            this.grpCurrentUser.Controls.Add(this.lblCGender);
+            this.grpCurrentUser.Controls.Add(this.lblCLocation);
+            this.grpCurrentUser.Controls.Add(this.lblCName);
+            this.grpCurrentUser.Controls.Add(this.lblCUserID);
+            this.grpCurrentUser.Location = new System.Drawing.Point(4, 12);
             this.grpCurrentUser.Name = "grpCurrentUser";
-            this.grpCurrentUser.Size = new System.Drawing.Size( 827, 61 );
+            this.grpCurrentUser.Size = new System.Drawing.Size(827, 61);
             this.grpCurrentUser.TabIndex = 9;
             this.grpCurrentUser.TabStop = false;
             this.grpCurrentUser.Text = "当前登录帐号信息";
@@ -338,139 +334,135 @@
             // lblCVerified
             // 
             this.lblCVerified.AutoSize = true;
-            this.lblCVerified.Location = new System.Drawing.Point( 430, 21 );
+            this.lblCVerified.Location = new System.Drawing.Point(430, 21);
             this.lblCVerified.Name = "lblCVerified";
-            this.lblCVerified.Size = new System.Drawing.Size( 113, 12 );
+            this.lblCVerified.Size = new System.Drawing.Size(113, 12);
             this.lblCVerified.TabIndex = 9;
             this.lblCVerified.Text = "是否微博认证用户：";
             // 
             // lblCFollowing
             // 
             this.lblCFollowing.AutoSize = true;
-            this.lblCFollowing.Location = new System.Drawing.Point( 593, 21 );
+            this.lblCFollowing.Location = new System.Drawing.Point(593, 21);
             this.lblCFollowing.Name = "lblCFollowing";
-            this.lblCFollowing.Size = new System.Drawing.Size( 185, 12 );
+            this.lblCFollowing.Size = new System.Drawing.Size(185, 12);
             this.lblCFollowing.TabIndex = 8;
             this.lblCFollowing.Text = "当前登录帐号是否关注他（她）：";
             // 
             // lblCStatusesCount
             // 
             this.lblCStatusesCount.AutoSize = true;
-            this.lblCStatusesCount.Location = new System.Drawing.Point( 430, 41 );
+            this.lblCStatusesCount.Location = new System.Drawing.Point(430, 41);
             this.lblCStatusesCount.Name = "lblCStatusesCount";
-            this.lblCStatusesCount.Size = new System.Drawing.Size( 77, 12 );
+            this.lblCStatusesCount.Size = new System.Drawing.Size(77, 12);
             this.lblCStatusesCount.TabIndex = 7;
             this.lblCStatusesCount.Text = "已发微博数：";
             // 
             // lblCCreatedAt
             // 
             this.lblCCreatedAt.AutoSize = true;
-            this.lblCCreatedAt.Location = new System.Drawing.Point( 593, 41 );
+            this.lblCCreatedAt.Location = new System.Drawing.Point(593, 41);
             this.lblCCreatedAt.Name = "lblCCreatedAt";
-            this.lblCCreatedAt.Size = new System.Drawing.Size( 89, 12 );
+            this.lblCCreatedAt.Size = new System.Drawing.Size(89, 12);
             this.lblCCreatedAt.TabIndex = 6;
             this.lblCCreatedAt.Text = "帐号创建时间：";
             // 
             // lblCFriendsCount
             // 
             this.lblCFriendsCount.AutoSize = true;
-            this.lblCFriendsCount.Location = new System.Drawing.Point( 302, 41 );
+            this.lblCFriendsCount.Location = new System.Drawing.Point(302, 41);
             this.lblCFriendsCount.Name = "lblCFriendsCount";
-            this.lblCFriendsCount.Size = new System.Drawing.Size( 65, 12 );
+            this.lblCFriendsCount.Size = new System.Drawing.Size(65, 12);
             this.lblCFriendsCount.TabIndex = 5;
             this.lblCFriendsCount.Text = "关注人数：";
             // 
             // lblCFollowersCount
             // 
             this.lblCFollowersCount.AutoSize = true;
-            this.lblCFollowersCount.Location = new System.Drawing.Point( 154, 41 );
+            this.lblCFollowersCount.Location = new System.Drawing.Point(154, 41);
             this.lblCFollowersCount.Name = "lblCFollowersCount";
-            this.lblCFollowersCount.Size = new System.Drawing.Size( 65, 12 );
+            this.lblCFollowersCount.Size = new System.Drawing.Size(65, 12);
             this.lblCFollowersCount.TabIndex = 4;
             this.lblCFollowersCount.Text = "粉丝人数：";
             // 
             // lblCGender
             // 
             this.lblCGender.AutoSize = true;
-            this.lblCGender.Location = new System.Drawing.Point( 325, 21 );
+            this.lblCGender.Location = new System.Drawing.Point(325, 21);
             this.lblCGender.Name = "lblCGender";
-            this.lblCGender.Size = new System.Drawing.Size( 41, 12 );
+            this.lblCGender.Size = new System.Drawing.Size(41, 12);
             this.lblCGender.TabIndex = 3;
             this.lblCGender.Text = "性别：";
             // 
             // lblCLocation
             // 
             this.lblCLocation.AutoSize = true;
-            this.lblCLocation.Location = new System.Drawing.Point( 9, 41 );
+            this.lblCLocation.Location = new System.Drawing.Point(9, 41);
             this.lblCLocation.Name = "lblCLocation";
-            this.lblCLocation.Size = new System.Drawing.Size( 53, 12 );
+            this.lblCLocation.Size = new System.Drawing.Size(53, 12);
             this.lblCLocation.TabIndex = 2;
             this.lblCLocation.Text = "所在地：";
             // 
             // lblCName
             // 
             this.lblCName.AutoSize = true;
-            this.lblCName.Location = new System.Drawing.Point( 154, 21 );
+            this.lblCName.Location = new System.Drawing.Point(154, 21);
             this.lblCName.Name = "lblCName";
-            this.lblCName.Size = new System.Drawing.Size( 65, 12 );
+            this.lblCName.Size = new System.Drawing.Size(65, 12);
             this.lblCName.TabIndex = 1;
             this.lblCName.Text = "用户昵称：";
             // 
             // lblCUserID
             // 
             this.lblCUserID.AutoSize = true;
-            this.lblCUserID.Location = new System.Drawing.Point( 9, 21 );
+            this.lblCUserID.Location = new System.Drawing.Point(9, 21);
             this.lblCUserID.Name = "lblCUserID";
-            this.lblCUserID.Size = new System.Drawing.Size( 53, 12 );
+            this.lblCUserID.Size = new System.Drawing.Size(53, 12);
             this.lblCUserID.TabIndex = 0;
             this.lblCUserID.Text = "用户ID：";
             // 
             // btnStartByCurrent
             // 
-            this.btnStartByCurrent.Location = new System.Drawing.Point( 6, 39 );
+            this.btnStartByCurrent.Location = new System.Drawing.Point(6, 18);
             this.btnStartByCurrent.Name = "btnStartByCurrent";
-            this.btnStartByCurrent.Size = new System.Drawing.Size( 225, 30 );
-            this.btnStartByCurrent.TabIndex = 10;
+            this.btnStartByCurrent.Size = new System.Drawing.Size(225, 30);
+            this.btnStartByCurrent.TabIndex = 17;
             this.btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
             this.btnStartByCurrent.UseVisualStyleBackColor = true;
-            this.btnStartByCurrent.Click += new System.EventHandler( this.btnStartByCurrent_Click );
+            this.btnStartByCurrent.Click += new System.EventHandler(this.btnStartByCurrent_Click);
             // 
             // grpSearch
             // 
             this.grpSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.grpSearch.Controls.Add( this.grpSearchCondition );
-            this.grpSearch.Controls.Add( this.grpUserInfo );
-            this.grpSearch.Location = new System.Drawing.Point( 4, 76 );
+            this.grpSearch.Controls.Add(this.grpSearchCondition);
+            this.grpSearch.Controls.Add(this.grpUserInfo);
+            this.grpSearch.Location = new System.Drawing.Point(4, 76);
             this.grpSearch.Name = "grpSearch";
-            this.grpSearch.Size = new System.Drawing.Size( 827, 151 );
+            this.grpSearch.Size = new System.Drawing.Size(827, 151);
             this.grpSearch.TabIndex = 10;
             this.grpSearch.TabStop = false;
             this.grpSearch.Text = "搜索用户";
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point( 453, 690 );
+            this.btnExit.Location = new System.Drawing.Point(453, 678);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size( 170, 23 );
-            this.btnExit.TabIndex = 11;
+            this.btnExit.Size = new System.Drawing.Size(170, 23);
+            this.btnExit.TabIndex = 22;
             this.btnExit.Text = "退出程序";
             this.btnExit.UseVisualStyleBackColor = true;
-            this.btnExit.Click += new System.EventHandler( this.btnExit_Click );
+            this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
             // grpControl
             // 
-            this.grpControl.Controls.Add( this.btnPauseContinue );
-            this.grpControl.Controls.Add( this.lblPreLoad );
-            this.grpControl.Controls.Add( this.rdPreLoadAllUserID );
-            this.grpControl.Controls.Add( this.rdPreLoadUserID );
-            this.grpControl.Controls.Add( this.rdNoPreLoad );
-            this.grpControl.Controls.Add( this.btnStartByCurrent );
-            this.grpControl.Controls.Add( this.btnStartBySearch );
-            this.grpControl.Controls.Add( this.btnStartByLast );
-            this.grpControl.Location = new System.Drawing.Point( 5, 407 );
+            this.grpControl.Controls.Add(this.btnPauseContinue);
+            this.grpControl.Controls.Add(this.btnStartByCurrent);
+            this.grpControl.Controls.Add(this.btnStartBySearch);
+            this.grpControl.Controls.Add(this.btnStartByLast);
+            this.grpControl.Location = new System.Drawing.Point(5, 407);
             this.grpControl.Name = "grpControl";
-            this.grpControl.Size = new System.Drawing.Size( 827, 77 );
+            this.grpControl.Size = new System.Drawing.Size(827, 61);
             this.grpControl.TabIndex = 14;
             this.grpControl.TabStop = false;
             this.grpControl.Text = "爬虫控制";
@@ -478,98 +470,53 @@
             // btnPauseContinue
             // 
             this.btnPauseContinue.Enabled = false;
-            this.btnPauseContinue.Location = new System.Drawing.Point( 699, 39 );
+            this.btnPauseContinue.Location = new System.Drawing.Point(699, 18);
             this.btnPauseContinue.Name = "btnPauseContinue";
-            this.btnPauseContinue.Size = new System.Drawing.Size( 120, 30 );
-            this.btnPauseContinue.TabIndex = 16;
+            this.btnPauseContinue.Size = new System.Drawing.Size(120, 30);
+            this.btnPauseContinue.TabIndex = 20;
             this.btnPauseContinue.Text = "暂停/继续";
             this.btnPauseContinue.UseVisualStyleBackColor = true;
-            this.btnPauseContinue.Click += new System.EventHandler( this.btnPauseContinue_Click );
-            // 
-            // lblPreLoad
-            // 
-            this.lblPreLoad.AutoSize = true;
-            this.lblPreLoad.Location = new System.Drawing.Point( 23, 19 );
-            this.lblPreLoad.Name = "lblPreLoad";
-            this.lblPreLoad.Size = new System.Drawing.Size( 125, 12 );
-            this.lblPreLoad.TabIndex = 15;
-            this.lblPreLoad.Text = "预加载用户队列选项：";
-            this.lblPreLoad.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // rdPreLoadAllUserID
-            // 
-            this.rdPreLoadAllUserID.AutoSize = true;
-            this.rdPreLoadAllUserID.Location = new System.Drawing.Point( 523, 15 );
-            this.rdPreLoadAllUserID.Name = "rdPreLoadAllUserID";
-            this.rdPreLoadAllUserID.Size = new System.Drawing.Size( 239, 16 );
-            this.rdPreLoadAllUserID.TabIndex = 14;
-            this.rdPreLoadAllUserID.Text = "从数据库全范围内预加载用户队列（慢）";
-            this.rdPreLoadAllUserID.UseVisualStyleBackColor = true;
-            this.rdPreLoadAllUserID.Click += new System.EventHandler( this.rdPreLoadAllUserID_Click );
-            // 
-            // rdPreLoadUserID
-            // 
-            this.rdPreLoadUserID.AutoSize = true;
-            this.rdPreLoadUserID.Location = new System.Drawing.Point( 314, 15 );
-            this.rdPreLoadUserID.Name = "rdPreLoadUserID";
-            this.rdPreLoadUserID.Size = new System.Drawing.Size( 203, 16 );
-            this.rdPreLoadUserID.TabIndex = 13;
-            this.rdPreLoadUserID.Text = "从用户表预加载用户队列（较快）";
-            this.rdPreLoadUserID.UseVisualStyleBackColor = true;
-            this.rdPreLoadUserID.Click += new System.EventHandler( this.rdPreLoadUserID_Click );
-            // 
-            // rdNoPreLoad
-            // 
-            this.rdNoPreLoad.AutoSize = true;
-            this.rdNoPreLoad.Checked = true;
-            this.rdNoPreLoad.Location = new System.Drawing.Point( 153, 15 );
-            this.rdNoPreLoad.Name = "rdNoPreLoad";
-            this.rdNoPreLoad.Size = new System.Drawing.Size( 155, 16 );
-            this.rdNoPreLoad.TabIndex = 12;
-            this.rdNoPreLoad.TabStop = true;
-            this.rdNoPreLoad.Text = "不预加载用户队列（快）";
-            this.rdNoPreLoad.UseVisualStyleBackColor = true;
-            this.rdNoPreLoad.Click += new System.EventHandler( this.rdNoPreLoad_Click );
+            this.btnPauseContinue.Click += new System.EventHandler(this.btnPauseContinue_Click);
             // 
             // gpSetting
             // 
-            this.gpSetting.Controls.Add( this.btnLoad );
-            this.gpSetting.Controls.Add( this.grpDBSettings );
-            this.gpSetting.Controls.Add( this.grpQueueLength );
-            this.gpSetting.Controls.Add( this.btnDefault );
-            this.gpSetting.Controls.Add( this.btnSave );
-            this.gpSetting.Location = new System.Drawing.Point( 5, 232 );
+            this.gpSetting.Controls.Add(this.btnLoad);
+            this.gpSetting.Controls.Add(this.grpDBSettings);
+            this.gpSetting.Controls.Add(this.grpQueueLength);
+            this.gpSetting.Controls.Add(this.btnDefault);
+            this.gpSetting.Controls.Add(this.btnSave);
+            this.gpSetting.Location = new System.Drawing.Point(5, 232);
             this.gpSetting.Name = "gpSetting";
-            this.gpSetting.Size = new System.Drawing.Size( 826, 170 );
+            this.gpSetting.Size = new System.Drawing.Size(826, 170);
             this.gpSetting.TabIndex = 15;
             this.gpSetting.TabStop = false;
             this.gpSetting.Text = "设置（改变设置后请点击“保存”）";
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point( 741, 111 );
+            this.btnLoad.Location = new System.Drawing.Point(741, 111);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size( 75, 23 );
-            this.btnLoad.TabIndex = 14;
+            this.btnLoad.Size = new System.Drawing.Size(75, 23);
+            this.btnLoad.TabIndex = 12;
             this.btnLoad.Text = "加载最新值";
             this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler( this.btnLoad_Click );
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // grpDBSettings
             // 
-            this.grpDBSettings.Controls.Add( this.txtDBName );
-            this.grpDBSettings.Controls.Add( this.lblDBName );
-            this.grpDBSettings.Controls.Add( this.drplstDBType );
-            this.grpDBSettings.Controls.Add( this.txtDBPwd );
-            this.grpDBSettings.Controls.Add( this.txtDBUserName );
-            this.grpDBSettings.Controls.Add( this.txtDBServer );
-            this.grpDBSettings.Controls.Add( this.lblDBType );
-            this.grpDBSettings.Controls.Add( this.lblDBUserName );
-            this.grpDBSettings.Controls.Add( this.lblDBServer );
-            this.grpDBSettings.Controls.Add( this.lblDBPwd );
-            this.grpDBSettings.Location = new System.Drawing.Point( 10, 85 );
+            this.grpDBSettings.Controls.Add(this.txtDBName);
+            this.grpDBSettings.Controls.Add(this.lblDBName);
+            this.grpDBSettings.Controls.Add(this.drplstDBType);
+            this.grpDBSettings.Controls.Add(this.txtDBPwd);
+            this.grpDBSettings.Controls.Add(this.txtDBUserName);
+            this.grpDBSettings.Controls.Add(this.txtDBServer);
+            this.grpDBSettings.Controls.Add(this.lblDBType);
+            this.grpDBSettings.Controls.Add(this.lblDBUserName);
+            this.grpDBSettings.Controls.Add(this.lblDBServer);
+            this.grpDBSettings.Controls.Add(this.lblDBPwd);
+            this.grpDBSettings.Location = new System.Drawing.Point(10, 85);
             this.grpDBSettings.Name = "grpDBSettings";
-            this.grpDBSettings.Size = new System.Drawing.Size( 725, 78 );
+            this.grpDBSettings.Size = new System.Drawing.Size(725, 78);
             this.grpDBSettings.TabIndex = 13;
             this.grpDBSettings.TabStop = false;
             this.grpDBSettings.Text = "数据库设置";
@@ -577,18 +524,18 @@
             // txtDBName
             // 
             this.txtDBName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBName.Location = new System.Drawing.Point( 562, 46 );
+            this.txtDBName.Location = new System.Drawing.Point(562, 46);
             this.txtDBName.MaxLength = 30;
             this.txtDBName.Name = "txtDBName";
-            this.txtDBName.Size = new System.Drawing.Size( 143, 21 );
-            this.txtDBName.TabIndex = 15;
+            this.txtDBName.Size = new System.Drawing.Size(143, 21);
+            this.txtDBName.TabIndex = 10;
             // 
             // lblDBName
             // 
             this.lblDBName.AutoSize = true;
-            this.lblDBName.Location = new System.Drawing.Point( 502, 53 );
+            this.lblDBName.Location = new System.Drawing.Point(502, 53);
             this.lblDBName.Name = "lblDBName";
-            this.lblDBName.Size = new System.Drawing.Size( 65, 12 );
+            this.lblDBName.Size = new System.Drawing.Size(65, 12);
             this.lblDBName.TabIndex = 14;
             this.lblDBName.Text = "数据库名：";
             this.lblDBName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -597,85 +544,85 @@
             // 
             this.drplstDBType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.drplstDBType.FormattingEnabled = true;
-            this.drplstDBType.Items.AddRange( new object[] {
+            this.drplstDBType.Items.AddRange(new object[] {
             "SQL Server",
-            "Oracle"} );
-            this.drplstDBType.Location = new System.Drawing.Point( 101, 16 );
+            "Oracle"});
+            this.drplstDBType.Location = new System.Drawing.Point(101, 16);
             this.drplstDBType.Name = "drplstDBType";
-            this.drplstDBType.Size = new System.Drawing.Size( 121, 20 );
-            this.drplstDBType.TabIndex = 13;
+            this.drplstDBType.Size = new System.Drawing.Size(121, 20);
+            this.drplstDBType.TabIndex = 6;
             // 
             // txtDBPwd
             // 
             this.txtDBPwd.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBPwd.Location = new System.Drawing.Point( 326, 47 );
+            this.txtDBPwd.Location = new System.Drawing.Point(326, 47);
             this.txtDBPwd.MaxLength = 50;
             this.txtDBPwd.Name = "txtDBPwd";
             this.txtDBPwd.PasswordChar = '*';
-            this.txtDBPwd.Size = new System.Drawing.Size( 145, 21 );
-            this.txtDBPwd.TabIndex = 11;
+            this.txtDBPwd.Size = new System.Drawing.Size(145, 21);
+            this.txtDBPwd.TabIndex = 9;
             // 
             // txtDBUserName
             // 
             this.txtDBUserName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBUserName.Location = new System.Drawing.Point( 100, 47 );
+            this.txtDBUserName.Location = new System.Drawing.Point(100, 47);
             this.txtDBUserName.MaxLength = 20;
             this.txtDBUserName.Name = "txtDBUserName";
-            this.txtDBUserName.Size = new System.Drawing.Size( 123, 21 );
-            this.txtDBUserName.TabIndex = 10;
+            this.txtDBUserName.Size = new System.Drawing.Size(123, 21);
+            this.txtDBUserName.TabIndex = 8;
             // 
             // txtDBServer
             // 
             this.txtDBServer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtDBServer.Location = new System.Drawing.Point( 438, 16 );
+            this.txtDBServer.Location = new System.Drawing.Point(438, 16);
             this.txtDBServer.Name = "txtDBServer";
-            this.txtDBServer.Size = new System.Drawing.Size( 145, 21 );
-            this.txtDBServer.TabIndex = 9;
+            this.txtDBServer.Size = new System.Drawing.Size(145, 21);
+            this.txtDBServer.TabIndex = 7;
             // 
             // lblDBType
             // 
             this.lblDBType.AutoSize = true;
-            this.lblDBType.Location = new System.Drawing.Point( 27, 20 );
+            this.lblDBType.Location = new System.Drawing.Point(27, 20);
             this.lblDBType.Name = "lblDBType";
-            this.lblDBType.Size = new System.Drawing.Size( 77, 12 );
+            this.lblDBType.Size = new System.Drawing.Size(77, 12);
             this.lblDBType.TabIndex = 12;
             this.lblDBType.Text = "数据库类型：";
             // 
             // lblDBUserName
             // 
             this.lblDBUserName.AutoSize = true;
-            this.lblDBUserName.Location = new System.Drawing.Point( 15, 53 );
+            this.lblDBUserName.Location = new System.Drawing.Point(15, 53);
             this.lblDBUserName.Name = "lblDBUserName";
-            this.lblDBUserName.Size = new System.Drawing.Size( 89, 12 );
+            this.lblDBUserName.Size = new System.Drawing.Size(89, 12);
             this.lblDBUserName.TabIndex = 7;
             this.lblDBUserName.Text = "数据库用户名：";
             // 
             // lblDBServer
             // 
             this.lblDBServer.AutoSize = true;
-            this.lblDBServer.Location = new System.Drawing.Point( 350, 20 );
+            this.lblDBServer.Location = new System.Drawing.Point(350, 20);
             this.lblDBServer.Name = "lblDBServer";
-            this.lblDBServer.Size = new System.Drawing.Size( 89, 12 );
+            this.lblDBServer.Size = new System.Drawing.Size(89, 12);
             this.lblDBServer.TabIndex = 6;
             this.lblDBServer.Text = "数据库服务器：";
             // 
             // lblDBPwd
             // 
             this.lblDBPwd.AutoSize = true;
-            this.lblDBPwd.Location = new System.Drawing.Point( 252, 53 );
+            this.lblDBPwd.Location = new System.Drawing.Point(252, 53);
             this.lblDBPwd.Name = "lblDBPwd";
-            this.lblDBPwd.Size = new System.Drawing.Size( 77, 12 );
+            this.lblDBPwd.Size = new System.Drawing.Size(77, 12);
             this.lblDBPwd.TabIndex = 8;
             this.lblDBPwd.Text = "数据库密码：";
             // 
             // grpQueueLength
             // 
-            this.grpQueueLength.Controls.Add( this.lblQueueLength );
-            this.grpQueueLength.Controls.Add( this.tbQueueLength );
-            this.grpQueueLength.Controls.Add( this.numQueueLength );
-            this.grpQueueLength.Location = new System.Drawing.Point( 10, 20 );
+            this.grpQueueLength.Controls.Add(this.lblQueueLength);
+            this.grpQueueLength.Controls.Add(this.tbQueueLength);
+            this.grpQueueLength.Controls.Add(this.numQueueLength);
+            this.grpQueueLength.Location = new System.Drawing.Point(10, 20);
             this.grpQueueLength.Name = "grpQueueLength";
-            this.grpQueueLength.Size = new System.Drawing.Size( 725, 61 );
+            this.grpQueueLength.Size = new System.Drawing.Size(725, 61);
             this.grpQueueLength.TabIndex = 12;
             this.grpQueueLength.TabStop = false;
             this.grpQueueLength.Text = "队列长度";
@@ -683,100 +630,100 @@
             // lblQueueLength
             // 
             this.lblQueueLength.AutoSize = true;
-            this.lblQueueLength.Location = new System.Drawing.Point( 8, 26 );
+            this.lblQueueLength.Location = new System.Drawing.Point(8, 26);
             this.lblQueueLength.Name = "lblQueueLength";
-            this.lblQueueLength.Size = new System.Drawing.Size( 281, 12 );
+            this.lblQueueLength.Size = new System.Drawing.Size(281, 12);
             this.lblQueueLength.TabIndex = 0;
             this.lblQueueLength.Text = "内存队列长度（较大值提高性能，但占内存较多）：";
             // 
             // tbQueueLength
             // 
             this.tbQueueLength.LargeChange = 100;
-            this.tbQueueLength.Location = new System.Drawing.Point( 284, 16 );
+            this.tbQueueLength.Location = new System.Drawing.Point(284, 16);
             this.tbQueueLength.Maximum = 100000;
             this.tbQueueLength.Minimum = 1;
             this.tbQueueLength.Name = "tbQueueLength";
-            this.tbQueueLength.Size = new System.Drawing.Size( 367, 42 );
+            this.tbQueueLength.Size = new System.Drawing.Size(367, 42);
             this.tbQueueLength.SmallChange = 100;
             this.tbQueueLength.TabIndex = 4;
             this.tbQueueLength.TickFrequency = 1000;
             this.tbQueueLength.Value = 5000;
-            this.tbQueueLength.ValueChanged += new System.EventHandler( this.tbQueueLength_ValueChanged );
+            this.tbQueueLength.ValueChanged += new System.EventHandler(this.tbQueueLength_ValueChanged);
             // 
             // numQueueLength
             // 
-            this.numQueueLength.Location = new System.Drawing.Point( 652, 22 );
-            this.numQueueLength.Maximum = new decimal( new int[] {
+            this.numQueueLength.Location = new System.Drawing.Point(652, 22);
+            this.numQueueLength.Maximum = new decimal(new int[] {
             100000,
             0,
             0,
-            0} );
-            this.numQueueLength.Minimum = new decimal( new int[] {
+            0});
+            this.numQueueLength.Minimum = new decimal(new int[] {
             1,
             0,
             0,
-            0} );
+            0});
             this.numQueueLength.Name = "numQueueLength";
-            this.numQueueLength.Size = new System.Drawing.Size( 62, 21 );
+            this.numQueueLength.Size = new System.Drawing.Size(62, 21);
             this.numQueueLength.TabIndex = 5;
             this.numQueueLength.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numQueueLength.Value = new decimal( new int[] {
+            this.numQueueLength.Value = new decimal(new int[] {
             5000,
             0,
             0,
-            0} );
-            this.numQueueLength.ValueChanged += new System.EventHandler( this.numQueueLength_ValueChanged );
+            0});
+            this.numQueueLength.ValueChanged += new System.EventHandler(this.numQueueLength_ValueChanged);
             // 
             // btnDefault
             // 
-            this.btnDefault.Location = new System.Drawing.Point( 741, 82 );
+            this.btnDefault.Location = new System.Drawing.Point(741, 82);
             this.btnDefault.Name = "btnDefault";
-            this.btnDefault.Size = new System.Drawing.Size( 75, 23 );
-            this.btnDefault.TabIndex = 3;
+            this.btnDefault.Size = new System.Drawing.Size(75, 23);
+            this.btnDefault.TabIndex = 11;
             this.btnDefault.Text = "加载默认值";
             this.btnDefault.UseVisualStyleBackColor = true;
-            this.btnDefault.Click += new System.EventHandler( this.btnDefault_Click );
+            this.btnDefault.Click += new System.EventHandler(this.btnDefault_Click);
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point( 741, 140 );
+            this.btnSave.Location = new System.Drawing.Point(741, 140);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size( 75, 23 );
-            this.btnSave.TabIndex = 2;
+            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.TabIndex = 13;
             this.btnSave.Text = "保存";
             this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler( this.btnSave_Click );
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // lblUserInfoTitle
             // 
             this.lblUserInfoTitle.AutoSize = true;
-            this.lblUserInfoTitle.Location = new System.Drawing.Point( 11, 20 );
+            this.lblUserInfoTitle.Location = new System.Drawing.Point(11, 20);
             this.lblUserInfoTitle.Name = "lblUserInfoTitle";
-            this.lblUserInfoTitle.Size = new System.Drawing.Size( 125, 12 );
+            this.lblUserInfoTitle.Size = new System.Drawing.Size(125, 12);
             this.lblUserInfoTitle.TabIndex = 16;
             this.lblUserInfoTitle.Text = "用户信息机器人状态：";
             this.lblUserInfoTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // grpStatus
             // 
-            this.grpStatus.Controls.Add( this.lblCommentQueueInfo );
-            this.grpStatus.Controls.Add( this.lblStatusQueueInfo );
-            this.grpStatus.Controls.Add( this.lblUserRelationQueueInfo );
-            this.grpStatus.Controls.Add( this.lblTagQueueInfo );
-            this.grpStatus.Controls.Add( this.lblUserInfoQueueInfo );
-            this.grpStatus.Controls.Add( this.lblCommentMessage );
-            this.grpStatus.Controls.Add( this.lblCommentTitle );
-            this.grpStatus.Controls.Add( this.lblStatusMessage );
-            this.grpStatus.Controls.Add( this.lblUserRelationMessage );
-            this.grpStatus.Controls.Add( this.lblTagMessage );
-            this.grpStatus.Controls.Add( this.lblUserInfoMessage );
-            this.grpStatus.Controls.Add( this.lblUserRelationTitle );
-            this.grpStatus.Controls.Add( this.lblTagTitle );
-            this.grpStatus.Controls.Add( this.lblStatusTitle );
-            this.grpStatus.Controls.Add( this.lblUserInfoTitle );
-            this.grpStatus.Location = new System.Drawing.Point( 5, 487 );
+            this.grpStatus.Controls.Add(this.lblCommentQueueInfo);
+            this.grpStatus.Controls.Add(this.lblStatusQueueInfo);
+            this.grpStatus.Controls.Add(this.lblUserTagQueueInfo);
+            this.grpStatus.Controls.Add(this.lblUserRelationQueueInfo);
+            this.grpStatus.Controls.Add(this.lblUserInfoQueueInfo);
+            this.grpStatus.Controls.Add(this.lblCommentMessage);
+            this.grpStatus.Controls.Add(this.lblCommentTitle);
+            this.grpStatus.Controls.Add(this.lblStatusMessage);
+            this.grpStatus.Controls.Add(this.lblUserTagMessage);
+            this.grpStatus.Controls.Add(this.lblUserRelationMessage);
+            this.grpStatus.Controls.Add(this.lblUserTagTitle);
+            this.grpStatus.Controls.Add(this.lblUserInfoMessage);
+            this.grpStatus.Controls.Add(this.lblUserRelationTitle);
+            this.grpStatus.Controls.Add(this.lblStatusTitle);
+            this.grpStatus.Controls.Add(this.lblUserInfoTitle);
+            this.grpStatus.Location = new System.Drawing.Point(5, 471);
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size( 827, 185 );
+            this.grpStatus.Size = new System.Drawing.Size(827, 186);
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "爬虫状态（详细内容见日志文件）";
@@ -784,45 +731,54 @@
             // lblCommentQueueInfo
             // 
             this.lblCommentQueueInfo.AutoSize = true;
-            this.lblCommentQueueInfo.Location = new System.Drawing.Point( 11, 166 );
+            this.lblCommentQueueInfo.Location = new System.Drawing.Point(11, 166);
             this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
-            this.lblCommentQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblCommentQueueInfo.Size = new System.Drawing.Size(341, 12);
             this.lblCommentQueueInfo.TabIndex = 24;
             this.lblCommentQueueInfo.Text = "评论机器人的内存队列中有0条微博，数据库队列中有0条微博。";
             // 
             // lblStatusQueueInfo
             // 
             this.lblStatusQueueInfo.AutoSize = true;
-            this.lblStatusQueueInfo.Location = new System.Drawing.Point( 11, 150 );
+            this.lblStatusQueueInfo.Location = new System.Drawing.Point(11, 150);
             this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
-            this.lblStatusQueueInfo.Size = new System.Drawing.Size( 341, 12 );
+            this.lblStatusQueueInfo.Size = new System.Drawing.Size(341, 12);
             this.lblStatusQueueInfo.TabIndex = 23;
             this.lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            // 
+            // lblUserTagQueueInfo
+            // 
+            this.lblUserTagQueueInfo.AutoSize = true;
+            this.lblUserTagQueueInfo.Location = new System.Drawing.Point(11, 134);
+            this.lblUserTagQueueInfo.Name = "lblUserTagQueueInfo";
+            this.lblUserTagQueueInfo.Size = new System.Drawing.Size(365, 12);
+            this.lblUserTagQueueInfo.TabIndex = 22;
+            this.lblUserTagQueueInfo.Text = "用户标签机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // lblUserRelationQueueInfo
             // 
             this.lblUserRelationQueueInfo.AutoSize = true;
-            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point( 11, 134 );
+            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point(11, 118);
             this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
-            this.lblUserRelationQueueInfo.Size = new System.Drawing.Size( 365, 12 );
+            this.lblUserRelationQueueInfo.Size = new System.Drawing.Size(365, 12);
             this.lblUserRelationQueueInfo.TabIndex = 22;
             this.lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // lblUserInfoQueueInfo
             // 
             this.lblUserInfoQueueInfo.AutoSize = true;
-            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point( 11, 102 );
+            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point(11, 102);
             this.lblUserInfoQueueInfo.Name = "lblUserInfoQueueInfo";
-            this.lblUserInfoQueueInfo.Size = new System.Drawing.Size( 365, 12 );
+            this.lblUserInfoQueueInfo.Size = new System.Drawing.Size(365, 12);
             this.lblUserInfoQueueInfo.TabIndex = 22;
             this.lblUserInfoQueueInfo.Text = "用户信息机器人的内存队列中有0个用户，数据库队列中有0个用户。";
             // 
             // lblCommentMessage
             // 
             this.lblCommentMessage.AutoSize = true;
-            this.lblCommentMessage.Location = new System.Drawing.Point( 130, 84 );
+            this.lblCommentMessage.Location = new System.Drawing.Point(130, 84);
             this.lblCommentMessage.Name = "lblCommentMessage";
-            this.lblCommentMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblCommentMessage.Size = new System.Drawing.Size(41, 12);
             this.lblCommentMessage.TabIndex = 21;
             this.lblCommentMessage.Text = "停止。";
             this.lblCommentMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -830,9 +786,9 @@
             // lblCommentTitle
             // 
             this.lblCommentTitle.AutoSize = true;
-            this.lblCommentTitle.Location = new System.Drawing.Point( 35, 84 );
+            this.lblCommentTitle.Location = new System.Drawing.Point(35, 84);
             this.lblCommentTitle.Name = "lblCommentTitle";
-            this.lblCommentTitle.Size = new System.Drawing.Size( 101, 12 );
+            this.lblCommentTitle.Size = new System.Drawing.Size(101, 12);
             this.lblCommentTitle.TabIndex = 20;
             this.lblCommentTitle.Text = "评论机器人状态：";
             this.lblCommentTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -840,29 +796,49 @@
             // lblStatusMessage
             // 
             this.lblStatusMessage.AutoSize = true;
-            this.lblStatusMessage.Location = new System.Drawing.Point( 130, 68 );
+            this.lblStatusMessage.Location = new System.Drawing.Point(130, 68);
             this.lblStatusMessage.Name = "lblStatusMessage";
-            this.lblStatusMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblStatusMessage.Size = new System.Drawing.Size(41, 12);
             this.lblStatusMessage.TabIndex = 17;
             this.lblStatusMessage.Text = "停止。";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblUserTagMessage
+            // 
+            this.lblUserTagMessage.AutoSize = true;
+            this.lblUserTagMessage.Location = new System.Drawing.Point(130, 52);
+            this.lblUserTagMessage.Name = "lblUserTagMessage";
+            this.lblUserTagMessage.Size = new System.Drawing.Size(41, 12);
+            this.lblUserTagMessage.TabIndex = 17;
+            this.lblUserTagMessage.Text = "停止。";
+            this.lblUserTagMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // lblUserRelationMessage
             // 
             this.lblUserRelationMessage.AutoSize = true;
-            this.lblUserRelationMessage.Location = new System.Drawing.Point( 130, 52 );
+            this.lblUserRelationMessage.Location = new System.Drawing.Point(130, 36);
             this.lblUserRelationMessage.Name = "lblUserRelationMessage";
-            this.lblUserRelationMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblUserRelationMessage.Size = new System.Drawing.Size(41, 12);
             this.lblUserRelationMessage.TabIndex = 17;
             this.lblUserRelationMessage.Text = "停止。";
             this.lblUserRelationMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // lblUserTagTitle
+            // 
+            this.lblUserTagTitle.AutoSize = true;
+            this.lblUserTagTitle.Location = new System.Drawing.Point(11, 52);
+            this.lblUserTagTitle.Name = "lblUserTagTitle";
+            this.lblUserTagTitle.Size = new System.Drawing.Size(125, 12);
+            this.lblUserTagTitle.TabIndex = 16;
+            this.lblUserTagTitle.Text = "用户标签机器人状态：";
+            this.lblUserTagTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
             // lblUserInfoMessage
             // 
             this.lblUserInfoMessage.AutoSize = true;
-            this.lblUserInfoMessage.Location = new System.Drawing.Point( 130, 20 );
+            this.lblUserInfoMessage.Location = new System.Drawing.Point(130, 20);
             this.lblUserInfoMessage.Name = "lblUserInfoMessage";
-            this.lblUserInfoMessage.Size = new System.Drawing.Size( 41, 12 );
+            this.lblUserInfoMessage.Size = new System.Drawing.Size(41, 12);
             this.lblUserInfoMessage.TabIndex = 17;
             this.lblUserInfoMessage.Text = "停止。";
             this.lblUserInfoMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -870,9 +846,9 @@
             // lblUserRelationTitle
             // 
             this.lblUserRelationTitle.AutoSize = true;
-            this.lblUserRelationTitle.Location = new System.Drawing.Point( 11, 52 );
+            this.lblUserRelationTitle.Location = new System.Drawing.Point(11, 36);
             this.lblUserRelationTitle.Name = "lblUserRelationTitle";
-            this.lblUserRelationTitle.Size = new System.Drawing.Size( 125, 12 );
+            this.lblUserRelationTitle.Size = new System.Drawing.Size(125, 12);
             this.lblUserRelationTitle.TabIndex = 16;
             this.lblUserRelationTitle.Text = "用户关系机器人状态：";
             this.lblUserRelationTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -880,91 +856,61 @@
             // lblStatusTitle
             // 
             this.lblStatusTitle.AutoSize = true;
-            this.lblStatusTitle.Location = new System.Drawing.Point( 35, 68 );
+            this.lblStatusTitle.Location = new System.Drawing.Point(35, 68);
             this.lblStatusTitle.Name = "lblStatusTitle";
-            this.lblStatusTitle.Size = new System.Drawing.Size( 101, 12 );
+            this.lblStatusTitle.Size = new System.Drawing.Size(101, 12);
             this.lblStatusTitle.TabIndex = 16;
             this.lblStatusTitle.Text = "微博机器人状态：";
             this.lblStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point( 212, 690 );
+            this.btnPost.Location = new System.Drawing.Point(212, 678);
             this.btnPost.Name = "btnPost";
-            this.btnPost.Size = new System.Drawing.Size( 170, 23 );
-            this.btnPost.TabIndex = 18;
+            this.btnPost.Size = new System.Drawing.Size(170, 23);
+            this.btnPost.TabIndex = 21;
             this.btnPost.Text = "发一条微博帮忙推广：）3Q";
             this.btnPost.UseVisualStyleBackColor = true;
-            this.btnPost.Click += new System.EventHandler( this.btnPost_Click );
-            // 
-            // lblTagTitle
-            // 
-            this.lblTagTitle.AutoSize = true;
-            this.lblTagTitle.Location = new System.Drawing.Point( 35, 36 );
-            this.lblTagTitle.Name = "lblTagTitle";
-            this.lblTagTitle.Size = new System.Drawing.Size( 101, 12 );
-            this.lblTagTitle.TabIndex = 16;
-            this.lblTagTitle.Text = "标签机器人状态：";
-            this.lblTagTitle.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // lblTagMessage
-            // 
-            this.lblTagMessage.AutoSize = true;
-            this.lblTagMessage.Location = new System.Drawing.Point( 130, 36 );
-            this.lblTagMessage.Name = "lblTagMessage";
-            this.lblTagMessage.Size = new System.Drawing.Size( 41, 12 );
-            this.lblTagMessage.TabIndex = 17;
-            this.lblTagMessage.Text = "停止。";
-            this.lblTagMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // lblTagQueueInfo
-            // 
-            this.lblTagQueueInfo.AutoSize = true;
-            this.lblTagQueueInfo.Location = new System.Drawing.Point( 11, 118 );
-            this.lblTagQueueInfo.Name = "lblTagQueueInfo";
-            this.lblTagQueueInfo.Size = new System.Drawing.Size( 341, 12 );
-            this.lblTagQueueInfo.TabIndex = 22;
-            this.lblTagQueueInfo.Text = "标签机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            this.btnPost.Click += new System.EventHandler(this.btnPost_Click);
             // 
             // frmMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size( 837, 733 );
-            this.Controls.Add( this.btnPost );
-            this.Controls.Add( this.grpStatus );
-            this.Controls.Add( this.gpSetting );
-            this.Controls.Add( this.grpControl );
-            this.Controls.Add( this.btnExit );
-            this.Controls.Add( this.grpSearch );
-            this.Controls.Add( this.grpCurrentUser );
+            this.ClientSize = new System.Drawing.Size(837, 716);
+            this.Controls.Add(this.btnPost);
+            this.Controls.Add(this.grpStatus);
+            this.Controls.Add(this.gpSetting);
+            this.Controls.Add(this.grpControl);
+            this.Controls.Add(this.btnExit);
+            this.Controls.Add(this.grpSearch);
+            this.Controls.Add(this.grpCurrentUser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject( "$this.Icon" )));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "新浪微博爬虫";
-            this.Load += new System.EventHandler( this.frmMain_Load );
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler( this.frmMain_FormClosing );
-            this.grpUserInfo.ResumeLayout( false );
+            this.Load += new System.EventHandler(this.frmMain_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.grpUserInfo.ResumeLayout(false);
             this.grpUserInfo.PerformLayout();
-            this.grpSearchCondition.ResumeLayout( false );
+            this.grpSearchCondition.ResumeLayout(false);
             this.grpSearchCondition.PerformLayout();
-            this.grpCurrentUser.ResumeLayout( false );
+            this.grpCurrentUser.ResumeLayout(false);
             this.grpCurrentUser.PerformLayout();
-            this.grpSearch.ResumeLayout( false );
-            this.grpControl.ResumeLayout( false );
-            this.grpControl.PerformLayout();
-            this.gpSetting.ResumeLayout( false );
-            this.grpDBSettings.ResumeLayout( false );
+            this.grpSearch.ResumeLayout(false);
+            this.grpControl.ResumeLayout(false);
+            this.gpSetting.ResumeLayout(false);
+            this.grpDBSettings.ResumeLayout(false);
             this.grpDBSettings.PerformLayout();
-            this.grpQueueLength.ResumeLayout( false );
+            this.grpQueueLength.ResumeLayout(false);
             this.grpQueueLength.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQueueLength)).EndInit();
-            this.grpStatus.ResumeLayout( false );
+            this.grpStatus.ResumeLayout(false);
             this.grpStatus.PerformLayout();
-            this.ResumeLayout( false );
+            this.ResumeLayout(false);
 
         }
 
@@ -1028,10 +974,6 @@
         private System.Windows.Forms.Label lblDBName;
         private System.Windows.Forms.TextBox txtDBName;
         private System.Windows.Forms.Button btnPost;
-        private System.Windows.Forms.RadioButton rdPreLoadAllUserID;
-        private System.Windows.Forms.RadioButton rdPreLoadUserID;
-        private System.Windows.Forms.RadioButton rdNoPreLoad;
-        private System.Windows.Forms.Label lblPreLoad;
         private System.Windows.Forms.Button btnPauseContinue;
         private System.Windows.Forms.Label lblStatusMessage;
         private System.Windows.Forms.Label lblStatusTitle;
@@ -1043,9 +985,9 @@
         private System.Windows.Forms.Label lblUserRelationMessage;
         private System.Windows.Forms.Label lblUserRelationTitle;
         private System.Windows.Forms.Label lblUserRelationQueueInfo;
-        private System.Windows.Forms.Label lblTagQueueInfo;
-        private System.Windows.Forms.Label lblTagMessage;
-        private System.Windows.Forms.Label lblTagTitle;
+        private System.Windows.Forms.Label lblUserTagQueueInfo;
+        private System.Windows.Forms.Label lblUserTagMessage;
+        private System.Windows.Forms.Label lblUserTagTitle;
     }
 }
 

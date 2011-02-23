@@ -322,6 +322,7 @@ namespace Sina.Api
             webRequest = System.Net.WebRequest.Create(url) as HttpWebRequest;
             webRequest.Method = method.ToString();
             webRequest.ServicePoint.Expect100Continue = false;
+            webRequest.CookieContainer = new CookieContainer();
             //webRequest.UserAgent  = "Identify your application please.";
             //webRequest.Timeout = 20000;
 
