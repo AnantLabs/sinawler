@@ -15,6 +15,7 @@ namespace Sinawler
         ///默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
         ///后经测试，此值还可缩小。2010-10-11定为最小值2000，可调整
         ///2010-10-12定为不设下限
+        ///2011-02-23设定为下限500ms
         private int iSleep = 3000;
         private int iRemainingHits = 1000; //当前小时内剩余请求次数
         private int iResetTimeInSeconds = 3600; //剩余秒数

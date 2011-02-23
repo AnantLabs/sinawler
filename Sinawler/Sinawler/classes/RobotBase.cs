@@ -79,6 +79,7 @@ namespace Sinawler
         }
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
+        //2011-02-23 改为间隔下限为500ms
         protected void AdjustFreq()
         {
             string strResult = api.check_hits_limit();
@@ -100,7 +101,8 @@ namespace Sinawler
             {
                 //计算
                 int iSleep = Convert.ToInt32( iResetTimeInSeconds * 1000 / iRemainingHits );
-                if (iSleep <= 0) iSleep = 1;
+                //if (iSleep <= 0) iSleep = 1;
+                if (iSleep < 500) iSleep = 500;
 
                 crawler.SleepTime = iSleep;
                 crawler.RemainingHits = iRemainingHits;
