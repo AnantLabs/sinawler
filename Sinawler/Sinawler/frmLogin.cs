@@ -11,12 +11,11 @@ namespace Sinawler
 {
     public partial class frmLogin : Form
     {
-        private SinaApiService _api;
+        private SinaApiService _api=GlobalPool.API;
 
-        public frmLogin(SinaApiService api)
+        public frmLogin()
         {
             InitializeComponent();
-            _api = api;
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

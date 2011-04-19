@@ -80,6 +80,7 @@ namespace Sinawler
 
         /// <summary>
         /// 取出队头，并放在队尾
+        /// because user buffer class does not have this operation, lstWaitingIDInDB is treated as long type here
         /// </summary>
         public long RollQueue () 
         {
@@ -89,7 +90,7 @@ namespace Sinawler
             lock (oLock)
             {
                 //从数据库队列缓存中移入元素
-                long lHead = lstWaitingIDInDB.FirstValue;
+                long lHead = Convert.ToInt64(lstWaitingIDInDB.FirstValue);
                 if (lHead > 0)
                 {
                     lstWaitingID.AddLast( lHead );

@@ -13,7 +13,7 @@ namespace Sinawler
 {
     public class RobotBase
     {
-        protected SinaApiService api;
+        protected SinaApiService api=GlobalPool.API;
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
         private string strLogMessage = "";          //日志内容
@@ -23,10 +23,9 @@ namespace Sinawler
         protected BackgroundWorker bwAsync = null;
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public RobotBase ( SinaApiService oAPI )
+        public RobotBase ()
         {
-            this.api = oAPI;
-            crawler = new SinaMBCrawler( this.api );            
+            crawler = new SinaMBCrawler();            
         }
 
         public bool AsyncCancelled
@@ -102,7 +101,7 @@ namespace Sinawler
                 //计算
                 int iSleep = Convert.ToInt32( iResetTimeInSeconds * 1000 / iRemainingHits );
                 //if (iSleep <= 0) iSleep = 1;
-                if (iSleep < 500) iSleep = 500;
+                if (iSleep < 500) iSleep = 500; //sleep at least 500ms
 
                 crawler.SleepTime = iSleep;
                 crawler.RemainingHits = iRemainingHits;

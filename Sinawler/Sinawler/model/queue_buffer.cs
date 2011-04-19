@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Sinawler.Model
 {
-    public enum QueueBufferFor { USER_INFO = 0, USER_RELATION = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4 };
+    public enum QueueBufferFor { USER_INFO = 0, USER_RELATION = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4, USER_BUFFER = 5 };
 
     /// <summary>
     /// 类QueueBuffer，当内存中的待爬行的UserID队列长度超过指定长度时，开始使用数据库保存队列。
@@ -18,17 +18,17 @@ namespace Sinawler.Model
     {
         private QueueBufferFor _target = QueueBufferFor.USER_INFO;
         private int iCount = 0;     //队列长度
-        private long lFirstValue = 0;   //首节点值
+        private Object oFirstValue = null;   //首节点值
 
-        public long FirstValue
+        public object FirstValue
         {
-            get { return lFirstValue; }
+            get { return oFirstValue; }
         }
 
         #region  成员方法
         ///构造函数
         ///<param name="target">要操作的目标</param>
-        public QueueBuffer ( QueueBufferFor target )
+        public QueueBuffer(QueueBufferFor target)
         {
             _target = target;
         }
@@ -36,36 +36,43 @@ namespace Sinawler.Model
         /// <summary>
         /// 从数据库中读取队头值
         /// </summary>
-        private void GetFirstValue ()
+        private void GetFirstValue()
         {
             Database db = DatabaseFactory.CreateDatabase();
             DataRow dr;
             switch (_target)
             {
                 case QueueBufferFor.USER_INFO:
-                    dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_userInfo order by enqueue_time" );
+                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userInfo order by enqueue_time");
                     if (dr == null) return;
-                    lFirstValue = Convert.ToInt64( dr["user_id"] );
+                    oFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.USER_RELATION:
-                    dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_userRelation order by enqueue_time" );
+                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userRelation order by enqueue_time");
                     if (dr == null) return;
-                    lFirstValue = Convert.ToInt64( dr["user_id"] );
+                    oFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.USER_TAG:
-                    dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_tag order by enqueue_time" );
+                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_tag order by enqueue_time");
                     if (dr == null) return;
-                    lFirstValue = Convert.ToInt64( dr["user_id"] );
+                    oFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.STATUS:
-                    dr = db.GetDataRow( "select top 1 user_id from queue_buffer_for_status order by enqueue_time" );
+                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_status order by enqueue_time");
                     if (dr == null) return;
-                    lFirstValue = Convert.ToInt64( dr["user_id"] );
+                    oFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.COMMENT:
-                    dr = db.GetDataRow( "select top 1 status_id from queue_buffer_for_comment order by enqueue_time" );
+                    dr = db.GetDataRow("select top 1 status_id from queue_buffer_for_comment order by enqueue_time");
                     if (dr == null) return;
-                    lFirstValue = Convert.ToInt64( dr["status_id"] );
+                    oFirstValue = Convert.ToInt64(dr["status_id"]);
+                    break;
+                case QueueBufferFor.USER_BUFFER:
+                    User user = new User();
+                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userBuffer order by enqueue_time");
+                    if (dr == null) return;
+                    if (user.GetModelFromUserBuffer(Convert.ToInt64(dr["user_id"])))
+                        oFirstValue = user;
                     break;
             }
         }
@@ -73,146 +80,167 @@ namespace Sinawler.Model
         /// <summary>
         /// 是否存在该记录
         /// </summary>
-        public bool Contains ( long id )
+        public bool Contains(Object obj)
         {
             Database db = DatabaseFactory.CreateDatabase();
             int count = 0;
-            switch (_target)
-            {
-                case QueueBufferFor.USER_INFO:
-                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_userInfo where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.USER_RELATION:
-                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_userRelation where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.USER_TAG:
-                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_tag where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.STATUS:
-                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_status where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.COMMENT:
-                    count = db.CountByExecuteSQLSelect( "select count(1) from queue_buffer_for_comment where status_id=" + id.ToString() );
-                    break;
-            }
+            if (obj.GetType() == typeof(Int64))
+                switch (_target)
+                {
+                    case QueueBufferFor.USER_INFO:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userInfo where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_RELATION:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userRelation where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_TAG:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_tag where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.STATUS:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_status where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.COMMENT:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_comment where status_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_BUFFER:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userBuffer where user_id=" + ((User)obj).user_id.ToString());
+                        break;
+                }
+            if (obj.GetType() == typeof(User) && _target == QueueBufferFor.USER_BUFFER)
+                count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userBuffer where user_id=" + ((User)obj).user_id.ToString());
             return count > 0;
         }
 
         /// <summary>
-        /// 一个ID入队（注意与Add函数在FirstValue处的区别）
+        /// 一个对象入队（注意与Add函数在FirstValue处的区别），该对象或者为ID，或者为模型类的实例
         /// </summary>
-        public void Enqueue ( long id )
+        public void Enqueue(Object obj)
         {
             Database db = DatabaseFactory.CreateDatabase();
             Hashtable htValues = new Hashtable();
 
-            htValues.Add( "enqueue_time", "'" + DateTime.Now.ToString() + "'" );
-            switch (_target)
+            htValues.Add("enqueue_time", "'" + DateTime.Now.ToString() + "'");
+
+            if (obj.GetType() == typeof(Int64))
+                switch (_target)
+                {
+                    case QueueBufferFor.USER_INFO:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_userInfo", htValues);
+                        break;
+                    case QueueBufferFor.USER_RELATION:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_userRelation", htValues);
+                        break;
+                    case QueueBufferFor.USER_TAG:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_tag", htValues);
+                        break;
+                    case QueueBufferFor.STATUS:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_status", htValues);
+                        break;
+                    case QueueBufferFor.COMMENT:
+                        htValues.Add("status_id", obj.ToString());
+                        db.Insert("queue_buffer_for_comment", htValues);
+                        break;
+                }
+            if (obj.GetType() == typeof(User) && _target == QueueBufferFor.USER_BUFFER)
             {
-                case QueueBufferFor.USER_INFO:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_userInfo", htValues );
-                    break;
-                case QueueBufferFor.USER_RELATION:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_userRelation", htValues );
-                    break;
-                case QueueBufferFor.USER_TAG:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_tag", htValues );
-                    break;
-                case QueueBufferFor.STATUS:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_status", htValues );
-                    break;
-                case QueueBufferFor.COMMENT:
-                    htValues.Add( "status_id", id );
-                    db.Insert( "queue_buffer_for_comment", htValues );
-                    break;
+                User user = (User)obj;
+                user.AddToUserBuffer();
             }
             iCount++;
             //更新新的队头值
             if (iCount == 1)
-                lFirstValue = id;
+                oFirstValue = obj;
         }
 
         /// <summary>
-        /// 队头UserID出队
+        /// 队头User出队
         /// </summary>
-        public long Dequeue ()
+        public Object Dequeue()
         {
             //先记录头节点,再删除头节点
-            long lResultID = lFirstValue;
-            this.Remove( lResultID );
-            return lResultID;
+            Object oResult = oFirstValue;
+            this.Remove(oResult);
+            return oResult;
         }
 
         /// <summary>
         /// 增加指定节点，带有入队时间，所以增加的节点可能在队列的任何位置（注意与Enqueue的区别）
         /// </summary>
-        public void Add ( long id, string enqueue_time )
+        public void Add(Object obj, string enqueue_time)
         {
             Database db = DatabaseFactory.CreateDatabase();
             Hashtable htValues = new Hashtable();
 
-            htValues.Add( "enqueue_time", "'" + enqueue_time + "'" );
-            switch (_target)
+            htValues.Add("enqueue_time", "'" + enqueue_time + "'");
+            if (obj.GetType() == typeof(Int64))
+                switch (_target)
+                {
+                    case QueueBufferFor.USER_INFO:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_userInfo", htValues);
+                        break;
+                    case QueueBufferFor.USER_RELATION:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_userRelation", htValues);
+                        break;
+                    case QueueBufferFor.USER_TAG:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_tag", htValues);
+                        break;
+                    case QueueBufferFor.STATUS:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_status", htValues);
+                        break;
+                    case QueueBufferFor.COMMENT:
+                        htValues.Add("status_id", obj.ToString());
+                        db.Insert("queue_buffer_for_comment", htValues);
+                        break;
+                }
+            if (obj.GetType() == typeof(User) && _target == QueueBufferFor.USER_BUFFER)
             {
-                case QueueBufferFor.USER_INFO:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_userInfo", htValues );
-                    break;
-                case QueueBufferFor.USER_RELATION:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_userRelation", htValues );
-                    break;
-                case QueueBufferFor.USER_TAG:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_tag", htValues );
-                    break;
-                case QueueBufferFor.STATUS:
-                    htValues.Add( "user_id", id );
-                    db.Insert( "queue_buffer_for_status", htValues );
-                    break;
-                case QueueBufferFor.COMMENT:
-                    htValues.Add( "status_id", id );
-                    db.Insert( "queue_buffer_for_comment", htValues );
-                    break;
+                User user = (User)obj;
+                user.AddToUserBuffer();
             }
             iCount++;
             //更新新的队头值
             if (iCount == 1)
-                lFirstValue = id;
-            else
-                GetFirstValue();
+                oFirstValue = obj;
         }
 
         /// <summary>
         /// 删除指定节点
         /// </summary>
-        public void Remove ( long id )
+        public void Remove(Object obj)
         {
             Database db = DatabaseFactory.CreateDatabase();
-            switch (_target)
-            {
-                case QueueBufferFor.USER_INFO:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_userInfo where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.USER_RELATION:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_userRelation where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.USER_TAG:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_tag where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.STATUS:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_status where user_id=" + id.ToString() );
-                    break;
-                case QueueBufferFor.COMMENT:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_comment where status_id=" + id.ToString() );
-                    break;
-            }
+            if (obj.GetType() == typeof(Int64))
+                switch (_target)
+                {
+                    case QueueBufferFor.USER_INFO:
+                        db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_RELATION:
+                        db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_TAG:
+                        db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.STATUS:
+                        db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.COMMENT:
+                        db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id=" + obj.ToString());
+                        break;
+                }
+            if (obj.GetType() == typeof(User) && _target == QueueBufferFor.USER_BUFFER)
+                db.CountByExecuteSQL("delete from queue_buffer_for_userBuffer where user_id=" + ((User)obj).user_id.ToString());
+
             iCount--;
-            if(lFirstValue==id)
+            if (oFirstValue.Equals(obj))
                 //更新新的队头值
                 GetFirstValue();
         }
@@ -220,29 +248,32 @@ namespace Sinawler.Model
         /// <summary>
         /// 清除数据
         /// </summary>
-        public void Clear ()
+        public void Clear()
         {
             Database db = DatabaseFactory.CreateDatabase();
             switch (_target)
             {
                 case QueueBufferFor.USER_INFO:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_userInfo" );
+                    db.CountByExecuteSQL("delete from queue_buffer_for_userInfo");
                     break;
                 case QueueBufferFor.USER_RELATION:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_userRelation" );
+                    db.CountByExecuteSQL("delete from queue_buffer_for_userRelation");
                     break;
                 case QueueBufferFor.USER_TAG:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_tag" );
+                    db.CountByExecuteSQL("delete from queue_buffer_for_tag");
                     break;
                 case QueueBufferFor.STATUS:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_status" );
+                    db.CountByExecuteSQL("delete from queue_buffer_for_status");
                     break;
                 case QueueBufferFor.COMMENT:
-                    db.CountByExecuteSQL( "delete from queue_buffer_for_comment" );
+                    db.CountByExecuteSQL("delete from queue_buffer_for_comment");
+                    break;
+                case QueueBufferFor.USER_BUFFER:
+                    db.CountByExecuteSQL("delete from queue_buffer_for_userBuffer");
                     break;
             }
             iCount = 0;
-            lFirstValue = 0;
+            oFirstValue = null;
         }
 
         public int Count
@@ -255,19 +286,22 @@ namespace Sinawler.Model
                     switch (_target)
                     {
                         case QueueBufferFor.USER_INFO:
-                            iCount = db.CountByExecuteSQLSelect( "select count(user_id) as cnt from queue_buffer_for_userInfo" );
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userInfo");
                             break;
                         case QueueBufferFor.USER_RELATION:
-                            iCount = db.CountByExecuteSQLSelect( "select count(user_id) as cnt from queue_buffer_for_userRelation" );
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userRelation");
                             break;
                         case QueueBufferFor.USER_TAG:
-                            iCount = db.CountByExecuteSQLSelect( "select count(user_id) as cnt from queue_buffer_for_tag" );
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_tag");
                             break;
                         case QueueBufferFor.STATUS:
-                            iCount = db.CountByExecuteSQLSelect( "select count(user_id) as cnt from queue_buffer_for_status" );
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_status");
                             break;
                         case QueueBufferFor.COMMENT:
-                            iCount = db.CountByExecuteSQLSelect( "select count(status_id) as cnt from queue_buffer_for_comment" );
+                            iCount = db.CountByExecuteSQLSelect("select count(status_id) as cnt from queue_buffer_for_comment");
+                            break;
+                        case QueueBufferFor.USER_BUFFER:
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userBuffer");
                             break;
                     }
                     if (iCount == -1) iCount = 0;

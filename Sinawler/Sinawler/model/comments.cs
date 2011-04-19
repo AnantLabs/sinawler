@@ -26,7 +26,7 @@ namespace Sinawler.Model
 		private long _comment_id;
 		private string _content;
 		private string _created_at;
-		private long _user_id;
+		private User _user=new User();
 		private long _status_id;
 		private int _iteration;
         private string _update_time;
@@ -55,12 +55,12 @@ namespace Sinawler.Model
 			get{return _created_at;}
 		}
 		/// <summary>
-		/// 评论人ID
+		/// 评论人
 		/// </summary>
-		public long user_id
+		public User user
 		{
-			set{ _user_id=value;}
-			get{return _user_id;}
+			set{ _user=value;}
+			get{return _user;}
 		}
 		/// <summary>
 		/// 评论的微博
@@ -127,7 +127,7 @@ namespace Sinawler.Model
                 htValues.Add( "comment_id", _comment_id );
                 htValues.Add( "created_at", "'" + _created_at + "'" );
                 htValues.Add( "content", "'" + _content.Replace( "'", "''" ) + "'" );
-                htValues.Add( "user_id", _user_id );
+                htValues.Add( "user_id", _user.user_id );
                 htValues.Add( "status_id", _status_id );
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );

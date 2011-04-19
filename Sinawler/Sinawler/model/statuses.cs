@@ -70,7 +70,7 @@ namespace Sinawler.Model
 		private string _thumbnail_pic="";
 		private string _bmiddle_pic="";
 		private string _original_pic="";
-		private long _user_id;
+		private User _user=new User();
         private Status _retweeted_status = null;
         private int _iteration;
         private string _update_time;
@@ -186,14 +186,14 @@ namespace Sinawler.Model
 			set{ _original_pic=value;}
 			get{return _original_pic;}
 		}
-		/// <summary>
-		/// 用户ID
-		/// </summary>
-		public long user_id
-		{
-			set{ _user_id=value;}
-			get{return _user_id;}
-		}
+        /// <summary>
+        /// 用户
+        /// </summary>
+        public User user
+        {
+            set { _user = value; }
+            get { return _user; }
+        }
         /// <summary>
         /// 同时转发的微博
         /// </summary>
@@ -269,7 +269,7 @@ namespace Sinawler.Model
                 htValues.Add( "thumbnail_pic", "'" + _thumbnail_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "bmiddle_pic", "'" + _bmiddle_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "original_pic", "'" + _original_pic.Replace( "'", "''" ) + "'" );
-                htValues.Add( "user_id", _user_id );
+                htValues.Add( "user_id", _user.user_id );
                 if(_retweeted_status!=null)
                     htValues.Add( "retweeted_status_id", _retweeted_status.status_id );
                 else

@@ -17,18 +17,19 @@ namespace Sinawler
         private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
-        private StatusQueue queueStatus;        //微博队列引用
+        private StatusQueue queueStatus;                    //微博队列引用
+        private UserBuffer oUserBuffer;                     //the buffer queue of users
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public StatusRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot, StatusQueue qStatus )
-            : base( oAPI )
+        public StatusRobot ()
+            : base()
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
-            queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForUserRelationRobot = qUserForUserRelationRobot;
-            queueUserForUserTagRobot = qUserForUserTagRobot;
-            queueUserForStatusRobot = qUserForStatusRobot;
-            queueStatus = qStatus;
+            queueUserForUserInfoRobot = GlobalPool.UserQueueForUserInfoRobot;
+            queueUserForUserRelationRobot = GlobalPool.UserQueueForUserRelationRobot;
+            queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
+            queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
+            oUserBuffer = GlobalPool.UserBuffer;
         }
 
         /// <summary>
@@ -76,14 +77,17 @@ namespace Sinawler
                 if (queueStatus.Enqueue( status.retweeted_status.status_id ))
                     Log( "将转发微博" + status.retweeted_status.status_id.ToString() + "加入微博队列。" );
 
-                if (queueUserForUserInfoRobot.Enqueue( status.retweeted_status.user_id ))
-                    Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户信息机器人的用户队列。" );
-                if (queueUserForUserRelationRobot.Enqueue( status.retweeted_status.user_id ))
-                    Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户关系机器人的用户队列。" );
-                if (queueUserForUserTagRobot.Enqueue( status.retweeted_status.user_id ))
-                    Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入用户标签机器人的用户队列。" );
-                if (queueUserForStatusRobot.Enqueue( status.retweeted_status.user_id ))
-                    Log( "将用户" + status.retweeted_status.user_id.ToString() + "加入微博机器人的用户队列。" );
+                if (queueUserForUserInfoRobot.Enqueue(status.retweeted_status.user.user_id))
+                    Log( "将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户信息机器人的用户队列。" );
+                if (queueUserForUserRelationRobot.Enqueue(status.retweeted_status.user.user_id))
+                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户关系机器人的用户队列。");
+                if (queueUserForUserTagRobot.Enqueue(status.retweeted_status.user.user_id))
+                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户标签机器人的用户队列。");
+                if (queueUserForStatusRobot.Enqueue(status.retweeted_status.user.user_id))
+                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入微博机器人的用户队列。");
+                //add the user into the buffer only when the user does not exist in the queue for userInfo
+                if(!queueUserForUserInfoRobot.QueueExists(status.retweeted_status.user.user_id) && oUserBuffer.Enqueue(status.retweeted_status.user))
+                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户缓冲池。");
             }
         }
 

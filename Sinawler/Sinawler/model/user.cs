@@ -339,6 +339,57 @@ namespace Sinawler.Model
 		}
 
         /// <summary>
+        /// add a new record into queue_buffer_for_userBuffer
+        /// </summary>
+        public void AddToUserBuffer()
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                Hashtable htValues = new Hashtable();
+                _update_time = "'" + DateTime.Now.ToString("u").Replace("Z", "") + "'";
+                htValues.Add("user_id", _user_id);
+                htValues.Add("screen_name", "'" + _screen_name.Replace("'", "''") + "'");
+                htValues.Add("name", "'" + _name.Replace("'", "''") + "'");
+                htValues.Add("province", "'" + _province + "'");
+                htValues.Add("city", "'" + _city + "'");
+                htValues.Add("location", "'" + _location.Replace("'", "''") + "'");
+                htValues.Add("description", "'" + _description.Replace("'", "''") + "'");
+                htValues.Add("url", "'" + _url.Replace("'", "''") + "'");
+                htValues.Add("profile_image_url", "'" + _profile_image_url.Replace("'", "''") + "'");
+                htValues.Add("domain", "'" + _domain.Replace("'", "''") + "'");
+                htValues.Add("gender", "'" + _gender + "'");
+                htValues.Add("followers_count", _followers_count);
+                htValues.Add("friends_count", _friends_count);
+                htValues.Add("statuses_count", _statuses_count);
+                htValues.Add("favourites_count", _favourites_count);
+                htValues.Add("created_at", "'" + _created_at + "'");
+                if (_following)
+                    htValues.Add("following", 1);
+                else
+                    htValues.Add("following", 0);
+                if (_verified)
+                    htValues.Add("verified", 1);
+                else
+                    htValues.Add("verified", 0);
+                if (_allow_all_act_msg)
+                    htValues.Add("allow_all_act_msg", 1);
+                else
+                    htValues.Add("allow_all_act_msg", 0);
+                if (_geo_enabled)
+                    htValues.Add("geo_enabled", 1);
+                else
+                    htValues.Add("geo_enabled", 0);
+                htValues.Add("iteration", 0);
+                htValues.Add("enqueue_time", _update_time);
+
+                db.Insert("users", htValues);
+            }
+            catch
+            { return; }
+        }
+
+        /// <summary>
         /// 更新数据
         /// </summary>
         public void Update()
@@ -480,6 +531,99 @@ namespace Sinawler.Model
             else
                 return false;
 		}
+
+        /// <summary>
+        /// load an object from user buffer by user id
+        /// </summary>
+        public bool GetModelFromUserBuffer(long lUid)
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("select  top 1 * FROM queue_buffer_for_userBuffer ");
+            strSql.Append(" where user_id=" + lUid.ToString());
+
+            DataRow dr = db.GetDataRow(strSql.ToString());
+            if (dr != null)
+            {
+                _user_id = Convert.ToInt64(dr["user_id"]);
+                _screen_name = dr["screen_name"].ToString();
+                _name = dr["name"].ToString();
+                _province = dr["province"].ToString();
+                _city = dr["city"].ToString();
+                _location = dr["location"].ToString();
+                _description = dr["description"].ToString();
+                _url = dr["url"].ToString();
+                _profile_image_url = dr["profile_image_url"].ToString();
+                _domain = dr["domain"].ToString();
+                _gender = dr["gender"].ToString();
+                if (dr["followers_count"].ToString() != "")
+                {
+                    _followers_count = Convert.ToInt32(dr["followers_count"]);
+                }
+                if (dr["friends_count"].ToString() != "")
+                {
+                    _friends_count = Convert.ToInt32(dr["friends_count"]);
+                }
+                if (dr["statuses_count"].ToString() != "")
+                {
+                    _statuses_count = Convert.ToInt32(dr["statuses_count"]);
+                }
+                if (dr["favourites_count"].ToString() != "")
+                {
+                    _favourites_count = Convert.ToInt32(dr["favourites_count"]);
+                }
+                _created_at = dr["created_at"].ToString();
+                if (dr["following"].ToString() != "")
+                {
+                    if (dr["following"].ToString() == "1")
+                    {
+                        _following = true;
+                    }
+                    else
+                    {
+                        _following = false;
+                    }
+                }
+                if (dr["verified"].ToString() != "")
+                {
+                    if (dr["verified"].ToString() == "1")
+                    {
+                        _verified = true;
+                    }
+                    else
+                    {
+                        _verified = false;
+                    }
+                }
+                if (dr["allow_all_act_msg"].ToString() != "")
+                {
+                    if (dr["allow_all_act_msg"].ToString() == "1")
+                    {
+                        _allow_all_act_msg = true;
+                    }
+                    else
+                    {
+                        _allow_all_act_msg = false;
+                    }
+                }
+                if (dr["geo_enabled"].ToString() != "")
+                {
+                    if (dr["geo_enabled"].ToString() == "1")
+                    {
+                        _geo_enabled = true;
+                    }
+                    else
+                    {
+                        _geo_enabled = false;
+                    }
+                }
+                _iteration = Convert.ToInt32(dr["iteration"]);
+                _update_time = dr["update_time"].ToString();
+                return true;
+            }
+            else
+                return false;
+        }
 
         /// <summary>
         /// 根据用户昵称得到一个对象实体

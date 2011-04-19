@@ -64,6 +64,11 @@
             this.grpSearch = new System.Windows.Forms.GroupBox();
             this.btnExit = new System.Windows.Forms.Button();
             this.grpControl = new System.Windows.Forms.GroupBox();
+            this.chkComment = new System.Windows.Forms.CheckBox();
+            this.chkStatus = new System.Windows.Forms.CheckBox();
+            this.chkTag = new System.Windows.Forms.CheckBox();
+            this.chkUserInfo = new System.Windows.Forms.CheckBox();
+            this.lblRobotSelect = new System.Windows.Forms.Label();
             this.btnPauseContinue = new System.Windows.Forms.Button();
             this.gpSetting = new System.Windows.Forms.GroupBox();
             this.btnLoad = new System.Windows.Forms.Button();
@@ -446,7 +451,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(453, 678);
+            this.btnExit.Location = new System.Drawing.Point(453, 700);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 22;
@@ -456,16 +461,78 @@
             // 
             // grpControl
             // 
+            this.grpControl.Controls.Add(this.chkComment);
+            this.grpControl.Controls.Add(this.chkStatus);
+            this.grpControl.Controls.Add(this.chkTag);
+            this.grpControl.Controls.Add(this.chkUserInfo);
+            this.grpControl.Controls.Add(this.lblRobotSelect);
             this.grpControl.Controls.Add(this.btnPauseContinue);
             this.grpControl.Controls.Add(this.btnStartByCurrent);
             this.grpControl.Controls.Add(this.btnStartBySearch);
             this.grpControl.Controls.Add(this.btnStartByLast);
             this.grpControl.Location = new System.Drawing.Point(5, 407);
             this.grpControl.Name = "grpControl";
-            this.grpControl.Size = new System.Drawing.Size(827, 61);
+            this.grpControl.Size = new System.Drawing.Size(827, 85);
             this.grpControl.TabIndex = 14;
             this.grpControl.TabStop = false;
             this.grpControl.Text = "爬虫控制";
+            // 
+            // chkComment
+            // 
+            this.chkComment.AutoSize = true;
+            this.chkComment.Checked = true;
+            this.chkComment.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkComment.Location = new System.Drawing.Point(708, 60);
+            this.chkComment.Name = "chkComment";
+            this.chkComment.Size = new System.Drawing.Size(108, 16);
+            this.chkComment.TabIndex = 25;
+            this.chkComment.Text = "Comments Robot";
+            this.chkComment.UseVisualStyleBackColor = true;
+            // 
+            // chkStatus
+            // 
+            this.chkStatus.AutoSize = true;
+            this.chkStatus.Checked = true;
+            this.chkStatus.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStatus.Location = new System.Drawing.Point(594, 60);
+            this.chkStatus.Name = "chkStatus";
+            this.chkStatus.Size = new System.Drawing.Size(108, 16);
+            this.chkStatus.TabIndex = 24;
+            this.chkStatus.Text = "Statuses Robot";
+            this.chkStatus.UseVisualStyleBackColor = true;
+            // 
+            // chkTag
+            // 
+            this.chkTag.AutoSize = true;
+            this.chkTag.Checked = true;
+            this.chkTag.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTag.Location = new System.Drawing.Point(504, 61);
+            this.chkTag.Name = "chkTag";
+            this.chkTag.Size = new System.Drawing.Size(84, 16);
+            this.chkTag.TabIndex = 23;
+            this.chkTag.Text = "Tags Robot";
+            this.chkTag.UseVisualStyleBackColor = true;
+            // 
+            // chkUserInfo
+            // 
+            this.chkUserInfo.AutoSize = true;
+            this.chkUserInfo.Checked = true;
+            this.chkUserInfo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUserInfo.Location = new System.Drawing.Point(342, 60);
+            this.chkUserInfo.Name = "chkUserInfo";
+            this.chkUserInfo.Size = new System.Drawing.Size(156, 16);
+            this.chkUserInfo.TabIndex = 22;
+            this.chkUserInfo.Text = "User Information Robot";
+            this.chkUserInfo.UseVisualStyleBackColor = true;
+            // 
+            // lblRobotSelect
+            // 
+            this.lblRobotSelect.AutoSize = true;
+            this.lblRobotSelect.Location = new System.Drawing.Point(6, 61);
+            this.lblRobotSelect.Name = "lblRobotSelect";
+            this.lblRobotSelect.Size = new System.Drawing.Size(323, 12);
+            this.lblRobotSelect.TabIndex = 21;
+            this.lblRobotSelect.Text = "Select Robots (User Relation Robot works by default):";
             // 
             // btnPauseContinue
             // 
@@ -690,14 +757,14 @@
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 13;
-            this.btnSave.Text = "保存";
+            this.btnSave.Text = "确定/保存";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // lblUserInfoTitle
             // 
             this.lblUserInfoTitle.AutoSize = true;
-            this.lblUserInfoTitle.Location = new System.Drawing.Point(11, 20);
+            this.lblUserInfoTitle.Location = new System.Drawing.Point(11, 35);
             this.lblUserInfoTitle.Name = "lblUserInfoTitle";
             this.lblUserInfoTitle.Size = new System.Drawing.Size(125, 12);
             this.lblUserInfoTitle.TabIndex = 16;
@@ -721,7 +788,7 @@
             this.grpStatus.Controls.Add(this.lblUserRelationTitle);
             this.grpStatus.Controls.Add(this.lblStatusTitle);
             this.grpStatus.Controls.Add(this.lblUserInfoTitle);
-            this.grpStatus.Location = new System.Drawing.Point(5, 471);
+            this.grpStatus.Location = new System.Drawing.Point(5, 496);
             this.grpStatus.Name = "grpStatus";
             this.grpStatus.Size = new System.Drawing.Size(827, 186);
             this.grpStatus.TabIndex = 17;
@@ -758,7 +825,7 @@
             // lblUserRelationQueueInfo
             // 
             this.lblUserRelationQueueInfo.AutoSize = true;
-            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point(11, 118);
+            this.lblUserRelationQueueInfo.Location = new System.Drawing.Point(11, 102);
             this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
             this.lblUserRelationQueueInfo.Size = new System.Drawing.Size(365, 12);
             this.lblUserRelationQueueInfo.TabIndex = 22;
@@ -767,7 +834,7 @@
             // lblUserInfoQueueInfo
             // 
             this.lblUserInfoQueueInfo.AutoSize = true;
-            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point(11, 102);
+            this.lblUserInfoQueueInfo.Location = new System.Drawing.Point(11, 118);
             this.lblUserInfoQueueInfo.Name = "lblUserInfoQueueInfo";
             this.lblUserInfoQueueInfo.Size = new System.Drawing.Size(365, 12);
             this.lblUserInfoQueueInfo.TabIndex = 22;
@@ -816,7 +883,7 @@
             // lblUserRelationMessage
             // 
             this.lblUserRelationMessage.AutoSize = true;
-            this.lblUserRelationMessage.Location = new System.Drawing.Point(130, 36);
+            this.lblUserRelationMessage.Location = new System.Drawing.Point(130, 18);
             this.lblUserRelationMessage.Name = "lblUserRelationMessage";
             this.lblUserRelationMessage.Size = new System.Drawing.Size(41, 12);
             this.lblUserRelationMessage.TabIndex = 17;
@@ -836,7 +903,7 @@
             // lblUserInfoMessage
             // 
             this.lblUserInfoMessage.AutoSize = true;
-            this.lblUserInfoMessage.Location = new System.Drawing.Point(130, 20);
+            this.lblUserInfoMessage.Location = new System.Drawing.Point(130, 35);
             this.lblUserInfoMessage.Name = "lblUserInfoMessage";
             this.lblUserInfoMessage.Size = new System.Drawing.Size(41, 12);
             this.lblUserInfoMessage.TabIndex = 17;
@@ -846,7 +913,7 @@
             // lblUserRelationTitle
             // 
             this.lblUserRelationTitle.AutoSize = true;
-            this.lblUserRelationTitle.Location = new System.Drawing.Point(11, 36);
+            this.lblUserRelationTitle.Location = new System.Drawing.Point(11, 18);
             this.lblUserRelationTitle.Name = "lblUserRelationTitle";
             this.lblUserRelationTitle.Size = new System.Drawing.Size(125, 12);
             this.lblUserRelationTitle.TabIndex = 16;
@@ -865,7 +932,7 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point(212, 678);
+            this.btnPost.Location = new System.Drawing.Point(212, 700);
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size(170, 23);
             this.btnPost.TabIndex = 21;
@@ -877,7 +944,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(837, 716);
+            this.ClientSize = new System.Drawing.Size(837, 743);
             this.Controls.Add(this.btnPost);
             this.Controls.Add(this.grpStatus);
             this.Controls.Add(this.gpSetting);
@@ -901,6 +968,7 @@
             this.grpCurrentUser.PerformLayout();
             this.grpSearch.ResumeLayout(false);
             this.grpControl.ResumeLayout(false);
+            this.grpControl.PerformLayout();
             this.gpSetting.ResumeLayout(false);
             this.grpDBSettings.ResumeLayout(false);
             this.grpDBSettings.PerformLayout();
@@ -988,6 +1056,11 @@
         private System.Windows.Forms.Label lblUserTagQueueInfo;
         private System.Windows.Forms.Label lblUserTagMessage;
         private System.Windows.Forms.Label lblUserTagTitle;
+        private System.Windows.Forms.CheckBox chkStatus;
+        private System.Windows.Forms.CheckBox chkTag;
+        private System.Windows.Forms.CheckBox chkUserInfo;
+        private System.Windows.Forms.Label lblRobotSelect;
+        private System.Windows.Forms.CheckBox chkComment;
     }
 }
 

@@ -17,20 +17,22 @@ namespace Sinawler
         private UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForUserTagRobot;             //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
+        private UserBuffer oUserBuffer;               //the buffer queue of users
         private int iInitQueueLength = 100;          //初始队列长度
 
         public int InitQueueLength
         { get { return iInitQueueLength; } }
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserInfoRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot )
-            : base( oAPI )
+        public UserInfoRobot ()
+            : base()
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
-            queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForUserRelationRobot = qUserForUserRelationRobot;
-            queueUserForUserTagRobot = qUserForUserTagRobot;
-            queueUserForStatusRobot = qUserForStatusRobot;
+            queueUserForUserInfoRobot = GlobalPool.UserQueueForUserInfoRobot;
+            queueUserForUserRelationRobot = GlobalPool.UserQueueForUserRelationRobot;
+            queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
+            queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
+            oUserBuffer = GlobalPool.UserBuffer;
         }
 
         /// <summary>
@@ -73,8 +75,18 @@ namespace Sinawler
                     if (blnAsyncCancelled) return;
                     Thread.Sleep(50);
                 }
-                Log( "爬取用户" + lCurrentID.ToString() +"的基本信息...");
-                user = crawler.GetUserInfo( lCurrentID );
+
+                if (oUserBuffer.UserExists(lCurrentID))   //current user exists in the user buffer
+                {
+                    Log("用户" + lCurrentID.ToString() + "已在缓冲池中，将直接获取其信息...");
+                    user = oUserBuffer.GetUser(lCurrentID);
+                    oUserBuffer.Remove(user);
+                }
+                else
+                {
+                    Log("爬取用户" + lCurrentID.ToString() + "的基本信息...");
+                    user = crawler.GetUserInfo(lCurrentID);
+                }
                 if (user!=null && user.user_id > 0)
                 {
                     //若数据库中不存在当前用户的基本信息，则爬取，加入数据库

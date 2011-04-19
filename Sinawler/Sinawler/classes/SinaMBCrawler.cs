@@ -11,7 +11,7 @@ namespace Sinawler
     //SinaMBCrawler类是通过新浪微博API从微博中抓取数据的类
     public class SinaMBCrawler
     {
-        private SinaApiService api;
+        private SinaApiService api=GlobalPool.API;
         ///默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
         ///后经测试，此值还可缩小。2010-10-11定为最小值2000，可调整
         ///2010-10-12定为不设下限
@@ -21,10 +21,8 @@ namespace Sinawler
         private int iResetTimeInSeconds = 3600; //剩余秒数
         private bool blnStopCrawling = false;   //是否停止爬行
 
-        public SinaMBCrawler ( SinaApiService oApi )
-        {
-            api = oApi;
-        }
+        public SinaMBCrawler ()
+        {}
 
         public int SleepTime
         {
@@ -347,7 +345,38 @@ namespace Sinawler
                         status.original_pic = node.InnerText;
                         break;
                     case "user":
-                        status.user_id = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                        status.user.user_id = Convert.ToInt64(node.ChildNodes[0].InnerText);
+                        status.user.screen_name = node.ChildNodes[1].InnerText;
+                        status.user.name = node.ChildNodes[2].InnerText;
+                        status.user.province = node.ChildNodes[3].InnerText;
+                        status.user.city = node.ChildNodes[4].InnerText;
+                        status.user.location = node.ChildNodes[5].InnerText;
+                        status.user.description = node.ChildNodes[6].InnerText;
+                        status.user.url = node.ChildNodes[7].InnerText;
+                        status.user.profile_image_url = node.ChildNodes[8].InnerText;
+                        status.user.domain = node.ChildNodes[9].InnerText;
+                        status.user.gender = node.ChildNodes[10].InnerText;
+                        status.user.followers_count = Convert.ToInt32(node.ChildNodes[11].InnerText);
+                        status.user.friends_count = Convert.ToInt32(node.ChildNodes[12].InnerText);
+                        status.user.statuses_count = Convert.ToInt32(node.ChildNodes[13].InnerText);
+                        status.user.favourites_count = Convert.ToInt32(node.ChildNodes[14].InnerText);
+                        status.user.created_at = PubHelper.ParseDateTime(node.ChildNodes[15].InnerText);
+                        if (node.ChildNodes[16].InnerText == "false")
+                            status.user.following = false;
+                        else
+                            status.user.following = true;
+                        if (node.ChildNodes[17].InnerText == "false")
+                            status.user.verified = false;
+                        else
+                            status.user.verified = true;
+                        if (node.ChildNodes[18].InnerText == "false")
+                            status.user.allow_all_act_msg = false;
+                        else
+                            status.user.allow_all_act_msg = true;
+                        if (node.ChildNodes[19].InnerText == "false")
+                            status.user.geo_enabled = false;
+                        else
+                            status.user.geo_enabled = true;
                         break;
                     case "retweeted_status":
                         status.retweeted_status = new Status();
@@ -409,7 +438,38 @@ namespace Sinawler
                                     status.retweeted_status.original_pic = retweeted_node.InnerText;
                                     break;
                                 case "user":
-                                    status.retweeted_status.user_id = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
+                                    status.retweeted_status.user.user_id = Convert.ToInt64(retweeted_node.ChildNodes[0].InnerText);
+                                    status.retweeted_status.user.screen_name = retweeted_node.ChildNodes[1].InnerText;
+                                    status.retweeted_status.user.name = retweeted_node.ChildNodes[2].InnerText;
+                                    status.retweeted_status.user.province = retweeted_node.ChildNodes[3].InnerText;
+                                    status.retweeted_status.user.city = retweeted_node.ChildNodes[4].InnerText;
+                                    status.retweeted_status.user.location = retweeted_node.ChildNodes[5].InnerText;
+                                    status.retweeted_status.user.description = retweeted_node.ChildNodes[6].InnerText;
+                                    status.retweeted_status.user.url = retweeted_node.ChildNodes[7].InnerText;
+                                    status.retweeted_status.user.profile_image_url = retweeted_node.ChildNodes[8].InnerText;
+                                    status.retweeted_status.user.domain = retweeted_node.ChildNodes[9].InnerText;
+                                    status.retweeted_status.user.gender = retweeted_node.ChildNodes[10].InnerText;
+                                    status.retweeted_status.user.followers_count = Convert.ToInt32(retweeted_node.ChildNodes[11].InnerText);
+                                    status.retweeted_status.user.friends_count = Convert.ToInt32(retweeted_node.ChildNodes[12].InnerText);
+                                    status.retweeted_status.user.statuses_count = Convert.ToInt32(retweeted_node.ChildNodes[13].InnerText);
+                                    status.retweeted_status.user.favourites_count = Convert.ToInt32(retweeted_node.ChildNodes[14].InnerText);
+                                    status.retweeted_status.user.created_at = PubHelper.ParseDateTime(retweeted_node.ChildNodes[15].InnerText);
+                                    if (retweeted_node.ChildNodes[16].InnerText == "false")
+                                        status.retweeted_status.user.following = false;
+                                    else
+                                        status.retweeted_status.user.following = true;
+                                    if (retweeted_node.ChildNodes[17].InnerText == "false")
+                                        status.retweeted_status.user.verified = false;
+                                    else
+                                        status.retweeted_status.user.verified = true;
+                                    if (retweeted_node.ChildNodes[18].InnerText == "false")
+                                        status.retweeted_status.user.allow_all_act_msg = false;
+                                    else
+                                        status.retweeted_status.user.allow_all_act_msg = true;
+                                    if (retweeted_node.ChildNodes[19].InnerText == "false")
+                                        status.retweeted_status.user.geo_enabled = false;
+                                    else
+                                        status.retweeted_status.user.geo_enabled = true;
                                     break;
                             }
                         }
@@ -498,11 +558,41 @@ namespace Sinawler
                             status.original_pic = node.InnerText;
                             break;
                         case "user":
-                            status.user_id = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                            status.user.user_id = Convert.ToInt64(node.ChildNodes[0].InnerText);
+                            status.user.screen_name = node.ChildNodes[1].InnerText;
+                            status.user.name = node.ChildNodes[2].InnerText;
+                            status.user.province = node.ChildNodes[3].InnerText;
+                            status.user.city = node.ChildNodes[4].InnerText;
+                            status.user.location = node.ChildNodes[5].InnerText;
+                            status.user.description = node.ChildNodes[6].InnerText;
+                            status.user.url = node.ChildNodes[7].InnerText;
+                            status.user.profile_image_url = node.ChildNodes[8].InnerText;
+                            status.user.domain = node.ChildNodes[9].InnerText;
+                            status.user.gender = node.ChildNodes[10].InnerText;
+                            status.user.followers_count = Convert.ToInt32(node.ChildNodes[11].InnerText);
+                            status.user.friends_count = Convert.ToInt32(node.ChildNodes[12].InnerText);
+                            status.user.statuses_count = Convert.ToInt32(node.ChildNodes[13].InnerText);
+                            status.user.favourites_count = Convert.ToInt32(node.ChildNodes[14].InnerText);
+                            status.user.created_at = PubHelper.ParseDateTime(node.ChildNodes[15].InnerText);
+                            if (node.ChildNodes[16].InnerText == "false")
+                                status.user.following = false;
+                            else
+                                status.user.following = true;
+                            if (node.ChildNodes[17].InnerText == "false")
+                                status.user.verified = false;
+                            else
+                                status.user.verified = true;
+                            if (node.ChildNodes[18].InnerText == "false")
+                                status.user.allow_all_act_msg = false;
+                            else
+                                status.user.allow_all_act_msg = true;
+                            if (node.ChildNodes[19].InnerText == "false")
+                                status.user.geo_enabled = false;
+                            else
+                                status.user.geo_enabled = true;
                             break;
                         case "retweeted_status":
                             status.retweeted_status = new Status();
-                            status.retweeted_status.status_id = Convert.ToInt64( node.ChildNodes[1].InnerText );
                             foreach (XmlNode retweeted_node in node.ChildNodes)
                             {
                                 switch (retweeted_node.Name.ToLower())
@@ -560,7 +650,38 @@ namespace Sinawler
                                         status.retweeted_status.original_pic = retweeted_node.InnerText;
                                         break;
                                     case "user":
-                                        status.retweeted_status.user_id = Convert.ToInt64( retweeted_node.ChildNodes[0].InnerText );
+                                        status.retweeted_status.user.user_id = Convert.ToInt64(retweeted_node.ChildNodes[0].InnerText);
+                                        status.retweeted_status.user.screen_name = retweeted_node.ChildNodes[1].InnerText;
+                                        status.retweeted_status.user.name = retweeted_node.ChildNodes[2].InnerText;
+                                        status.retweeted_status.user.province = retweeted_node.ChildNodes[3].InnerText;
+                                        status.retweeted_status.user.city = retweeted_node.ChildNodes[4].InnerText;
+                                        status.retweeted_status.user.location = retweeted_node.ChildNodes[5].InnerText;
+                                        status.retweeted_status.user.description = retweeted_node.ChildNodes[6].InnerText;
+                                        status.retweeted_status.user.url = retweeted_node.ChildNodes[7].InnerText;
+                                        status.retweeted_status.user.profile_image_url = retweeted_node.ChildNodes[8].InnerText;
+                                        status.retweeted_status.user.domain = retweeted_node.ChildNodes[9].InnerText;
+                                        status.retweeted_status.user.gender = retweeted_node.ChildNodes[10].InnerText;
+                                        status.retweeted_status.user.followers_count = Convert.ToInt32(retweeted_node.ChildNodes[11].InnerText);
+                                        status.retweeted_status.user.friends_count = Convert.ToInt32(retweeted_node.ChildNodes[12].InnerText);
+                                        status.retweeted_status.user.statuses_count = Convert.ToInt32(retweeted_node.ChildNodes[13].InnerText);
+                                        status.retweeted_status.user.favourites_count = Convert.ToInt32(retweeted_node.ChildNodes[14].InnerText);
+                                        status.retweeted_status.user.created_at = PubHelper.ParseDateTime(retweeted_node.ChildNodes[15].InnerText);
+                                        if (retweeted_node.ChildNodes[16].InnerText == "false")
+                                            status.retweeted_status.user.following = false;
+                                        else
+                                            status.retweeted_status.user.following = true;
+                                        if (retweeted_node.ChildNodes[17].InnerText == "false")
+                                            status.retweeted_status.user.verified = false;
+                                        else
+                                            status.retweeted_status.user.verified = true;
+                                        if (retweeted_node.ChildNodes[18].InnerText == "false")
+                                            status.retweeted_status.user.allow_all_act_msg = false;
+                                        else
+                                            status.retweeted_status.user.allow_all_act_msg = true;
+                                        if (retweeted_node.ChildNodes[19].InnerText == "false")
+                                            status.retweeted_status.user.geo_enabled = false;
+                                        else
+                                            status.retweeted_status.user.geo_enabled = true;
                                         break;
                                 }
                             }//for
@@ -610,7 +731,38 @@ namespace Sinawler
                                 comment.content = node.InnerText;
                                 break;
                             case "user":
-                                comment.user_id = Convert.ToInt64( node.ChildNodes[0].InnerText );
+                                comment.user.user_id = Convert.ToInt64(node.ChildNodes[0].InnerText);
+                                comment.user.screen_name = node.ChildNodes[1].InnerText;
+                                comment.user.name = node.ChildNodes[2].InnerText;
+                                comment.user.province = node.ChildNodes[3].InnerText;
+                                comment.user.city = node.ChildNodes[4].InnerText;
+                                comment.user.location = node.ChildNodes[5].InnerText;
+                                comment.user.description = node.ChildNodes[6].InnerText;
+                                comment.user.url = node.ChildNodes[7].InnerText;
+                                comment.user.profile_image_url = node.ChildNodes[8].InnerText;
+                                comment.user.domain = node.ChildNodes[9].InnerText;
+                                comment.user.gender = node.ChildNodes[10].InnerText;
+                                comment.user.followers_count = Convert.ToInt32(node.ChildNodes[11].InnerText);
+                                comment.user.friends_count = Convert.ToInt32(node.ChildNodes[12].InnerText);
+                                comment.user.statuses_count = Convert.ToInt32(node.ChildNodes[13].InnerText);
+                                comment.user.favourites_count = Convert.ToInt32(node.ChildNodes[14].InnerText);
+                                comment.user.created_at = PubHelper.ParseDateTime(node.ChildNodes[15].InnerText);
+                                if (node.ChildNodes[16].InnerText == "false")
+                                    comment.user.following = false;
+                                else
+                                    comment.user.following = true;
+                                if (node.ChildNodes[17].InnerText == "false")
+                                    comment.user.verified = false;
+                                else
+                                    comment.user.verified = true;
+                                if (node.ChildNodes[18].InnerText == "false")
+                                    comment.user.allow_all_act_msg = false;
+                                else
+                                    comment.user.allow_all_act_msg = true;
+                                if (node.ChildNodes[19].InnerText == "false")
+                                    comment.user.geo_enabled = false;
+                                else
+                                    comment.user.geo_enabled = true;
                                 break;
                         }
                     }
