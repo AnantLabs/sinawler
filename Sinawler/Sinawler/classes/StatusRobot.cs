@@ -77,16 +77,16 @@ namespace Sinawler
                 if (queueStatus.Enqueue( status.retweeted_status.status_id ))
                     Log( "将转发微博" + status.retweeted_status.status_id.ToString() + "加入微博队列。" );
 
-                if (queueUserForUserInfoRobot.Enqueue(status.retweeted_status.user.user_id))
-                    Log( "将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户信息机器人的用户队列。" );
                 if (queueUserForUserRelationRobot.Enqueue(status.retweeted_status.user.user_id))
                     Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户关系机器人的用户队列。");
-                if (queueUserForUserTagRobot.Enqueue(status.retweeted_status.user.user_id))
+                if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(status.retweeted_status.user.user_id))
+                    Log( "将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户信息机器人的用户队列。" );
+                if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(status.retweeted_status.user.user_id))
                     Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户标签机器人的用户队列。");
-                if (queueUserForStatusRobot.Enqueue(status.retweeted_status.user.user_id))
+                if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(status.retweeted_status.user.user_id))
                     Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入微博机器人的用户队列。");
                 //add the user into the buffer only when the user does not exist in the queue for userInfo
-                if(!queueUserForUserInfoRobot.QueueExists(status.retweeted_status.user.user_id) && oUserBuffer.Enqueue(status.retweeted_status.user))
+                if (GlobalPool.UserInfoRobotEnabled && !queueUserForUserInfoRobot.QueueExists(status.retweeted_status.user.user_id) && oUserBuffer.Enqueue(status.retweeted_status.user))
                     Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户缓冲池。");
             }
         }

@@ -106,16 +106,16 @@ namespace Sinawler
                         Thread.Sleep(50);
                     }
                     //加入队列
-                    if (queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
+                    if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );
-                    if (queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
+                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。");
+                    if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
                         //日志
-                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。" );
-                    if (queueUserForUserTagRobot.Enqueue( lQueueBufferFirst ))
+                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );                    
+                    if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户标签机器人的用户队列。" );
-                    if (queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
+                    if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入微博机器人的用户队列。" );
                     lstBuffer.RemoveFirst();
@@ -172,16 +172,16 @@ namespace Sinawler
                         Thread.Sleep(50);
                     }
                     //加入队列
-                    if (queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
+                    if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
+                        //日志
+                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。");
+                    if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。" );
-                    if (queueUserForUserRelationRobot.Enqueue( lQueueBufferFirst ))
-                        //日志
-                        Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。" );
-                    if (queueUserForUserTagRobot.Enqueue( lQueueBufferFirst ))
+                    if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入用户标签机器人的用户队列。" );
-                    if (queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
+                    if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue( lQueueBufferFirst ))
                         //日志
                         Log( "将用户" + lQueueBufferFirst.ToString() + "加入微博机器人的用户队列。" );
                     lstBuffer.RemoveFirst();

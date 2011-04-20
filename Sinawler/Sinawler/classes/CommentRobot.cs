@@ -97,16 +97,16 @@ namespace Sinawler
                         comment.Add();
                     }
 
-                    if (queueUserForUserInfoRobot.Enqueue(comment.user.user_id))
-                        Log("将评论人" + comment.user.user_id.ToString() + "加入用户信息机器人的用户队列。");
                     if (queueUserForUserRelationRobot.Enqueue(comment.user.user_id))
                         Log("将评论人" + comment.user.user_id.ToString() + "加入用户关系机器人的用户队列。");
-                    if (queueUserForUserTagRobot.Enqueue(comment.user.user_id))
+                    if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(comment.user.user_id))
+                        Log("将评论人" + comment.user.user_id.ToString() + "加入用户信息机器人的用户队列。");
+                    if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(comment.user.user_id))
                         Log("将评论人" + comment.user.user_id.ToString() + "加入用户标签机器人的用户队列。");
-                    if (queueUserForStatusRobot.Enqueue(comment.user.user_id))
+                    if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(comment.user.user_id))
                         Log("将评论人" + comment.user.user_id.ToString() + "加入微博机器人的用户队列。");
                     //add the user into the buffer only when the user does not exist in the queue for userInfo
-                    if (!queueUserForUserInfoRobot.QueueExists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
+                    if (GlobalPool.UserInfoRobotEnabled && !queueUserForUserInfoRobot.QueueExists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
                         Log("将评论人" + comment.user.user_id.ToString() + "加入用户缓冲池。");
 
                     lstComment.RemoveFirst();

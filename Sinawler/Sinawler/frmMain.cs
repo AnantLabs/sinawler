@@ -341,6 +341,11 @@ namespace Sinawler
                     return;
                 }
 
+                GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
+                GlobalPool.TagRobotEnabled = chkTag.Checked;
+                GlobalPool.StatusRobotEnabled = chkStatus.Checked;
+                GlobalPool.CommentRobotEnabled = chkComment.Checked;
+
                 btnStartByCurrent.Text = "正在初始化，请稍候...";
                 btnStartByCurrent.Enabled = false;
                 btnStartBySearch.Enabled = false;
@@ -486,6 +491,11 @@ namespace Sinawler
                     return;
                 }
 
+                GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
+                GlobalPool.TagRobotEnabled = chkTag.Checked;
+                GlobalPool.StatusRobotEnabled = chkStatus.Checked;
+                GlobalPool.CommentRobotEnabled = chkComment.Checked;
+
                 btnStartBySearch.Text = "正在初始化，请稍候...";
                 btnStartBySearch.Enabled = false;
                 btnStartByCurrent.Enabled = false;
@@ -630,6 +640,11 @@ namespace Sinawler
                     MessageBox.Show(this, "无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫");
                     return;
                 }
+
+                GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
+                GlobalPool.TagRobotEnabled = chkTag.Checked;
+                GlobalPool.StatusRobotEnabled = chkStatus.Checked;
+                GlobalPool.CommentRobotEnabled = chkComment.Checked;
 
                 btnStartByLast.Text = "正在初始化，请稍候...";
                 btnStartByLast.Enabled = false;
@@ -1046,6 +1061,11 @@ namespace Sinawler
             txtDBPwd.Text = settings.DBPwd;
             txtDBName.Text = settings.DBName;
 
+            GlobalPool.UserInfoRobotEnabled = settings.UserInfoRobot;
+            GlobalPool.TagRobotEnabled = settings.TagsRobot;
+            GlobalPool.StatusRobotEnabled = settings.StatusesRobot;
+            GlobalPool.CommentRobotEnabled = settings.CommentsRobot;
+
             chkUserInfo.Checked = settings.UserInfoRobot;
             chkTag.Checked = settings.TagsRobot;
             chkStatus.Checked = settings.StatusesRobot;
@@ -1065,6 +1085,11 @@ namespace Sinawler
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
+            GlobalPool.TagRobotEnabled = chkTag.Checked;
+            GlobalPool.StatusRobotEnabled = chkStatus.Checked;
+            GlobalPool.CommentRobotEnabled = chkComment.Checked;
+
             SettingItems settings = new SettingItems();
             settings.MaxLengthInMem = tbQueueLength.Value;
             settings.DBType = drplstDBType.SelectedItem.ToString();
