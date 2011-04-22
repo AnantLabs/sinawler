@@ -833,6 +833,11 @@ namespace Sinawler
                 btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+
+                chkUserInfo.Enabled = true;
+                chkTag.Enabled = true;
+                chkStatus.Enabled = true;
+                chkComment.Enabled = true;
             }
             oAsyncWorkerUserInfo = null;
         }
@@ -897,6 +902,11 @@ namespace Sinawler
                 btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+
+                chkUserInfo.Enabled = true;
+                chkTag.Enabled = true;
+                chkStatus.Enabled = true;
+                chkComment.Enabled = true;
             }
             oAsyncWorkerUserRelation = null;
         }
@@ -961,6 +971,11 @@ namespace Sinawler
                 btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+
+                chkUserInfo.Enabled = true;
+                chkTag.Enabled = true;
+                chkStatus.Enabled = true;
+                chkComment.Enabled = true;
             }
             oAsyncWorkerUserTag = null;
         }
@@ -1001,6 +1016,11 @@ namespace Sinawler
                 btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+
+                chkUserInfo.Enabled = true;
+                chkTag.Enabled = true;
+                chkStatus.Enabled = true;
+                chkComment.Enabled = true;
             }
             oAsyncWorkerStatus = null;
         }
@@ -1041,6 +1061,11 @@ namespace Sinawler
                 btnPauseContinue.Text = "暂停/继续";
 
                 MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+
+                chkUserInfo.Enabled = true;
+                chkTag.Enabled = true;
+                chkStatus.Enabled = true;
+                chkComment.Enabled = true;
             }
             oAsyncWorkerComment = null;
         }

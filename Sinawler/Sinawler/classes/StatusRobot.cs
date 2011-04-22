@@ -29,6 +29,7 @@ namespace Sinawler
             queueUserForUserRelationRobot = GlobalPool.UserQueueForUserRelationRobot;
             queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
             queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
+            queueStatus = GlobalPool.StatusQueue;
             oUserBuffer = GlobalPool.UserBuffer;
         }
 
