@@ -79,8 +79,15 @@ namespace Sinawler
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
         //2011-02-23 改为间隔下限为500ms
+        //except user relation robot, others get and record the reset time only
         protected virtual void AdjustFreq()
         {
+            string strResult = api.check_hits_limit();
+            if (strResult == null) return;
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(strResult);
+
+            GlobalPool.ResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
             //若已无剩余次数，直接等待剩余时间
             if (GlobalPool.RemainingHits == 0)
             {
@@ -97,7 +104,6 @@ namespace Sinawler
 
                 crawler.SleepTime = iSleep;
             }
-            GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - DateTime.Now.Subtract(GlobalPool.LimitUpdateTime).Seconds;
         }
 
         public virtual void Initialize (){}

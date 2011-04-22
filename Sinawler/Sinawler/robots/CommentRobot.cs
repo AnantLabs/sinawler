@@ -81,8 +81,22 @@ namespace Sinawler
 
                 //日志
                 Log("爬取微博" + lCurrentSID.ToString() + "的评论...");
+                int iPage = 1;
                 //爬取当前微博的评论
-                LinkedList<Comment> lstComment = crawler.GetCommentsOf(lCurrentSID);
+                LinkedList<Comment> lstComment = new LinkedList<Comment>();
+                LinkedList<Comment> lstTemp=new LinkedList<Comment>();
+                do
+                {
+                    lstTemp = crawler.GetCommentsOf(lCurrentSID, iPage);
+                    while (lstTemp.Count > 0)
+                    {
+                        lstComment.AddLast(lstTemp.First.Value);
+                        lstTemp.RemoveFirst();
+                    }
+                    iPage++;
+                    AdjustFreq();
+                    Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                } while (lstTemp.Count > 0);
                 //日志
                 Log("爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。");
                 Comment comment;
