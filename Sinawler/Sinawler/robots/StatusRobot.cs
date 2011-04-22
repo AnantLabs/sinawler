@@ -102,8 +102,14 @@ namespace Sinawler
                 if (blnAsyncCancelled) return;
                 Thread.Sleep( 50 );   //若队列为空，则等待
             }
+            Thread.Sleep(500);  //waiting that user relation robot update limit data
+            
             long lStartUserID = queueUserForStatusRobot.FirstValue;
             long lCurrentUserID = 0;
+
+            AdjustFreq();
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
             {
@@ -197,7 +203,7 @@ namespace Sinawler
                 Log( "用户" + lCurrentUserID.ToString() + "的微博数据已爬取完毕。" );
                 //日志
                 AdjustFreq();
-                Log( "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次" );
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
             }
         }
 
@@ -208,6 +214,11 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForStatusRobot.Initialize();
+        }
+
+        sealed protected override void AdjustFreq()
+        {
+            base.AdjustFreq();
         }
     }
 }

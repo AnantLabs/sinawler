@@ -8,6 +8,7 @@ using System.IO;
 using System.Windows.Forms;
 using Sinawler.Model;
 using System.Data;
+using System.Xml;
 
 namespace Sinawler
 {
@@ -37,12 +38,17 @@ namespace Sinawler
         public void Start ( long lStartUserID )
         {
             if (lStartUserID == 0) return;
+
+            AdjustFreq();
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue( lStartUserID );
             queueUserForUserInfoRobot.Enqueue( lStartUserID );
             queueUserForUserTagRobot.Enqueue( lStartUserID );
             queueUserForStatusRobot.Enqueue( lStartUserID );
             lCurrentID = lStartUserID;
+
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
             {
@@ -123,7 +129,7 @@ namespace Sinawler
 
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
                 #endregion
                 #region 用户粉丝列表
                 //爬取当前用户的粉丝的ID，记录关系，加入队列
@@ -192,7 +198,7 @@ namespace Sinawler
                 Log("用户" + lCurrentID.ToString() + "的关系已爬取完毕。");
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
             }
         }
 
@@ -203,6 +209,36 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForUserRelationRobot.Initialize();
+        }
+
+        sealed protected override void AdjustFreq()
+        {
+            string strResult = api.check_hits_limit();
+            if (strResult == null) return;
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(strResult);
+
+            int iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
+            int iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
+
+            //若已无剩余次数，直接等待剩余时间
+            if (iRemainingHits == 0)
+            {
+                crawler.SleepTime = iResetTimeInSeconds * 1000;
+            }
+            else
+            {
+                //计算
+                int iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
+                //if (iSleep <= 0) iSleep = 1;
+                if (iSleep < 500) iSleep = 500; //sleep at least 500ms
+
+                crawler.SleepTime = iSleep;
+            }
+
+            GlobalPool.LimitUpdateTime = DateTime.Now;
+            GlobalPool.RemainingHits = iRemainingHits;
+            GlobalPool.ResetTimeInSeconds = iResetTimeInSeconds;
         }
     }
 }

@@ -22,5 +22,9 @@ namespace Sinawler
         public static bool TagRobotEnabled = true;
         public static bool StatusRobotEnabled = true;
         public static bool CommentRobotEnabled = true;
+
+        public static DateTime LimitUpdateTime = DateTime.Now;
+        public static int ResetTimeInSeconds = 3600;
+        public static int RemainingHits=1000;
     }
 }

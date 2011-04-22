@@ -17,8 +17,6 @@ namespace Sinawler
         ///2010-10-12定为不设下限
         ///2011-02-23设定为下限500ms
         private int iSleep = 3000;
-        private int iRemainingHits = 1000; //当前小时内剩余请求次数
-        private int iResetTimeInSeconds = 3600; //剩余秒数
         private bool blnStopCrawling = false;   //是否停止爬行
 
         public SinaMBCrawler ()
@@ -28,18 +26,6 @@ namespace Sinawler
         {
             set { iSleep = value; }
             get { return iSleep; }
-        }
-
-        public int RemainingHits
-        {
-            set { iRemainingHits = value; }
-            get { return iRemainingHits; }
-        }
-
-        public int ResetTimeInSeconds
-        {
-            set { iResetTimeInSeconds = value; }
-            get { return iResetTimeInSeconds; }
         }
 
         public bool StopCrawling
