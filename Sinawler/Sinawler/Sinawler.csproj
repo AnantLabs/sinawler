@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DAA2DB49-A89C-417B-AA99-112DB36362B9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -76,7 +76,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ISinaApiService.cs" />
     <Compile Include="API\oAuthBase.cs" />
     <Compile Include="API\oAuthSina.cs" />
     <Compile Include="API\SinaApiService.cs" />

@@ -28,101 +28,119 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtUserID = new System.Windows.Forms.TextBox();
-            this.txtPWD = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.wbBrowser = new System.Windows.Forms.WebBrowser();
+            this.txtUserID = new System.Windows.Forms.TextBox();
+            this.txtPWD = new System.Windows.Forms.TextBox();
+            this.lblUserId = new System.Windows.Forms.Label();
+            this.lblPWD = new System.Windows.Forms.Label();
             this.SuspendLayout();
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point( 28, 28 );
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size( 65, 12 );
-            this.label1.TabIndex = 0;
-            this.label1.Text = "微博帐号：";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point( 28, 70 );
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size( 65, 12 );
-            this.label2.TabIndex = 1;
-            this.label2.Text = "登录密码：";
-            // 
-            // txtUserID
-            // 
-            this.txtUserID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtUserID.Location = new System.Drawing.Point( 99, 26 );
-            this.txtUserID.Name = "txtUserID";
-            this.txtUserID.Size = new System.Drawing.Size( 100, 21 );
-            this.txtUserID.TabIndex = 0;
-            // 
-            // txtPWD
-            // 
-            this.txtPWD.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.txtPWD.Location = new System.Drawing.Point( 99, 68 );
-            this.txtPWD.Name = "txtPWD";
-            this.txtPWD.PasswordChar = '*';
-            this.txtPWD.Size = new System.Drawing.Size( 100, 21 );
-            this.txtPWD.TabIndex = 1;
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point( 30, 121 );
+            this.btnLogin.Enabled = false;
+            this.btnLogin.Location = new System.Drawing.Point(30, 121);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size( 75, 23 );
+            this.btnLogin.Size = new System.Drawing.Size(75, 23);
             this.btnLogin.TabIndex = 2;
             this.btnLogin.Text = "登录";
             this.btnLogin.UseVisualStyleBackColor = true;
-            this.btnLogin.Click += new System.EventHandler( this.btnLogin_Click );
+            this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
             // btnCancel
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point( 124, 121 );
+            this.btnCancel.Enabled = false;
+            this.btnCancel.Location = new System.Drawing.Point(121, 121);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size( 75, 23 );
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
+            // wbBrowser
+            // 
+            this.wbBrowser.Location = new System.Drawing.Point(30, 95);
+            this.wbBrowser.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wbBrowser.Name = "wbBrowser";
+            this.wbBrowser.Size = new System.Drawing.Size(33, 20);
+            this.wbBrowser.TabIndex = 4;
+            this.wbBrowser.Visible = false;
+            this.wbBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbBrowser_DocumentCompleted);
+            // 
+            // txtUserID
+            // 
+            this.txtUserID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtUserID.Enabled = false;
+            this.txtUserID.Location = new System.Drawing.Point(96, 23);
+            this.txtUserID.Name = "txtUserID";
+            this.txtUserID.Size = new System.Drawing.Size(100, 21);
+            this.txtUserID.TabIndex = 7;
+            // 
+            // txtPWD
+            // 
+            this.txtPWD.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.txtPWD.Enabled = false;
+            this.txtPWD.Location = new System.Drawing.Point(96, 65);
+            this.txtPWD.Name = "txtPWD";
+            this.txtPWD.PasswordChar = '*';
+            this.txtPWD.Size = new System.Drawing.Size(100, 21);
+            this.txtPWD.TabIndex = 8;
+            // 
+            // lblUserId
+            // 
+            this.lblUserId.AutoSize = true;
+            this.lblUserId.Location = new System.Drawing.Point(28, 28);
+            this.lblUserId.Name = "lblUserId";
+            this.lblUserId.Size = new System.Drawing.Size(65, 12);
+            this.lblUserId.TabIndex = 9;
+            this.lblUserId.Text = "微博帐号：";
+            // 
+            // lblPWD
+            // 
+            this.lblPWD.AutoSize = true;
+            this.lblPWD.Location = new System.Drawing.Point(28, 70);
+            this.lblPWD.Name = "lblPWD";
+            this.lblPWD.Size = new System.Drawing.Size(65, 12);
+            this.lblPWD.TabIndex = 10;
+            this.lblPWD.Text = "登录密码：";
+            // 
             // frmLogin
             // 
             this.AcceptButton = this.btnLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF( 6F, 12F );
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size( 229, 168 );
+            this.ClientSize = new System.Drawing.Size(229, 168);
             this.ControlBox = false;
-            this.Controls.Add( this.btnCancel );
-            this.Controls.Add( this.btnLogin );
-            this.Controls.Add( this.txtPWD );
-            this.Controls.Add( this.txtUserID );
-            this.Controls.Add( this.label2 );
-            this.Controls.Add( this.label1 );
+            this.Controls.Add(this.lblPWD);
+            this.Controls.Add(this.lblUserId);
+            this.Controls.Add(this.txtPWD);
+            this.Controls.Add(this.txtUserID);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnLogin);
+            this.Controls.Add(this.wbBrowser);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "登录新浪微博";
-            this.ResumeLayout( false );
+            this.Load += new System.EventHandler(this.frmLogin_Load);
+            this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtUserID;
-        private System.Windows.Forms.TextBox txtPWD;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.WebBrowser wbBrowser;
+        private System.Windows.Forms.TextBox txtUserID;
+        private System.Windows.Forms.TextBox txtPWD;
+        private System.Windows.Forms.Label lblUserId;
+        private System.Windows.Forms.Label lblPWD;
     }
 }

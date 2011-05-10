@@ -19,12 +19,13 @@ namespace Sina.Api
     public class oAuthSina : oAuthBase
     {
         public enum Method { GET, POST, PUT, DELETE };
-        public const string REQUEST_TOKEN = "http://api.t.sina.com.cn/oauth/request_token";
-        public const string AUTHORIZE = "http://api.t.sina.com.cn/oauth/authorize";
-        public const string ACCESS_TOKEN = "http://api.t.sina.com.cn/oauth/access_token";
 
-        private string _consumerKey = "";
-        private string _consumerSecret = "";
+        public const string REQUEST_TOKEN = "http://api.weibo.com/oauth/request_token";
+        public const string AUTHORIZE = "http://api.weibo.com/oauth/authorize";
+        public const string ACCESS_TOKEN = "http://api.weibo.com/oauth/access_token";
+
+        private string _appKey = "";
+        private string _appSecret = "";
         private string _token = "";
         private string _tokenSecret = "";
         private string _format = "xml";
@@ -35,30 +36,30 @@ namespace Sina.Api
             get{return _format;}
             set{_format=value;}
         }
-        public string ConsumerKey
+        public string appKey
         {
             get
             {
-                if (_consumerKey.Length == 0)
+                if (_appKey.Length == 0)
                 {
-                    _consumerKey = AppSettings.LoadDefault().AppKey;
+                    _appKey = AppSettings.LoadDefault().AppKey;
                 }
-                return _consumerKey;
+                return _appKey;
             }
-            set { _consumerKey = value; }
+            set { _appKey = value; }
         }
 
-        public string ConsumerSecret
+        public string appSecret
         {
             get
             {
-                if (_consumerSecret.Length == 0)
+                if (_appSecret.Length == 0)
                 {
-                    _consumerSecret = AppSettings.LoadDefault().SecretKey;
+                    _appSecret = AppSettings.LoadDefault().AppSecret;
                 }
-                return _consumerSecret;
+                return _appSecret;
             }
-            set { _consumerSecret = value; }
+            set { _appSecret = value; }
         }
 
         public string Token { get { return _token; } set { _token = value; } }
@@ -74,8 +75,6 @@ namespace Sina.Api
             string response = oAuthWebRequest( Method.GET, REQUEST_TOKEN, String.Empty );
             if (response.Length > 0)
             {
-                //response contains token and token secret.  We only need the token.
-                //oauth_token=36d1871d-5315-499f-a256-7231fdb6a1e0&oauth_token_secret=34a6cb8e-4279-4a0b-b840-085234678ab4&oauth_callback_confirmed=true
                 NameValueCollection qs = HttpUtility.ParseQueryString(response);
                 if (qs["oauth_token"] != null)
                 {
@@ -102,10 +101,8 @@ namespace Sina.Api
         /// 用授权的Request Token换取Access Token【后台进行】
         /// </summary>
         /// <param name="authToken">oauth_token is supplied by Twitter's authorization page following the callback.</param>
-        public void AccessTokenGet(string authToken)
+        public void AccessTokenGet()
         {
-            this.Token = authToken;
-
             string response = oAuthWebRequest(Method.GET, ACCESS_TOKEN, string.Empty);
 
             if (response.Length > 0)
@@ -183,8 +180,8 @@ namespace Sina.Api
 
             //Generate Signature
             string sig = this.GenerateSignature(uri,
-                this.ConsumerKey,
-                this.ConsumerSecret,
+                this.appKey,
+                this.appSecret,
                 this.Token,
                 this.TokenSecret,
                 method.ToString(),
@@ -245,8 +242,8 @@ namespace Sina.Api
 
             //Generate Signature
             string sig = this.GenerateSignatureBase(uri,
-                this.ConsumerKey,
-                this.ConsumerSecret,
+                this.appKey,
+                this.appSecret,
                 this.Token,
                 this.TokenSecret,
                 "PUT",
@@ -269,7 +266,7 @@ namespace Sina.Api
             webRequest.ServicePoint.Expect100Continue = false;
 
             webRequest.Headers.Add("Authorization", "OAuth realm=\"\"");
-            webRequest.Headers.Add("oauth_consumer_key", this.ConsumerKey);
+            webRequest.Headers.Add("oauth_consumer_key", this.appKey);
             webRequest.Headers.Add("oauth_token", this.Token);
             webRequest.Headers.Add("oauth_signature_method", "HMAC-SHA1");
             webRequest.Headers.Add("oauth_signature", sig);
@@ -304,7 +301,6 @@ namespace Sina.Api
             return responseData;
 
         }
-
 
         /// <summary>
         /// Web Request Wrapper
@@ -417,7 +413,7 @@ namespace Sina.Api
                     StringBuilder sb2 = new StringBuilder();
                     sb2.Append(boundary + "\r\n");
                     sb2.Append("content-disposition: form-data; name=\"source\"\r\n\r\n");
-                    sb2.Append(ConsumerKey + "\r\n");
+                    sb2.Append(appKey + "\r\n");
                     requestWriter.Write(sb2.ToString()); 
 
                     //$k = "status";
@@ -486,14 +482,23 @@ namespace Sina.Api
 
         public string ParseHtml(string html)
         {
+            string strPin="";
+
             Regex htmlRegex = new Regex("<b>[0-9]{6}</b>");
             Match m = htmlRegex.Match(html);
             Regex pinRegex = new Regex("[0-9]{6}");
             Match m1 = pinRegex.Match(m.Value);
 
-            Regex reg = new Regex("获取到授权码：([0-9]+)");
-            Match result = reg.Match(html);
-            return result.Groups[1].Value;
+            Regex reg = new Regex("获取到的授权码：<span class=\"fb\">([0-9]+)");
+            strPin= reg.Match(html).Groups[1].Value;
+
+            if (strPin == "")
+            {
+                Regex reg2 = new Regex("获取到授权码：([0-9]+)");
+                strPin = reg.Match(html).Groups[1].Value;
+            }
+
+            return strPin;
         }
     }
 }
