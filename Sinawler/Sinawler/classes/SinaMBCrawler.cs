@@ -52,6 +52,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.friends_ids(lUid, iCursor);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);
@@ -86,6 +87,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.followers_ids(lUid, iCursor);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);
@@ -116,6 +118,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.user_show(lUid);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
@@ -176,6 +179,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.user_show(strScreenName);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
@@ -236,6 +240,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.user_show(lUid, strScreenName);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
@@ -308,6 +313,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.statuses_show(lStatusID);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
@@ -525,6 +531,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.user_timeline(lUid, lSinceSid);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
@@ -744,6 +751,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.comments(lStatusID, iPageNum);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
@@ -826,6 +834,7 @@ namespace Sinawler
                 System.Threading.Thread.Sleep(100);
                 strResult = api.tags_of(lUserID);
                 iTryTimes--;
+                GlobalPool.RemainingHits--;
             }
             iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);
