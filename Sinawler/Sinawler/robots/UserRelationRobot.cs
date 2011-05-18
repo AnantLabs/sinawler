@@ -214,7 +214,12 @@ namespace Sinawler
         sealed protected override void AdjustFreq()
         {
             string strResult = api.check_hits_limit();
-            if (strResult == null) return;
+            while (strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null)
+            {
+                System.Threading.Thread.Sleep(100);
+                strResult = api.check_hits_limit();
+            }
+            //if (strResult == null) return;
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.LoadXml(strResult);
 
