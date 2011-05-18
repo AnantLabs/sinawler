@@ -19,14 +19,14 @@ namespace Sinawler
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserTagRobot(SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot)
-            : base( oAPI )
+        public UserTagRobot()
+            : base()
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_tag.log";
-            queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForUserRelationRobot = qUserForUserRelationRobot;
-            queueUserForUserTagRobot = qUserForUserTagRobot;
-            queueUserForStatusRobot = qUserForStatusRobot;
+            queueUserForUserInfoRobot = GlobalPool.UserQueueForUserInfoRobot;
+            queueUserForUserRelationRobot = GlobalPool.UserQueueForUserRelationRobot;
+            queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
+            queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
         }
 
         /// <summary>
@@ -36,12 +36,18 @@ namespace Sinawler
         public void Start ( long lStartUserID )
         {
             if (lStartUserID == 0) return;
+            Thread.Sleep(500);  //waiting that user relation robot update limit data
+             
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue(lStartUserID);
             queueUserForUserInfoRobot.Enqueue(lStartUserID);
             queueUserForUserTagRobot.Enqueue(lStartUserID);
             queueUserForStatusRobot.Enqueue(lStartUserID);
             lCurrentID = lStartUserID;
+
+            AdjustFreq();
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
             {
@@ -112,7 +118,7 @@ namespace Sinawler
                 Log( "用户" + lCurrentID.ToString() + "的标签数据已爬取完毕。" );
                 //日志
                 AdjustFreq();
-                Log( "调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次" );
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
             }
         }
 
@@ -123,6 +129,11 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForUserTagRobot.Initialize();
+        }
+
+        sealed protected override void AdjustFreq()
+        {
+            base.AdjustFreq();
         }
     }
 }

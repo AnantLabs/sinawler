@@ -17,20 +17,22 @@ namespace Sinawler
         private UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForUserTagRobot;             //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
+        private UserBuffer oUserBuffer;               //the buffer queue of users
         private int iInitQueueLength = 100;          //初始队列长度
 
         public int InitQueueLength
         { get { return iInitQueueLength; } }
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public UserInfoRobot ( SinaApiService oAPI, UserQueue qUserForUserInfoRobot, UserQueue qUserForUserRelationRobot, UserQueue qUserForUserTagRobot, UserQueue qUserForStatusRobot )
-            : base( oAPI )
+        public UserInfoRobot ()
+            : base()
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
-            queueUserForUserInfoRobot = qUserForUserInfoRobot;
-            queueUserForUserRelationRobot = qUserForUserRelationRobot;
-            queueUserForUserTagRobot = qUserForUserTagRobot;
-            queueUserForStatusRobot = qUserForStatusRobot;
+            queueUserForUserInfoRobot = GlobalPool.UserQueueForUserInfoRobot;
+            queueUserForUserRelationRobot = GlobalPool.UserQueueForUserRelationRobot;
+            queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
+            queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
+            oUserBuffer = GlobalPool.UserBuffer;
         }
 
         /// <summary>
@@ -40,7 +42,7 @@ namespace Sinawler
         public void Start ( long lStartUserID )
         {
             if (lStartUserID == 0) return;
-
+            Thread.Sleep(500);  //waiting that user relation robot update limit data
             User user;
 
             //将起始UserID入队
@@ -50,6 +52,10 @@ namespace Sinawler
             queueUserForStatusRobot.Enqueue( lStartUserID );
             
             lCurrentID = lStartUserID;
+
+            AdjustFreq();
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+
             //对队列循环爬行
             while (true)
             {
@@ -73,8 +79,18 @@ namespace Sinawler
                     if (blnAsyncCancelled) return;
                     Thread.Sleep(50);
                 }
-                Log( "爬取用户" + lCurrentID.ToString() +"的基本信息...");
-                user = crawler.GetUserInfo( lCurrentID );
+
+                if (oUserBuffer.UserExists(lCurrentID))   //current user exists in the user buffer
+                {
+                    Log("用户" + lCurrentID.ToString() + "已在缓冲池中，将直接获取其信息...");
+                    user = oUserBuffer.GetUser(lCurrentID);
+                    oUserBuffer.Remove(user);
+                }
+                else
+                {
+                    Log("爬取用户" + lCurrentID.ToString() + "的基本信息...");
+                    user = crawler.GetUserInfo(lCurrentID);
+                }
                 if (user!=null && user.user_id > 0)
                 {
                     //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
@@ -107,7 +123,7 @@ namespace Sinawler
                 
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + crawler.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + crawler.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
             }
         }
 
@@ -118,6 +134,11 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForUserInfoRobot.Initialize();
+        }
+
+        sealed protected override void AdjustFreq()
+        {
+            base.AdjustFreq();
         }
     }
 }

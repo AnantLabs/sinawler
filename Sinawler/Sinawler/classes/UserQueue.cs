@@ -6,12 +6,13 @@ using Sinawler.Model;
 
 namespace Sinawler
 {
-    class UserQueue : QueueBase
+    public class UserQueue : QueueBase
     {
         public UserQueue (QueueBufferFor who)
             : base()
         {
-            if(who==QueueBufferFor.COMMENT) //Ä¬ÈÏÎªUSER_INFO
+            //this is a queue for of user ids, so the value COMMENT, which will make the queue store status ids, is not allowed, default value USER_INFO will be used.
+            if(who==QueueBufferFor.COMMENT)
                 lstWaitingIDInDB = new QueueBuffer( QueueBufferFor.USER_INFO );
             else
                 lstWaitingIDInDB = new QueueBuffer(who);

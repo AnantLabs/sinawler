@@ -6,7 +6,7 @@ using Sinawler.Model;
 
 namespace Sinawler
 {
-    class StatusQueue : QueueBase
+    public class StatusQueue : QueueBase
     {
         public StatusQueue ()
             : base()

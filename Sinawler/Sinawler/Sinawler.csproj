@@ -76,22 +76,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\ISinaApiService.cs" />
     <Compile Include="API\oAuthBase.cs" />
     <Compile Include="API\oAuthSina.cs" />
     <Compile Include="API\SinaApiService.cs" />
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
+    <Compile Include="classes\GlobalPool.cs" />
+    <Compile Include="classes\UserBuffer.cs" />
     <Compile Include="classes\UserQueue.cs" />
-    <Compile Include="classes\UserInfoRobot.cs" />
+    <Compile Include="frmBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmBrowser.Designer.cs">
+      <DependentUpon>frmBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="robots\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
-    <Compile Include="classes\StatusRobot.cs" />
-    <Compile Include="classes\RobotBase.cs" />
-    <Compile Include="classes\CommentRobot.cs" />
+    <Compile Include="robots\StatusRobot.cs" />
+    <Compile Include="robots\RobotBase.cs" />
+    <Compile Include="robots\CommentRobot.cs" />
     <Compile Include="classes\QueueBase.cs" />
     <Compile Include="classes\StatusQueue.cs" />
-    <Compile Include="classes\UserRelationRobot.cs" />
-    <Compile Include="classes\UserTagRobot.cs" />
+    <Compile Include="robots\UserRelationRobot.cs" />
+    <Compile Include="robots\UserTagRobot.cs" />
     <Compile Include="model\user.cs" />
     <Compile Include="model\user_relation.cs">
       <SubType>Code</SubType>
@@ -119,6 +126,9 @@
     <Compile Include="model\queue_buffer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmBrowser.resx">
+      <DependentUpon>frmBrowser.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -142,6 +152,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="sqlscripts\sqlserver\queue_buffer_for_userBuffer.TAB" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>

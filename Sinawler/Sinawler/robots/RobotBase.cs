@@ -13,7 +13,7 @@ namespace Sinawler
 {
     public class RobotBase
     {
-        protected SinaApiService api;
+        protected SinaApiService api=GlobalPool.API;
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
         private string strLogMessage = "";          //日志内容
@@ -23,10 +23,9 @@ namespace Sinawler
         protected BackgroundWorker bwAsync = null;
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public RobotBase ( SinaApiService oAPI )
+        public RobotBase ()
         {
-            this.api = oAPI;
-            crawler = new SinaMBCrawler( this.api );            
+            crawler = new SinaMBCrawler();            
         }
 
         public bool AsyncCancelled
@@ -79,32 +78,25 @@ namespace Sinawler
         }
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        protected void AdjustFreq()
+        //2011-02-23 改为间隔下限为500ms
+        //except user relation robot, others get and record the reset time only
+        protected virtual void AdjustFreq()
         {
-            string strResult = api.check_hits_limit();
-            if (strResult == null) return;
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml( strResult );
-
-            int iResetTimeInSeconds = Convert.ToInt32( xmlDoc.GetElementsByTagName( "reset-time-in-seconds" )[0].InnerText );
-            int iRemainingHits = Convert.ToInt32( xmlDoc.GetElementsByTagName( "remaining-hits" )[0].InnerText );
-
             //若已无剩余次数，直接等待剩余时间
-            if (iRemainingHits == 0)
+            if (GlobalPool.RemainingHits == 0)
             {
-                crawler.SleepTime = iResetTimeInSeconds * 1000;
-                crawler.RemainingHits = iRemainingHits;
-                crawler.ResetTimeInSeconds = iResetTimeInSeconds;
+                crawler.SleepTime = GlobalPool.ResetTimeInSeconds * 1000;
             }
             else
             {
                 //计算
-                int iSleep = Convert.ToInt32( iResetTimeInSeconds * 1000 / iRemainingHits );
-                if (iSleep <= 0) iSleep = 1;
+                int iSleep = Convert.ToInt32(GlobalPool.ResetTimeInSeconds * 1000 / GlobalPool.RemainingHits);
+                GlobalPool.RemainingHits--;
+
+                //if (iSleep <= 0) iSleep = 1;
+                if (iSleep < 500) iSleep = 500; //sleep at least 500ms
 
                 crawler.SleepTime = iSleep;
-                crawler.RemainingHits = iRemainingHits;
-                crawler.ResetTimeInSeconds = iResetTimeInSeconds;
             }
         }
 
