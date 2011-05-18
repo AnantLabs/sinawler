@@ -1,7 +1,7 @@
-delete from users
-delete from user_relation
-delete from tags
-delete from user_tag
-delete from statuses
-delete from comments
-delete from sys_args
+truncate table users
+truncate table user_relation
+truncate table tags
+truncate table user_tag
+truncate table statuses
+truncate table comments
+truncate table sys_args

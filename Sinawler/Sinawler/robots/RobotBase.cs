@@ -82,12 +82,6 @@ namespace Sinawler
         //except user relation robot, others get and record the reset time only
         protected virtual void AdjustFreq()
         {
-            string strResult = api.check_hits_limit();
-            if (strResult == null) return;
-            XmlDocument xmlDoc = new XmlDocument();
-            xmlDoc.LoadXml(strResult);
-
-            GlobalPool.ResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
             //若已无剩余次数，直接等待剩余时间
             if (GlobalPool.RemainingHits == 0)
             {

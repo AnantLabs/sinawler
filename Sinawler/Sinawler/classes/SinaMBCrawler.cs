@@ -18,6 +18,7 @@ namespace Sinawler
         ///2011-02-23设定为下限500ms
         private int iSleep = 3000;
         private bool blnStopCrawling = false;   //是否停止爬行
+        private int iTryTimes = 10;             //the times that try to get XML
 
         public SinaMBCrawler()
         { }
@@ -45,6 +46,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<long> ids = new LinkedList<long>();
             string strResult = api.friends_ids(lUid, iCursor);
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return ids;
+                System.Threading.Thread.Sleep(100);
+                strResult = api.friends_ids(lUid, iCursor);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);
             if (strResult != null && strResult != "")
             {
@@ -71,6 +80,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<long> ids = new LinkedList<long>();
             string strResult = api.followers_ids(lUid, iCursor);
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return ids;
+                System.Threading.Thread.Sleep(100);
+                strResult = api.followers_ids(lUid, iCursor);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);
             if (strResult != null && strResult != "")
             {
@@ -93,8 +110,14 @@ namespace Sinawler
             User user = new User();
             user.user_id = -1;
             string strResult = api.user_show(lUid);
-            while (strResult == null && !blnStopCrawling)
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return null;
+                System.Threading.Thread.Sleep(100);
                 strResult = api.user_show(lUid);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (blnStopCrawling)
@@ -147,8 +170,14 @@ namespace Sinawler
             User user = new User();
             user.user_id = -1;
             string strResult = api.user_show(strScreenName);
-            while (strResult == null && !blnStopCrawling)
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return null;
+                System.Threading.Thread.Sleep(100);
                 strResult = api.user_show(strScreenName);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (blnStopCrawling)
@@ -201,8 +230,14 @@ namespace Sinawler
             User user = new User();
             user.user_id = -1;
             string strResult = api.user_show(lUid, strScreenName);
-            while (strResult == null && !blnStopCrawling)
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return null;
+                System.Threading.Thread.Sleep(100);
                 strResult = api.user_show(lUid, strScreenName);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (blnStopCrawling)
@@ -267,6 +302,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             string strResult = api.statuses_show(lStatusID);
             if (strResult == null) return null;
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return null;
+                System.Threading.Thread.Sleep(100);
+                strResult = api.statuses_show(lStatusID);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
             if (strResult.Trim() == "") return null;
             XmlDocument xmlDoc = new XmlDocument();
@@ -476,8 +519,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Status> lstStatuses = new LinkedList<Status>();
             string strResult = api.user_timeline(lUid, lSinceSid);
-            while (strResult == null && !blnStopCrawling)
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return lstStatuses;
+                System.Threading.Thread.Sleep(100);
                 strResult = api.user_timeline(lUid, lSinceSid);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
             if (strResult.Trim() == "") return lstStatuses;
             XmlDocument xmlDoc = new XmlDocument();
@@ -689,9 +738,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Comment> lstComments = new LinkedList<Comment>();
             string strResult = api.comments(lStatusID, iPageNum);
-            while (strResult == null && !blnStopCrawling)
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return lstComments;
+                System.Threading.Thread.Sleep(100);
                 strResult = api.comments(lStatusID, iPageNum);
-
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
             if (strResult.Trim() == "") return lstComments;
             XmlDocument xmlDoc = new XmlDocument();
@@ -765,8 +819,15 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Tag> lstTags = new LinkedList<Tag>();
-
             string strResult = api.tags_of(lUserID);
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return lstTags;
+                System.Threading.Thread.Sleep(100);
+                strResult = api.tags_of(lUserID);
+                iTryTimes--;
+            }
+            iTryTimes = 10;
             strResult = PubHelper.stripNonValidXMLCharacters(strResult);
             if (strResult != null && strResult != "")
             {

@@ -254,22 +254,22 @@ namespace Sinawler.Model
             switch (_target)
             {
                 case QueueBufferFor.USER_INFO:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_userInfo");
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_userInfo");
                     break;
                 case QueueBufferFor.USER_RELATION:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_userRelation");
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_userRelation");
                     break;
                 case QueueBufferFor.USER_TAG:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_tag");
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_tag");
                     break;
                 case QueueBufferFor.STATUS:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_status");
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_status");
                     break;
                 case QueueBufferFor.COMMENT:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_comment");
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_comment");
                     break;
                 case QueueBufferFor.USER_BUFFER:
-                    db.CountByExecuteSQL("delete from queue_buffer_for_userBuffer");
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_userBuffer");
                     break;
             }
             iCount = 0;
