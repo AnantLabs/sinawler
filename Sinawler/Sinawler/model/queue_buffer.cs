@@ -216,31 +216,32 @@ namespace Sinawler.Model
         /// </summary>
         public void Remove(Object obj)
         {
+            int iRowsDeleted = 0;
             Database db = DatabaseFactory.CreateDatabase();
             if (obj.GetType() == typeof(Int64))
                 switch (_target)
                 {
                     case QueueBufferFor.USER_INFO:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id=" + obj.ToString());
+                        iRowsDeleted=db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id=" + obj.ToString());
                         break;
                     case QueueBufferFor.USER_RELATION:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id=" + obj.ToString());
+                        iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id=" + obj.ToString());
                         break;
                     case QueueBufferFor.USER_TAG:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id=" + obj.ToString());
+                        iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id=" + obj.ToString());
                         break;
                     case QueueBufferFor.STATUS:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id=" + obj.ToString());
+                        iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id=" + obj.ToString());
                         break;
                     case QueueBufferFor.COMMENT:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id=" + obj.ToString());
+                        iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id=" + obj.ToString());
                         break;
                 }
             if (obj.GetType() == typeof(User) && _target == QueueBufferFor.USER_BUFFER)
-                db.CountByExecuteSQL("delete from queue_buffer_for_userBuffer where user_id=" + ((User)obj).user_id.ToString());
+                iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_userBuffer where user_id=" + ((User)obj).user_id.ToString());
 
-            iCount--;
-            if (oFirstValue.Equals(obj))
+            if(iRowsDeleted>0)  iCount=iCount-iRowsDeleted;
+            if (oFirstValue!=null && oFirstValue.Equals(obj))
                 //更新新的队头值
                 GetFirstValue();
         }
