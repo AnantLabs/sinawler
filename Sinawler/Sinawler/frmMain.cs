@@ -1152,5 +1152,15 @@ namespace Sinawler
         {
             if (!CanBeClosed()) e.Cancel = true;
         }
+
+        private void chkComment_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkComment.Checked) chkStatus.Checked = true;
+        }
+
+        private void chkStatus_CheckedChanged(object sender, EventArgs e)
+        {
+            if (!chkStatus.Checked) chkComment.Checked = false;
+        }
     }
 }

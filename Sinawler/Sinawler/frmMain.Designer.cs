@@ -491,6 +491,7 @@
             this.chkComment.TabIndex = 25;
             this.chkComment.Text = "Comments Robot";
             this.chkComment.UseVisualStyleBackColor = true;
+            this.chkComment.CheckedChanged += new System.EventHandler(this.chkComment_CheckedChanged);
             // 
             // chkStatus
             // 
@@ -503,6 +504,7 @@
             this.chkStatus.TabIndex = 24;
             this.chkStatus.Text = "Statuses Robot";
             this.chkStatus.UseVisualStyleBackColor = true;
+            this.chkStatus.CheckedChanged += new System.EventHandler(this.chkStatus_CheckedChanged);
             // 
             // chkTag
             // 
