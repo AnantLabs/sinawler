@@ -71,6 +71,9 @@
             this.lblRobotSelect = new System.Windows.Forms.Label();
             this.btnPauseContinue = new System.Windows.Forms.Button();
             this.gpSetting = new System.Windows.Forms.GroupBox();
+            this.optXML = new System.Windows.Forms.RadioButton();
+            this.optJSON = new System.Windows.Forms.RadioButton();
+            this.lblFormat = new System.Windows.Forms.Label();
             this.btnLoad = new System.Windows.Forms.Button();
             this.grpDBSettings = new System.Windows.Forms.GroupBox();
             this.txtDBName = new System.Windows.Forms.TextBox();
@@ -106,9 +109,6 @@
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.lblFormat = new System.Windows.Forms.Label();
-            this.optJSON = new System.Windows.Forms.RadioButton();
-            this.optXML = new System.Windows.Forms.RadioButton();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -565,6 +565,37 @@
             this.gpSetting.TabStop = false;
             this.gpSetting.Text = "设置（改变设置后请点击“保存”）";
             // 
+            // optXML
+            // 
+            this.optXML.AutoSize = true;
+            this.optXML.Location = new System.Drawing.Point(259, 163);
+            this.optXML.Name = "optXML";
+            this.optXML.Size = new System.Drawing.Size(41, 16);
+            this.optXML.TabIndex = 16;
+            this.optXML.Text = "XML";
+            this.optXML.UseVisualStyleBackColor = true;
+            // 
+            // optJSON
+            // 
+            this.optJSON.AutoSize = true;
+            this.optJSON.Checked = true;
+            this.optJSON.Location = new System.Drawing.Point(120, 162);
+            this.optJSON.Name = "optJSON";
+            this.optJSON.Size = new System.Drawing.Size(125, 16);
+            this.optJSON.TabIndex = 15;
+            this.optJSON.TabStop = true;
+            this.optJSON.Text = "JSON(recommended)";
+            this.optJSON.UseVisualStyleBackColor = true;
+            // 
+            // lblFormat
+            // 
+            this.lblFormat.AutoSize = true;
+            this.lblFormat.Location = new System.Drawing.Point(25, 164);
+            this.lblFormat.Name = "lblFormat";
+            this.lblFormat.Size = new System.Drawing.Size(89, 12);
+            this.lblFormat.TabIndex = 14;
+            this.lblFormat.Text = "数据传输格式：";
+            // 
             // btnLoad
             // 
             this.btnLoad.Location = new System.Drawing.Point(741, 126);
@@ -945,37 +976,6 @@
             this.btnPost.Text = "发一条微博帮忙推广：）3Q";
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler(this.btnPost_Click);
-            // 
-            // lblFormat
-            // 
-            this.lblFormat.AutoSize = true;
-            this.lblFormat.Location = new System.Drawing.Point(25, 164);
-            this.lblFormat.Name = "lblFormat";
-            this.lblFormat.Size = new System.Drawing.Size(89, 12);
-            this.lblFormat.TabIndex = 14;
-            this.lblFormat.Text = "数据传输格式：";
-            // 
-            // optJSON
-            // 
-            this.optJSON.AutoSize = true;
-            this.optJSON.Checked = true;
-            this.optJSON.Location = new System.Drawing.Point(120, 162);
-            this.optJSON.Name = "optJSON";
-            this.optJSON.Size = new System.Drawing.Size(125, 16);
-            this.optJSON.TabIndex = 15;
-            this.optJSON.TabStop = true;
-            this.optJSON.Text = "JSON(recommended)";
-            this.optJSON.UseVisualStyleBackColor = true;
-            // 
-            // optXML
-            // 
-            this.optXML.AutoSize = true;
-            this.optXML.Location = new System.Drawing.Point(259, 163);
-            this.optXML.Name = "optXML";
-            this.optXML.Size = new System.Drawing.Size(41, 16);
-            this.optXML.TabIndex = 16;
-            this.optXML.Text = "XML";
-            this.optXML.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 

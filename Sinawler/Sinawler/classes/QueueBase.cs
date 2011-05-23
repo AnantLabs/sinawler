@@ -92,7 +92,7 @@ namespace Sinawler
             lock (oLock)
             {
                 //移入队尾，并从队头移除
-                if (lstWaitingIDInDB.Count==0 && lstWaitingID.Count < iMaxLengthInMem)
+                if (lstWaitingID.Count < iMaxLengthInMem && lstWaitingIDInDB.Count == 0)
                     lstWaitingID.AddLast( lFirstValue );
                 else
                     lstWaitingIDInDB.Enqueue( lFirstValue );
@@ -118,7 +118,7 @@ namespace Sinawler
                 //否则使用数据库队列缓存
                 lock (oLock)
                 {
-                    if (lstWaitingIDInDB.Count==0 && lstWaitingID.Count < iMaxLengthInMem)
+                    if (lstWaitingID.Count < iMaxLengthInMem && lstWaitingIDInDB.Count == 0)
                         lstWaitingID.AddLast(lID);
                     else
                         lstWaitingIDInDB.Enqueue(lID);

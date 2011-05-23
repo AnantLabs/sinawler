@@ -155,6 +155,8 @@ namespace Sinawler.Model
                 htValues.Add( "comment_id", _comment_id );
                 htValues.Add( "created_at", "'" + _created_at + "'" );
                 htValues.Add( "content", "'" + _content.Replace( "'", "''" ) + "'" );
+                htValues.Add("source_url", "'" + _source_url + "'");
+                htValues.Add("source_name", "'" + _source_name.Replace("'", "''") + "'");
                 htValues.Add( "user_id", _user.user_id );
                 htValues.Add( "status_id", _status_id );
                 htValues.Add("mid", _mid);

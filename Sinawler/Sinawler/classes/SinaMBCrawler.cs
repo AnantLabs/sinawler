@@ -926,10 +926,14 @@ namespace Sinawler
                 {
                     Comment comment = new Comment();
                     comment.status_id = lStatusID;
+                    comment.created_at = PubHelper.ParseDateTime(oJsonComment.created_at);
                     comment.comment_id = oJsonComment.id;
                     comment.content = oJsonComment.text;
-                    comment.source_url = oJsonComment.source.Substring(9, oJsonComment.source.IndexOf("rel") - 11);
-                    comment.source_name = oJsonComment.source.Substring(oJsonComment.source.IndexOf('>') + 1, oJsonComment.source.IndexOf("</") - oJsonComment.source.IndexOf('>') - 1);
+                    if (oJsonComment.source != null)
+                    {
+                        comment.source_url = oJsonComment.source.Substring(9, oJsonComment.source.IndexOf("rel") - 11);
+                        comment.source_name = oJsonComment.source.Substring(oJsonComment.source.IndexOf('>') + 1, oJsonComment.source.IndexOf("</") - oJsonComment.source.IndexOf('>') - 1);
+                    }
                     comment.mid = Convert.ToInt64(oJsonComment.mid);
                     comment.user = oJsonComment.user;
                     comment.user.created_at = PubHelper.ParseDateTime(comment.user.created_at);
