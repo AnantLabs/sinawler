@@ -27,7 +27,7 @@ namespace Sina.Api
         public SinaApiService()
         {
             //default format
-            Format = "xml";
+            Format = "json";
         }
 
         //从新浪跳转回来，换取Access Token
@@ -251,11 +251,16 @@ namespace Sina.Api
             {
                 string url = "http://api.weibo.com/account/verify_credentials." + Format;
                 string response = oAuthWebRequest( Method.GET, url, String.Empty );
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml( response );
-                XmlNode nodeError = xmlDoc.GetElementsByTagName( "error" )[0];
-                if (nodeError != null) return 0;   //出错，验证失败
-                else return Convert.ToInt64( xmlDoc.GetElementsByTagName( "id" )[0].InnerText );
+                if (Format == "xml")
+                {
+                    XmlDocument xmlDoc = new XmlDocument();
+                    xmlDoc.LoadXml(response);
+                    XmlNode nodeError = xmlDoc.GetElementsByTagName("error")[0];
+                    if (nodeError != null) return 0;   //出错，验证失败
+                    else return Convert.ToInt64(xmlDoc.GetElementsByTagName("id")[0].InnerText);
+                }
+                else
+                    return Convert.ToInt64(response.Substring(6, response.IndexOf(',') - 6));
             }
             catch
             { return 0; }

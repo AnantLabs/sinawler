@@ -21,10 +21,13 @@ namespace Sinawler.Model
             </source>
             <favorited>false</favorited>
             <truncated>false</truncated>
-            <geo/>
+            <geo xmlns:georss="http://www.georss.org/georss">
+                <georss:point>40.01115548 116.33617502</georss:point> 
+            </geo>
             <in_reply_to_status_id/>
             <in_reply_to_user_id/>
             <in_reply_to_screen_name/>
+            <mid>xxxxxxxx</mid>
             <user>
                 <id>1763124584</id>
                 <screen_name>标-心</screen_name>
@@ -63,13 +66,16 @@ namespace Sinawler.Model
 		private string _source_name;
 		private bool _favorited;
 		private bool _truncated;
-        private string _geo;
+        private string _geo_type;
+        private double _geo_coordinates_x;
+        private double _geo_coordinates_y;
 		private long _in_reply_to_status_id;
 		private long _in_reply_to_user_id;
 		private string _in_reply_to_screen_name;
 		private string _thumbnail_pic="";
 		private string _bmiddle_pic="";
 		private string _original_pic="";
+        private long _mid;
 		private User _user=new User();
         private Status _retweeted_status = null;
         private int _iteration;
@@ -82,6 +88,13 @@ namespace Sinawler.Model
 			set{ _status_id=value;}
 			get{return _status_id;}
 		}
+        /// <summary>
+        /// 微博ID（XML中为id），用于Json反序列化
+        /// </summary>
+        public long id
+        {
+            set { _status_id = value; }
+        }
 		/// <summary>
 		/// 创建时间
 		/// </summary>
@@ -131,12 +144,28 @@ namespace Sinawler.Model
 			get{return _truncated;}
 		}
         /// <summary>
-        /// 地理信息（暂不明类型）
+        /// 地理信息类型
         /// </summary>
-        public string geo
+        public string geo_type
         {
-            set { _geo = value; }
-            get { return _geo; }
+            set { _geo_type = value; }
+            get { return _geo_type; }
+        }
+        /// <summary>
+        /// 地理信息x坐标
+        /// </summary>
+        public double geo_coordinates_x
+        {
+            set { _geo_coordinates_x = value; }
+            get { return _geo_coordinates_x; }
+        }
+        /// <summary>
+        /// 地理信息y坐标
+        /// </summary>
+        public double geo_coordinates_y
+        {
+            set { _geo_coordinates_y = value; }
+            get { return _geo_coordinates_y; }
         }
 		/// <summary>
 		/// 回复ID
@@ -186,6 +215,14 @@ namespace Sinawler.Model
 			set{ _original_pic=value;}
 			get{return _original_pic;}
 		}
+        /// <summary>
+        /// mid
+        /// </summary>
+        public long mid
+        {
+            set { _mid = value; }
+            get { return _mid; }
+        }        
         /// <summary>
         /// 用户
         /// </summary>
@@ -262,13 +299,16 @@ namespace Sinawler.Model
                     htValues.Add( "truncated", 1 );
                 else
                     htValues.Add( "truncated", 0 );
-                htValues.Add( "geo", "'" + _geo.Replace( "'", "''" ) + "'" );
+                htValues.Add( "geo_type", "'" + _geo_type + "'" );
+                htValues.Add("geo_coordinates_x", _geo_coordinates_x);
+                htValues.Add("geo_coordinates_y", _geo_coordinates_y);
                 htValues.Add( "in_reply_to_status_id", _in_reply_to_status_id );
                 htValues.Add( "in_reply_to_user_id", _in_reply_to_user_id );
                 htValues.Add( "in_reply_to_screen_name", "'" + _in_reply_to_screen_name.Replace( "'", "''" ) + "'" );
                 htValues.Add( "thumbnail_pic", "'" + _thumbnail_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "bmiddle_pic", "'" + _bmiddle_pic.Replace( "'", "''" ) + "'" );
                 htValues.Add( "original_pic", "'" + _original_pic.Replace( "'", "''" ) + "'" );
+                htValues.Add("mid", _mid);
                 htValues.Add( "user_id", _user.user_id );
                 if(_retweeted_status!=null)
                     htValues.Add( "retweeted_status_id", _retweeted_status.status_id );

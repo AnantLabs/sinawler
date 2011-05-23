@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DAA2DB49-A89C-417B-AA99-112DB36362B9}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -62,6 +62,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json.Net20, Version=4.0.2.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\Newtonsoft.Json.Net20.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -82,6 +86,7 @@
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
     <Compile Include="classes\GlobalPool.cs" />
+    <Compile Include="model\JsonModels.cs" />
     <Compile Include="classes\UserBuffer.cs" />
     <Compile Include="classes\UserQueue.cs" />
     <Compile Include="robots\UserInfoRobot.cs" />
@@ -160,6 +165,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Monsters21.ico" />
+    <Content Include="Newtonsoft.Json.Net20.dll" />
     <Content Include="sqlscripts\sqlserver\comments.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_comment.TAB" />
     <Content Include="sqlscripts\sqlserver\queue_buffer_for_userInfo.TAB" />

@@ -102,7 +102,7 @@ namespace Sinawler
                 if (blnAsyncCancelled) return;
                 Thread.Sleep( 50 );   //若队列为空，则等待
             }
-            Thread.Sleep(500);  //waiting that user relation robot update limit data
+            Thread.Sleep(500);  //waiting that user relation robot update list data
             
             long lStartUserID = queueUserForStatusRobot.FirstValue;
             long lCurrentUserID = 0;

@@ -28,7 +28,7 @@ namespace Sina.Api
         private string _appSecret = "";
         private string _token = "";
         private string _tokenSecret = "";
-        private string _format = "xml";
+        private string _format = "json";
 
         #region Properties
         public string Format 

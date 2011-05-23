@@ -80,7 +80,9 @@ namespace Sinawler
 
         /// <summary>
         /// 取出队头，并放在队尾
+        /// 若已取空，从DB中移入
         /// because user buffer class does not have this operation, lstWaitingIDInDB is treated as long type here
+        /// on 2011-5-22, it is modified that only lstWaitingID.Count>0, MaxLengthInMem items are removed from DB into memory, so that the performance is enhanced
         /// </summary>
         public long RollQueue () 
         {
@@ -89,19 +91,16 @@ namespace Sinawler
             long lFirstValue = lstWaitingID.First.Value;
             lock (oLock)
             {
-                //从数据库队列缓存中移入元素
-                long lHead = Convert.ToInt64(lstWaitingIDInDB.FirstValue);
-                if (lHead > 0)
-                {
-                    lstWaitingID.AddLast( lHead );
-                    lstWaitingIDInDB.Remove( lHead );
-                }
                 //移入队尾，并从队头移除
-                if (lstWaitingID.Count <= iMaxLengthInMem)
+                if (lstWaitingIDInDB.Count==0 && lstWaitingID.Count < iMaxLengthInMem)
                     lstWaitingID.AddLast( lFirstValue );
                 else
                     lstWaitingIDInDB.Enqueue( lFirstValue );
                 lstWaitingID.RemoveFirst();
+
+                //从数据库队列缓存中移入元素
+                if (lstWaitingID.Count == 0)
+                    lstWaitingID = lstWaitingIDInDB.GetFirstValues(iMaxLengthInMem);
             }
             return lFirstValue;
         }
@@ -119,7 +118,7 @@ namespace Sinawler
                 //否则使用数据库队列缓存
                 lock (oLock)
                 {
-                    if (lstWaitingID.Count < iMaxLengthInMem)
+                    if (lstWaitingIDInDB.Count==0 && lstWaitingID.Count < iMaxLengthInMem)
                         lstWaitingID.AddLast(lID);
                     else
                         lstWaitingIDInDB.Enqueue(lID);

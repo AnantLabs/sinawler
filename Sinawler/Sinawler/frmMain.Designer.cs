@@ -106,6 +106,9 @@
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
+            this.lblFormat = new System.Windows.Forms.Label();
+            this.optJSON = new System.Windows.Forms.RadioButton();
+            this.optXML = new System.Windows.Forms.RadioButton();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -451,7 +454,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(453, 700);
+            this.btnExit.Location = new System.Drawing.Point(453, 711);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 22;
@@ -470,7 +473,7 @@
             this.grpControl.Controls.Add(this.btnStartByCurrent);
             this.grpControl.Controls.Add(this.btnStartBySearch);
             this.grpControl.Controls.Add(this.btnStartByLast);
-            this.grpControl.Location = new System.Drawing.Point(5, 407);
+            this.grpControl.Location = new System.Drawing.Point(5, 427);
             this.grpControl.Name = "grpControl";
             this.grpControl.Size = new System.Drawing.Size(827, 85);
             this.grpControl.TabIndex = 14;
@@ -547,6 +550,9 @@
             // 
             // gpSetting
             // 
+            this.gpSetting.Controls.Add(this.optXML);
+            this.gpSetting.Controls.Add(this.optJSON);
+            this.gpSetting.Controls.Add(this.lblFormat);
             this.gpSetting.Controls.Add(this.btnLoad);
             this.gpSetting.Controls.Add(this.grpDBSettings);
             this.gpSetting.Controls.Add(this.grpQueueLength);
@@ -554,14 +560,14 @@
             this.gpSetting.Controls.Add(this.btnSave);
             this.gpSetting.Location = new System.Drawing.Point(5, 232);
             this.gpSetting.Name = "gpSetting";
-            this.gpSetting.Size = new System.Drawing.Size(826, 170);
+            this.gpSetting.Size = new System.Drawing.Size(826, 189);
             this.gpSetting.TabIndex = 15;
             this.gpSetting.TabStop = false;
             this.gpSetting.Text = "设置（改变设置后请点击“保存”）";
             // 
             // btnLoad
             // 
-            this.btnLoad.Location = new System.Drawing.Point(741, 111);
+            this.btnLoad.Location = new System.Drawing.Point(741, 126);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(75, 23);
             this.btnLoad.TabIndex = 12;
@@ -581,7 +587,7 @@
             this.grpDBSettings.Controls.Add(this.lblDBUserName);
             this.grpDBSettings.Controls.Add(this.lblDBServer);
             this.grpDBSettings.Controls.Add(this.lblDBPwd);
-            this.grpDBSettings.Location = new System.Drawing.Point(10, 85);
+            this.grpDBSettings.Location = new System.Drawing.Point(10, 74);
             this.grpDBSettings.Name = "grpDBSettings";
             this.grpDBSettings.Size = new System.Drawing.Size(725, 78);
             this.grpDBSettings.TabIndex = 13;
@@ -687,9 +693,9 @@
             this.grpQueueLength.Controls.Add(this.lblQueueLength);
             this.grpQueueLength.Controls.Add(this.tbQueueLength);
             this.grpQueueLength.Controls.Add(this.numQueueLength);
-            this.grpQueueLength.Location = new System.Drawing.Point(10, 20);
+            this.grpQueueLength.Location = new System.Drawing.Point(10, 18);
             this.grpQueueLength.Name = "grpQueueLength";
-            this.grpQueueLength.Size = new System.Drawing.Size(725, 61);
+            this.grpQueueLength.Size = new System.Drawing.Size(725, 48);
             this.grpQueueLength.TabIndex = 12;
             this.grpQueueLength.TabStop = false;
             this.grpQueueLength.Text = "队列长度";
@@ -706,7 +712,7 @@
             // tbQueueLength
             // 
             this.tbQueueLength.LargeChange = 100;
-            this.tbQueueLength.Location = new System.Drawing.Point(284, 16);
+            this.tbQueueLength.Location = new System.Drawing.Point(284, 15);
             this.tbQueueLength.Maximum = 100000;
             this.tbQueueLength.Minimum = 1;
             this.tbQueueLength.Name = "tbQueueLength";
@@ -743,7 +749,7 @@
             // 
             // btnDefault
             // 
-            this.btnDefault.Location = new System.Drawing.Point(741, 82);
+            this.btnDefault.Location = new System.Drawing.Point(741, 97);
             this.btnDefault.Name = "btnDefault";
             this.btnDefault.Size = new System.Drawing.Size(75, 23);
             this.btnDefault.TabIndex = 11;
@@ -753,7 +759,7 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(741, 140);
+            this.btnSave.Location = new System.Drawing.Point(741, 155);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 13;
@@ -788,7 +794,7 @@
             this.grpStatus.Controls.Add(this.lblUserRelationTitle);
             this.grpStatus.Controls.Add(this.lblStatusTitle);
             this.grpStatus.Controls.Add(this.lblUserInfoTitle);
-            this.grpStatus.Location = new System.Drawing.Point(5, 496);
+            this.grpStatus.Location = new System.Drawing.Point(5, 516);
             this.grpStatus.Name = "grpStatus";
             this.grpStatus.Size = new System.Drawing.Size(827, 186);
             this.grpStatus.TabIndex = 17;
@@ -932,13 +938,44 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point(212, 700);
+            this.btnPost.Location = new System.Drawing.Point(212, 711);
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size(170, 23);
             this.btnPost.TabIndex = 21;
             this.btnPost.Text = "发一条微博帮忙推广：）3Q";
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler(this.btnPost_Click);
+            // 
+            // lblFormat
+            // 
+            this.lblFormat.AutoSize = true;
+            this.lblFormat.Location = new System.Drawing.Point(25, 164);
+            this.lblFormat.Name = "lblFormat";
+            this.lblFormat.Size = new System.Drawing.Size(89, 12);
+            this.lblFormat.TabIndex = 14;
+            this.lblFormat.Text = "数据传输格式：";
+            // 
+            // optJSON
+            // 
+            this.optJSON.AutoSize = true;
+            this.optJSON.Checked = true;
+            this.optJSON.Location = new System.Drawing.Point(120, 162);
+            this.optJSON.Name = "optJSON";
+            this.optJSON.Size = new System.Drawing.Size(125, 16);
+            this.optJSON.TabIndex = 15;
+            this.optJSON.TabStop = true;
+            this.optJSON.Text = "JSON(recommended)";
+            this.optJSON.UseVisualStyleBackColor = true;
+            // 
+            // optXML
+            // 
+            this.optXML.AutoSize = true;
+            this.optXML.Location = new System.Drawing.Point(259, 163);
+            this.optXML.Name = "optXML";
+            this.optXML.Size = new System.Drawing.Size(41, 16);
+            this.optXML.TabIndex = 16;
+            this.optXML.Text = "XML";
+            this.optXML.UseVisualStyleBackColor = true;
             // 
             // frmMain
             // 
@@ -970,6 +1007,7 @@
             this.grpControl.ResumeLayout(false);
             this.grpControl.PerformLayout();
             this.gpSetting.ResumeLayout(false);
+            this.gpSetting.PerformLayout();
             this.grpDBSettings.ResumeLayout(false);
             this.grpDBSettings.PerformLayout();
             this.grpQueueLength.ResumeLayout(false);
@@ -1061,6 +1099,9 @@
         private System.Windows.Forms.CheckBox chkUserInfo;
         private System.Windows.Forms.Label lblRobotSelect;
         private System.Windows.Forms.CheckBox chkComment;
+        private System.Windows.Forms.RadioButton optXML;
+        private System.Windows.Forms.RadioButton optJSON;
+        private System.Windows.Forms.Label lblFormat;
     }
 }
 

@@ -37,7 +37,6 @@ namespace Sinawler
                     {
                         element.InvokeMember("click");
                     }
-                    
                 }   
             }
         }

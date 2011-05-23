@@ -89,6 +89,13 @@ namespace Sinawler.Model
 			set{ _user_id=value;}
 			get{return _user_id;}
 		}
+        /// <summary>
+        /// 用户UserID（XML中为id），用于Json的反序列化
+        /// </summary>
+        public long id
+        {
+            set { _user_id = value; }
+        }
 		/// <summary>
 		/// 微博昵称
 		/// </summary>

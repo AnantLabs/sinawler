@@ -39,19 +39,15 @@ namespace Sinawler
         /// 以指定的UserID为起点开始爬行
         /// </summary>
         /// <param name="lUid"></param>
-        public void Start ( long lStartUserID )
+        public void Start ()
         {
-            if (lStartUserID == 0) return;
-            Thread.Sleep(500);  //waiting that user relation robot update limit data
+            while (queueUserForUserInfoRobot.Count == 0)
+            {
+                if (blnAsyncCancelled) return;
+                Thread.Sleep(50);   //若队列为空，则等待
+            }
+            Thread.Sleep(500);  //waiting that user relation robot update request limit data
             User user;
-
-            //将起始UserID入队
-            queueUserForUserInfoRobot.Enqueue( lStartUserID );
-            queueUserForUserRelationRobot.Enqueue( lStartUserID );
-            queueUserForUserTagRobot.Enqueue( lStartUserID );
-            queueUserForStatusRobot.Enqueue( lStartUserID );
-            
-            lCurrentID = lStartUserID;
 
             AdjustFreq();
             Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");

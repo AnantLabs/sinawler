@@ -327,6 +327,20 @@ namespace Sinawler
             GlobalPool.UserQueueForStatusRobot.MaxLengthInMem = settings.MaxLengthInMem;
             GlobalPool.StatusQueue.MaxLengthInMem = settings.MaxLengthInMem;
             GlobalPool.UserBuffer.MaxLengthInMem = settings.MaxLengthInMem;
+            GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
+            GlobalPool.TagRobotEnabled = chkTag.Checked;
+            GlobalPool.StatusRobotEnabled = chkStatus.Checked;
+            GlobalPool.CommentRobotEnabled = chkComment.Checked;
+            if (optJSON.Checked)
+            {
+                settings.Format = DataFormat.JSON;
+                GlobalPool.API.Format = "json";
+            }
+            if (optXML.Checked)
+            {
+                settings.Format = DataFormat.XML;
+                GlobalPool.API.Format = "xml";
+            }
         }
 
         private void btnStartByCurrent_Click(object sender, EventArgs e)
@@ -340,11 +354,6 @@ namespace Sinawler
                     MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
                     return;
                 }
-
-                GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
-                GlobalPool.TagRobotEnabled = chkTag.Checked;
-                GlobalPool.StatusRobotEnabled = chkStatus.Checked;
-                GlobalPool.CommentRobotEnabled = chkComment.Checked;
 
                 btnStartByCurrent.Text = "正在初始化，请稍候...";
                 btnStartByCurrent.Enabled = false;
@@ -377,7 +386,7 @@ namespace Sinawler
                     oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler(UserInfoProgressChanged);
                     oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UserInfoCompleteWork);
-                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler(StartCrawUserInfoByCurrentUser);
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler(StartCrawUserInfo);
                     robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
                 }
 
@@ -388,7 +397,7 @@ namespace Sinawler
                     oAsyncWorkerUserTag.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserTag.ProgressChanged += new ProgressChangedEventHandler(UserTagProgressChanged);
                     oAsyncWorkerUserTag.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UserTagCompleteWork);
-                    oAsyncWorkerUserTag.DoWork += new DoWorkEventHandler(StartCrawUserTagByCurrentUser);
+                    oAsyncWorkerUserTag.DoWork += new DoWorkEventHandler(StartCrawUserTag);
                     robotUserTag.AsyncWorker = oAsyncWorkerUserTag;
                 }
 
@@ -491,11 +500,6 @@ namespace Sinawler
                     return;
                 }
 
-                GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
-                GlobalPool.TagRobotEnabled = chkTag.Checked;
-                GlobalPool.StatusRobotEnabled = chkStatus.Checked;
-                GlobalPool.CommentRobotEnabled = chkComment.Checked;
-
                 btnStartBySearch.Text = "正在初始化，请稍候...";
                 btnStartBySearch.Enabled = false;
                 btnStartByCurrent.Enabled = false;
@@ -527,7 +531,7 @@ namespace Sinawler
                     oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler(UserInfoProgressChanged);
                     oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UserInfoCompleteWork);
-                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler(StartCrawUserInfoBySearchedUser);
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler(StartCrawUserInfo);
                     robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
                 }
 
@@ -538,7 +542,7 @@ namespace Sinawler
                     oAsyncWorkerUserTag.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserTag.ProgressChanged += new ProgressChangedEventHandler(UserTagProgressChanged);
                     oAsyncWorkerUserTag.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UserTagCompleteWork);
-                    oAsyncWorkerUserTag.DoWork += new DoWorkEventHandler(StartCrawUserTagBySearchedUser);
+                    oAsyncWorkerUserTag.DoWork += new DoWorkEventHandler(StartCrawUserTag);
                     robotUserTag.AsyncWorker = oAsyncWorkerUserTag;
                 }
 
@@ -641,11 +645,6 @@ namespace Sinawler
                     return;
                 }
 
-                GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
-                GlobalPool.TagRobotEnabled = chkTag.Checked;
-                GlobalPool.StatusRobotEnabled = chkStatus.Checked;
-                GlobalPool.CommentRobotEnabled = chkComment.Checked;
-
                 btnStartByLast.Text = "正在初始化，请稍候...";
                 btnStartByLast.Enabled = false;
                 btnStartBySearch.Enabled = false;
@@ -677,7 +676,7 @@ namespace Sinawler
                     oAsyncWorkerUserInfo.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserInfo.ProgressChanged += new ProgressChangedEventHandler(UserInfoProgressChanged);
                     oAsyncWorkerUserInfo.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UserInfoCompleteWork);
-                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler(StartCrawUserInfoByLastUser);
+                    oAsyncWorkerUserInfo.DoWork += new DoWorkEventHandler(StartCrawUserInfo);
                     robotUserInfo.AsyncWorker = oAsyncWorkerUserInfo;
                 }
 
@@ -688,7 +687,7 @@ namespace Sinawler
                     oAsyncWorkerUserTag.WorkerSupportsCancellation = true;
                     oAsyncWorkerUserTag.ProgressChanged += new ProgressChangedEventHandler(UserTagProgressChanged);
                     oAsyncWorkerUserTag.RunWorkerCompleted += new RunWorkerCompletedEventHandler(UserTagCompleteWork);
-                    oAsyncWorkerUserTag.DoWork += new DoWorkEventHandler(StartCrawUserTagByLastUser);
+                    oAsyncWorkerUserTag.DoWork += new DoWorkEventHandler(StartCrawUserTag);
                     robotUserTag.AsyncWorker = oAsyncWorkerUserTag;
                 }
 
@@ -775,33 +774,9 @@ namespace Sinawler
         }
 
         #region 用户信息机器人
-        private void StartCrawUserInfoByCurrentUser(Object sender, DoWorkEventArgs e)
+        private void StartCrawUserInfo(Object sender, DoWorkEventArgs e)
         {
-            robotUserInfo.Start(oCurrentUser.user_id);
-        }
-
-        private void StartCrawUserInfoBySearchedUser(Object sender, DoWorkEventArgs e)
-        {
-            robotUserInfo.Start(oSearchedUser.user_id);
-        }
-
-        private void StartCrawUserInfoByLastUser(Object sender, DoWorkEventArgs e)
-        {
-            long lLastUserID = SysArg.GetCurrentUserIDForUserInfo();
-            if (lLastUserID == 0)
-            {
-                lLastUserID = SysArg.GetCurrentUserIDForUserRelation();
-                if (lLastUserID == 0)
-                {
-                    lLastUserID = SysArg.GetCurrentUserIDForUserTag();
-                    if (lLastUserID == 0)
-                    {
-                        MessageBox.Show(this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫");
-                        return;
-                    }
-                }
-            }
-            robotUserInfo.Start(lLastUserID);
+            robotUserInfo.Start();
         }
 
         private void UserInfoProgressChanged(Object sender, ProgressChangedEventArgs e)
@@ -913,33 +888,9 @@ namespace Sinawler
         #endregion
 
         #region 用户标签机器人
-        private void StartCrawUserTagByCurrentUser(Object sender, DoWorkEventArgs e)
+        private void StartCrawUserTag(Object sender, DoWorkEventArgs e)
         {
-            robotUserTag.Start(oCurrentUser.user_id);
-        }
-
-        private void StartCrawUserTagBySearchedUser(Object sender, DoWorkEventArgs e)
-        {
-            robotUserTag.Start(oSearchedUser.user_id);
-        }
-
-        private void StartCrawUserTagByLastUser(Object sender, DoWorkEventArgs e)
-        {
-            long lLastUserID = SysArg.GetCurrentUserIDForUserTag();
-            if (lLastUserID == 0)
-            {
-                lLastUserID = SysArg.GetCurrentUserIDForUserInfo();
-                if (lLastUserID == 0)
-                {
-                    lLastUserID = SysArg.GetCurrentUserIDForUserRelation();
-                    if (lLastUserID == 0)
-                    {
-                        MessageBox.Show(this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫");
-                        return;
-                    }
-                }
-            }
-            robotUserTag.Start(lLastUserID);
+            robotUserTag.Start();
         }
 
         private void UserTagProgressChanged(Object sender, ProgressChangedEventArgs e)
@@ -1095,6 +1046,18 @@ namespace Sinawler
             chkTag.Checked = settings.TagsRobot;
             chkStatus.Checked = settings.StatusesRobot;
             chkComment.Checked = settings.CommentsRobot;
+
+            switch(settings.Format)
+            {
+                case DataFormat.JSON:
+                    optJSON.Checked = true;
+                    GlobalPool.API.Format = "json";
+                    break;
+                case DataFormat.XML:
+                    optXML.Checked = true;
+                    GlobalPool.API.Format = "xml";
+                    break;
+            }
         }
 
         private void btnDefault_Click(object sender, EventArgs e)
@@ -1127,6 +1090,17 @@ namespace Sinawler
             settings.TagsRobot = chkTag.Checked;
             settings.StatusesRobot = chkStatus.Checked;
             settings.CommentsRobot = chkComment.Checked;
+
+            if (optJSON.Checked)
+            {
+                settings.Format = DataFormat.JSON;
+                GlobalPool.API.Format = "json";
+            }
+            if (optXML.Checked)
+            {
+                settings.Format = DataFormat.XML;
+                GlobalPool.API.Format = "xml";
+            }
 
             AppSettings.Save(settings);
 

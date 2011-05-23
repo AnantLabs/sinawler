@@ -17,12 +17,12 @@ namespace Sinawler.Model
     public class QueueBuffer
     {
         private QueueBufferFor _target = QueueBufferFor.USER_INFO;
-        private int iCount = 0;     //队列长度
-        private Object oFirstValue = null;   //首节点值
+        private int iCount=0;
+        private long lFirstValue;   //首节点值
 
         public object FirstValue
         {
-            get { return oFirstValue; }
+            get { return lFirstValue; }
         }
 
         #region  成员方法
@@ -35,6 +35,8 @@ namespace Sinawler.Model
 
         /// <summary>
         /// 从数据库中读取队头值
+        /// because user buffer class does not need this operation, lstWaitingIDInDB is treated as long type here,
+        /// and the case of QueueBufferFor.USER_BUFFER is ignored
         /// </summary>
         private void GetFirstValue()
         {
@@ -45,36 +47,90 @@ namespace Sinawler.Model
                 case QueueBufferFor.USER_INFO:
                     dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userInfo order by enqueue_time");
                     if (dr == null) return;
-                    oFirstValue = Convert.ToInt64(dr["user_id"]);
+                    lFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.USER_RELATION:
                     dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userRelation order by enqueue_time");
                     if (dr == null) return;
-                    oFirstValue = Convert.ToInt64(dr["user_id"]);
+                    lFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.USER_TAG:
                     dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_tag order by enqueue_time");
                     if (dr == null) return;
-                    oFirstValue = Convert.ToInt64(dr["user_id"]);
+                    lFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.STATUS:
                     dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_status order by enqueue_time");
                     if (dr == null) return;
-                    oFirstValue = Convert.ToInt64(dr["user_id"]);
+                    lFirstValue = Convert.ToInt64(dr["user_id"]);
                     break;
                 case QueueBufferFor.COMMENT:
                     dr = db.GetDataRow("select top 1 status_id from queue_buffer_for_comment order by enqueue_time");
                     if (dr == null) return;
-                    oFirstValue = Convert.ToInt64(dr["status_id"]);
-                    break;
-                case QueueBufferFor.USER_BUFFER:
-                    User user = new User();
-                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userBuffer order by enqueue_time");
-                    if (dr == null) return;
-                    if (user.GetModelFromUserBuffer(Convert.ToInt64(dr["user_id"])))
-                        oFirstValue = user;
+                    lFirstValue = Convert.ToInt64(dr["status_id"]);
                     break;
             }
+        }
+
+        /// <summary>
+        /// 从数据库中读取队头指定个数的值，并以链表形式返回，可直接续接在指定链表后
+        /// because user buffer class does not need this operation, lstWaitingIDInDB is treated as long type here,
+        /// and the case of QueueBufferFor.USER_BUFFER is ignored
+        /// </summary>
+        public LinkedList<long> GetFirstValues(int iCount)
+        {
+            LinkedList<long> lstResult = new LinkedList<long>();
+            Database db = DatabaseFactory.CreateDatabase();
+            DataSet ds=null;
+            switch (_target)
+            {
+                case QueueBufferFor.USER_INFO:
+                    ds = db.GetDataSet("select top "+iCount.ToString()+" user_id from queue_buffer_for_userInfo order by enqueue_time");
+                    break;
+                case QueueBufferFor.USER_RELATION:
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_userRelation order by enqueue_time");
+                    break;
+                case QueueBufferFor.USER_TAG:
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_tag order by enqueue_time");
+                    break;
+                case QueueBufferFor.STATUS:
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_status order by enqueue_time");
+                    break;
+                case QueueBufferFor.COMMENT:
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " status_id from queue_buffer_for_comment order by enqueue_time");
+                    break;
+            }
+            if (ds != null)
+            { 
+                string strIDsToBeDeleted="(";
+                foreach (DataRow dr in ds.Tables[0].Rows)
+                {
+                    lstResult.AddLast(Convert.ToInt64(dr[0]));
+                    strIDsToBeDeleted += dr[0].ToString() + ",";
+                }
+                strIDsToBeDeleted += "0)";
+                //delete the records from DB
+                switch (_target)
+                {
+                    case QueueBufferFor.USER_INFO:
+                        db.CountByExecuteSQL("delete * from queue_buffer_for_userInfo where user_id in "+strIDsToBeDeleted);
+                        break;
+                    case QueueBufferFor.USER_RELATION:
+                        db.CountByExecuteSQL("delete * from queue_buffer_for_userRelation where user_id in " + strIDsToBeDeleted);
+                        break;
+                    case QueueBufferFor.USER_TAG:
+                        db.CountByExecuteSQL("delete * from queue_buffer_for_tag where user_id in " + strIDsToBeDeleted);
+                        break;
+                    case QueueBufferFor.STATUS:
+                        db.CountByExecuteSQL("delete * from queue_buffer_for_status where user_id in " + strIDsToBeDeleted);
+                        break;
+                    case QueueBufferFor.COMMENT:
+                        db.CountByExecuteSQL("delete * from queue_buffer_for_comment where status_id in " + strIDsToBeDeleted);
+                        break;
+                }
+                GetFirstValue();
+            }
+            return lstResult;
         }
 
         /// <summary>
@@ -113,6 +169,7 @@ namespace Sinawler.Model
 
         /// <summary>
         /// 一个对象入队（注意与Add函数在FirstValue处的区别），该对象或者为ID，或者为模型类的实例
+        /// because user buffer does not use FirstValue, lFirstValue record id only for other 5 buffers
         /// </summary>
         public void Enqueue(Object obj)
         {
@@ -153,7 +210,7 @@ namespace Sinawler.Model
             iCount++;
             //更新新的队头值
             if (iCount == 1)
-                oFirstValue = obj;
+                lFirstValue = Convert.ToInt64(obj);
         }
 
         /// <summary>
@@ -162,7 +219,7 @@ namespace Sinawler.Model
         public Object Dequeue()
         {
             //先记录头节点,再删除头节点
-            Object oResult = oFirstValue;
+            Object oResult = lFirstValue;
             this.Remove(oResult);
             return oResult;
         }
@@ -207,8 +264,9 @@ namespace Sinawler.Model
             }
             iCount++;
             //更新新的队头值
-            if (iCount == 1)
-                oFirstValue = obj;
+            //only available to long ids
+            if (iCount == 1 && obj.GetType()==typeof(Int64))
+                lFirstValue = Convert.ToInt64(obj);
         }
 
         /// <summary>
@@ -241,7 +299,7 @@ namespace Sinawler.Model
                 iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_userBuffer where user_id=" + ((User)obj).user_id.ToString());
 
             if(iRowsDeleted>0)  iCount=iCount-iRowsDeleted;
-            if (oFirstValue!=null && oFirstValue.Equals(obj))
+            if (obj.GetType()==typeof(Int64) && lFirstValue==Convert.ToInt64(obj))
                 //更新新的队头值
                 GetFirstValue();
         }
@@ -274,7 +332,7 @@ namespace Sinawler.Model
                     break;
             }
             iCount = 0;
-            oFirstValue = null;
+            lFirstValue = 0;
         }
 
         public int Count

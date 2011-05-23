@@ -15,6 +15,7 @@ namespace Sinawler.Model
         <created_at>Thu Sep 16 19:47:22 +0800 2010</created_at> 
         <id>3311494857</id> 
         <text>回复@四正:测试2</text> 
+        <mid>xxxxxxxx</mid>
         + <user>
         + <status>
     </comment>
@@ -26,8 +27,11 @@ namespace Sinawler.Model
 		private long _comment_id;
 		private string _content;
 		private string _created_at;
+        private string _source_url;
+        private string _source_name;
 		private User _user=new User();
 		private long _status_id;
+        private long _mid;
 		private int _iteration;
         private string _update_time;
 		/// <summary>
@@ -54,6 +58,22 @@ namespace Sinawler.Model
 			set{ _created_at=value;}
 			get{return _created_at;}
 		}
+        /// <summary>
+        /// 评论来源中的URL
+        /// </summary>
+        public string source_url
+        {
+            set { _source_url = value; }
+            get { return _source_url; }
+        }
+        /// <summary>
+        /// 评论来源的名字
+        /// </summary>
+        public string source_name
+        {
+            set { _source_name = value; }
+            get { return _source_name; }
+        }
 		/// <summary>
 		/// 评论人
 		/// </summary>
@@ -70,6 +90,14 @@ namespace Sinawler.Model
 			set{ _status_id=value;}
 			get{return _status_id;}
 		}
+        /// <summary>
+        /// mid
+        /// </summary>
+        public long mid
+        {
+            set { _mid = value; }
+            get { return _mid; }
+        } 
 		/// <summary>
         /// 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
         /// </summary>
@@ -129,6 +157,7 @@ namespace Sinawler.Model
                 htValues.Add( "content", "'" + _content.Replace( "'", "''" ) + "'" );
                 htValues.Add( "user_id", _user.user_id );
                 htValues.Add( "status_id", _status_id );
+                htValues.Add("mid", _mid);
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
 
