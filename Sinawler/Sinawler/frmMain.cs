@@ -364,6 +364,8 @@ namespace Sinawler
                 chkTag.Enabled = false;
                 chkStatus.Enabled = false;
                 chkComment.Enabled = false;
+                optJSON.Enabled = false;
+                optXML.Enabled = false;
                 Application.DoEvents();
 
                 PrepareToStart();
@@ -509,6 +511,8 @@ namespace Sinawler
                 chkTag.Enabled = false;
                 chkStatus.Enabled = false;
                 chkComment.Enabled = false;
+                optJSON.Enabled = false;
+                optXML.Enabled = false;
                 Application.DoEvents();
 
                 PrepareToStart();
@@ -654,6 +658,8 @@ namespace Sinawler
                 chkTag.Enabled = false;
                 chkStatus.Enabled = false;
                 chkComment.Enabled = false;
+                optJSON.Enabled = false;
+                optXML.Enabled = false;
                 Application.DoEvents();
 
                 PrepareToStart();
@@ -813,6 +819,8 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                optJSON.Enabled = true;
+                optXML.Enabled = true;
             }
             oAsyncWorkerUserInfo = null;
         }
@@ -882,6 +890,8 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                optJSON.Enabled = true;
+                optXML.Enabled = true;
             }
             oAsyncWorkerUserRelation = null;
         }
@@ -927,6 +937,8 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                optJSON.Enabled = true;
+                optXML.Enabled = true;
             }
             oAsyncWorkerUserTag = null;
         }
@@ -972,6 +984,8 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                optJSON.Enabled = true;
+                optXML.Enabled = true;
             }
             oAsyncWorkerStatus = null;
         }
@@ -1016,7 +1030,8 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
-                chkComment.Enabled = true;
+                optJSON.Enabled = true;
+                optXML.Enabled = true; chkComment.Enabled = true;
             }
             oAsyncWorkerComment = null;
         }
