@@ -9,6 +9,7 @@ namespace Sinawler
     static public class GlobalPool
     {
         public static SinaApiService API = new SinaApiService();
+        public static Object Lock = new Object();       //用于进程间同步的锁，注意一定要在队列初始化之前，因为队列要用它
 
         public static UserQueue UserQueueForUserInfoRobot = new UserQueue(QueueBufferFor.USER_INFO);  //用户信息机器人使用的用户队列
         public static UserQueue UserQueueForUserRelationRobot = new UserQueue(QueueBufferFor.USER_RELATION);  //用户关系机器人使用的用户队列

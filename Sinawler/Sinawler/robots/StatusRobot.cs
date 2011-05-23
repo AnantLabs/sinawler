@@ -107,7 +107,7 @@ namespace Sinawler
             long lStartUserID = queueUserForStatusRobot.FirstValue;
             long lCurrentUserID = 0;
 
-            AdjustFreq();
+            SetCrawlerFreq();
             Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
 
             //对队列无限循环爬行，直至有操作暂停或停止

@@ -79,25 +79,33 @@ namespace Sinawler
 
         //检查请求限制剩余次数，并根据情况调整访问频度并返回
         //2011-02-23 改为间隔下限为500ms
+        //2011-05-24 改为间隔下限为1s
         //except user relation robot, others get and record the reset time only
         protected virtual void AdjustFreq()
         {
-            //若已无剩余次数，直接等待剩余时间
-            if (GlobalPool.RemainingHits == 0)
+            lock (GlobalPool.Lock)
             {
-                crawler.SleepTime = GlobalPool.ResetTimeInSeconds * 1000;
-            }
-            else
-            {
-                //计算
-                int iSleep = Convert.ToInt32(GlobalPool.ResetTimeInSeconds * 1000 / GlobalPool.RemainingHits);
+                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - crawler.SleepTime / 1000;
                 GlobalPool.RemainingHits--;
-
-                //if (iSleep <= 0) iSleep = 1;
-                if (iSleep < 500) iSleep = 500; //sleep at least 500ms
-
-                crawler.SleepTime = iSleep;
             }
+            SetCrawlerFreq();
+        }
+
+        //检查请求限制剩余次数，并根据情况调整访问频度并返回
+        //2011-02-23 改为间隔下限为500ms
+        //2011-05-24 改为间隔下限为1s
+        protected void SetCrawlerFreq()
+        {
+            int iSleep = GlobalPool.ResetTimeInSeconds * 1000;
+            if (iSleep < 1000) iSleep = 1000;
+
+            if (GlobalPool.RemainingHits > 0)
+            {
+                iSleep = Convert.ToInt32(GlobalPool.ResetTimeInSeconds * 1000 / GlobalPool.RemainingHits);
+                if (iSleep < 1000) iSleep = 1000; //sleep at least 1s
+            }//若已无剩余次数，直接等待剩余时间
+
+            crawler.SleepTime = iSleep;
         }
 
         public virtual void Initialize (){}

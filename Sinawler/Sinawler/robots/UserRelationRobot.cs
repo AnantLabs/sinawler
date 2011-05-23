@@ -241,21 +241,13 @@ namespace Sinawler
                 }
             }
 
-            //若已无剩余次数，直接等待剩余时间
-            if (iRemainingHits == 0)
+            int iSleep = iResetTimeInSeconds*1000;  //safe value
+            if (iRemainingHits > 0)
             {
-                crawler.SleepTime = iResetTimeInSeconds * 1000;
-                if (crawler.SleepTime < 500) crawler.SleepTime = 500;
-            }
-            else
-            {
-                //计算
-                int iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
-                //if (iSleep <= 0) iSleep = 1;
-                if (iSleep < 500) iSleep = 500; //sleep at least 500ms
-
-                crawler.SleepTime = iSleep;
-            }
+                iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
+                if (iSleep < 1000) iSleep = 1000; //sleep at least 1s
+            }//若已无剩余次数，直接等待剩余时间
+            crawler.SleepTime = iSleep;
 
             GlobalPool.LimitUpdateTime = DateTime.Now;
             GlobalPool.RemainingHits = iRemainingHits;

@@ -15,7 +15,7 @@ namespace Sinawler
         protected int iMaxLengthInMem = 5000;               //内存中队列长度上限，默认5000
         protected QueueBuffer lstWaitingIDInDB;              //数据库队列缓存
 
-        protected Object oLock = new Object();                    //锁。用于各机器人线程之间同步
+        protected Object oLock = GlobalPool.Lock;
         
         //构造函数
         public QueueBase()
@@ -60,9 +60,6 @@ namespace Sinawler
                     return 0;
             }
         }
-
-        public Object Lock
-        { get{ return oLock; }}
 
         /// <summary>
         /// 从外部调用判断队列中是否存在指定ID

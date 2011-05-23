@@ -49,7 +49,7 @@ namespace Sinawler
             Thread.Sleep(500);  //waiting that user relation robot update request limit data
             User user;
 
-            AdjustFreq();
+            SetCrawlerFreq();
             Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
 
             //对队列循环爬行
@@ -116,9 +116,9 @@ namespace Sinawler
                     queueUserForStatusRobot.Remove( lCurrentID );
                 }
                 #endregion
-                
-                //日志
+
                 AdjustFreq();
+                //日志
                 Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
             }
         }
