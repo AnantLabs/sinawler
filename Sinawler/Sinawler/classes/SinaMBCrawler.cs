@@ -24,6 +24,7 @@ namespace Sinawler
         private void AdjustLimit()
         {
             GlobalPool.RemainingHits--;
+            if (GlobalPool.RemainingHits < 0) GlobalPool.RemainingHits = 0;
             GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - iSleep / 1000;
             if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 3600;
         }

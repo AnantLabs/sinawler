@@ -89,6 +89,7 @@ namespace Sinawler
                 if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 3600;
                 GlobalPool.LimitUpdateTime = DateTime.Now;
                 GlobalPool.RemainingHits--;
+                if (GlobalPool.RemainingHits < 0) GlobalPool.RemainingHits=0;
             }
             SetCrawlerFreq();
         }
