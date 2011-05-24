@@ -85,7 +85,8 @@ namespace Sinawler
         {
             lock (GlobalPool.Lock)
             {
-                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - crawler.SleepTime / 1000;
+                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now-GlobalPool.LimitUpdateTime).TotalSeconds);
+                GlobalPool.LimitUpdateTime = DateTime.Now;
                 GlobalPool.RemainingHits--;
             }
             SetCrawlerFreq();
