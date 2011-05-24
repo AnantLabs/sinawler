@@ -86,6 +86,7 @@ namespace Sinawler
             lock (GlobalPool.Lock)
             {
                 GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now-GlobalPool.LimitUpdateTime).TotalSeconds);
+                if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 3600;
                 GlobalPool.LimitUpdateTime = DateTime.Now;
                 GlobalPool.RemainingHits--;
             }

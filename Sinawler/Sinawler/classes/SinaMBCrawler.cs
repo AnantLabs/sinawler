@@ -21,6 +21,13 @@ namespace Sinawler
         private bool blnStopCrawling = false;   //是否停止爬行
         private int iTryTimes = 10;             //the times that try to get XML
 
+        private void AdjustLimit()
+        {
+            GlobalPool.RemainingHits--;
+            GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - iSleep / 1000;
+            if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 3600;
+        }
+
         public SinaMBCrawler()
         { }
 
@@ -50,10 +57,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return ids;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.friends_ids(lUid, iCursor);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -94,10 +101,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return ids;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.followers_ids(lUid, iCursor);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -138,10 +145,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.user_show(lUid);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -206,10 +213,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.user_show(strScreenName);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -279,10 +286,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.user_show(lUid, strScreenName);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -714,10 +721,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.statuses_show(lStatusID);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -751,10 +758,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstStatuses;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.user_timeline(lUid, lSinceSid);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -790,10 +797,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstComments;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.comments(lStatusID, iPageNum);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
@@ -951,10 +958,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstTags;
-                System.Threading.Thread.Sleep(100);
+                System.Threading.Thread.Sleep(iSleep);
                 strResult = api.tags_of(lUserID);
                 iTryTimes--;
-                GlobalPool.RemainingHits--;
+                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.Format == "xml")
