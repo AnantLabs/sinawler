@@ -152,6 +152,8 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (api.Format == "xml")
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
@@ -220,6 +222,8 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (api.Format == "xml")
             {
                 if (strResult == "User Not Exist")  //用户不存在
@@ -293,6 +297,8 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
+            if (strResult == "User Not Exist")  //用户不存在
+                return null;
             if (api.Format == "xml")
             {
                 if (strResult == "User Not Exist")  //用户不存在
@@ -728,6 +734,7 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
+            if (strResult == null) return null;
             if (api.Format == "xml")
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符

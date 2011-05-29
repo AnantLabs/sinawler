@@ -219,6 +219,7 @@ namespace Sinawler
         sealed protected override void AdjustFreq()
         {
             base.AdjustFreq();
+            SetCrawlerFreq();
         }
     }
 }

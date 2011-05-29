@@ -114,7 +114,6 @@ namespace Sinawler
             GlobalPool.LimitUpdateTime = DateTime.Now;
             GlobalPool.RemainingHits = iRemainingHits;
             GlobalPool.ResetTimeInSeconds = iResetTimeInSeconds;
-            SetCrawlerFreq();
         }
 
         //从GlobalPool中检查请求限制剩余次数，并根据情况调整访问频度并返回
@@ -125,13 +124,11 @@ namespace Sinawler
         {
             lock (GlobalPool.Lock)
             {
-                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now-GlobalPool.LimitUpdateTime).TotalSeconds);
-                if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 1;
-                GlobalPool.LimitUpdateTime = DateTime.Now;
                 GlobalPool.RemainingHits--;
-                if (GlobalPool.RemainingHits < 0) GlobalPool.RemainingHits=0;
+                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - GlobalPool.LimitUpdateTime).TotalSeconds);
+                GlobalPool.LimitUpdateTime = DateTime.Now;
+                if (GlobalPool.ResetTimeInSeconds <= 0 || GlobalPool.RemainingHits<0) AdjustRealFreq();//GlobalPool.ResetTimeInSeconds = 1;
             }
-            SetCrawlerFreq();
         }
 
         //set the frequency to crawler
