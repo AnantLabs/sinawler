@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Sina.Api;
@@ -10,7 +9,6 @@ using System.Windows.Forms;
 using Sinawler.Model;
 using System.Data;
 using System.Xml;
-using Newtonsoft.Json;
 
 namespace Sinawler
 {
@@ -214,44 +212,7 @@ namespace Sinawler
 
         sealed protected override void AdjustFreq()
         {
-            string strResult = api.check_hits_limit();
-            while (strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null)
-            {
-                System.Threading.Thread.Sleep(100);
-                strResult = api.check_hits_limit();
-            }
-            int iResetTimeInSeconds = 0;
-            int iRemainingHits = 0;
-            if (api.Format == "xml")
-            {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(strResult);
-
-                iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
-                iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
-            }//xml
-            else
-            {
-                //such as {"remaining_hits":804,"hourly_limit":1000,"reset_time_in_seconds":2462,"reset_time":"Sun May 22 17:00:00 +0800 2011"}
-                Hashtable oJsonHitsLimit = (Hashtable)JsonConvert.DeserializeObject(strResult, typeof(Hashtable));
-                foreach (DictionaryEntry de in oJsonHitsLimit)
-                {
-                    if (de.Key.ToString() == "reset_time_in_seconds") iResetTimeInSeconds = Convert.ToInt32(de.Value);
-                    if (de.Key.ToString() == "remaining_hits") iRemainingHits = Convert.ToInt32(de.Value);
-                }
-            }
-
-            int iSleep = iResetTimeInSeconds*1000;  //safe value
-            if (iRemainingHits > 0)
-            {
-                iSleep = Convert.ToInt32(iResetTimeInSeconds * 1000 / iRemainingHits);
-                if (iSleep < 1000) iSleep = 1000; //sleep at least 1s
-            }//若已无剩余次数，直接等待剩余时间
-            crawler.SleepTime = iSleep;
-
-            GlobalPool.LimitUpdateTime = DateTime.Now;
-            GlobalPool.RemainingHits = iRemainingHits;
-            GlobalPool.ResetTimeInSeconds = iResetTimeInSeconds;
+            base.AdjustRealFreq();
         }
     }
 }

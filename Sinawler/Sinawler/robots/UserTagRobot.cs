@@ -130,7 +130,7 @@ namespace Sinawler
 
         sealed protected override void AdjustFreq()
         {
-            base.AdjustFreq();
+            base.AdjustRealFreq();
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Sina.Api;
@@ -8,6 +9,7 @@ using System.IO;
 using Sinawler.Model;
 using System.Data;
 using System.Xml;
+using Newtonsoft.Json;
 
 namespace Sinawler
 {
@@ -77,7 +79,45 @@ namespace Sinawler
             Thread.Sleep(50);
         }
 
-        //检查请求限制剩余次数，并根据情况调整访问频度并返回
+        //检查真实请求限制剩余次数，并根据情况调整访问频度并返回
+        //2011-02-23 改为间隔下限为500ms
+        //2011-05-24 改为间隔下限为1s
+        //except user relation robot, others get and record the reset time only
+        protected virtual void AdjustRealFreq()
+        {
+            string strResult = api.check_hits_limit();
+            while (strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null)
+            {
+                System.Threading.Thread.Sleep(100);
+                strResult = api.check_hits_limit();
+            }
+            int iResetTimeInSeconds = 0;
+            int iRemainingHits = 0;
+            if (api.Format == "xml")
+            {
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(strResult);
+
+                iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
+                iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
+            }//xml
+            else
+            {
+                //such as {"remaining_hits":804,"hourly_limit":1000,"reset_time_in_seconds":2462,"reset_time":"Sun May 22 17:00:00 +0800 2011"}
+                Hashtable oJsonHitsLimit = (Hashtable)JsonConvert.DeserializeObject(strResult, typeof(Hashtable));
+                foreach (DictionaryEntry de in oJsonHitsLimit)
+                {
+                    if (de.Key.ToString() == "reset_time_in_seconds") iResetTimeInSeconds = Convert.ToInt32(de.Value);
+                    if (de.Key.ToString() == "remaining_hits") iRemainingHits = Convert.ToInt32(de.Value);
+                }
+            }
+            GlobalPool.LimitUpdateTime = DateTime.Now;
+            GlobalPool.RemainingHits = iRemainingHits;
+            GlobalPool.ResetTimeInSeconds = iResetTimeInSeconds;
+            SetCrawlerFreq();
+        }
+
+        //从GlobalPool中检查请求限制剩余次数，并根据情况调整访问频度并返回
         //2011-02-23 改为间隔下限为500ms
         //2011-05-24 改为间隔下限为1s
         //except user relation robot, others get and record the reset time only
@@ -86,7 +126,7 @@ namespace Sinawler
             lock (GlobalPool.Lock)
             {
                 GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now-GlobalPool.LimitUpdateTime).TotalSeconds);
-                if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 3600;
+                if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 1;
                 GlobalPool.LimitUpdateTime = DateTime.Now;
                 GlobalPool.RemainingHits--;
                 if (GlobalPool.RemainingHits < 0) GlobalPool.RemainingHits=0;
@@ -94,9 +134,7 @@ namespace Sinawler
             SetCrawlerFreq();
         }
 
-        //检查请求限制剩余次数，并根据情况调整访问频度并返回
-        //2011-02-23 改为间隔下限为500ms
-        //2011-05-24 改为间隔下限为1s
+        //set the frequency to crawler
         protected void SetCrawlerFreq()
         {
             int iSleep = GlobalPool.ResetTimeInSeconds * 1000;

@@ -73,7 +73,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/users/show." + Format + "?user_id=" + user_id.ToString();
+                string url = "http://api.t.sina.com.cn/users/show." + Format + "?user_id=" + user_id.ToString();
                 return oAuthWebRequest( Method.GET, url, String.Empty );;
             }
             catch(Exception ex) 
@@ -90,7 +90,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/users/show." + Format + "?screen_name=" + screen_name;
+                string url = "http://api.t.sina.com.cn/users/show." + Format + "?screen_name=" + screen_name;
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
             catch (Exception ex)
@@ -107,7 +107,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/users/show." + Format + "?user_id="+user_id.ToString()+"&screen_name=" + screen_name;
+                string url = "http://api.t.sina.com.cn/users/show." + Format + "?user_id="+user_id.ToString()+"&screen_name=" + screen_name;
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
             catch (Exception ex)
@@ -124,7 +124,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/friends_timeline." + Format;
+                string url = "http://api.t.sina.com.cn/statuses/friends_timeline." + Format;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch { return null; }
@@ -134,7 +134,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/user_timeline." + Format+"?user_id="+lUid.ToString()+"&count=200&since_id="+lSinceID.ToString();
+                string url = "http://api.t.sina.com.cn/statuses/user_timeline." + Format+"?user_id="+lUid.ToString()+"&count=200&since_id="+lSinceID.ToString();
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -145,7 +145,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/mentions." + Format;
+                string url = "http://api.t.sina.com.cn/statuses/mentions." + Format;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -156,7 +156,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/comments_timeline." + Format;
+                string url = "http://api.t.sina.com.cn/statuses/comments_timeline." + Format;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -167,7 +167,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/comments_by_me." + Format;
+                string url = "http://api.t.sina.com.cn/statuses/comments_by_me." + Format;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -178,7 +178,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/comments." + Format + "?id=" + status_id.ToString();
+                string url = "http://api.t.sina.com.cn/statuses/comments." + Format + "?id=" + status_id.ToString();
                 url += "&count=200&page=" + page.ToString();
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
@@ -190,7 +190,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/counts." + Format + "?ids=" + ids;
+                string url = "http://api.t.sina.com.cn/statuses/counts." + Format + "?ids=" + ids;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -205,7 +205,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/show/" + id.ToString() + "." + Format;
+                string url = "http://api.t.sina.com.cn/statuses/show/" + id.ToString() + "." + Format;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -216,7 +216,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/" + user_id + "/statuses/" + id;
+                string url = "http://api.t.sina.com.cn/" + user_id + "/statuses/" + id;
                 return oAuthWebRequest(Method.GET, url, String.Empty);
             }
             catch
@@ -227,7 +227,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/update." + Format + "?";
+                string url = "http://api.t.sina.com.cn/statuses/update." + Format + "?";
                 return oAuthWebRequest(Method.POST, url, "status=" + HttpUtility.UrlEncode(status));
             }
             catch(Exception ex)
@@ -238,7 +238,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/statuses/upload." + Format + "?";
+                string url = "http://api.t.sina.com.cn/statuses/upload." + Format + "?";
                 return oAuthWebRequest(Method.POST, url, "status=" + HttpUtility.UrlEncode(status) + "&pic=" + HttpUtility.UrlEncode(pic));
             }
             catch
@@ -249,7 +249,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/account/verify_credentials." + Format;
+                string url = "http://api.t.sina.com.cn/account/verify_credentials." + Format;
                 string response = oAuthWebRequest( Method.GET, url, String.Empty );
                 if (Format == "xml")
                 {
@@ -272,7 +272,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/friendships/create." + Format + "?";
+                string url = "http://api.t.sina.com.cn/friendships/create." + Format + "?";
                 return oAuthWebRequest(Method.POST, url, "user_id=" + user_id);
             }
             catch
@@ -284,7 +284,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/friendships/destroy." + Format + "?";
+                string url = "http://api.t.sina.com.cn/friendships/destroy." + Format + "?";
                 return oAuthWebRequest(Method.POST, url, "user_id=" + user_id);
             }
             catch
@@ -296,7 +296,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/friendships/exists." + Format + "?";
+                string url = "http://api.t.sina.com.cn/friendships/exists." + Format + "?";
                 string response = oAuthWebRequest(Method.POST, url, "user_a=" + user_a + "&user_b=" + user_b);
                 if (response.ToLower().Contains("true"))
                 { return true; }
@@ -313,7 +313,7 @@ namespace Sina.Api
         返回用户关注对象user_id列表 
 
         URL
-        http://api.weibo.com/friends/ids.format 
+        http://api.t.sina.com.cn/friends/ids.format 
 
         格式
         xml, json 
@@ -326,19 +326,19 @@ namespace Sina.Api
 
         请求参数
         id. 选填参数. 要获取好友的UserID或微博昵称 
-        o 示例: http://api.weibo.com/friends/ids/12345.xml or http://api.weibo.com/statuses/friends/bob.xml 
+        o 示例: http://api.t.sina.com.cn/friends/ids/12345.xml or http://api.t.sina.com.cn/statuses/friends/bob.xml 
 
         user_id. 选填参数. 要获取的UserID 
-        o 示例: http://api.weibo.com/friends/ids.xml?user_id=1401881 
+        o 示例: http://api.t.sina.com.cn/friends/ids.xml?user_id=1401881 
 
         screen_name. 选填参数. 要获取的微博昵称 
-        o 示例: http://api.weibo.com/friends/ids.xml?screen_name=101010 
+        o 示例: http://api.t.sina.com.cn/friends/ids.xml?screen_name=101010 
 
         cursor. 选填参数. 单页只能包含5000个id，为了获取更多则cursor默认从-1开始，通过增加或减少cursor来获取更多的关注列表 
-        o 示例: http://api.weibo.com/friends/ids.xml?cursor=-1 o 示例: http://api.weibo.com/friends/ids.xml?cursor=1300794057949944903 
+        o 示例: http://api.t.sina.com.cn/friends/ids.xml?cursor=-1 o 示例: http://api.t.sina.com.cn/friends/ids.xml?cursor=1300794057949944903 
 
         count. 可选参数. 每次返回的最大记录数（即页面大小），不大于5000，默认返回500。 
-        o 示例: http://api.weibo.com/friends/ids.xml?&count=200 
+        o 示例: http://api.t.sina.com.cn/friends/ids.xml?&count=200 
 
         使用说明
         */
@@ -346,7 +346,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/friends/ids/" + user_id.ToString() + "." + Format;
+                string url = "http://api.t.sina.com.cn/friends/ids/" + user_id.ToString() + "." + Format;
                 url+="?count=5000&cursor="+cursor.ToString();
                 return oAuthWebRequest(Method.GET,url,string.Empty);
             }
@@ -360,7 +360,7 @@ namespace Sina.Api
         返回用户粉丝user_id列表，注意目前接口最多只返回5000个粉丝。 
 
         URL
-        http://api.weibo.com/followers/ids.format 
+        http://api.t.sina.com.cn/followers/ids.format 
 
         格式
         xml, json 
@@ -373,16 +373,16 @@ namespace Sina.Api
 
         请求参数
         id. 选填参数. 要获取好友的UserID或微博昵称 
-        o 示例: http://api.weibo.com/followers/ids/12345.xml or http://api.weibo.com/statuses/friends/bob.xml 
+        o 示例: http://api.t.sina.com.cn/followers/ids/12345.xml or http://api.t.sina.com.cn/statuses/friends/bob.xml 
         user_id. 选填参数，要获取的UserID 
-        o 示例: http://api.weibo.com/followers/ids.xml?user_id=1401881 
+        o 示例: http://api.t.sina.com.cn/followers/ids.xml?user_id=1401881 
         screen_name. 选填参数，要获取的微博昵称 
-        o 示例: http://api.weibo.com/followers/ids.xml?screen_name=101010 
+        o 示例: http://api.t.sina.com.cn/followers/ids.xml?screen_name=101010 
         cursor. 选填参数. 单页只能包含5000个id，为了获取更多则cursor默认从-1开始，通过增加或减少cursor来获取更多的关注列表 
-        o 示例: http://api.weibo.com/followers/ids.xml?cursor=-1 
-        o 示例: http://api.weibo.com/followers/ids.xml?cursor=1300794057949944903 
+        o 示例: http://api.t.sina.com.cn/followers/ids.xml?cursor=-1 
+        o 示例: http://api.t.sina.com.cn/followers/ids.xml?cursor=1300794057949944903 
         count. 可选参数. 每次返回的最大记录数（即页面大小），不大于5000，默认返回500。 
-        o 示例: http://api.weibo.com/followers/ids.xml?&count=200 
+        o 示例: http://api.t.sina.com.cn/followers/ids.xml?&count=200 
         使用说明
         如果没有提供cursor参数，将只返回最前面的5000个粉丝id 
         */
@@ -390,7 +390,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/followers/ids/"+user_id.ToString()+"." + Format;
+                string url = "http://api.t.sina.com.cn/followers/ids/"+user_id.ToString()+"." + Format;
                 url+="?cursor="+cursor.ToString()+"&count=5000";
                 return oAuthWebRequest(Method.GET, url,string.Empty);
             }
@@ -406,7 +406,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/direct_messages/new." + Format + "?";
+                string url = "http://api.t.sina.com.cn/direct_messages/new." + Format + "?";
                 string response = oAuthWebRequest(Method.POST, url, "user_id=" + user_id + "&text=" + HttpUtility.UrlEncode(text));
 
                 XmlDocument xmlDoc = new XmlDocument();
@@ -423,7 +423,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/direct_messages/destroy/" + id + "." + Format;
+                string url = "http://api.t.sina.com.cn/direct_messages/destroy/" + id + "." + Format;
                 return oAuthWebRequest(Method.POST, url, String.Empty);
             }
             catch
@@ -435,7 +435,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/account/rate_limit_status." + Format;
+                string url = "http://api.t.sina.com.cn/account/rate_limit_status." + Format;
                 return oAuthWebRequest( Method.GET, url, String.Empty);
             }
             catch
@@ -445,7 +445,7 @@ namespace Sina.Api
         /*返回指定用户的标签列表 */
         /*
          URL
-         http://api.weibo.com/tags.format 
+         http://api.t.sina.com.cn/tags.format 
          格式
          xml, json
          HTTP请求方式
@@ -458,11 +458,11 @@ namespace Sina.Api
          
          请求参数
          user_id: 必填参数，查询用户的ID 
-         示例: http://api.weibo.com/tags.xml?user_id=142272 
+         示例: http://api.t.sina.com.cn/tags.xml?user_id=142272 
          count: 可选参数. 每次返回的最大记录数（即页面大小），不大于200，默认为20。 
-         示例: http://api.weibo.com/tags.xml?user_id=12345&count=200 
+         示例: http://api.t.sina.com.cn/tags.xml?user_id=12345&count=200 
          page: 可选参数. 返回结果的页序号。注意：有分页限制。 
-         示例: http://api.weibo.com/tags.xml?user_id=12345&page=3 
+         示例: http://api.t.sina.com.cn/tags.xml?user_id=12345&page=3 
          使用说明
          缺少参数，将返回400错误 
          用户ID不存在，将返回500错误 
@@ -471,7 +471,7 @@ namespace Sina.Api
         {
             try
             {
-                string url = "http://api.weibo.com/tags."+Format+"?user_id="+lUid.ToString();
+                string url = "http://api.t.sina.com.cn/tags."+Format+"?user_id="+lUid.ToString();
                 return oAuthWebRequest( Method.GET, url, String.Empty );
             }
             catch

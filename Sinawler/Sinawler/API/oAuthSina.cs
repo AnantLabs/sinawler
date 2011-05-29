@@ -20,9 +20,9 @@ namespace Sina.Api
     {
         public enum Method { GET, POST, PUT, DELETE };
 
-        public const string REQUEST_TOKEN = "http://api.weibo.com/oauth/request_token";
-        public const string AUTHORIZE = "http://api.weibo.com/oauth/authorize";
-        public const string ACCESS_TOKEN = "http://api.weibo.com/oauth/access_token";
+        public const string REQUEST_TOKEN = "http://api.t.sina.com.cn/oauth/request_token";
+        public const string AUTHORIZE = "http://api.t.sina.com.cn/oauth/authorize";
+        public const string ACCESS_TOKEN = "http://api.t.sina.com.cn/oauth/access_token";
 
         private string _appKey = "";
         private string _appSecret = "";

@@ -68,7 +68,7 @@ namespace Sinawler
         {
             if (wbBrowser.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbBrowser.Url.ToString())
             {
-                if (wbBrowser.Url.ToString().Contains("http://api.weibo.com/oauth/authorize?oauth_token="))
+                if (wbBrowser.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
                 {
                     txtUserID.Enabled = true;
                     txtPWD.Enabled = true;
