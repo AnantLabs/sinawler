@@ -371,8 +371,11 @@ namespace Sinawler
             status.created_at = PubHelper.ParseDateTime(oJsonStatus.created_at);
             status.status_id = oJsonStatus.id;
             status.content = oJsonStatus.text;
-            status.source_url = oJsonStatus.source.Substring(9, oJsonStatus.source.IndexOf("rel") - 11);
-            status.source_name = oJsonStatus.source.Substring(oJsonStatus.source.IndexOf('>') + 1, oJsonStatus.source.IndexOf("</") - oJsonStatus.source.IndexOf('>') - 1);
+            if (oJsonStatus.source != null)
+            {
+                status.source_url = oJsonStatus.source.Substring(9, oJsonStatus.source.IndexOf("rel") - 11);
+                status.source_name = oJsonStatus.source.Substring(oJsonStatus.source.IndexOf('>') + 1, oJsonStatus.source.IndexOf("</") - oJsonStatus.source.IndexOf('>') - 1);
+            }
             status.favorited = oJsonStatus.favorited;
             status.truncated = oJsonStatus.truncated;
             if (oJsonStatus.geo != null)
@@ -388,15 +391,19 @@ namespace Sinawler
             status.in_reply_to_screen_name = oJsonStatus.in_reply_to_screen_name;
             status.mid = Convert.ToInt64(oJsonStatus.mid);
             status.user = oJsonStatus.user;
-            status.user.created_at = PubHelper.ParseDateTime(status.user.created_at);
+            if(status.user.created_at!=null)
+                status.user.created_at = PubHelper.ParseDateTime(status.user.created_at);
             if (oJsonStatus.retweeted_status != null)
             {
                 status.retweeted_status = new Status();
                 status.retweeted_status.created_at = PubHelper.ParseDateTime(oJsonStatus.retweeted_status.created_at);
                 status.retweeted_status.status_id = Convert.ToInt64(oJsonStatus.retweeted_status.id);
                 status.retweeted_status.content = oJsonStatus.retweeted_status.text;
-                status.retweeted_status.source_url = oJsonStatus.retweeted_status.source.Substring(9, oJsonStatus.retweeted_status.source.IndexOf("rel") - 11);
-                status.retweeted_status.source_name = oJsonStatus.retweeted_status.source.Substring(oJsonStatus.retweeted_status.source.IndexOf('>') + 1, oJsonStatus.retweeted_status.source.IndexOf("</") - oJsonStatus.retweeted_status.source.IndexOf('>') - 1);
+                if (oJsonStatus.retweeted_status.source != null)
+                {
+                    status.retweeted_status.source_url = oJsonStatus.retweeted_status.source.Substring(9, oJsonStatus.retweeted_status.source.IndexOf("rel") - 11);
+                    status.retweeted_status.source_name = oJsonStatus.retweeted_status.source.Substring(oJsonStatus.retweeted_status.source.IndexOf('>') + 1, oJsonStatus.retweeted_status.source.IndexOf("</") - oJsonStatus.retweeted_status.source.IndexOf('>') - 1);
+                }
                 status.retweeted_status.favorited = oJsonStatus.retweeted_status.favorited;
                 status.retweeted_status.truncated = oJsonStatus.retweeted_status.truncated;
                 if (oJsonStatus.retweeted_status.geo != null)
@@ -412,7 +419,8 @@ namespace Sinawler
                 status.retweeted_status.in_reply_to_screen_name = oJsonStatus.retweeted_status.in_reply_to_screen_name;
                 status.retweeted_status.mid = Convert.ToInt64(oJsonStatus.retweeted_status.mid);
                 status.retweeted_status.user = oJsonStatus.retweeted_status.user;
-                status.retweeted_status.user.created_at = PubHelper.ParseDateTime(status.retweeted_status.user.created_at);
+                if(status.retweeted_status.user.created_at!=null)
+                    status.retweeted_status.user.created_at = PubHelper.ParseDateTime(status.retweeted_status.user.created_at);
             }
             return status;
         }

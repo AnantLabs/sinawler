@@ -99,7 +99,8 @@ namespace Sinawler
         public void Start ()
         {
             //获取上次中止处的用户ID并入队
-            long lLastUID = SysArg.GetCurrentID(SysArgFor.STATUS);
+            //long lLastUID = SysArg.GetCurrentID(SysArgFor.STATUS);
+            long lLastUID = 1918628847;
             if (lLastUID > 0) queueUserForStatusRobot.Enqueue(lLastUID);
             while (queueUserForStatusRobot.Count == 0)
             {
@@ -138,7 +139,8 @@ namespace Sinawler
                 //日志
                 Log("获取数据库中用户" + lCurrentID.ToString() + "最新一条微博的ID...");
                 //获取数据库中当前用户最新一条微博的ID
-                long lCurrentSID = Status.GetLastStatusIDOf(lCurrentID);
+                //long lCurrentSID = Status.GetLastStatusIDOf(lCurrentID);
+                long lCurrentSID = 12221317466;
 
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
