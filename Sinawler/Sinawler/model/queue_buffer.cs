@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 namespace Sinawler.Model
 {
-    public enum QueueBufferFor { USER_INFO = 0, USER_RELATION = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4, USER_BUFFER = 5 };
-
     /// <summary>
     /// 类QueueBuffer，当内存中的待爬行的UserID队列长度超过指定长度时，开始使用数据库保存队列。
     /// 数据库中分别有用于用户机器人和微博机器人的两个队列表，具体操作哪个，由构造函数中的参数指明
@@ -84,11 +82,11 @@ namespace Sinawler.Model
             DataSet ds=null;
             switch (_target)
             {
-                case QueueBufferFor.USER_INFO:
-                    ds = db.GetDataSet("select top "+iCount.ToString()+" user_id from queue_buffer_for_userInfo order by enqueue_time");
-                    break;
                 case QueueBufferFor.USER_RELATION:
                     ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_userRelation order by enqueue_time");
+                    break;
+                case QueueBufferFor.USER_INFO:
+                    ds = db.GetDataSet("select top "+iCount.ToString()+" user_id from queue_buffer_for_userInfo order by enqueue_time");
                     break;
                 case QueueBufferFor.USER_TAG:
                     ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_tag order by enqueue_time");
@@ -112,11 +110,11 @@ namespace Sinawler.Model
                 //delete the records from DB
                 switch (_target)
                 {
-                    case QueueBufferFor.USER_INFO:
-                        db.CountByExecuteSQL("delete * from queue_buffer_for_userInfo where user_id in "+strIDsToBeDeleted);
-                        break;
                     case QueueBufferFor.USER_RELATION:
                         db.CountByExecuteSQL("delete * from queue_buffer_for_userRelation where user_id in " + strIDsToBeDeleted);
+                        break;
+                    case QueueBufferFor.USER_INFO:
+                        db.CountByExecuteSQL("delete * from queue_buffer_for_userInfo where user_id in "+strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.USER_TAG:
                         db.CountByExecuteSQL("delete * from queue_buffer_for_tag where user_id in " + strIDsToBeDeleted);
@@ -143,11 +141,11 @@ namespace Sinawler.Model
             if (obj.GetType() == typeof(Int64))
                 switch (_target)
                 {
-                    case QueueBufferFor.USER_INFO:
-                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userInfo where user_id=" + obj.ToString());
-                        break;
                     case QueueBufferFor.USER_RELATION:
                         count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userRelation where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_INFO:
+                        count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userInfo where user_id=" + obj.ToString());
                         break;
                     case QueueBufferFor.USER_TAG:
                         count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_tag where user_id=" + obj.ToString());
@@ -181,13 +179,13 @@ namespace Sinawler.Model
             if (obj.GetType() == typeof(Int64))
                 switch (_target)
                 {
-                    case QueueBufferFor.USER_INFO:
-                        htValues.Add("user_id", obj.ToString());
-                        db.Insert("queue_buffer_for_userInfo", htValues);
-                        break;
                     case QueueBufferFor.USER_RELATION:
                         htValues.Add("user_id", obj.ToString());
                         db.Insert("queue_buffer_for_userRelation", htValues);
+                        break;
+                    case QueueBufferFor.USER_INFO:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_userInfo", htValues);
                         break;
                     case QueueBufferFor.USER_TAG:
                         htValues.Add("user_id", obj.ToString());
@@ -236,13 +234,13 @@ namespace Sinawler.Model
             if (obj.GetType() == typeof(Int64))
                 switch (_target)
                 {
-                    case QueueBufferFor.USER_INFO:
-                        htValues.Add("user_id", obj.ToString());
-                        db.Insert("queue_buffer_for_userInfo", htValues);
-                        break;
                     case QueueBufferFor.USER_RELATION:
                         htValues.Add("user_id", obj.ToString());
                         db.Insert("queue_buffer_for_userRelation", htValues);
+                        break;
+                    case QueueBufferFor.USER_INFO:
+                        htValues.Add("user_id", obj.ToString());
+                        db.Insert("queue_buffer_for_userInfo", htValues);
                         break;
                     case QueueBufferFor.USER_TAG:
                         htValues.Add("user_id", obj.ToString());
@@ -279,11 +277,11 @@ namespace Sinawler.Model
             if (obj.GetType() == typeof(Int64))
                 switch (_target)
                 {
-                    case QueueBufferFor.USER_INFO:
-                        iRowsDeleted=db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id=" + obj.ToString());
-                        break;
                     case QueueBufferFor.USER_RELATION:
                         iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id=" + obj.ToString());
+                        break;
+                    case QueueBufferFor.USER_INFO:
+                        iRowsDeleted=db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id=" + obj.ToString());
                         break;
                     case QueueBufferFor.USER_TAG:
                         iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id=" + obj.ToString());
@@ -312,11 +310,11 @@ namespace Sinawler.Model
             Database db = DatabaseFactory.CreateDatabase();
             switch (_target)
             {
-                case QueueBufferFor.USER_INFO:
-                    db.CountByExecuteSQL("truncate table queue_buffer_for_userInfo");
-                    break;
                 case QueueBufferFor.USER_RELATION:
                     db.CountByExecuteSQL("truncate table queue_buffer_for_userRelation");
+                    break;
+                case QueueBufferFor.USER_INFO:
+                    db.CountByExecuteSQL("truncate table queue_buffer_for_userInfo");
                     break;
                 case QueueBufferFor.USER_TAG:
                     db.CountByExecuteSQL("truncate table queue_buffer_for_tag");
@@ -344,11 +342,11 @@ namespace Sinawler.Model
                     Database db = DatabaseFactory.CreateDatabase();
                     switch (_target)
                     {
-                        case QueueBufferFor.USER_INFO:
-                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userInfo");
-                            break;
                         case QueueBufferFor.USER_RELATION:
                             iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userRelation");
+                            break;
+                        case QueueBufferFor.USER_INFO:
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userInfo");
                             break;
                         case QueueBufferFor.USER_TAG:
                             iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_tag");

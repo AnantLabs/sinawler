@@ -40,7 +40,7 @@ namespace Sinawler
         public void Start()
         {
             //获取上次中止处的微博ID并入队
-            long lLastStatusID = SysArg.GetCurrentStatusID();
+            long lLastStatusID = SysArg.GetCurrentID(SysArgFor.COMMENT);
             if (lLastStatusID > 0) queueStatus.Enqueue( lLastStatusID );
             while (queueStatus.Count == 0)
             {
@@ -48,8 +48,6 @@ namespace Sinawler
                 Thread.Sleep(50);   //若队列为空，则等待
             }
             Thread.Sleep(500);  //waiting that user relation robot update limit data
-            long lStartSID = queueStatus.FirstValue;
-            long lCurrentSID = 0;
 
             SetCrawlerFreq();
             Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
@@ -65,11 +63,11 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentSID = queueStatus.RollQueue();
+                lCurrentID = queueStatus.RollQueue();
 
                 //日志
-                Log( "记录当前微博ID：" + lCurrentSID.ToString() );
-                SysArg.SetCurrentStatusID( lCurrentSID );
+                Log("记录当前微博ID：" + lCurrentID.ToString());
+                SysArg.SetCurrentID(lCurrentID,SysArgFor.COMMENT);
 
                 #region 微博相应评论
                 if (blnAsyncCancelled) return;
@@ -80,25 +78,28 @@ namespace Sinawler
                 }
 
                 //日志
-                Log("爬取微博" + lCurrentSID.ToString() + "的评论...");
+                Log("爬取微博" + lCurrentID.ToString() + "的评论...");
                 int iPage = 1;
                 //爬取当前微博的评论
                 LinkedList<Comment> lstComment = new LinkedList<Comment>();
                 LinkedList<Comment> lstTemp=new LinkedList<Comment>();
-                do
+                lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
+                AdjustFreq();
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                while (lstTemp.Count > 0)
                 {
-                    lstTemp = crawler.GetCommentsOf(lCurrentSID, iPage);
                     while (lstTemp.Count > 0)
                     {
                         lstComment.AddLast(lstTemp.First.Value);
                         lstTemp.RemoveFirst();
                     }
                     iPage++;
+                    lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                     AdjustFreq();
                     Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
-                } while (lstTemp.Count > 0);
+                }
                 //日志
-                Log("爬得微博"+lCurrentSID.ToString()+"的" + lstComment.Count.ToString() + "条评论。");
+                Log("爬得微博" + lCurrentID.ToString() + "的" + lstComment.Count.ToString() + "条评论。");
                 Comment comment;
                 while(lstComment.Count>0)
                 {
@@ -133,10 +134,7 @@ namespace Sinawler
                 #endregion
                 //最后再将刚刚爬行完的StatusID加入队尾
                 //日志
-                Log("微博" + lCurrentSID.ToString() + "的评论已爬取完毕。");
-                //日志
-                AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                Log("微博" + lCurrentID.ToString() + "的评论已爬取完毕。");
             }
         }
 

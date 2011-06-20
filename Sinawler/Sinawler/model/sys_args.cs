@@ -6,7 +6,7 @@ using System.Data;
 
 namespace Sinawler.Model
 {
-	/// <summary>
+    /// <summary>
 	/// 类SysArg。此类中的方法，都是与数据库交互，从中读取或向其中写入数据。
 	/// </summary>
     
@@ -41,102 +41,70 @@ namespace Sinawler.Model
         
 		#region  成员方法
 
-		/// <summary>
-        /// 记录用户信息机器人当前爬行的UserID
-		/// </summary>
-		static public void SetCurrentUserIDForUserInfo(long lUserID)
-		{
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "delete from sys_args where arg_name='current_user_id_userInfo'";
-            db.CountByExecuteSQL(strSQL);
-            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userInfo','" + lUserID.ToString() + "')";
-            db.CountByExecuteSQL(strSQL);
-		}
-
         /// <summary>
-        /// 为用户信息机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
+        /// 记录机器人当前爬行的ID
         /// </summary>
-        static public long GetCurrentUserIDForUserInfo ()
+        static public void SetCurrentID(long lID, SysArgFor eFor)
         {
             Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userInfo'";
-            DataRow dr = db.GetDataRow( strSQL );
+            string strDeleteSQL = "";
+            string strInsertSQL = "";
+            switch (eFor)
+            { 
+                case SysArgFor.USER_RELATION:
+                    strDeleteSQL = "delete from sys_args where arg_name='current_user_id_userRelation'";
+                    strInsertSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userRelation','" + lID.ToString() + "')";
+                    break;
+                case SysArgFor.USER_INFO:
+                    strDeleteSQL = "delete from sys_args where arg_name='current_user_id_userInfo'";
+                    strInsertSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userInfo','" + lID.ToString() + "')";
+                    break;
+                case SysArgFor.USER_TAG:
+                    strDeleteSQL = "delete from sys_args where arg_name='current_user_id_userTag'";
+                    strInsertSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userTag','" + lID.ToString() + "')";
+                    break;
+                case SysArgFor.STATUS:
+                    strDeleteSQL = "delete from sys_args where arg_name='current_user_id_status'";
+                    strInsertSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_status','" + lID.ToString() + "')";
+                    break;
+                case SysArgFor.COMMENT:
+                    strDeleteSQL = "delete from sys_args where arg_name='current_status_id'";
+                    strInsertSQL = "insert into sys_args(arg_name,arg_value) values('current_status_id','" + lID.ToString() + "')";
+                    break;
+            }            
+            db.CountByExecuteSQL(strDeleteSQL);            
+            db.CountByExecuteSQL(strInsertSQL);
+        }
+
+        /// <summary>
+        /// 为机器人获取当前爬行的ID（若爬行中止，则为上次中止处的ID）
+        /// </summary>
+        static public long GetCurrentID(SysArgFor eFor)
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            string strSQL = "";
+            switch (eFor)
+            {
+                case SysArgFor.USER_RELATION:
+                    strSQL = "select arg_value from sys_args where arg_name='current_user_id_userRelation'";
+                    break;
+                case SysArgFor.USER_INFO:
+                    strSQL = "select arg_value from sys_args where arg_name='current_user_id_userInfo'";
+                    break;
+                case SysArgFor.USER_TAG:
+                    strSQL = "select arg_value from sys_args where arg_name='current_user_id_userTag'";
+                    break;
+                case SysArgFor.STATUS:
+                    strSQL = "select arg_value from sys_args where arg_name='current_user_id_status'";
+                    break;
+                case SysArgFor.COMMENT:
+                    strSQL = "select arg_value from sys_args where arg_name='current_status_id'";
+                    break;
+            }
+            DataRow dr = db.GetDataRow(strSQL);
             if (dr == null) return 0;
-            else return Convert.ToInt64( dr["arg_value"] );
+            else return Convert.ToInt64(dr["arg_value"]);
         }
-
-        /// <summary>
-        /// 记录用户关系机器人当前爬行的UserID
-        /// </summary>
-        static public void SetCurrentUserIDForUserRelation ( long lUserID )
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "delete from sys_args where arg_name='current_user_id_userRelation'";
-            db.CountByExecuteSQL( strSQL );
-            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userRelation','" + lUserID.ToString() + "')";
-            db.CountByExecuteSQL( strSQL );
-        }
-
-        /// <summary>
-        /// 为用户关系机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
-        /// </summary>
-        static public long GetCurrentUserIDForUserRelation ()
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userRelation'";
-            DataRow dr = db.GetDataRow( strSQL );
-            if (dr == null) return 0;
-            else return Convert.ToInt64( dr["arg_value"] );
-        }
-
-        /// <summary>
-        /// 记录用户标签机器人当前爬行的UserID
-        /// </summary>
-        static public void SetCurrentUserIDForUserTag ( long lUserID )
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "delete from sys_args where arg_name='current_user_id_userTag'";
-            db.CountByExecuteSQL( strSQL );
-            strSQL = "insert into sys_args(arg_name,arg_value) values('current_user_id_userTag','" + lUserID.ToString() + "')";
-            db.CountByExecuteSQL( strSQL );
-        }
-
-        /// <summary>
-        /// 为用户标签机器人获取当前爬行的UserID（若爬行中止，则为上次中止处的用户）
-        /// </summary>
-        static public long GetCurrentUserIDForUserTag ()
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_user_id_userTag'";
-            DataRow dr = db.GetDataRow( strSQL );
-            if (dr == null) return 0;
-            else return Convert.ToInt64( dr["arg_value"] );
-        }
-
-        /// <summary>
-        /// 记录微博评论机器人当前爬行的StatusID
-        /// </summary>
-        static public void SetCurrentStatusID ( long lStatusID )
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "delete from sys_args where arg_name='current_status_id'";
-            db.CountByExecuteSQL( strSQL );
-            strSQL = "insert into sys_args(arg_name,arg_value) values('current_status_id','" + lStatusID.ToString() + "')";
-            db.CountByExecuteSQL( strSQL );
-        }
-
-        /// <summary>
-        /// 为微博评论机器人获取当前爬行的StatusID（若爬行中止，则为上次中止处的微博）
-        /// </summary>
-        static public long GetCurrentStatusID()
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select arg_value from sys_args where arg_name='current_status_id'";
-            DataRow dr = db.GetDataRow( strSQL );
-            if (dr == null) return 0;
-            else return Convert.ToInt64( dr["arg_value"] );
-        }
-
 		#endregion  成员方法
 	}
 }

@@ -17,6 +17,9 @@ namespace Sinawler
         public int Interval;
     }
 
+    public enum QueueBufferFor { USER_RELATION = 0, USER_INFO = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4, USER_BUFFER = 5 };
+    public enum SysArgFor { USER_RELATION = 0, USER_INFO = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4 };
+
     //此类用于实现一些公用的、常用的处理函数
     class PubHelper
     {

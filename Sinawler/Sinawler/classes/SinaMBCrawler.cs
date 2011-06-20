@@ -23,10 +23,13 @@ namespace Sinawler
 
         private void AdjustLimit()
         {
-            GlobalPool.RemainingHits--;
-            if (GlobalPool.RemainingHits < 0) GlobalPool.RemainingHits = 0;
-            GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - iSleep / 1000;
-            if (GlobalPool.ResetTimeInSeconds <= 0) GlobalPool.ResetTimeInSeconds = 3600;
+            lock (GlobalPool.Lock)
+            {
+                GlobalPool.RemainingHits--;
+                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - GlobalPool.LimitUpdateTime).TotalSeconds);
+                GlobalPool.LimitUpdateTime = DateTime.Now;
+                if (GlobalPool.ResetTimeInSeconds <= 0 || GlobalPool.RemainingHits < 0) GlobalPool.ResetTimeInSeconds = 3;
+            }
         }
 
         public SinaMBCrawler()

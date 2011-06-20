@@ -643,7 +643,7 @@ namespace Sinawler
                     MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
                     return;
                 }
-                if (SysArg.GetCurrentUserIDForUserInfo() == 0 && SysArg.GetCurrentUserIDForUserRelation() == 0)
+                if (SysArg.GetCurrentID(SysArgFor.USER_RELATION) == 0)
                 {
                     MessageBox.Show(this, "无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫");
                     return;
@@ -839,13 +839,13 @@ namespace Sinawler
 
         private void StartCrawUserRelationByLastUser(Object sender, DoWorkEventArgs e)
         {
-            long lLastUserID = SysArg.GetCurrentUserIDForUserRelation();
+            long lLastUserID = SysArg.GetCurrentID(SysArgFor.USER_RELATION);
             if (lLastUserID == 0)
             {
-                lLastUserID = SysArg.GetCurrentUserIDForUserInfo();
+                lLastUserID = SysArg.GetCurrentID(SysArgFor.USER_INFO);
                 if (lLastUserID == 0)
                 {
-                    lLastUserID = SysArg.GetCurrentUserIDForUserTag();
+                    lLastUserID = SysArg.GetCurrentID(SysArgFor.USER_TAG);
                     if (lLastUserID == 0)
                     {
                         MessageBox.Show(this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫");

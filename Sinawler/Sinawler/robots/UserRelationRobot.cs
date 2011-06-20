@@ -62,7 +62,7 @@ namespace Sinawler
 
                 //日志
                 Log("记录当前用户ID：" + lCurrentID.ToString());
-                SysArg.SetCurrentUserIDForUserRelation(lCurrentID);
+                SysArg.SetCurrentID(lCurrentID,SysArgFor.USER_RELATION);
 
                 #region 用户关注列表
                 if (blnAsyncCancelled) return;

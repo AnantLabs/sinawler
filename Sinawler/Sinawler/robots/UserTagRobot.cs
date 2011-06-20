@@ -35,7 +35,10 @@ namespace Sinawler
         /// <param name="lUid"></param>
         public void Start ()
         {
-            while (queueUserForUserInfoRobot.Count == 0)
+            //获取上次中止处的用户ID并入队
+            long lLastUID = SysArg.GetCurrentID(SysArgFor.USER_TAG);
+            if (lLastUID > 0) queueUserForUserTagRobot.Enqueue(lLastUID);
+            while (queueUserForUserTagRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
                 Thread.Sleep(50);   //若队列为空，则等待
@@ -60,7 +63,7 @@ namespace Sinawler
                 
                 //日志
                 Log( "记录当前用户ID：" + lCurrentID.ToString() );
-                SysArg.SetCurrentUserIDForUserTag( lCurrentID );
+                SysArg.SetCurrentID( lCurrentID, SysArgFor.USER_TAG );
 
                 #region 用户标签信息
                 if (blnAsyncCancelled) return;

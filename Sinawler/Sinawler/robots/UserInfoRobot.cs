@@ -41,6 +41,9 @@ namespace Sinawler
         /// <param name="lUid"></param>
         public void Start ()
         {
+            //获取上次中止处的用户ID并入队
+            long lLastUID = SysArg.GetCurrentID(SysArgFor.USER_INFO);
+            if (lLastUID > 0) queueUserForUserInfoRobot.Enqueue(lLastUID);
             while (queueUserForUserInfoRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
@@ -66,7 +69,7 @@ namespace Sinawler
                 
                 //日志
                 Log("记录当前用户ID：" + lCurrentID.ToString());
-                SysArg.SetCurrentUserIDForUserInfo( lCurrentID );
+                SysArg.SetCurrentID( lCurrentID,SysArgFor.USER_INFO );
 
                 #region 用户基本信息
                 if (blnAsyncCancelled) return;

@@ -19,6 +19,7 @@ namespace Sinawler
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;                    //微博队列引用
         private UserBuffer oUserBuffer;                     //the buffer queue of users
+        private long lCurrentSID = 0;                       //currently processing status id
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public StatusRobot ()
@@ -38,16 +39,16 @@ namespace Sinawler
         /// </summary>
         private void SaveStatus ( Status status )
         {
-            lCurrentID = status.status_id;
-            if (!Status.Exists( lCurrentID ))
+            lCurrentSID = status.status_id;
+            if (!Status.Exists(lCurrentSID))
             {
                 //日志
-                Log( "将微博" + lCurrentID.ToString() + "存入数据库..." );
+                Log("将微博" + lCurrentSID.ToString() + "存入数据库...");
                 status.Add();
             }
 
-            if (queueStatus.Enqueue( lCurrentID ))
-                Log( "将微博" + lCurrentID.ToString() + "加入微博队列。" );
+            if (queueStatus.Enqueue(lCurrentSID))
+                Log("将微博" + lCurrentSID.ToString() + "加入微博队列。");
 
             //若该微博有转发，将转发微博保存
             if (status.retweeted_status != null)
@@ -60,7 +61,7 @@ namespace Sinawler
                 }
 
                 //日志
-                Log( "微博" + lCurrentID.ToString() + "有转发微博，将转发微博" + status.retweeted_status.status_id.ToString() + "存入数据库..." );
+                Log("微博" + lCurrentSID.ToString() + "有转发微博，将转发微博" + status.retweeted_status.status_id.ToString() + "存入数据库...");
 
                 if (!Status.Exists( status.retweeted_status.status_id ))
                 {
@@ -97,15 +98,15 @@ namespace Sinawler
         /// </summary>
         public void Start ()
         {
+            //获取上次中止处的用户ID并入队
+            long lLastUID = SysArg.GetCurrentID(SysArgFor.STATUS);
+            if (lLastUID > 0) queueUserForStatusRobot.Enqueue(lLastUID);
             while (queueUserForStatusRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
                 Thread.Sleep( 50 );   //若队列为空，则等待
             }
             Thread.Sleep(500);  //waiting that user relation robot update list data
-            
-            long lStartUserID = queueUserForStatusRobot.FirstValue;
-            long lCurrentUserID = 0;
 
             SetCrawlerFreq();
             Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
@@ -121,7 +122,11 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentUserID = queueUserForStatusRobot.RollQueue();
+                lCurrentID = queueUserForStatusRobot.RollQueue();
+
+                //日志
+                Log("记录当前用户ID：" + lCurrentID.ToString());
+                SysArg.SetCurrentID(lCurrentID, SysArgFor.STATUS);
 
                 #region 用户微博信息
                 if (blnAsyncCancelled) return;
@@ -131,9 +136,9 @@ namespace Sinawler
                     Thread.Sleep( 50 );
                 }
                 //日志
-                Log( "获取数据库中用户" + lCurrentUserID.ToString() + "最新一条微博的ID..." );
+                Log("获取数据库中用户" + lCurrentID.ToString() + "最新一条微博的ID...");
                 //获取数据库中当前用户最新一条微博的ID
-                lCurrentID = Status.GetLastStatusIDOf( lCurrentUserID );
+                long lCurrentSID = Status.GetLastStatusIDOf(lCurrentID);
 
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
@@ -143,44 +148,11 @@ namespace Sinawler
                 }
 
                 Status status;
-                #region 微博在页面上的ID不是实际的ID，暂时搁置
-                //if(lCurrentID==0)   //通过web抓取所有微博
-                //{
-                //    //日志
-                //    Log( "爬取用户" + lCurrentUserID.ToString()+"的基本信息..." );
-                //    User user = crawler.GetUserInfo( lCurrentUserID );  //主要是为了获取用户的微博数量，以供参考
-                //    //日志
-                //    Log( "爬取用户" + lCurrentUserID.ToString() + "的所有微博ID列表..." );
-                //    LinkedList<long> lstStatusID=crawler.GetStatusesByWeb(lCurrentUserID,user.statuses_count);
-                //    //日志
-                //    Log( "爬得" + lstStatusID.Count.ToString() + "条微博。" );
-
-                //    long lStatusID = 0;
-                //    while(lstStatusID.Count>0)
-                //    {
-                //        if (blnAsyncCancelled) return;
-                //        while (blnSuspending)
-                //        {
-                //            if (blnAsyncCancelled) return;
-                //            Thread.Sleep( 50 );
-                //        }
-
-                //        lStatusID = lstStatusID.First.Value;
-                //        //日志
-                //        Log( "爬取微博" + lStatusID.ToString() + "的内容..." );
-                //        status = crawler.GetStatus( lStatusID );
-                //        SaveStatus( status );
-                //        lstStatusID.RemoveFirst();                        
-                //    }
-                //}
-                //else
-                //{
-                #endregion
                 #region 后续微博
                 //日志
-                Log( "爬取用户" + lCurrentUserID.ToString() + "的ID在" + lCurrentID.ToString() + "之后的微博..." );
+                Log("爬取用户" + lCurrentID.ToString() + "的ID在" + lCurrentSID.ToString() + "之后的微博...");
                 //爬取数据库中当前用户最新一条微博的ID之后的微博，存入数据库
-                LinkedList<Status> lstStatus = crawler.GetStatusesOfSince( lCurrentUserID, lCurrentID );
+                LinkedList<Status> lstStatus = crawler.GetStatusesOfSince(lCurrentID, lCurrentSID);
                 //日志
                 Log( "爬得" + lstStatus.Count.ToString() + "条微博。" );
 
@@ -200,7 +172,7 @@ namespace Sinawler
                 //}
                 #endregion
                 //日志
-                Log( "用户" + lCurrentUserID.ToString() + "的微博数据已爬取完毕。" );
+                Log( "用户" + lCurrentID.ToString() + "的微博数据已爬取完毕。" );
                 //日志
                 AdjustFreq();
                 Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
