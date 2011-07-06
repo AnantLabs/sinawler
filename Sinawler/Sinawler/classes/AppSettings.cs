@@ -13,8 +13,6 @@ namespace Sinawler
     [Serializable]
     public class SettingItems
     {
-        private string _app_key = {appKey};
-        private string _app_secret = {appSecret};
         private string _database_type = "SQL Server";   //数据库类型默认为SQL Server
         private string _db_server = "localhost";        //数据库服务器
         private string _db_username = "sa";             //数据库用户名
@@ -27,12 +25,6 @@ namespace Sinawler
         private bool _tags_robot = true;                 //the state of tag robot
         private bool _statuses_robot = true;            //the state of statuses robot
         private bool _comments_robot = true;            //the state of comments robot
-
-        public string AppKey
-        { get { return _app_key; } }
-
-        public string AppSecret
-        { get { return _app_secret; } }
 
         public string DBType
         {

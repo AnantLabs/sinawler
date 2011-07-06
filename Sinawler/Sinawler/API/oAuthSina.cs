@@ -38,27 +38,13 @@ namespace Sina.Api
         }
         public string appKey
         {
-            get
-            {
-                if (_appKey.Length == 0)
-                {
-                    _appKey = AppSettings.LoadDefault().AppKey;
-                }
-                return _appKey;
-            }
+            get { return _appKey;  }
             set { _appKey = value; }
         }
 
         public string appSecret
         {
-            get
-            {
-                if (_appSecret.Length == 0)
-                {
-                    _appSecret = AppSettings.LoadDefault().AppSecret;
-                }
-                return _appSecret;
-            }
+            get { return _appSecret;  }
             set { _appSecret = value; }
         }
 

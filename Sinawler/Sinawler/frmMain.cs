@@ -31,9 +31,7 @@ namespace Sinawler
         private UserRelationRobot robotUserRelation;
         private UserTagRobot robotUserTag;
         private StatusRobot robotStatus;
-        private CommentRobot robotComment;
-
-        
+        private CommentRobot robotComment;        
 
         private string strDataBaseStatus = "";      //数据库测试状态结果，OK为正常
 
@@ -204,7 +202,7 @@ namespace Sinawler
         {
             CheckLogin();
             drplstDBType.SelectedIndex = 0;
-            LoadSettings();
+            LoadSettings();            
         }
 
         private void btnExit_Click(object sender, EventArgs e)

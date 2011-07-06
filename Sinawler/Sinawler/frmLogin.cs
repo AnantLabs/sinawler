@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Sina.Api;
+using System.Configuration;
 
 namespace Sinawler
 {
@@ -60,8 +61,18 @@ namespace Sinawler
             //the two strings below must to be "" to generate right signature
             _api.Token = "";
             _api.TokenSecret = "";
-
-            wbBrowser.Url=new Uri(_api.AuthorizationGet());
+            try
+            {
+                Sinawler.Properties.Settings settings=new Sinawler.Properties.Settings();
+                _api.appKey = settings.appKey;
+                _api.appSecret = settings.appSecret;
+                wbBrowser.Url = new Uri(_api.AuthorizationGet());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Authentication failed! Please check appKey and appSecret values in Sinawler.exe.config.");
+                Application.Exit();
+            }
         }
 
         private void wbBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
