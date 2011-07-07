@@ -30,6 +30,7 @@ namespace Sinawler
         /// <returns>整理后的yyyy-mm-dd hh:mm:ss格式的日期和时间</returns>
         static public string ParseDateTime(string strDateTime)
         {
+            if (strDateTime.Trim() == "") return "";
             string[] s = strDateTime.Split(' ');
             string strBuffer = s[5] + "-";
             switch (s[1])
