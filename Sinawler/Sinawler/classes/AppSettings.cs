@@ -7,9 +7,6 @@ using System.Windows.Forms;
 
 namespace Sinawler
 {
-    //应用程序配置项
-    public enum DataFormat { JSON = 0, XML = 1};
-
     [Serializable]
     public class SettingItems
     {
