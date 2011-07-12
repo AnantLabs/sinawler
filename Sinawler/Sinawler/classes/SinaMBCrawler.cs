@@ -12,8 +12,8 @@ namespace Sinawler
     //SinaMBCrawler类是通过新浪微博API从微博中抓取数据的类
     public class SinaMBCrawler
     {
-        private SinaApiService api = GlobalPool.API;
-        ///默认请求之前等待3.6秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
+        private APIInfo api;
+        ///默认请求之前等待3秒钟，此值根据每小时100次的限制算得（每次3.6秒），但鉴于日志操作也有等待时间，故此值应能保证请求次数不超限
         ///后经测试，此值还可缩小。2010-10-11定为最小值2000，可调整
         ///2010-10-12定为不设下限
         ///2011-02-23设定为下限500ms
@@ -23,17 +23,16 @@ namespace Sinawler
 
         private void AdjustLimit()
         {
-            lock (GlobalPool.Lock)
-            {
-                GlobalPool.RemainingHits--;
-                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - GlobalPool.LimitUpdateTime).TotalSeconds);
-                GlobalPool.LimitUpdateTime = DateTime.Now;
-                if (GlobalPool.ResetTimeInSeconds <= 0 || GlobalPool.RemainingHits < 0) GlobalPool.ResetTimeInSeconds = 3;
-            }
+            api.RemainingHits--;
+            api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.LimitUpdateTime).TotalSeconds);
+            api.LimitUpdateTime = DateTime.Now;
+            if (api.ResetTimeInSeconds <= 0 || api.RemainingHits < 0) api.ResetTimeInSeconds = 3;
         }
 
-        public SinaMBCrawler()
-        { }
+        public SinaMBCrawler(SysArgFor crawlerType)
+        {
+            api = GlobalPool.GetAPI(crawlerType);
+        }
 
         public int SleepTime
         {
@@ -57,17 +56,17 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<long> ids = new LinkedList<long>();
-            string strResult = api.friends_ids(lUid, iCursor);
+            string strResult = api.API.friends_ids(lUid, iCursor);
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return ids;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.friends_ids(lUid, iCursor);
+                strResult = api.API.friends_ids(lUid, iCursor);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (api.Format == "xml")
+            if (api.API.Format == "xml")
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);
                 if (strResult != null && strResult != "")
@@ -101,17 +100,17 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<long> ids = new LinkedList<long>();
-            string strResult = api.followers_ids(lUid, iCursor);
+            string strResult = api.API.followers_ids(lUid, iCursor);
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return ids;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.followers_ids(lUid, iCursor);
+                strResult = api.API.followers_ids(lUid, iCursor);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (api.Format == "xml")
+            if (api.API.Format == "xml")
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);
                 if (strResult != null && strResult != "")
@@ -141,7 +140,7 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             User user = new User();
             user.user_id = -1;
-            string strResult = api.user_show(lUid);
+            string strResult = api.API.user_show(lUid);
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (blnStopCrawling)
@@ -150,14 +149,19 @@ namespace Sinawler
             {
                 if (iTryTimes == 0) return null;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.user_show(lUid);
+                strResult = api.API.user_show(lUid);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
+                user.created_at = PubHelper.ParseDateTime(user.created_at);
+            }//json
+            else
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
                 if (strResult.Trim() == "") return user;
@@ -197,11 +201,6 @@ namespace Sinawler
                 else
                     user.geo_enabled = true;
             }//format=xml
-            else
-            {
-                user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
-                user.created_at = PubHelper.ParseDateTime(user.created_at);
-            }//json
             return user;
         }
 
@@ -211,7 +210,7 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             User user = new User();
             user.user_id = -1;
-            string strResult = api.user_show(strScreenName);
+            string strResult = api.API.user_show(strScreenName);
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (blnStopCrawling)
@@ -220,14 +219,19 @@ namespace Sinawler
             {
                 if (iTryTimes == 0) return null;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.user_show(strScreenName);
+                strResult = api.API.user_show(strScreenName);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
+                user.created_at = PubHelper.ParseDateTime(user.created_at);
+            }//json
+            else
             {
                 if (strResult == "User Not Exist")  //用户不存在
                     return null;
@@ -272,11 +276,6 @@ namespace Sinawler
                 else
                     user.geo_enabled = true;
             }//format=xml
-            else
-            {
-                user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
-                user.created_at = PubHelper.ParseDateTime(user.created_at);
-            }//json
             return user;
         }
 
@@ -286,7 +285,7 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             User user = new User();
             user.user_id = -1;
-            string strResult = api.user_show(lUid, strScreenName);
+            string strResult = api.API.user_show(lUid, strScreenName);
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (blnStopCrawling)
@@ -295,14 +294,19 @@ namespace Sinawler
             {
                 if (iTryTimes == 0) return null;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.user_show(lUid, strScreenName);
+                strResult = api.API.user_show(lUid, strScreenName);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
+                user.created_at = PubHelper.ParseDateTime(user.created_at);
+            }//json
+            else
             {
                 if (strResult == "User Not Exist")  //用户不存在
                     return null;
@@ -347,11 +351,6 @@ namespace Sinawler
                 else
                     user.geo_enabled = true;
             }//format=xml
-            else
-            {
-                user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
-                user.created_at = PubHelper.ParseDateTime(user.created_at);
-            }//json
             return user;
         }
 
@@ -359,7 +358,7 @@ namespace Sinawler
         public User GetCurrentUserInfo()
         {
             System.Threading.Thread.Sleep(iSleep);
-            long lCurrentUserID = api.account_verify_credentials();
+            long lCurrentUserID = api.API.account_verify_credentials();
             if (lCurrentUserID == 0) return null;
             else return this.GetUserInfo(lCurrentUserID);
         }
@@ -417,7 +416,8 @@ namespace Sinawler
                 if (oJsonStatus.retweeted_status.in_reply_to_user_id != null && oJsonStatus.retweeted_status.in_reply_to_user_id != "")
                     status.retweeted_status.in_reply_to_user_id = Convert.ToInt64(oJsonStatus.retweeted_status.in_reply_to_user_id);
                 status.retweeted_status.in_reply_to_screen_name = oJsonStatus.retweeted_status.in_reply_to_screen_name;
-                status.retweeted_status.mid = Convert.ToInt64(oJsonStatus.retweeted_status.mid);
+                if(oJsonStatus.retweeted_status.mid!=null && oJsonStatus.retweeted_status.mid.Trim()!="")
+                    status.retweeted_status.mid = Convert.ToInt64(oJsonStatus.retweeted_status.mid);
                 status.retweeted_status.user = oJsonStatus.retweeted_status.user;
                 if(status.retweeted_status.user.created_at!=null)
                     status.retweeted_status.user.created_at = PubHelper.ParseDateTime(status.retweeted_status.user.created_at);
@@ -732,7 +732,7 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             Status status = new Status();
-            string strResult = api.statuses_show(lStatusID);
+            string strResult = api.API.statuses_show(lStatusID);
             if (strResult == null) return null;
             if (blnStopCrawling || strResult.Contains("target weibo does not exist"))   //微博不存在
                 return null;
@@ -740,13 +740,17 @@ namespace Sinawler
             {
                 if (iTryTimes == 0) return null;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.statuses_show(lStatusID);
+                strResult = api.API.statuses_show(lStatusID);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == null) return null;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                status = JsonStatusToStatus((JsonStatus)JsonConvert.DeserializeObject(strResult, typeof(JsonStatus)));
+            }//json
+            else
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
                 if (strResult.Trim() == "") return null;
@@ -756,10 +760,6 @@ namespace Sinawler
                 XmlNode nodeStatus = xmlDoc.GetElementsByTagName("status")[0];
                 status = XMLNodeToStatus(nodeStatus);
             }//format=xml
-            else
-            {
-                status = JsonStatusToStatus((JsonStatus)JsonConvert.DeserializeObject(strResult, typeof(JsonStatus)));
-            }//json
             return status;
         }
 
@@ -773,17 +773,23 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Status> lstStatuses = new LinkedList<Status>();
-            string strResult = api.user_timeline(lUid, lSinceSid);
+            string strResult = api.API.user_timeline(lUid, lSinceSid);
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstStatuses;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.user_timeline(lUid, lSinceSid);
+                strResult = api.API.user_timeline(lUid, lSinceSid);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                JsonStatus[] oJsonStatuses = (JsonStatus[])JsonConvert.DeserializeObject(strResult, typeof(JsonStatus[]));
+                foreach (JsonStatus oJsonStatus in oJsonStatuses)
+                    lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
+            }//json
+            else
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
                 if (strResult.Trim() == "") return lstStatuses;
@@ -794,12 +800,6 @@ namespace Sinawler
                 foreach (XmlNode nodeStatus in nodes)
                     lstStatuses.AddLast(XMLNodeToStatus(nodeStatus));
             }//format=xml
-            else
-            {
-                JsonStatus[] oJsonStatuses = (JsonStatus[])JsonConvert.DeserializeObject(strResult, typeof(JsonStatus[]));
-                foreach (JsonStatus oJsonStatus in oJsonStatuses)
-                    lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
-            }//json
             return lstStatuses;
         }
 
@@ -812,17 +812,39 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Comment> lstComments = new LinkedList<Comment>();
-            string strResult = api.comments(lStatusID, iPageNum);
+            string strResult = api.API.comments(lStatusID, iPageNum);
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstComments;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.comments(lStatusID, iPageNum);
+                strResult = api.API.comments(lStatusID, iPageNum);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                JsonComment[] oJsonComments = (JsonComment[])JsonConvert.DeserializeObject(strResult, typeof(JsonComment[]));
+                foreach (JsonComment oJsonComment in oJsonComments)
+                {
+                    Comment comment = new Comment();
+                    comment.status_id = lStatusID;
+                    comment.created_at = PubHelper.ParseDateTime(oJsonComment.created_at);
+                    comment.comment_id = oJsonComment.id;
+                    comment.content = oJsonComment.text;
+                    if (oJsonComment.source != null)
+                    {
+                        comment.source_url = oJsonComment.source.Substring(9, oJsonComment.source.IndexOf("rel") - 11);
+                        comment.source_name = oJsonComment.source.Substring(oJsonComment.source.IndexOf('>') + 1, oJsonComment.source.IndexOf("</") - oJsonComment.source.IndexOf('>') - 1);
+                    }
+                    comment.mid = Convert.ToInt64(oJsonComment.mid);
+                    comment.user = oJsonComment.user;
+                    comment.user.created_at = PubHelper.ParseDateTime(comment.user.created_at);
+
+                    lstComments.AddLast(comment);
+                }
+            }//json
+            else
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
                 if (strResult.Trim() == "") return lstComments;
@@ -939,28 +961,6 @@ namespace Sinawler
                     lstComments.AddLast(comment);
                 }
             }//xml
-            else
-            {
-                JsonComment[] oJsonComments = (JsonComment[])JsonConvert.DeserializeObject(strResult, typeof(JsonComment[]));
-                foreach (JsonComment oJsonComment in oJsonComments)
-                {
-                    Comment comment = new Comment();
-                    comment.status_id = lStatusID;
-                    comment.created_at = PubHelper.ParseDateTime(oJsonComment.created_at);
-                    comment.comment_id = oJsonComment.id;
-                    comment.content = oJsonComment.text;
-                    if (oJsonComment.source != null)
-                    {
-                        comment.source_url = oJsonComment.source.Substring(9, oJsonComment.source.IndexOf("rel") - 11);
-                        comment.source_name = oJsonComment.source.Substring(oJsonComment.source.IndexOf('>') + 1, oJsonComment.source.IndexOf("</") - oJsonComment.source.IndexOf('>') - 1);
-                    }
-                    comment.mid = Convert.ToInt64(oJsonComment.mid);
-                    comment.user = oJsonComment.user;
-                    comment.user.created_at = PubHelper.ParseDateTime(comment.user.created_at);
-
-                    lstComments.AddLast(comment);
-                }
-            }//json
             return lstComments;
         }
 
@@ -973,17 +973,31 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Tag> lstTags = new LinkedList<Tag>();
-            string strResult = api.tags_of(lUserID);
+            string strResult = api.API.tags_of(lUserID);
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstTags;
                 System.Threading.Thread.Sleep(iSleep);
-                strResult = api.tags_of(lUserID);
+                strResult = api.API.tags_of(lUserID);
                 iTryTimes--;
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (api.Format == "xml")
+            if (api.API.Format == "json")
+            {
+                Hashtable[] oJsonTags = (Hashtable[])JsonConvert.DeserializeObject(strResult, typeof(Hashtable[]));
+                foreach (Hashtable oJsonTag in oJsonTags)
+                {
+                    Tag tag = new Tag();
+                    foreach (DictionaryEntry de in oJsonTag)
+                    {
+                        tag.tag_id = Convert.ToInt64(de.Key);
+                        tag.tag = de.Value.ToString();
+                    }
+                    lstTags.AddLast(tag);
+                }
+            }//json
+            else
             {
                 strResult = PubHelper.stripNonValidXMLCharacters(strResult);
                 if (strResult != null && strResult != "")
@@ -1011,20 +1025,6 @@ namespace Sinawler
                     }
                 }
             }//xml
-            else
-            {
-                Hashtable[] oJsonTags = (Hashtable[])JsonConvert.DeserializeObject(strResult, typeof(Hashtable[]));
-                foreach (Hashtable oJsonTag in oJsonTags)
-                {
-                    Tag tag = new Tag();
-                    foreach (DictionaryEntry de in oJsonTag)
-                    {
-                        tag.tag_id = Convert.ToInt64(de.Key);
-                        tag.tag = de.Value.ToString();
-                    }
-                    lstTags.AddLast(tag);
-                }
-            }//json
             return lstTags;
         }
     };

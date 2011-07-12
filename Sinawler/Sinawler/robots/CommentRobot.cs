@@ -22,7 +22,7 @@ namespace Sinawler
 
         //构造函数，需要传入相应的新浪微博API
         public CommentRobot ()
-            : base()
+            : base(SysArgFor.COMMENT)
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
 
@@ -50,7 +50,7 @@ namespace Sinawler
             Thread.Sleep(500);  //waiting that user relation robot update limit data
 
             SetCrawlerFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -85,7 +85,7 @@ namespace Sinawler
                 LinkedList<Comment> lstTemp=new LinkedList<Comment>();
                 lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
                 while (lstTemp.Count > 0)
                 {
                     while (lstTemp.Count > 0)
@@ -96,7 +96,7 @@ namespace Sinawler
                     iPage++;
                     lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                     AdjustFreq();
-                    Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                    Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
                 }
                 //日志
                 Log("爬得微博" + lCurrentID.ToString() + "的" + lstComment.Count.ToString() + "条评论。");

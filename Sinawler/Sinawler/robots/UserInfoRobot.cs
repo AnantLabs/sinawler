@@ -25,7 +25,7 @@ namespace Sinawler
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public UserInfoRobot ()
-            : base()
+            : base(SysArgFor.USER_INFO)
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
             queueUserForUserInfoRobot = GlobalPool.UserQueueForUserInfoRobot;
@@ -53,7 +53,7 @@ namespace Sinawler
             User user;
 
             SetCrawlerFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
 
             //对队列循环爬行
             while (true)
@@ -122,7 +122,7 @@ namespace Sinawler
 
                 AdjustFreq();
                 //日志
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
             }
         }
 

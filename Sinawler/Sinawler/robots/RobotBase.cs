@@ -15,7 +15,7 @@ namespace Sinawler
 {
     public class RobotBase
     {
-        protected SinaApiService api=GlobalPool.API;
+        protected APIInfo api;
         protected bool blnAsyncCancelled = false;     //指示爬虫线程是否被取消，来帮助中止爬虫循环
         protected string strLogFile = "";             //日志文件
         private string strLogMessage = "";          //日志内容
@@ -25,9 +25,10 @@ namespace Sinawler
         protected BackgroundWorker bwAsync = null;
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public RobotBase ()
+        public RobotBase (SysArgFor robotType)
         {
-            crawler = new SinaMBCrawler();            
+            crawler = new SinaMBCrawler(robotType);
+            api = GlobalPool.GetAPI(robotType);
         }
 
         public bool AsyncCancelled
@@ -57,10 +58,6 @@ namespace Sinawler
             set { blnSuspending = value; }
         }
 
-        //重新设置API的接口
-        public SinaApiService SinaAPI
-        { set { api = value; } }
-
         public BackgroundWorker AsyncWorker
         { set { bwAsync = value; } }
 
@@ -85,15 +82,16 @@ namespace Sinawler
         //except user relation robot, others get and record the reset time only
         protected virtual void AdjustRealFreq()
         {
-            string strResult = api.check_hits_limit();
+            if (api == null) return;
+            string strResult = api.API.check_hits_limit();
             while (strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null)
             {
                 System.Threading.Thread.Sleep(100);
-                strResult = api.check_hits_limit();
+                strResult = api.API.check_hits_limit();
             }
             int iResetTimeInSeconds = 0;
             int iRemainingHits = 0;
-            if (api.Format == "xml")
+            if (api.API.Format == "xml")
             {
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.LoadXml(strResult);
@@ -111,9 +109,13 @@ namespace Sinawler
                     if (de.Key.ToString() == "remaining_hits") iRemainingHits = Convert.ToInt32(de.Value);
                 }
             }
-            GlobalPool.LimitUpdateTime = DateTime.Now;
-            GlobalPool.RemainingHits = iRemainingHits;
-            GlobalPool.ResetTimeInSeconds = iResetTimeInSeconds;
+
+            if(api!=null)
+            {
+                api.LimitUpdateTime = DateTime.Now;
+                api.RemainingHits = iRemainingHits;
+                api.ResetTimeInSeconds = iResetTimeInSeconds;
+            }
         }
 
         //从GlobalPool中检查请求限制剩余次数，并根据情况调整访问频度并返回
@@ -122,28 +124,29 @@ namespace Sinawler
         //except user relation robot, others get and record the reset time only
         protected virtual void AdjustFreq()
         {
-            lock (GlobalPool.Lock)
+            if(api!=null)
             {
-                GlobalPool.RemainingHits--;
-                GlobalPool.ResetTimeInSeconds = GlobalPool.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - GlobalPool.LimitUpdateTime).TotalSeconds);
-                GlobalPool.LimitUpdateTime = DateTime.Now;
-                if (GlobalPool.ResetTimeInSeconds <= 0 || GlobalPool.RemainingHits<0) AdjustRealFreq();//GlobalPool.ResetTimeInSeconds = 1;
+                api.RemainingHits--;
+                api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.LimitUpdateTime).TotalSeconds);
+                api.LimitUpdateTime = DateTime.Now;
+                if (api.ResetTimeInSeconds <= 0 || api.RemainingHits<0) AdjustRealFreq();//GlobalPool.ResetTimeInSeconds = 1;
             }
         }
 
         //set the frequency to crawler
         protected void SetCrawlerFreq()
         {
-            int iSleep = GlobalPool.ResetTimeInSeconds * 1000;
-            if (iSleep < 1000) iSleep = 1000;
-
-            if (GlobalPool.RemainingHits > 0)
+            if (api != null)
             {
-                iSleep = Convert.ToInt32(GlobalPool.ResetTimeInSeconds * 1000 / GlobalPool.RemainingHits);
-                if (iSleep < 1000) iSleep = 1000; //sleep at least 1s
-            }//若已无剩余次数，直接等待剩余时间
-
-            crawler.SleepTime = iSleep;
+                int iSleep = api.ResetTimeInSeconds * 1000;
+                if (iSleep < 1000) iSleep = 1000;
+                if (api.RemainingHits > 0)
+                {
+                    iSleep = Convert.ToInt32(api.ResetTimeInSeconds * 1000 / api.RemainingHits);
+                    if (iSleep < 1000) iSleep = 1000; //sleep at least 1s
+                }
+                crawler.SleepTime = iSleep;
+            }
         }
 
         public virtual void Initialize (){}

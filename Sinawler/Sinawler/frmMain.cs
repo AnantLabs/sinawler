@@ -87,7 +87,7 @@ namespace Sinawler
                 if (login.ShowDialog() == DialogResult.OK)
                 {
                     blnAuthorized = true;
-                    SinaMBCrawler crawler = new SinaMBCrawler();
+                    SinaMBCrawler crawler = new SinaMBCrawler(SysArgFor.USER_RELATION);
                     crawler.SleepTime = 0;  //这里不等待
                     oCurrentUser = crawler.GetCurrentUserInfo();
                     ShowCurrentUser();
@@ -229,7 +229,7 @@ namespace Sinawler
                     MessageBox.Show("请输入正确的用户ID。", "新浪微博爬虫");
                     return;
                 }
-                SinaMBCrawler crawler = new SinaMBCrawler();
+                SinaMBCrawler crawler = new SinaMBCrawler(SysArgFor.USER_RELATION);
                 crawler.SleepTime = 0;  //这里不等待
                 if (strUserID != "" && strScreenName == "")
                     oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUserID));
@@ -332,12 +332,20 @@ namespace Sinawler
             if (optJSON.Checked)
             {
                 settings.Format = DataFormat.JSON;
-                GlobalPool.API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "json";
             }
             if (optXML.Checked)
             {
                 settings.Format = DataFormat.XML;
-                GlobalPool.API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "xml";
             }
         }
 
@@ -1064,11 +1072,19 @@ namespace Sinawler
             {
                 case DataFormat.JSON:
                     optJSON.Checked = true;
-                    GlobalPool.API.Format = "json";
+                    GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "json";
+                    GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "json";
+                    GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "json";
+                    GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "json";
+                    GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "json";
                     break;
                 case DataFormat.XML:
                     optXML.Checked = true;
-                    GlobalPool.API.Format = "xml";
+                    GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "xml";
+                    GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "xml";
+                    GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "xml";
+                    GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "xml";
+                    GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "xml";
                     break;
             }
         }
@@ -1107,12 +1123,20 @@ namespace Sinawler
             if (optJSON.Checked)
             {
                 settings.Format = DataFormat.JSON;
-                GlobalPool.API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "json";
+                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "json";
             }
             if (optXML.Checked)
             {
                 settings.Format = DataFormat.XML;
-                GlobalPool.API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "xml";
+                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "xml";
             }
 
             AppSettings.Save(settings);

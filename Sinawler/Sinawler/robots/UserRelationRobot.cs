@@ -22,7 +22,7 @@ namespace Sinawler
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public UserRelationRobot()
-            : base()
+            : base(SysArgFor.USER_RELATION)
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userRelation.log";
             queueUserForUserInfoRobot = GlobalPool.UserQueueForUserInfoRobot;
@@ -39,7 +39,7 @@ namespace Sinawler
         {
             if (lStartUserID == 0) return;
             AdjustFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
 
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue(lStartUserID);
@@ -128,7 +128,7 @@ namespace Sinawler
 
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
                 #endregion
                 #region 用户粉丝列表
                 //爬取当前用户的粉丝的ID，记录关系，加入队列
@@ -197,7 +197,7 @@ namespace Sinawler
                 Log("用户" + lCurrentID.ToString() + "的关系已爬取完毕。");
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + GlobalPool.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + GlobalPool.RemainingHits.ToString() + "次");
+                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
             }
         }
 

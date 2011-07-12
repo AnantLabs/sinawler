@@ -30,7 +30,7 @@
         {
             this.btnLogin = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
-            this.wbBrowser = new System.Windows.Forms.WebBrowser();
+            this.wbUserRelation = new System.Windows.Forms.WebBrowser();
             this.txtUserID = new System.Windows.Forms.TextBox();
             this.txtPWD = new System.Windows.Forms.TextBox();
             this.lblUserId = new System.Windows.Forms.Label();
@@ -59,15 +59,15 @@
             this.btnCancel.Text = "取消";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
-            // wbBrowser
+            // wbUserRelation
             // 
-            this.wbBrowser.Location = new System.Drawing.Point(30, 95);
-            this.wbBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.wbBrowser.Name = "wbBrowser";
-            this.wbBrowser.Size = new System.Drawing.Size(33, 20);
-            this.wbBrowser.TabIndex = 4;
-            this.wbBrowser.Visible = false;
-            this.wbBrowser.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbBrowser_DocumentCompleted);
+            this.wbUserRelation.Location = new System.Drawing.Point(30, 95);
+            this.wbUserRelation.MinimumSize = new System.Drawing.Size(20, 20);
+            this.wbUserRelation.Name = "wbUserRelation";
+            this.wbUserRelation.Size = new System.Drawing.Size(33, 20);
+            this.wbUserRelation.TabIndex = 4;
+            this.wbUserRelation.Visible = false;
+            this.wbUserRelation.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbBrowser_DocumentCompleted);
             // 
             // txtUserID
             // 
@@ -120,7 +120,7 @@
             this.Controls.Add(this.txtUserID);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnLogin);
-            this.Controls.Add(this.wbBrowser);
+            this.Controls.Add(this.wbUserRelation);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -137,7 +137,7 @@
 
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.WebBrowser wbBrowser;
+        private System.Windows.Forms.WebBrowser wbUserRelation;
         private System.Windows.Forms.TextBox txtUserID;
         private System.Windows.Forms.TextBox txtPWD;
         private System.Windows.Forms.Label lblUserId;

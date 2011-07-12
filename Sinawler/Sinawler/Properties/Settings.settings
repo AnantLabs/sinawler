@@ -2,11 +2,35 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Sinawler.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="appKey" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">{appKey}</Value>
+    <Setting Name="appKeyForUserRelation" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appKeyForUserRelation}</Value>
     </Setting>
-    <Setting Name="appSecret" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">{appSecret}</Value>
+    <Setting Name="appSecretForUserRelation" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appSecretForUserRelation}</Value>
+    </Setting>
+    <Setting Name="appKeyForUserInfo" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appKeyForUserInfo}</Value>
+    </Setting>
+    <Setting Name="appSecretForUserInfo" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appSecretForUserInfo}</Value>
+    </Setting>
+    <Setting Name="appKeyForUserTag" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appKeyForUserTag}</Value>
+    </Setting>
+    <Setting Name="appSecretForUserTag" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appSecretForUserTag}</Value>
+    </Setting>
+    <Setting Name="appKeyForStatus" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appKeyForStatus}</Value>
+    </Setting>
+    <Setting Name="appSecretForStatus" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appSecretForStatus}</Value>
+    </Setting>
+    <Setting Name="appKeyForComment" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appKeyForComment}</Value>
+    </Setting>
+    <Setting Name="appSecretForComment" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">{appSecretForComment}</Value>
     </Setting>
   </Settings>
 </SettingsFile>
