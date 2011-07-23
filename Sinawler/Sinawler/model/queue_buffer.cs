@@ -126,7 +126,6 @@ namespace Sinawler.Model
                         db.CountByExecuteSQL("delete * from queue_buffer_for_comment where status_id in " + strIDsToBeDeleted);
                         break;
                 }
-                GetFirstValue();
             }
             return lstResult;
         }
