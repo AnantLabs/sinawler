@@ -36,6 +36,12 @@ namespace Sinawler
         public static bool StatusRobotEnabled = true;
         public static bool CommentRobotEnabled = true;
 
+        public static int MinSleepMsForUserRelation = 500;
+        public static int MinSleepMsForUserInfo = 500;
+        public static int MinSleepMsForUserTag = 500;
+        public static int MinSleepMsForStatus = 500;
+        public static int MinSleepMsForComment = 500;
+
         public static APIInfo GetAPI(SysArgFor apiType)
         {
             switch (apiType)

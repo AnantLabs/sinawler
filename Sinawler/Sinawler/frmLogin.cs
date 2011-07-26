@@ -125,18 +125,23 @@ namespace Sinawler
 
                 _apiUserRelation.appKey = settings.appKeyForUserRelation;
                 _apiUserRelation.appSecret = settings.appSecretForUserRelation;
+                GlobalPool.MinSleepMsForUserRelation = settings.MinSleepMsForUserRelation;
 
                 _apiUserInfo.appKey = settings.appKeyForUserInfo;
                 _apiUserInfo.appSecret = settings.appSecretForUserInfo;
+                GlobalPool.MinSleepMsForUserInfo = settings.MinSleepMsForUserInfo;
 
                 _apiUserTag.appKey = settings.appKeyForUserTag;
                 _apiUserTag.appSecret = settings.appSecretForUserTag;
+                GlobalPool.MinSleepMsForUserTag = settings.MinSleepMsForUserTag;
 
                 _apiStatus.appKey = settings.appKeyForStatus;
                 _apiStatus.appSecret = settings.appSecretForStatus;
+                GlobalPool.MinSleepMsForStatus = settings.MinSleepMsForStatus;
 
                 _apiComment.appKey = settings.appKeyForComment;
                 _apiComment.appSecret = settings.appSecretForComment;
+                GlobalPool.MinSleepMsForComment = settings.MinSleepMsForComment;
             }
             catch (Exception ex)
             {

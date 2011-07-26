@@ -112,5 +112,50 @@ namespace Sinawler.Properties {
                 return ((string)(this["appSecretForComment"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int MinSleepMsForUserRelation {
+            get {
+                return ((int)(this["MinSleepMsForUserRelation"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int MinSleepMsForUserInfo {
+            get {
+                return ((int)(this["MinSleepMsForUserInfo"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int MinSleepMsForUserTag {
+            get {
+                return ((int)(this["MinSleepMsForUserTag"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int MinSleepMsForStatus {
+            get {
+                return ((int)(this["MinSleepMsForStatus"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int MinSleepMsForComment {
+            get {
+                return ((int)(this["MinSleepMsForComment"]));
+            }
+        }
     }
 }

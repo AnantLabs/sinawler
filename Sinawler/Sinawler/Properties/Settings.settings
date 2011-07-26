@@ -32,5 +32,20 @@
     <Setting Name="appSecretForComment" Type="System.String" Scope="Application">
       <Value Profile="(Default)">{appSecretForComment}</Value>
     </Setting>
+    <Setting Name="MinSleepMsForUserRelation" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="MinSleepMsForUserInfo" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="MinSleepMsForUserTag" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="MinSleepMsForStatus" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
+    <Setting Name="MinSleepMsForComment" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">500</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

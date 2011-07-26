@@ -23,12 +23,31 @@ namespace Sinawler
         protected SinaMBCrawler crawler;              //爬虫对象。构造函数中初始化
         protected long lCurrentID = 0;               //当前爬取的用户或微博ID，随时抛出传递给另外的机器人，由各子类决定由其暴露的属性名
         protected BackgroundWorker bwAsync = null;
+        protected int iMinSleep = 100;              //minimum ms for sleeping
 
         //构造函数，需要传入相应的新浪微博API和主界面
         public RobotBase (SysArgFor robotType)
         {
             crawler = new SinaMBCrawler(robotType);
             api = GlobalPool.GetAPI(robotType);
+            switch (robotType)
+            { 
+                case SysArgFor.USER_INFO:
+                    if (iMinSleep < GlobalPool.MinSleepMsForUserInfo) iMinSleep = GlobalPool.MinSleepMsForUserInfo;
+                    break;
+                case SysArgFor.USER_TAG:
+                    if (iMinSleep < GlobalPool.MinSleepMsForUserTag) iMinSleep = GlobalPool.MinSleepMsForUserTag;
+                    break;
+                case SysArgFor.STATUS:
+                    if (iMinSleep < GlobalPool.MinSleepMsForStatus) iMinSleep = GlobalPool.MinSleepMsForStatus;
+                    break;
+                case SysArgFor.COMMENT:
+                    if (iMinSleep < GlobalPool.MinSleepMsForComment) iMinSleep = GlobalPool.MinSleepMsForComment;
+                    break;
+                default:
+                    if (iMinSleep < GlobalPool.MinSleepMsForUserRelation) iMinSleep = GlobalPool.MinSleepMsForUserRelation;
+                    break;
+            }
         }
 
         public bool AsyncCancelled
@@ -139,11 +158,11 @@ namespace Sinawler
             if (api != null)
             {
                 int iSleep = api.ResetTimeInSeconds * 1000;
-                if (iSleep < 1000) iSleep = 1000;
+                if (iSleep < iMinSleep) iSleep = iMinSleep;
                 if (api.RemainingHits > 0)
                 {
                     iSleep = Convert.ToInt32(api.ResetTimeInSeconds * 1000 / api.RemainingHits);
-                    if (iSleep < 1000) iSleep = 1000; //sleep at least 1s
+                    if (iSleep < iMinSleep) iSleep = iMinSleep; //sleep at least 1s
                 }
                 crawler.SleepTime = iSleep;
             }
