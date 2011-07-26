@@ -48,6 +48,7 @@ namespace Sinawler
                     if (iMinSleep < GlobalPool.MinSleepMsForUserRelation) iMinSleep = GlobalPool.MinSleepMsForUserRelation;
                     break;
             }
+            AdjustRealFreq();
         }
 
         public bool AsyncCancelled
@@ -148,7 +149,7 @@ namespace Sinawler
                 api.RemainingHits--;
                 api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.LimitUpdateTime).TotalSeconds);
                 api.LimitUpdateTime = DateTime.Now;
-                if (api.ResetTimeInSeconds <= 0 || api.RemainingHits<0) AdjustRealFreq();//GlobalPool.ResetTimeInSeconds = 1;
+                if (api.ResetTimeInSeconds % 100 == 0 || api.RemainingHits % 20 == 0 || api.ResetTimeInSeconds <= 0 || api.RemainingHits<0) AdjustRealFreq();
             }
         }
 
