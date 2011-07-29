@@ -111,19 +111,19 @@ namespace Sinawler.Model
                 switch (_target)
                 {
                     case QueueBufferFor.USER_RELATION:
-                        db.CountByExecuteSQL("delete * from queue_buffer_for_userRelation where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.USER_INFO:
-                        db.CountByExecuteSQL("delete * from queue_buffer_for_userInfo where user_id in "+strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id in "+strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.USER_TAG:
-                        db.CountByExecuteSQL("delete * from queue_buffer_for_tag where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.STATUS:
-                        db.CountByExecuteSQL("delete * from queue_buffer_for_status where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.COMMENT:
-                        db.CountByExecuteSQL("delete * from queue_buffer_for_comment where status_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id in " + strIDsToBeDeleted);
                         break;
                 }
             }
