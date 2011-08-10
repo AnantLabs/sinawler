@@ -179,7 +179,7 @@ namespace Sinawler
                             btnLogin.Enabled = true;
                             btnCancel.Enabled = true;
 
-                            btnLogin.Text = "登录";
+                            btnLogin.Text = "Login";
                             txtUserID.Focus();
                         }
                         return;
@@ -192,7 +192,7 @@ namespace Sinawler
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
-                        btnLogin.Text = "登录";
+                        btnLogin.Text = "Login";
                         return;
                     }
                     if (blnDirectAuthUserRelation && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
@@ -222,7 +222,7 @@ namespace Sinawler
                             btnLogin.Enabled = true;
                             btnCancel.Enabled = true;
 
-                            btnLogin.Text = "登录";
+                            btnLogin.Text = "Login";
                             txtUserID.Focus();
                         }
                         return;
@@ -235,7 +235,7 @@ namespace Sinawler
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
-                        btnLogin.Text = "登录";
+                        btnLogin.Text = "Login";
                         return;
                     }
                     if (blnDirectAuthUserInfo && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
@@ -265,7 +265,7 @@ namespace Sinawler
                             btnLogin.Enabled = true;
                             btnCancel.Enabled = true;
 
-                            btnLogin.Text = "登录";
+                            btnLogin.Text = "Login";
                             txtUserID.Focus();
                         }
                         return;
@@ -278,7 +278,7 @@ namespace Sinawler
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
-                        btnLogin.Text = "登录";
+                        btnLogin.Text = "Login";
                         return;
                     }
                     if (blnDirectAuthUserTag && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
@@ -308,7 +308,7 @@ namespace Sinawler
                             btnLogin.Enabled = true;
                             btnCancel.Enabled = true;
 
-                            btnLogin.Text = "登录";
+                            btnLogin.Text = "Login";
                             txtUserID.Focus();
                         }
                         return;
@@ -321,7 +321,7 @@ namespace Sinawler
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
-                        btnLogin.Text = "登录";
+                        btnLogin.Text = "Login";
                         return;
                     }
                     if (blnDirectAuthStatus && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
@@ -351,7 +351,7 @@ namespace Sinawler
                             btnLogin.Enabled = true;
                             btnCancel.Enabled = true;
 
-                            btnLogin.Text = "登录";
+                            btnLogin.Text = "Login";
                             txtUserID.Focus();
                         }
                         return;
@@ -364,7 +364,7 @@ namespace Sinawler
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
-                        btnLogin.Text = "登录";
+                        btnLogin.Text = "Login";
                         return;
                     }
                     if (blnDirectAuthComment && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;

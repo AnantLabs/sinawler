@@ -20,7 +20,7 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+        #region generated code of Windows Form Designer
 
         /// <summary>
         /// Required method for Designer support - do not modify
@@ -44,7 +44,7 @@
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(75, 23);
             this.btnLogin.TabIndex = 2;
-            this.btnLogin.Text = "登录";
+            this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
             this.btnLogin.Click += new System.EventHandler(this.btnLogin_Click);
             // 
@@ -56,7 +56,7 @@
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "取消";
+            this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // wbUserRelation
@@ -93,18 +93,18 @@
             this.lblUserId.AutoSize = true;
             this.lblUserId.Location = new System.Drawing.Point(28, 28);
             this.lblUserId.Name = "lblUserId";
-            this.lblUserId.Size = new System.Drawing.Size(65, 12);
+            this.lblUserId.Size = new System.Drawing.Size(47, 12);
             this.lblUserId.TabIndex = 9;
-            this.lblUserId.Text = "微博帐号：";
+            this.lblUserId.Text = "UserID:";
             // 
             // lblPWD
             // 
             this.lblPWD.AutoSize = true;
             this.lblPWD.Location = new System.Drawing.Point(28, 70);
             this.lblPWD.Name = "lblPWD";
-            this.lblPWD.Size = new System.Drawing.Size(65, 12);
+            this.lblPWD.Size = new System.Drawing.Size(59, 12);
             this.lblPWD.TabIndex = 10;
-            this.lblPWD.Text = "登录密码：";
+            this.lblPWD.Text = "PassWord:";
             // 
             // frmLogin
             // 
@@ -126,7 +126,7 @@
             this.MinimizeBox = false;
             this.Name = "frmLogin";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "登录新浪微博";
+            this.Text = "Login Sina Weibo";
             this.Load += new System.EventHandler(this.frmLogin_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
