@@ -46,7 +46,7 @@ namespace Sinawler
             SettingItems settings = AppSettings.Load();
             if (settings == null)
             {
-                MessageBox.Show("读取配置文件时发生错误，将加载默认值。", "新浪微博爬虫");
+                MessageBox.Show("Reading configuration failed. Defaults will be loaded.", "Sinawler");
                 settings = AppSettings.LoadDefault();
             }
             ShowSettings(settings);
@@ -64,7 +64,7 @@ namespace Sinawler
                     robotUserTag.Suspending = true;    //先暂停
                     robotStatus.Suspending = true;    //先暂停
                     robotComment.Suspending = true; //先暂停
-                    if (MessageBox.Show("爬虫似乎在工作，您确定要中止它的工作并退出程序吗？", "新浪微博爬虫", MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show("The crawler is working. Are you sure to stop it and exit?", "Sinawler", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         robotUserInfo.Suspending = false;
                         robotUserRelation.Suspending = false;
@@ -119,40 +119,40 @@ namespace Sinawler
         {
             if (oCurrentUser != null)
             {
-                lblCUserID.Text = "用户ID：" + oCurrentUser.user_id.ToString();
-                lblCName.Text = "用户昵称：" + oCurrentUser.screen_name;
+                lblCUserID.Text = "UserID：" + oCurrentUser.user_id.ToString();
+                lblCName.Text = "Nickname：" + oCurrentUser.screen_name;
                 if (oCurrentUser.gender == "m")
-                    lblCGender.Text = "性别：男";
+                    lblCGender.Text = "Gender: Male";
                 else
-                    lblCGender.Text = "性别：女";
+                    lblCGender.Text = "Gender: Female";
                 if (oCurrentUser.verified)
-                    lblCVerified.Text = "是否微博认证用户：是";
+                    lblCVerified.Text = "Verified: Yes";
                 else
-                    lblCVerified.Text = "是否微博认证用户：否";
+                    lblCVerified.Text = "Verified: No";
                 if (oCurrentUser.following)
-                    lblCFollowing.Text = "当前登录帐号是否关注他（她）：是";
+                    lblCFollowing.Text = "Followed by Current User：Yes";
                 else
-                    lblCFollowing.Text = "当前登录帐号是否关注他（她）：否";
-                lblCLocation.Text = "所在地：" + oCurrentUser.location;
-                lblCFollowersCount.Text = "粉丝人数：" + oCurrentUser.followers_count.ToString();
-                lblCFriendsCount.Text = "关注人数：" + oCurrentUser.friends_count.ToString();
-                lblCStatusesCount.Text = "已发微博数：" + oCurrentUser.statuses_count.ToString();
+                    lblCFollowing.Text = "Followed by Current User：No";
+                lblCLocation.Text = "Location: " + oCurrentUser.location;
+                lblCFollowersCount.Text = "Followers: " + oCurrentUser.followers_count.ToString();
+                lblCFriendsCount.Text = "Followings: " + oCurrentUser.friends_count.ToString();
+                lblCStatusesCount.Text = "Tweets: " + oCurrentUser.statuses_count.ToString();
                 string strCreatedAt = oCurrentUser.created_at;
                 string[] strCreatedDate = strCreatedAt.Split(' ')[0].Split('-');
-                lblCCreatedAt.Text = "帐号创建时间：" + strCreatedDate[0] + "年" + strCreatedDate[1] + "月" + strCreatedDate[2] + "日";
+                lblCCreatedAt.Text = "Created At: " + strCreatedDate[1] + " " + strCreatedDate[2] + ", " + strCreatedDate[0] + "Year";
             }
             else
             {
-                lblCUserID.Text = "用户ID：";
-                lblCName.Text = "用户昵称：";
-                lblCGender.Text = "性别：";
-                lblCVerified.Text = "是否微博认证用户：";
-                lblCFollowing.Text = "当前登录帐号是否关注他（她）：";
-                lblCLocation.Text = "所在地：";
-                lblCFollowersCount.Text = "粉丝人数：";
-                lblCFriendsCount.Text = "关注人数：";
-                lblCStatusesCount.Text = "已发微博数：";
-                lblCCreatedAt.Text = "";
+                lblCUserID.Text = "UserID:";
+                lblCName.Text = "Nickname:";
+                lblCGender.Text = "Gender:";
+                lblCVerified.Text = "Verified:";
+                lblCFollowing.Text = "Followed by Current User:";
+                lblCLocation.Text = "Location:";
+                lblCFollowersCount.Text = "Followers:";
+                lblCFriendsCount.Text = "Followings:";
+                lblCStatusesCount.Text = "Tweets:";
+                lblCCreatedAt.Text = "Created At:";
             }
         }
 
@@ -161,40 +161,40 @@ namespace Sinawler
         {
             if (oSearchedUser != null)
             {
-                lblUserID.Text = "用户ID：" + oSearchedUser.user_id.ToString();
-                lblName.Text = "用户昵称：" + oSearchedUser.screen_name;
+                lblUserID.Text = "UserID：" + oSearchedUser.user_id.ToString();
+                lblName.Text = "Nickname：" + oSearchedUser.screen_name;
                 if (oSearchedUser.gender == "m")
-                    lblGender.Text = "性别：男";
+                    lblGender.Text = "Gender: Male";
                 else
-                    lblGender.Text = "性别：女";
+                    lblGender.Text = "Gender: Female";
                 if (oSearchedUser.verified)
-                    lblVerified.Text = "是否微博认证用户：是";
+                    lblVerified.Text = "Verified: Yes";
                 else
-                    lblVerified.Text = "是否微博认证用户：否";
+                    lblVerified.Text = "Verified: No";
                 if (oSearchedUser.following)
-                    lblFollowing.Text = "当前登录帐号是否关注他（她）：是";
+                    lblFollowing.Text = "Followed by Current User：Yes";
                 else
-                    lblFollowing.Text = "当前登录帐号是否关注他（她）：否";
-                lblLocation.Text = "所在地：" + oSearchedUser.location;
-                lblFollowersCount.Text = "粉丝人数：" + oSearchedUser.followers_count.ToString();
-                lblFriendsCount.Text = "关注人数：" + oSearchedUser.friends_count.ToString();
-                lblStatusesCount.Text = "已发微博数：" + oSearchedUser.statuses_count.ToString();
+                    lblFollowing.Text = "Followed by Current User：No";
+                lblLocation.Text = "Location:" + oSearchedUser.location;
+                lblFollowersCount.Text = "Followers: " + oSearchedUser.followers_count.ToString();
+                lblFriendsCount.Text = "Followings: " + oSearchedUser.friends_count.ToString();
+                lblStatusesCount.Text = "Tweets: " + oSearchedUser.statuses_count.ToString();
                 string strCreatedAt = oSearchedUser.created_at;
                 string[] strCreatedDate = strCreatedAt.Split(' ')[0].Split('-');
-                lblCreatedAt.Text = "帐号创建时间：" + strCreatedDate[0] + "年" + strCreatedDate[1] + "月" + strCreatedDate[2] + "日";
+                lblCreatedAt.Text = "Created At: " + strCreatedDate[1] + " " + strCreatedDate[2] + "," + strCreatedDate[0] + "Year";
             }
             else
             {
-                lblUserID.Text = "用户ID：";
-                lblName.Text = "用户昵称：";
-                lblGender.Text = "性别：";
-                lblVerified.Text = "是否微博认证用户：";
-                lblFollowing.Text = "当前登录帐号是否关注他（她）：";
-                lblLocation.Text = "所在地：";
-                lblFollowersCount.Text = "粉丝人数：";
-                lblFriendsCount.Text = "关注人数：";
-                lblStatusesCount.Text = "已发微博数：";
-                lblCreatedAt.Text = "帐号创建时间：";
+                lblUserID.Text = "UserID:";
+                lblName.Text = "Nickname:";
+                lblGender.Text = "Gender:";
+                lblVerified.Text = "Verified:";
+                lblFollowing.Text = "Followed by Current User:";
+                lblLocation.Text = "Location:";
+                lblFollowersCount.Text = "Followers:";
+                lblFriendsCount.Text = "Followings:";
+                lblStatusesCount.Text = "Tweets:";
+                lblCreatedAt.Text = "Created At:";
             }
         }
 
@@ -217,7 +217,7 @@ namespace Sinawler
             {
                 if (txtUserID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
                 {
-                    MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫");
+                    MessageBox.Show("UserID or Nickname Required.", "Sinawler");
                     txtUserID.Focus();
                     return;
                 }
@@ -226,7 +226,7 @@ namespace Sinawler
                 long lBuffer;
                 if (strUserID != "" && !long.TryParse(strUserID, out lBuffer))
                 {
-                    MessageBox.Show("请输入正确的用户ID。", "新浪微博爬虫");
+                    MessageBox.Show("Invalid UserID.", "Sinawler");
                     return;
                 }
                 SinaMBCrawler crawler = new SinaMBCrawler(SysArgFor.USER_RELATION);
@@ -237,7 +237,7 @@ namespace Sinawler
                     oSearchedUser = crawler.GetUserInfo(strScreenName);
                 if (strUserID != "" && strScreenName != "")
                     oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUserID), strScreenName);
-                if (oSearchedUser == null) MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
+                if (oSearchedUser == null) MessageBox.Show("User not found.", "Sinawler");
                 ShowSearchedUser();
             }
             else
@@ -254,14 +254,14 @@ namespace Sinawler
         {
             if (txtUserID.Text.Trim() == "" && txtUserName.Text.Trim() == "")
             {
-                MessageBox.Show("请至少输入“用户ID”和“用户昵称”之一。", "新浪微博爬虫");
+                MessageBox.Show("UserID or Nickname Required.", "Sinawler");
                 txtUserID.Focus();
                 return;
             }
             strDataBaseStatus = PubHelper.TestDataBase();
             if (strDataBaseStatus != "OK")
             {
-                MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
+                MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
                 return;
             }
             string strUserID = txtUserID.Text.Trim();
@@ -269,14 +269,14 @@ namespace Sinawler
             long lBuffer;
             if (strUserID != "" && !long.TryParse(strUserID, out lBuffer))
             {
-                MessageBox.Show("请输入正确的用户ID。", "新浪微博爬虫");
+                MessageBox.Show("Invalid UserID.", "Sinawer");
                 return;
             }
             if (strUserID != "" && strScreenName == "")
             {
                 if (!oSearchedUser.GetModel(Convert.ToInt64(strUserID)))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
+                    MessageBox.Show("User not found.", "Sinawler");
                 }
                 else
                     ShowSearchedUser();
@@ -285,7 +285,7 @@ namespace Sinawler
             {
                 if (!oSearchedUser.GetModel(strScreenName))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
+                    MessageBox.Show("User not found.", "Sinawler");
                 }
                 else
                     ShowSearchedUser();
@@ -294,7 +294,7 @@ namespace Sinawler
             {
                 if (!oSearchedUser.GetModel(Convert.ToInt64(strUserID), strScreenName))
                 {
-                    MessageBox.Show("未搜索到指定用户。", "新浪微博爬虫");
+                    MessageBox.Show("User not found.", "Sinawler");
                 }
                 else
                     ShowSearchedUser();
@@ -357,11 +357,11 @@ namespace Sinawler
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
                 {
-                    MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
+                    MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
                     return;
                 }
 
-                btnStartByCurrent.Text = "正在初始化，请稍候...";
+                btnStartByCurrent.Text = "Initializing. Please wait...";
                 btnStartByCurrent.Enabled = false;
                 btnStartBySearch.Enabled = false;
                 btnStartByLast.Enabled = false;
@@ -448,7 +448,7 @@ namespace Sinawler
                     robotUserTag.Suspending = true;    //暂停
                     robotStatus.Suspending = true;    //暂停
                     robotComment.Suspending = true; //暂停
-                    if (MessageBox.Show("您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show("Are you sure to stop crawling?", "Sinawler", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         //恢复状态
                         robotUserInfo.Suspending = userInfoState;
@@ -459,7 +459,7 @@ namespace Sinawler
                         return;
                     }
                     btnStartByCurrent.Enabled = false;
-                    btnStartByCurrent.Text = "正在停止，请稍候...";
+                    btnStartByCurrent.Text = "Stopping. Please wait...";
                     btnPauseContinue.Enabled = false;
                     robotUserInfo.AsyncCancelled = true;
                     robotUserRelation.AsyncCancelled = true;
@@ -475,11 +475,11 @@ namespace Sinawler
                 }
                 else
                 {
-                    btnStartByCurrent.Text = "停止爬行";
+                    btnStartByCurrent.Text = "STOP";
                     btnStartByCurrent.Enabled = true;
                     btnStartBySearch.Enabled = false;
                     btnStartByLast.Enabled = false;
-                    btnPauseContinue.Text = "暂停";
+                    btnPauseContinue.Text = "PAUSE";
                     btnPauseContinue.Enabled = true;
 
                     oAsyncWorkerUserRelation.RunWorkerAsync();
@@ -498,17 +498,17 @@ namespace Sinawler
             {
                 if (oSearchedUser == null)
                 {
-                    MessageBox.Show(this, "无搜索结果用户，请先搜索用户。", "新浪微博爬虫");
+                    MessageBox.Show(this, "No searched user. Please search user first.", "Sinawler");
                     return;
                 }
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
                 {
-                    MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
+                    MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
                     return;
                 }
 
-                btnStartBySearch.Text = "正在初始化，请稍候...";
+                btnStartBySearch.Text = "Initializing. Please wait...";
                 btnStartBySearch.Enabled = false;
                 btnStartByCurrent.Enabled = false;
                 btnStartByLast.Enabled = false;
@@ -595,7 +595,7 @@ namespace Sinawler
                     robotUserTag.Suspending = true;    //暂停
                     robotStatus.Suspending = true;    //暂停
                     robotComment.Suspending = true; //暂停
-                    if (MessageBox.Show("您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show("Are you sure to stop crawling?", "Sinawler", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         //恢复状态
                         robotUserInfo.Suspending = userInfoState;
@@ -606,7 +606,7 @@ namespace Sinawler
                         return;
                     }
                     btnStartBySearch.Enabled = false;
-                    btnStartBySearch.Text = "正在停止，请稍候...";
+                    btnStartBySearch.Text = "Stopping. Please wait...";
                     btnPauseContinue.Enabled = false;
                     robotUserInfo.AsyncCancelled = true;
                     robotUserRelation.AsyncCancelled = true;
@@ -622,11 +622,11 @@ namespace Sinawler
                 }
                 else
                 {
-                    btnStartBySearch.Text = "停止爬行";
+                    btnStartBySearch.Text = "STOP";
                     btnStartBySearch.Enabled = true;
                     btnStartByCurrent.Enabled = false;
                     btnStartByLast.Enabled = false;
-                    btnPauseContinue.Text = "暂停";
+                    btnPauseContinue.Text = "PAUSE";
                     btnPauseContinue.Enabled = true;
 
                     oAsyncWorkerUserRelation.RunWorkerAsync();
@@ -646,16 +646,16 @@ namespace Sinawler
                 strDataBaseStatus = PubHelper.TestDataBase();
                 if (strDataBaseStatus != "OK")
                 {
-                    MessageBox.Show("数据库错误：" + strDataBaseStatus + "。\n请正确设置数据库。", "新浪微博爬虫");
+                    MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
                     return;
                 }
                 if (SysArg.GetCurrentID(SysArgFor.USER_RELATION) == 0)
                 {
-                    MessageBox.Show(this, "无上次中止用户的记录，请选择其它爬行起点。", "新浪微博爬虫");
+                    MessageBox.Show(this, "No user stopped last time. Please select another start point.", "Sinawler");
                     return;
                 }
 
-                btnStartByLast.Text = "正在初始化，请稍候...";
+                btnStartByLast.Text = "Initializing. Please wait...";
                 btnStartByLast.Enabled = false;
                 btnStartBySearch.Enabled = false;
                 btnStartByCurrent.Enabled = false;
@@ -742,7 +742,7 @@ namespace Sinawler
                     robotUserTag.Suspending = true;    //暂停
                     robotStatus.Suspending = true;    //暂停
                     robotComment.Suspending = true; //暂停
-                    if (MessageBox.Show("您确定要中止爬虫吗？", "新浪微博爬虫", MessageBoxButtons.YesNo) == DialogResult.No)
+                    if (MessageBox.Show("Are you sure to stop crawling?", "Sinawler", MessageBoxButtons.YesNo) == DialogResult.No)
                     {
                         //恢复状态
                         robotUserInfo.Suspending = userInfoState;
@@ -753,7 +753,7 @@ namespace Sinawler
                         return;
                     }
                     btnStartByLast.Enabled = false;
-                    btnStartByLast.Text = "正在停止，请稍候...";
+                    btnStartByLast.Text = "Stopping. Please wait...";
                     btnPauseContinue.Enabled = false;
                     robotUserInfo.AsyncCancelled = true;
                     robotUserRelation.AsyncCancelled = true;
@@ -769,11 +769,11 @@ namespace Sinawler
                 }
                 else
                 {
-                    btnStartByLast.Text = "停止爬行";
+                    btnStartByLast.Text = "STOP";
                     btnStartByLast.Enabled = true;
                     btnStartBySearch.Enabled = false;
                     btnStartByCurrent.Enabled = false;
-                    btnPauseContinue.Text = "暂停";
+                    btnPauseContinue.Text = "PAUSE";
                     btnPauseContinue.Enabled = true;
 
                     oAsyncWorkerUserRelation.RunWorkerAsync();
@@ -794,7 +794,7 @@ namespace Sinawler
         private void UserInfoProgressChanged(Object sender, ProgressChangedEventArgs e)
         {
             lblUserInfoMessage.Text = robotUserInfo.LogMessage;
-            lblUserInfoQueueInfo.Text = "用户信息机器人的内存队列中有" + GlobalPool.UserQueueForUserInfoRobot.CountInMem.ToString() + "个用户，数据库队列中有" + GlobalPool.UserQueueForUserInfoRobot.CountInDB.ToString() + "个用户。";
+            lblUserInfoQueueInfo.Text = "Queue of User Information Robot: " + GlobalPool.UserQueueForUserInfoRobot.CountInMem.ToString() + " users in memory and " + GlobalPool.UserQueueForUserInfoRobot.CountInDB.ToString() + " in database.";            
         }
 
         private void UserInfoCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -805,21 +805,21 @@ namespace Sinawler
                 return;
             }
             robotUserInfo.Initialize();
-            lblUserInfoMessage.Text = "停止。";
-            lblUserInfoQueueInfo.Text = "用户信息机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            lblUserInfoMessage.Text = "Stopped.";
+            lblUserInfoQueueInfo.Text = "Queue of User Information Robot: 0 user in memory and 0 user in datebase.";
 
             if (oAsyncWorkerUserRelation == null && oAsyncWorkerUserTag == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外四个机器人也已停止
             {
-                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Text = "Start Crawling by Current User";
+                btnStartBySearch.Text = "Start Crawling by Searched User";
+                btnStartByLast.Text = "Start Crawling by Last Stopped User";
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/继续";
+                btnPauseContinue.Text = "Pause/Continue";
 
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+                MessageBox.Show(this, "Crawler stopped.", "Sinawler");
 
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
@@ -854,7 +854,7 @@ namespace Sinawler
                     lLastUserID = SysArg.GetCurrentID(SysArgFor.USER_TAG);
                     if (lLastUserID == 0)
                     {
-                        MessageBox.Show(this, "未找到上次中止的用户，请选择其它起点。", "新浪微博爬虫");
+                        MessageBox.Show(this, "No user stopped last time. Please select another start point.", "Sinawler");
                         return;
                     }
                 }
@@ -865,7 +865,7 @@ namespace Sinawler
         private void UserRelationProgressChanged(Object sender, ProgressChangedEventArgs e)
         {
             lblUserRelationMessage.Text = robotUserRelation.LogMessage;
-            lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有" + GlobalPool.UserQueueForUserRelationRobot.CountInMem.ToString() + "个用户，数据库队列中有" + GlobalPool.UserQueueForUserRelationRobot.CountInDB.ToString() + "个用户。";
+            lblUserRelationQueueInfo.Text = "Queue of User Relation Robot: " + GlobalPool.UserQueueForUserRelationRobot.CountInMem.ToString() + " users in memory and " + GlobalPool.UserQueueForUserRelationRobot.CountInDB.ToString() + " in database.";            
         }
 
         private void UserRelationCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -876,21 +876,22 @@ namespace Sinawler
                 return;
             }
             robotUserRelation.Initialize();
-            lblUserRelationMessage.Text = "停止。";
-            lblUserRelationQueueInfo.Text = "用户关系机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            lblUserRelationMessage.Text = "Stopped.";
+            lblUserRelationQueueInfo.Text = "Queue of User Relation Robot: 0 user in memory and 0 user in datebase.";
+
 
             if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserTag == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外四个机器人也已停止
             {
-                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Text = "Start Crawling by Current User";
+                btnStartBySearch.Text = "Start Crawling by Searched User";
+                btnStartByLast.Text = "Start Crawling by Last Stopped User";
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/继续";
+                btnPauseContinue.Text = "Pause/Continue";
 
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+                MessageBox.Show(this, "Crawler stopped.", "Sinawler");
 
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
@@ -912,7 +913,7 @@ namespace Sinawler
         private void UserTagProgressChanged(Object sender, ProgressChangedEventArgs e)
         {
             lblUserTagMessage.Text = robotUserTag.LogMessage;
-            lblUserTagQueueInfo.Text = "用户标签机器人的内存队列中有" + GlobalPool.UserQueueForUserTagRobot.CountInMem.ToString() + "个用户，数据库队列中有" + GlobalPool.UserQueueForUserTagRobot.CountInDB.ToString() + "个用户。";
+            lblUserTagQueueInfo.Text = "Queue of User Tag Robot: " + GlobalPool.UserQueueForUserTagRobot.CountInMem.ToString() + " users in memory and " + GlobalPool.UserQueueForUserTagRobot.CountInDB.ToString() + " in database.";
         }
 
         private void UserTagCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -923,21 +924,21 @@ namespace Sinawler
                 return;
             }
             robotUserTag.Initialize();
-            lblUserTagMessage.Text = "停止。";
-            lblUserTagQueueInfo.Text = "用户标签机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            lblUserTagMessage.Text = "Stopped.";
+            lblUserTagQueueInfo.Text = "Queue of User Tag Robot: 0 user in memory and 0 user in datebase.";
 
             if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerStatus == null && oAsyncWorkerComment == null)  //如果另外四个机器人也已停止
             {
-                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Text = "Start Crawling by Current User";
+                btnStartBySearch.Text = "Start Crawling by Searched User";
+                btnStartByLast.Text = "Start Crawling by Last Stopped User";
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/继续";
+                btnPauseContinue.Text = "Pause/Continue";
 
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+                MessageBox.Show(this, "Crawler stopped.", "Sinawler");
 
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
@@ -959,7 +960,7 @@ namespace Sinawler
         private void StatusProgressChanged(Object sender, ProgressChangedEventArgs e)
         {
             lblStatusMessage.Text = robotStatus.LogMessage;
-            lblStatusQueueInfo.Text = "微博机器人的内存队列中有" + GlobalPool.UserQueueForStatusRobot.CountInMem.ToString() + "个用户，数据库队列中有" + GlobalPool.UserQueueForStatusRobot.CountInDB.ToString() + "个用户。";
+            lblStatusQueueInfo.Text = "Queue of Status Robot: " + GlobalPool.UserQueueForStatusRobot.CountInMem.ToString() + " users in memory and " + GlobalPool.UserQueueForStatusRobot.CountInDB.ToString() + " in database.";
         }
 
         private void StatusCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -970,21 +971,21 @@ namespace Sinawler
                 return;
             }
             robotStatus.Initialize();
-            lblStatusMessage.Text = "停止。";
-            lblStatusQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            lblStatusMessage.Text = "Stopped.";
+            lblStatusQueueInfo.Text = "Queue of Status Robot: 0 user in memory and 0 user in datebase.";
 
             if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerUserTag == null && oAsyncWorkerComment == null)  //如果另外四个机器人也已停止
             {
-                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Text = "Start Crawling by Current User";
+                btnStartBySearch.Text = "Start Crawling by Searched User";
+                btnStartByLast.Text = "Start Crawling by Last Stopped User";
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/继续";
+                btnPauseContinue.Text = "Pause/Continue";
 
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+                MessageBox.Show(this, "Crawler stopped.", "Sinawler");
 
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
@@ -1006,7 +1007,7 @@ namespace Sinawler
         private void CommentProgressChanged(Object sender, ProgressChangedEventArgs e)
         {
             lblCommentMessage.Text = robotComment.LogMessage;
-            lblCommentQueueInfo.Text = "评论机器人的内存队列中有" + GlobalPool.StatusQueue.CountInMem.ToString() + "条微博，数据库队列中有" + GlobalPool.StatusQueue.CountInDB.ToString() + "条微博。";
+            lblCommentQueueInfo.Text = "Queue of Comment Robot: " + GlobalPool.StatusQueue.CountInMem.ToString() + " statuses in memory and " + GlobalPool.StatusQueue.CountInDB.ToString() + " in database.";
         }
 
         private void CommentCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -1017,21 +1018,21 @@ namespace Sinawler
                 return;
             }
             robotComment.Initialize();
-            lblCommentMessage.Text = "停止。";
-            lblCommentQueueInfo.Text = "微博机器人的内存队列中有0个用户，数据库队列中有0个用户。";
+            lblCommentMessage.Text = "Stopped.";
+            lblCommentQueueInfo.Text = "Queue of Comment Robot: 0 status in memory and 0 status in database.";
 
             if (oAsyncWorkerUserInfo == null && oAsyncWorkerUserRelation == null && oAsyncWorkerUserTag == null && oAsyncWorkerStatus == null)  //如果另外四个机器人也已停止
             {
-                btnStartByCurrent.Text = "以当前登录帐号为起点开始爬行";
-                btnStartBySearch.Text = "以搜索结果用户为起点开始爬行";
-                btnStartByLast.Text = "以上次中止的用户为起点开始爬行";
+                btnStartByCurrent.Text = "Start Crawling by Current User";
+                btnStartBySearch.Text = "Start Crawling by Searched User";
+                btnStartByLast.Text = "Start Crawling by Last Stopped User";
                 btnStartByCurrent.Enabled = true;
                 btnStartBySearch.Enabled = true;
                 btnStartByLast.Enabled = true;
                 btnPauseContinue.Enabled = false;
-                btnPauseContinue.Text = "暂停/继续";
+                btnPauseContinue.Text = "Pause/Continue";
 
-                MessageBox.Show(this, "爬虫已停止。", "新浪微博爬虫");
+                MessageBox.Show(this, "Crawler stopped.", "Sinawler");
 
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
@@ -1141,7 +1142,7 @@ namespace Sinawler
 
             AppSettings.Save(settings);
 
-            MessageBox.Show("设置已保存。启动新的爬虫任务时将使用新的设置。", "新浪微博爬虫");
+            MessageBox.Show("Settings have been saved and will be used when new crawling starts. ", "Sinawler");
         }
 
         private void numQueueLength_ValueChanged(object sender, EventArgs e)
@@ -1160,24 +1161,24 @@ namespace Sinawler
             if (blnAuthorized)
             {
                 if (oAsyncWorkerUserInfo != null)  //工作中
-                    if (PubHelper.PostAdvertisement(GlobalPool.UserQueueForUserInfoRobot.Count, GlobalPool.StatusQueue.Count))
-                        MessageBox.Show("您已经帮忙发布了一条推广此应用的微博。\n感谢您对本应用的支持！", "新浪微博爬虫");
+                    if (PubHelper.PostAdvertisement(GlobalPool.UserQueueForUserRelationRobot.Count, GlobalPool.StatusQueue.Count))
+                        MessageBox.Show("A status has been posted to advertise Sinawler.\nThank you very much！", "Sinawler");
                     else
-                        MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。", "新浪微博爬虫");
+                        MessageBox.Show("Sorry, posting status failed. Please try again, or comment on the homepage of Sinawler.", "Sinawler");
                 else
                     if (PubHelper.PostAdvertisement(0, 0))
-                        MessageBox.Show("您已经帮忙发布了一条推广此应用的微博。\n感谢您对本应用的支持！", "新浪微博爬虫");
+                        MessageBox.Show("A status has been posted to advertise Sinawler.\nThank you very much！", "Sinawler");
                     else
-                        MessageBox.Show("对不起，发布推广微博失败，请重试，或到应用主页提出您的宝贵意见。", "新浪微博爬虫");
+                        MessageBox.Show("Sorry, posting status failed. Please try again, or comment on the homepage of Sinawler.", "Sinawler");
             }
         }
 
         private void btnPauseContinue_Click(object sender, EventArgs e)
         {
-            if (btnPauseContinue.Text == "暂停")
-                btnPauseContinue.Text = "继续";
+            if (btnPauseContinue.Text == "PAUSE")
+                btnPauseContinue.Text = "CONTINUE";
             else
-                btnPauseContinue.Text = "暂停";
+                btnPauseContinue.Text = "PAUSE";
             robotUserInfo.Suspending = !robotUserInfo.Suspending;
             robotUserRelation.Suspending = !robotUserRelation.Suspending;
             robotUserTag.Suspending = !robotUserTag.Suspending;

@@ -96,7 +96,7 @@ namespace Sinawler
         {
             txtUserID.Enabled = false;
             txtPWD.Enabled = false;
-            btnLogin.Text = "登录中...";
+            btnLogin.Text = "Login...";
             btnLogin.Enabled = false;
             btnCancel.Enabled = false;
             string strUserID = txtUserID.Text;
@@ -107,7 +107,7 @@ namespace Sinawler
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
-            btnLogin.Text = "初始化中...";
+            btnLogin.Text = "Initializing...";
             //the two strings below must to be "" to generate right signature
             _apiUserRelation.Token = "";
             _apiUserRelation.TokenSecret = "";
@@ -145,7 +145,7 @@ namespace Sinawler
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Authentication failed! Please check appKey and appSecret values in Sinawler.exe.config.");
+                MessageBox.Show("Authentication failed! Please check appKey and appSecret values in .config file.");
                 Application.Exit();
             }
             try
@@ -187,7 +187,7 @@ namespace Sinawler
                     string strHTML = wbUserRelation.DocumentText;
                     if (strHTML.Contains("登录名或密码错误"))
                     {
-                        MessageBox.Show("用户关系线程登录失败。请重试。", "新浪微博爬虫");
+                        MessageBox.Show("User Relation thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
@@ -230,7 +230,7 @@ namespace Sinawler
                     string strHTML = wbUserInfo.DocumentText;
                     if (strHTML.Contains("登录名或密码错误"))
                     {
-                        MessageBox.Show("用户关系线程登录失败。请重试。", "新浪微博爬虫");
+                        MessageBox.Show("User Information thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
@@ -273,7 +273,7 @@ namespace Sinawler
                     string strHTML = wbUserTag.DocumentText;
                     if (strHTML.Contains("登录名或密码错误"))
                     {
-                        MessageBox.Show("用户关系线程登录失败。请重试。", "新浪微博爬虫");
+                        MessageBox.Show("User Tag thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
@@ -316,7 +316,7 @@ namespace Sinawler
                     string strHTML = wbStatus.DocumentText;
                     if (strHTML.Contains("登录名或密码错误"))
                     {
-                        MessageBox.Show("用户关系线程登录失败。请重试。", "新浪微博爬虫");
+                        MessageBox.Show("Status thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
@@ -359,7 +359,7 @@ namespace Sinawler
                     string strHTML = wbComment.DocumentText;
                     if (strHTML.Contains("登录名或密码错误"))
                     {
-                        MessageBox.Show("用户关系线程登录失败。请重试。", "新浪微博爬虫");
+                        MessageBox.Show("Comment thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;

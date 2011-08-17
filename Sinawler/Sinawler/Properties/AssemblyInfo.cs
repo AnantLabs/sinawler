@@ -7,11 +7,11 @@ using System.Resources;
 // 控制。更改这些属性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle( "Sinawler" )]
-[assembly: AssemblyDescription("新浪微博爬虫")]
+[assembly: AssemblyDescription("Sinawler")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("BUCT")]
 [assembly: AssemblyProduct( "Sinawler" )]
-[assembly: AssemblyCopyright("版权所有 (C) 卢罡 2010")]
+[assembly: AssemblyCopyright("Copyright (C) 卢罡 2010")]
 [assembly: AssemblyTrademark( "Sizheng@BUCT" )]
 [assembly: AssemblyCulture("")]
 

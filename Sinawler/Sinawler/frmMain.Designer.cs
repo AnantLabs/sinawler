@@ -88,8 +88,8 @@
             this.lblDBPwd = new System.Windows.Forms.Label();
             this.grpQueueLength = new System.Windows.Forms.GroupBox();
             this.lblQueueLength = new System.Windows.Forms.Label();
-            this.tbQueueLength = new System.Windows.Forms.TrackBar();
             this.numQueueLength = new System.Windows.Forms.NumericUpDown();
+            this.tbQueueLength = new System.Windows.Forms.TrackBar();
             this.btnDefault = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserInfoTitle = new System.Windows.Forms.Label();
@@ -117,8 +117,8 @@
             this.gpSetting.SuspendLayout();
             this.grpDBSettings.SuspendLayout();
             this.grpQueueLength.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQueueLength)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).BeginInit();
             this.grpStatus.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -156,9 +156,9 @@
             this.lblVerified.AutoSize = true;
             this.lblVerified.Location = new System.Drawing.Point(420, 21);
             this.lblVerified.Name = "lblVerified";
-            this.lblVerified.Size = new System.Drawing.Size(125, 12);
+            this.lblVerified.Size = new System.Drawing.Size(59, 12);
             this.lblVerified.TabIndex = 9;
-            this.lblVerified.Text = "User Authentication:";
+            this.lblVerified.Text = "Verified:";
             // 
             // lblFollowing
             // 
@@ -183,9 +183,9 @@
             this.lblCreatedAt.AutoSize = true;
             this.lblCreatedAt.Location = new System.Drawing.Point(580, 41);
             this.lblCreatedAt.Name = "lblCreatedAt";
-            this.lblCreatedAt.Size = new System.Drawing.Size(83, 12);
+            this.lblCreatedAt.Size = new System.Drawing.Size(71, 12);
             this.lblCreatedAt.TabIndex = 6;
-            this.lblCreatedAt.Text = "Created Date:";
+            this.lblCreatedAt.Text = "Created At:";
             // 
             // lblFriendsCount
             // 
@@ -344,9 +344,9 @@
             this.lblCVerified.AutoSize = true;
             this.lblCVerified.Location = new System.Drawing.Point(430, 21);
             this.lblCVerified.Name = "lblCVerified";
-            this.lblCVerified.Size = new System.Drawing.Size(125, 12);
+            this.lblCVerified.Size = new System.Drawing.Size(59, 12);
             this.lblCVerified.TabIndex = 9;
-            this.lblCVerified.Text = "User Authentication:";
+            this.lblCVerified.Text = "Verified:";
             // 
             // lblCFollowing
             // 
@@ -371,9 +371,9 @@
             this.lblCCreatedAt.AutoSize = true;
             this.lblCCreatedAt.Location = new System.Drawing.Point(593, 41);
             this.lblCCreatedAt.Name = "lblCCreatedAt";
-            this.lblCCreatedAt.Size = new System.Drawing.Size(83, 12);
+            this.lblCCreatedAt.Size = new System.Drawing.Size(71, 12);
             this.lblCCreatedAt.TabIndex = 6;
-            this.lblCCreatedAt.Text = "Created Date:";
+            this.lblCCreatedAt.Text = "Created At:";
             // 
             // lblCFriendsCount
             // 
@@ -742,20 +742,6 @@
             this.lblQueueLength.TabIndex = 0;
             this.lblQueueLength.Text = "Queue Length in Memory(High performance by more memory):";
             // 
-            // tbQueueLength
-            // 
-            this.tbQueueLength.LargeChange = 100;
-            this.tbQueueLength.Location = new System.Drawing.Point(360, 14);
-            this.tbQueueLength.Maximum = 100000;
-            this.tbQueueLength.Minimum = 1;
-            this.tbQueueLength.Name = "tbQueueLength";
-            this.tbQueueLength.Size = new System.Drawing.Size(367, 42);
-            this.tbQueueLength.SmallChange = 100;
-            this.tbQueueLength.TabIndex = 4;
-            this.tbQueueLength.TickFrequency = 1000;
-            this.tbQueueLength.Value = 5000;
-            this.tbQueueLength.ValueChanged += new System.EventHandler(this.tbQueueLength_ValueChanged);
-            // 
             // numQueueLength
             // 
             this.numQueueLength.Location = new System.Drawing.Point(735, 22);
@@ -779,6 +765,20 @@
             0,
             0});
             this.numQueueLength.ValueChanged += new System.EventHandler(this.numQueueLength_ValueChanged);
+            // 
+            // tbQueueLength
+            // 
+            this.tbQueueLength.LargeChange = 100;
+            this.tbQueueLength.Location = new System.Drawing.Point(360, 14);
+            this.tbQueueLength.Maximum = 100000;
+            this.tbQueueLength.Minimum = 1;
+            this.tbQueueLength.Name = "tbQueueLength";
+            this.tbQueueLength.Size = new System.Drawing.Size(367, 42);
+            this.tbQueueLength.SmallChange = 100;
+            this.tbQueueLength.TabIndex = 4;
+            this.tbQueueLength.TickFrequency = 1000;
+            this.tbQueueLength.Value = 5000;
+            this.tbQueueLength.ValueChanged += new System.EventHandler(this.tbQueueLength_ValueChanged);
             // 
             // btnDefault
             // 
@@ -884,9 +884,9 @@
             this.lblCommentMessage.AutoSize = true;
             this.lblCommentMessage.Location = new System.Drawing.Point(225, 84);
             this.lblCommentMessage.Name = "lblCommentMessage";
-            this.lblCommentMessage.Size = new System.Drawing.Size(35, 12);
+            this.lblCommentMessage.Size = new System.Drawing.Size(53, 12);
             this.lblCommentMessage.TabIndex = 21;
-            this.lblCommentMessage.Text = "Stop.";
+            this.lblCommentMessage.Text = "Stopped.";
             this.lblCommentMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblCommentTitle
@@ -904,9 +904,9 @@
             this.lblStatusMessage.AutoSize = true;
             this.lblStatusMessage.Location = new System.Drawing.Point(225, 68);
             this.lblStatusMessage.Name = "lblStatusMessage";
-            this.lblStatusMessage.Size = new System.Drawing.Size(35, 12);
+            this.lblStatusMessage.Size = new System.Drawing.Size(53, 12);
             this.lblStatusMessage.TabIndex = 17;
-            this.lblStatusMessage.Text = "Stop.";
+            this.lblStatusMessage.Text = "Stopped.";
             this.lblStatusMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUserTagMessage
@@ -914,9 +914,9 @@
             this.lblUserTagMessage.AutoSize = true;
             this.lblUserTagMessage.Location = new System.Drawing.Point(225, 52);
             this.lblUserTagMessage.Name = "lblUserTagMessage";
-            this.lblUserTagMessage.Size = new System.Drawing.Size(35, 12);
+            this.lblUserTagMessage.Size = new System.Drawing.Size(53, 12);
             this.lblUserTagMessage.TabIndex = 17;
-            this.lblUserTagMessage.Text = "Stop.";
+            this.lblUserTagMessage.Text = "Stopped.";
             this.lblUserTagMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUserRelationMessage
@@ -924,9 +924,9 @@
             this.lblUserRelationMessage.AutoSize = true;
             this.lblUserRelationMessage.Location = new System.Drawing.Point(225, 18);
             this.lblUserRelationMessage.Name = "lblUserRelationMessage";
-            this.lblUserRelationMessage.Size = new System.Drawing.Size(35, 12);
+            this.lblUserRelationMessage.Size = new System.Drawing.Size(53, 12);
             this.lblUserRelationMessage.TabIndex = 17;
-            this.lblUserRelationMessage.Text = "Stop.";
+            this.lblUserRelationMessage.Text = "Stopped.";
             this.lblUserRelationMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUserTagTitle
@@ -944,9 +944,9 @@
             this.lblUserInfoMessage.AutoSize = true;
             this.lblUserInfoMessage.Location = new System.Drawing.Point(225, 35);
             this.lblUserInfoMessage.Name = "lblUserInfoMessage";
-            this.lblUserInfoMessage.Size = new System.Drawing.Size(35, 12);
+            this.lblUserInfoMessage.Size = new System.Drawing.Size(53, 12);
             this.lblUserInfoMessage.TabIndex = 17;
-            this.lblUserInfoMessage.Text = "Stop.";
+            this.lblUserInfoMessage.Text = "Stopped.";
             this.lblUserInfoMessage.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUserRelationTitle
@@ -996,7 +996,7 @@
             this.MaximizeBox = false;
             this.Name = "frmMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Sina Weibo Crawler";
+            this.Text = "Sinawler";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
             this.Load += new System.EventHandler(this.frmMain_Load);
             this.grpUserInfo.ResumeLayout(false);
@@ -1014,8 +1014,8 @@
             this.grpDBSettings.PerformLayout();
             this.grpQueueLength.ResumeLayout(false);
             this.grpQueueLength.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numQueueLength)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.tbQueueLength)).EndInit();
             this.grpStatus.ResumeLayout(false);
             this.grpStatus.PerformLayout();
             this.ResumeLayout(false);

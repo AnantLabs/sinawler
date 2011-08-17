@@ -39,7 +39,7 @@ namespace Sinawler
         {
             if (lStartUserID == 0) return;
             AdjustFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+            Log("The initial request interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
 
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue(lStartUserID);
@@ -61,7 +61,7 @@ namespace Sinawler
                 lCurrentID = queueUserForUserRelationRobot.RollQueue();
 
                 //日志
-                Log("记录当前用户ID：" + lCurrentID.ToString());
+                Log("Recording current UserID：" + lCurrentID.ToString());
                 SysArg.SetCurrentID(lCurrentID,SysArgFor.USER_RELATION);
 
                 #region 用户关注列表
@@ -72,11 +72,11 @@ namespace Sinawler
                     Thread.Sleep(50);
                 }
                 //日志                
-                Log("爬取用户" + lCurrentID.ToString() + "关注用户ID列表...");
+                Log("Crawling the followings of User " + lCurrentID.ToString() + "...");
                 //爬取当前用户的关注的用户ID，记录关系，加入队列
                 LinkedList<long> lstBuffer = crawler.GetFriendsOf(lCurrentID, -1);
                 //日志
-                Log("爬得" + lstBuffer.Count.ToString() + "位关注用户。");
+                Log(lstBuffer.Count.ToString() + " followings crawled.");
 
                 while (lstBuffer.Count > 0)
                 {
@@ -97,7 +97,7 @@ namespace Sinawler
                             Thread.Sleep(50);
                         }
                         //日志
-                        Log("记录用户" + lCurrentID.ToString() + "关注用户" + lQueueBufferFirst.ToString() + "...");
+                        Log("Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
                         UserRelation ur = new UserRelation();
                         ur.source_user_id = lCurrentID;
                         ur.target_user_id = lstBuffer.First.Value;
@@ -113,16 +113,16 @@ namespace Sinawler
                     //加入队列
                     if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Relation Robot.");
                     if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Information Robot.");
                     if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户标签机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Tag Robot.");
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入微博机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot.");
                     lstBuffer.RemoveFirst();
                 }
 
