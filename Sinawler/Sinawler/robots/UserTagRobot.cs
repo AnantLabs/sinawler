@@ -46,7 +46,7 @@ namespace Sinawler
             Thread.Sleep(500);  //waiting that user relation robot update request limit data
 
             SetCrawlerFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -62,7 +62,7 @@ namespace Sinawler
                 lCurrentID = queueUserForUserTagRobot.RollQueue();
                 
                 //日志
-                Log( "记录当前用户ID：" + lCurrentID.ToString() );
+                Log( "Recording current UserID: " + lCurrentID.ToString()+"..." );
                 SysArg.SetCurrentID( lCurrentID, SysArgFor.USER_TAG );
 
                 #region 用户标签信息
@@ -74,10 +74,10 @@ namespace Sinawler
                 }
 
                 //日志
-                Log( "爬取用户" + lCurrentID.ToString() + "的标签..." );
+                Log( "Crawling tags of User " + lCurrentID.ToString() + "..." );
                 LinkedList<Tag> lstTag = crawler.GetTagsOf( lCurrentID );
                 //日志
-                Log( "爬得" + lstTag.Count.ToString() + "个标签。" );
+                Log( lstTag.Count.ToString() + " tags crawled." );
 
                 while (lstTag.Count > 0)
                 {
@@ -91,17 +91,17 @@ namespace Sinawler
                     if (!Tag.Exists( tag.tag_id ))
                     {
                         //日志
-                        Log( "将标签" + tag.tag_id.ToString() + "存入数据库..." );
+                        Log( "Saving Tag " + tag.tag_id.ToString() + " into database..." );
                         tag.Add();
                     }
                     else
                         //日志
-                        Log( "标签" + tag.tag_id.ToString() + "已存在。" );
+                        Log( "Tag " + tag.tag_id.ToString() + " exists." );
 
                     if (!UserTag.Exists( lCurrentID, tag.tag_id ))
                     {
                         //日志
-                        Log( "记录用户" + lCurrentID.ToString() + "拥有标签" + tag.tag_id.ToString() + "..." );
+                        Log( "Recording User " + lCurrentID.ToString() + " has Tag " + tag.tag_id.ToString() + "..." );
                         UserTag user_tag = new UserTag();
                         user_tag.user_id = lCurrentID;
                         user_tag.tag_id = tag.tag_id;
@@ -109,16 +109,16 @@ namespace Sinawler
                     }
                     else
                         //日志
-                        Log( "用户" + lCurrentID.ToString() + "拥有标签" + tag.tag_id.ToString() + "已存在。" );
+                        Log( "Tag " + tag.tag_id.ToString() + " of User "+ lCurrentID.ToString() + " exists." );
 
                     lstTag.RemoveFirst();
                 }
                 #endregion
                 //日志
-                Log( "用户" + lCurrentID.ToString() + "的标签数据已爬取完毕。" );
+                Log( "Tags of User " + lCurrentID.ToString() + " crawled." );
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
             }
         }
 

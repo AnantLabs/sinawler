@@ -53,7 +53,7 @@ namespace Sinawler
             User user;
 
             SetCrawlerFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
 
             //对队列循环爬行
             while (true)
@@ -68,7 +68,7 @@ namespace Sinawler
                 lCurrentID = queueUserForUserInfoRobot.RollQueue();
                 
                 //日志
-                Log("记录当前用户ID：" + lCurrentID.ToString());
+                Log("Recording current UserID: " + lCurrentID.ToString()+"...");
                 SysArg.SetCurrentID( lCurrentID,SysArgFor.USER_INFO );
 
                 #region 用户基本信息
@@ -81,13 +81,13 @@ namespace Sinawler
 
                 if (oUserBuffer.UserExists(lCurrentID))   //current user exists in the user buffer
                 {
-                    Log("用户" + lCurrentID.ToString() + "已在缓冲池中，将直接获取其信息...");
+                    Log("User " + lCurrentID.ToString() + " is in user buffer, getting the information directly...");
                     user = oUserBuffer.GetUser(lCurrentID);
                     oUserBuffer.Remove(user);
                 }
                 else
                 {
-                    Log("爬取用户" + lCurrentID.ToString() + "的基本信息...");
+                    Log("Crawling information of User " + lCurrentID.ToString() + "...");
                     user = crawler.GetUserInfo(lCurrentID);
                 }
                 if (user!=null && user.user_id > 0)
@@ -96,22 +96,22 @@ namespace Sinawler
                     if (!User.Exists( lCurrentID ))
                     {
                         //日志
-                        Log("将用户" + lCurrentID.ToString() + "存入数据库...");
+                        Log("Saving User " + lCurrentID.ToString() + " into database...");
                         user.Add();
                     }
                     else
                     {
                         //日志
-                        Log("更新用户" + lCurrentID.ToString() + "的数据...");
+                        Log("Updating the information of User " + lCurrentID.ToString() + "...");
                         user.Update();
                     }
                     //日志
-                    Log( "用户" + lCurrentID.ToString() + "的基本信息已爬取完毕。" );
+                    Log( "The information of User " + lCurrentID.ToString() + " crawled." );
                 }
                 else if(user==null) //用户不存在
                 {
                     //日志
-                    Log( "用户" + lCurrentID.ToString() + "不存在，将其从队列中移除..." );
+                    Log( "User " + lCurrentID.ToString() + " not exists. Removing from all queues..." );
                     //将该用户ID从各个队列中去掉
                     queueUserForUserInfoRobot.Remove( lCurrentID );
                     queueUserForUserRelationRobot.Remove( lCurrentID );
@@ -122,7 +122,7 @@ namespace Sinawler
 
                 AdjustFreq();
                 //日志
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
             }
         }
 

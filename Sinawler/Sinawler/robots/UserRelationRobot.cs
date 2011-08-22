@@ -39,7 +39,7 @@ namespace Sinawler
         {
             if (lStartUserID == 0) return;
             AdjustFreq();
-            Log("The initial request interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
 
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue(lStartUserID);
@@ -61,7 +61,7 @@ namespace Sinawler
                 lCurrentID = queueUserForUserRelationRobot.RollQueue();
 
                 //日志
-                Log("Recording current UserID：" + lCurrentID.ToString());
+                Log("Recording current UserID：" + lCurrentID.ToString()+"...");
                 SysArg.SetCurrentID(lCurrentID,SysArgFor.USER_RELATION);
 
                 #region 用户关注列表
@@ -113,22 +113,22 @@ namespace Sinawler
                     //加入队列
                     if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Relation Robot.");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Relation Robot...");
                     if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Information Robot.");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Information Robot...");
                     if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Tag Robot.");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Tag Robot...");
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot.");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
                     lstBuffer.RemoveFirst();
                 }
 
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
                 #endregion
                 #region 用户粉丝列表
                 //爬取当前用户的粉丝的ID，记录关系，加入队列
@@ -139,10 +139,10 @@ namespace Sinawler
                     Thread.Sleep(50);
                 }
                 //日志
-                Log("爬取用户" + lCurrentID.ToString() + "的粉丝用户ID列表...");
+                Log("Crawling the followers of User " + lCurrentID.ToString() + "...");
                 lstBuffer = crawler.GetFollowersOf(lCurrentID, -1);
                 //日志
-                Log("爬得" + lstBuffer.Count.ToString() + "位粉丝。");
+                Log(lstBuffer.Count.ToString() + " followers crawled.");
 
                 while (lstBuffer.Count > 0)
                 {
@@ -163,7 +163,7 @@ namespace Sinawler
                             Thread.Sleep(50);
                         }
                         //日志
-                        Log("记录用户" + lQueueBufferFirst.ToString() + "关注用户" + lCurrentID.ToString() + "...");
+                        Log("Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
                         UserRelation ur = new UserRelation();
                         ur.source_user_id = lstBuffer.First.Value;
                         ur.target_user_id = lCurrentID;
@@ -179,25 +179,25 @@ namespace Sinawler
                     //加入队列
                     if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户关系机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Relation Robot...");
                     if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户信息机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Information Robot...");
                     if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入用户标签机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Tag Robot...");
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
                         //日志
-                        Log("将用户" + lQueueBufferFirst.ToString() + "加入微博机器人的用户队列。");
+                        Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
                     lstBuffer.RemoveFirst();
                 }
                 #endregion
                 //最后再将刚刚爬行完的UserID加入队尾
                 //日志
-                Log("用户" + lCurrentID.ToString() + "的关系已爬取完毕。");
+                Log("Social grapgh of User " + lCurrentID.ToString() + " crawled.");
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
             }
         }
 

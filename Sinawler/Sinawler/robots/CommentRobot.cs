@@ -50,7 +50,7 @@ namespace Sinawler
             Thread.Sleep(500);  //waiting that user relation robot update limit data
 
             SetCrawlerFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -66,7 +66,7 @@ namespace Sinawler
                 lCurrentID = queueStatus.RollQueue();
 
                 //日志
-                Log("记录当前微博ID：" + lCurrentID.ToString());
+                Log("Recording current StatusID: " + lCurrentID.ToString()+"...");
                 SysArg.SetCurrentID(lCurrentID,SysArgFor.COMMENT);
 
                 #region 微博相应评论
@@ -78,14 +78,14 @@ namespace Sinawler
                 }
 
                 //日志
-                Log("爬取微博" + lCurrentID.ToString() + "的评论...");
+                Log("Crawling the comments of Status " + lCurrentID.ToString() + "...");
                 int iPage = 1;
                 //爬取当前微博的评论
                 LinkedList<Comment> lstComment = new LinkedList<Comment>();
                 LinkedList<Comment> lstTemp=new LinkedList<Comment>();
                 lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
                 while (lstTemp.Count > 0)
                 {
                     while (lstTemp.Count > 0)
@@ -96,10 +96,10 @@ namespace Sinawler
                     iPage++;
                     lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                     AdjustFreq();
-                    Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
                 }
                 //日志
-                Log("爬得微博" + lCurrentID.ToString() + "的" + lstComment.Count.ToString() + "条评论。");
+                Log(lstComment.Count.ToString() + " comments of Status " + lCurrentID.ToString() + " crawled.");
                 Comment comment;
                 while(lstComment.Count>0)
                 {
@@ -113,28 +113,27 @@ namespace Sinawler
                     if (!Comment.Exists( comment.comment_id ))
                     {
                         //日志
-                        Log( "将评论" + comment.comment_id.ToString() + "存入数据库..." );
+                        Log( "Saving Comment " + comment.comment_id.ToString() + " into database..." );
                         comment.Add();
                     }
 
                     if (queueUserForUserRelationRobot.Enqueue(comment.user.user_id))
-                        Log("将评论人" + comment.user.user_id.ToString() + "加入用户关系机器人的用户队列。");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Relation Robot...");
                     if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(comment.user.user_id))
-                        Log("将评论人" + comment.user.user_id.ToString() + "加入用户信息机器人的用户队列。");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Information Robot..."");
                     if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(comment.user.user_id))
-                        Log("将评论人" + comment.user.user_id.ToString() + "加入用户标签机器人的用户队列。");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Tag Robot..."");
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(comment.user.user_id))
-                        Log("将评论人" + comment.user.user_id.ToString() + "加入微博机器人的用户队列。");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of Status Robot..."");
                     //add the user into the buffer only when the user does not exist in the queue for userInfo
                     if (GlobalPool.UserInfoRobotEnabled && !queueUserForUserInfoRobot.QueueExists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
-                        Log("将评论人" + comment.user.user_id.ToString() + "加入用户缓冲池。");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to user buffer...");
 
                     lstComment.RemoveFirst();
                 }
                 #endregion
-                //最后再将刚刚爬行完的StatusID加入队尾
                 //日志
-                Log("微博" + lCurrentID.ToString() + "的评论已爬取完毕。");
+                Log("Comments of Status " + lCurrentID.ToString() + " crawled.");
             }
         }
 

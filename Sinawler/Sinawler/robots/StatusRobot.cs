@@ -43,12 +43,12 @@ namespace Sinawler
             if (!Status.Exists(lCurrentSID))
             {
                 //日志
-                Log("将微博" + lCurrentSID.ToString() + "存入数据库...");
+                Log("Saving Status " + lCurrentSID.ToString() + " into database...");
                 status.Add();
             }
 
             if (queueStatus.Enqueue(lCurrentSID))
-                Log("将微博" + lCurrentSID.ToString() + "加入微博队列。");
+                Log("Adding Status " + lCurrentSID.ToString() + " to status queue...");
 
             //若该微博有转发，将转发微博保存
             if (status.retweeted_status != null)
@@ -61,35 +61,35 @@ namespace Sinawler
                 }
 
                 //日志
-                Log("微博" + lCurrentSID.ToString() + "有转发微博，将转发微博" + status.retweeted_status.status_id.ToString() + "存入数据库...");
+                Log("Status " + status.retweeted_status.status_id.ToString() + " is retweeted by Status " + lCurrentSID.ToString() + ", saving it into database...");
 
                 if (!Status.Exists( status.retweeted_status.status_id ))
                 {
                     status.retweeted_status.Add();
 
                     //日志
-                    Log( "转发微博" + status.retweeted_status.status_id.ToString() + "已保存。" );
+                    Log( "Retweeted Status " + status.retweeted_status.status_id.ToString() + " saved." );
                 }
                 else
                 {
                     //日志
-                    Log( "转发微博" + status.retweeted_status.status_id.ToString() + "已存在。" );
+                    Log( "Retweeted Status " + status.retweeted_status.status_id.ToString() + " exists." );
                 }
 
                 if (queueStatus.Enqueue( status.retweeted_status.status_id ))
-                    Log( "将转发微博" + status.retweeted_status.status_id.ToString() + "加入微博队列。" );
+                    Log( "Adding retweeted Status " + status.retweeted_status.status_id.ToString() + " to status queue..." );
 
                 if (queueUserForUserRelationRobot.Enqueue(status.retweeted_status.user.user_id))
-                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户关系机器人的用户队列。");
+                    Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Relation Robot...");
                 if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(status.retweeted_status.user.user_id))
-                    Log( "将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户信息机器人的用户队列。" );
+                    Log( "Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Information Robot..." );
                 if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(status.retweeted_status.user.user_id))
-                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户标签机器人的用户队列。");
+                    Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                 if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(status.retweeted_status.user.user_id))
-                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入微博机器人的用户队列。");
+                    Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of Status Robot...");
                 //add the user into the buffer only when the user does not exist in the queue for userInfo
                 if (GlobalPool.UserInfoRobotEnabled && !queueUserForUserInfoRobot.QueueExists(status.retweeted_status.user.user_id) && oUserBuffer.Enqueue(status.retweeted_status.user))
-                    Log("将用户" + status.retweeted_status.user.user_id.ToString() + "加入用户缓冲池。");
+                    Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to user buffer...");
             }
         }
 
@@ -109,7 +109,7 @@ namespace Sinawler
             Thread.Sleep(500);  //waiting that user relation robot update list data
 
             SetCrawlerFreq();
-            Log("初始请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -125,7 +125,7 @@ namespace Sinawler
                 lCurrentID = queueUserForStatusRobot.RollQueue();
 
                 //日志
-                Log("记录当前用户ID：" + lCurrentID.ToString());
+                Log("Recording current UserID: " + lCurrentID.ToString()+"...");
                 SysArg.SetCurrentID(lCurrentID, SysArgFor.STATUS);
 
                 #region 用户微博信息
@@ -136,7 +136,7 @@ namespace Sinawler
                     Thread.Sleep( 50 );
                 }
                 //日志
-                Log("获取数据库中用户" + lCurrentID.ToString() + "最新一条微博的ID...");
+                Log("Getting the latest Status ID of User " + lCurrentID.ToString() + "...");
                 //获取数据库中当前用户最新一条微博的ID
                 long lCurrentSID = Status.GetLastStatusIDOf(lCurrentID);
 
@@ -150,11 +150,11 @@ namespace Sinawler
                 Status status;
                 #region 后续微博
                 //日志
-                Log("爬取用户" + lCurrentID.ToString() + "的ID在" + lCurrentSID.ToString() + "之后的微博...");
+                Log("Crawling statuses after Status " + lCurrentSID.ToString() + " of User " + lCurrentID.ToString() + "...");
                 //爬取数据库中当前用户最新一条微博的ID之后的微博，存入数据库
                 LinkedList<Status> lstStatus = crawler.GetStatusesOfSince(lCurrentID, lCurrentSID);
                 //日志
-                Log( "爬得" + lstStatus.Count.ToString() + "条微博。" );
+                Log( lstStatus.Count.ToString() + " statuses crawled." );
 
                 while (lstStatus.Count > 0)
                 {
@@ -172,10 +172,10 @@ namespace Sinawler
                 //}
                 #endregion
                 //日志
-                Log( "用户" + lCurrentID.ToString() + "的微博数据已爬取完毕。" );
+                Log( "Statuses of User " + lCurrentID.ToString() + " crawled." );
                 //日志
                 AdjustFreq();
-                Log("调整请求间隔为" + crawler.SleepTime.ToString() + "毫秒。本小时剩余" + api.ResetTimeInSeconds.ToString() + "秒，剩余请求次数为" + api.RemainingHits.ToString() + "次");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
             }
         }
 
