@@ -196,7 +196,7 @@ namespace Sinawler
                             Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                         if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
                             Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of Status Robot...");
-                        if (GlobalPool.UserInfoRobotEnabled && oUserBuffer.Enqueue(lstRepostedStatus.First.Value.user))
+                        if (GlobalPool.UserInfoRobotEnabled && !User.Exists(lstRepostedStatus.First.Value.user.user_id) && oUserBuffer.Enqueue(lstRepostedStatus.First.Value.user))
                             Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to user buffer...");
 
                         lstRepostedStatus.RemoveFirst();

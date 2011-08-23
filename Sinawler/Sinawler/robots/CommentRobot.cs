@@ -132,7 +132,7 @@ namespace Sinawler
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(comment.user.user_id))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of Status Robot...");
                     //add the user into the buffer only when the user does not exist in the queue for userInfo
-                    if (GlobalPool.UserInfoRobotEnabled && oUserBuffer.Enqueue(comment.user))
+                    if (GlobalPool.UserInfoRobotEnabled && !User.Exists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to user buffer...");
 
                     lstComment.RemoveFirst();
