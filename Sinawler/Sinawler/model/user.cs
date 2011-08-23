@@ -81,6 +81,7 @@ namespace Sinawler.Model
 		private bool _geo_enabled;
         private int _iteration;
         private string _update_time;
+
 		/// <summary>
 		/// 用户UserID（XML中为id）
 		/// </summary>
@@ -288,7 +289,7 @@ namespace Sinawler.Model
         /// <summary>
         /// 更新数据库中已有数据的迭代次数
         /// </summary>
-        static public void NewIterate ()
+        public static void NewIterate()
         {
             Database db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL("update users set iteration=iteration+1");
@@ -394,6 +395,21 @@ namespace Sinawler.Model
             }
             catch
             { return; }
+        }
+
+        /// <summary>
+        /// remove a user from table
+        /// </summary>
+        public static bool Remove(long lUID)
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                if (db.CountByExecuteSQL("delete from users where user_id=" + lUID.ToString()) == 0) return true;
+                else return false;
+            }
+            catch
+            { return false; }
         }
 
         /// <summary>

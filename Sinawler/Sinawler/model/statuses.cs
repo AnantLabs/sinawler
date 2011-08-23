@@ -258,7 +258,7 @@ namespace Sinawler.Model
 
 		#region  成员方法
 
-		static public bool Exists(long lStatusID)
+        public static bool Exists(long lStatusID)
 		{
             Database db = DatabaseFactory.CreateDatabase();
             db = DatabaseFactory.CreateDatabase();
@@ -269,7 +269,7 @@ namespace Sinawler.Model
         /// <summary>
         /// 更新数据库中已有数据的迭代次数
         /// </summary>
-        static public void NewIterate ()
+        public static void NewIterate()
         {
             Database db = DatabaseFactory.CreateDatabase();
             db = DatabaseFactory.CreateDatabase();
@@ -326,7 +326,7 @@ namespace Sinawler.Model
         /// <summary>
         /// 获得数据库中指定用户最新一条微博ID
         /// </summary>
-        static public long GetLastStatusIDOf(long lUid)
+        public static long GetLastStatusIDOf(long lUid)
         {
             Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select top 1 status_id from statuses where user_id="+lUid.ToString()+" order by created_at desc";

@@ -56,7 +56,7 @@ namespace Sinawler.Model
         /// <summary>
         /// 是否存在指定的有效关注关系（最新状态）
         /// </summary>
-        static public bool Exists ( long lUserID, long lTagID )
+        public static bool Exists(long lUserID, long lTagID)
         {
             Database db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select count(*) from user_tag where user_id=" + lUserID.ToString() + " and tag_id=" + lTagID.ToString() );
@@ -66,10 +66,25 @@ namespace Sinawler.Model
         /// <summary>
         /// 更新数据库中已有数据的迭代次数
         /// </summary>
-        static public void NewIterate ()
+        public static void NewIterate()
         {
             Database db = DatabaseFactory.CreateDatabase();
             db.CountByExecuteSQL( "update user_tag set iteration=iteration+1" );
+        }
+
+        /// <summary>
+        /// remove data of specific user
+        /// </summary>
+        public static bool Remove(long lUID)
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                if (db.CountByExecuteSQL("delete from user_tag where user_id=" + lUID.ToString()) == 0) return true;
+                else return false;
+            }
+            catch
+            { return false; }
         }
 
         /// <summary>

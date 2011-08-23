@@ -882,7 +882,7 @@
             // lblCommentMessage
             // 
             this.lblCommentMessage.AutoSize = true;
-            this.lblCommentMessage.Location = new System.Drawing.Point(225, 84);
+            this.lblCommentMessage.Location = new System.Drawing.Point(213, 84);
             this.lblCommentMessage.Name = "lblCommentMessage";
             this.lblCommentMessage.Size = new System.Drawing.Size(53, 12);
             this.lblCommentMessage.TabIndex = 21;
@@ -902,7 +902,7 @@
             // lblStatusMessage
             // 
             this.lblStatusMessage.AutoSize = true;
-            this.lblStatusMessage.Location = new System.Drawing.Point(225, 68);
+            this.lblStatusMessage.Location = new System.Drawing.Point(213, 68);
             this.lblStatusMessage.Name = "lblStatusMessage";
             this.lblStatusMessage.Size = new System.Drawing.Size(53, 12);
             this.lblStatusMessage.TabIndex = 17;
@@ -912,7 +912,7 @@
             // lblUserTagMessage
             // 
             this.lblUserTagMessage.AutoSize = true;
-            this.lblUserTagMessage.Location = new System.Drawing.Point(225, 52);
+            this.lblUserTagMessage.Location = new System.Drawing.Point(213, 52);
             this.lblUserTagMessage.Name = "lblUserTagMessage";
             this.lblUserTagMessage.Size = new System.Drawing.Size(53, 12);
             this.lblUserTagMessage.TabIndex = 17;
@@ -922,7 +922,7 @@
             // lblUserRelationMessage
             // 
             this.lblUserRelationMessage.AutoSize = true;
-            this.lblUserRelationMessage.Location = new System.Drawing.Point(225, 18);
+            this.lblUserRelationMessage.Location = new System.Drawing.Point(213, 18);
             this.lblUserRelationMessage.Name = "lblUserRelationMessage";
             this.lblUserRelationMessage.Size = new System.Drawing.Size(53, 12);
             this.lblUserRelationMessage.TabIndex = 17;
@@ -942,7 +942,7 @@
             // lblUserInfoMessage
             // 
             this.lblUserInfoMessage.AutoSize = true;
-            this.lblUserInfoMessage.Location = new System.Drawing.Point(225, 35);
+            this.lblUserInfoMessage.Location = new System.Drawing.Point(213, 35);
             this.lblUserInfoMessage.Name = "lblUserInfoMessage";
             this.lblUserInfoMessage.Size = new System.Drawing.Size(53, 12);
             this.lblUserInfoMessage.TabIndex = 17;

@@ -47,13 +47,13 @@ namespace Sinawler
             while (queueUserForUserInfoRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
-                Thread.Sleep(50);   //若队列为空，则等待
+                Thread.Sleep(GlobalPool.SleepMsForThread);   //若队列为空，则等待
             }
             Thread.Sleep(500);  //waiting that user relation robot update request limit data
             User user;
 
             SetCrawlerFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
             //对队列循环爬行
             while (true)
@@ -62,7 +62,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
                 //将队头取出
                 lCurrentID = queueUserForUserInfoRobot.RollQueue();
@@ -76,7 +76,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
 
                 if (oUserBuffer.UserExists(lCurrentID))   //current user exists in the user buffer
@@ -117,12 +117,18 @@ namespace Sinawler
                     queueUserForUserRelationRobot.Remove( lCurrentID );
                     queueUserForUserTagRobot.Remove( lCurrentID );
                     queueUserForStatusRobot.Remove( lCurrentID );
+
+                    Log("User " + lCurrentID.ToString() + " not exists. Deleting related data...");
+                    //Remove the data related from every table, except statuses and comments
+                    User.Remove(lCurrentID);
+                    UserRelation.Remove(lCurrentID);
+                    UserTag.Remove(lCurrentID);
                 }
                 #endregion
 
                 AdjustFreq();
                 //日志
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
             }
         }
 

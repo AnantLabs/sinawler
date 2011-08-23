@@ -39,7 +39,7 @@ namespace Sinawler
         {
             if (lStartUserID == 0) return;
             AdjustFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue(lStartUserID);
@@ -55,7 +55,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
                 //将队头取出
                 lCurrentID = queueUserForUserRelationRobot.RollQueue();
@@ -69,7 +69,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
                 //日志                
                 Log("Crawling the followings of User " + lCurrentID.ToString() + "...");
@@ -84,7 +84,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(50);
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     lQueueBufferFirst = lstBuffer.First.Value;
                     //若不存在有效关系，增加
@@ -94,7 +94,7 @@ namespace Sinawler
                         while (blnSuspending)
                         {
                             if (blnAsyncCancelled) return;
-                            Thread.Sleep(50);
+                            Thread.Sleep(GlobalPool.SleepMsForThread);
                         }
                         //日志
                         Log("Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
@@ -108,7 +108,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(50);
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     //加入队列
                     if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
@@ -128,7 +128,7 @@ namespace Sinawler
 
                 //日志
                 AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
                 #endregion
                 #region 用户粉丝列表
                 //爬取当前用户的粉丝的ID，记录关系，加入队列
@@ -136,7 +136,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
                 //日志
                 Log("Crawling the followers of User " + lCurrentID.ToString() + "...");
@@ -150,7 +150,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(50);
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     lQueueBufferFirst = lstBuffer.First.Value;
                     //若不存在有效关系，增加
@@ -160,7 +160,7 @@ namespace Sinawler
                         while (blnSuspending)
                         {
                             if (blnAsyncCancelled) return;
-                            Thread.Sleep(50);
+                            Thread.Sleep(GlobalPool.SleepMsForThread);
                         }
                         //日志
                         Log("Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
@@ -174,7 +174,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(50);
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     //加入队列
                     if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
@@ -197,7 +197,7 @@ namespace Sinawler
                 Log("Social grapgh of User " + lCurrentID.ToString() + " crawled.");
                 //日志
                 AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
             }
         }
 

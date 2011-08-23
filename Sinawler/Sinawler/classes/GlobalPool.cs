@@ -42,6 +42,8 @@ namespace Sinawler
         public static int MinSleepMsForStatus = 500;
         public static int MinSleepMsForComment = 500;
 
+        public static int SleepMsForThread = 1;
+
         public static APIInfo GetAPI(SysArgFor apiType)
         {
             switch (apiType)

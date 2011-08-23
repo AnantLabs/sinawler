@@ -104,12 +104,12 @@ namespace Sinawler
             while (queueUserForStatusRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
-                Thread.Sleep( 50 );   //若队列为空，则等待
+                Thread.Sleep( GlobalPool.SleepMsForThread );   //若队列为空，则等待
             }
             Thread.Sleep(500);  //waiting that user relation robot update list data
 
             SetCrawlerFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -118,7 +118,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
+                    Thread.Sleep( GlobalPool.SleepMsForThread );
                 }
 
                 //将队头取出
@@ -133,7 +133,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
+                    Thread.Sleep( GlobalPool.SleepMsForThread );
                 }
                 //日志
                 Log("Getting the latest Status ID of User " + lCurrentID.ToString() + "...");
@@ -144,7 +144,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 50 );
+                    Thread.Sleep( GlobalPool.SleepMsForThread );
                 }
 
                 Status status;
@@ -162,7 +162,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep( 50 );
+                        Thread.Sleep( GlobalPool.SleepMsForThread );
                     }
                     status = lstStatus.First.Value;
                     SaveStatus( status );
@@ -175,7 +175,7 @@ namespace Sinawler
                 Log( "Statuses of User " + lCurrentID.ToString() + " crawled." );
                 //日志
                 AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
             }
         }
 

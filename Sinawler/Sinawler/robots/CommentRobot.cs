@@ -45,12 +45,12 @@ namespace Sinawler
             while (queueStatus.Count == 0)
             {
                 if (blnAsyncCancelled) return;
-                Thread.Sleep(50);   //若队列为空，则等待
+                Thread.Sleep(GlobalPool.SleepMsForThread);   //若队列为空，则等待
             }
             Thread.Sleep(500);  //waiting that user relation robot update limit data
 
             SetCrawlerFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -59,7 +59,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
 
                 //将队头取出
@@ -74,7 +74,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep(50);
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
 
                 //日志
@@ -85,7 +85,7 @@ namespace Sinawler
                 LinkedList<Comment> lstTemp=new LinkedList<Comment>();
                 lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                 AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
                 while (lstTemp.Count > 0)
                 {
                     while (lstTemp.Count > 0)
@@ -96,7 +96,7 @@ namespace Sinawler
                     iPage++;
                     lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                     AdjustFreq();
-                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests remained this hour.");
+                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
                 }
                 //日志
                 Log(lstComment.Count.ToString() + " comments of Status " + lCurrentID.ToString() + " crawled.");
@@ -107,7 +107,7 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(50);
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     comment = lstComment.First.Value;
                     if (!Comment.Exists( comment.comment_id ))
@@ -120,11 +120,11 @@ namespace Sinawler
                     if (queueUserForUserRelationRobot.Enqueue(comment.user.user_id))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Relation Robot...");
                     if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(comment.user.user_id))
-                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Information Robot..."");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Information Robot...");
                     if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(comment.user.user_id))
-                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Tag Robot..."");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(comment.user.user_id))
-                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of Status Robot..."");
+                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of Status Robot...");
                     //add the user into the buffer only when the user does not exist in the queue for userInfo
                     if (GlobalPool.UserInfoRobotEnabled && !queueUserForUserInfoRobot.QueueExists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to user buffer...");

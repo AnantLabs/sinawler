@@ -87,13 +87,13 @@ namespace Sinawler
         /// <param name="strLog">日志内容</param>
         protected void Log(string strLog)
         {
-            strLogMessage = DateTime.Now.ToString() + "  " + strLog;
+            strLogMessage = DateTime.Now.ToString() + " " + strLog;
             StreamWriter swComment = File.AppendText( strLogFile );
             swComment.WriteLine( strLogMessage );
             swComment.Close();
 
             bwAsync.ReportProgress( 0 );
-            Thread.Sleep(50);
+            Thread.Sleep(GlobalPool.SleepMsForThread);
         }
 
         //检查真实请求限制剩余次数，并根据情况调整访问频度并返回

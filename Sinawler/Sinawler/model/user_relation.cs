@@ -150,7 +150,7 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 获得指定源用户关注的UserID列表
 		/// </summary>
-        static public LinkedList<long> GetFollowingUserID(long lSourceUserID)
+        public static LinkedList<long> GetFollowingUserID(long lSourceUserID)
         {
             Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select target_user_id,relation_state from user_relation where source_user_id=" + lSourceUserID.ToString() + " order by update_time";
@@ -172,7 +172,7 @@ namespace Sinawler.Model
         /// <summary>
         /// 获得关注指定目标用户的UserID列表
         /// </summary>
-        static public LinkedList<long> GetFollowedByUserID ( long lTargetUserID )
+        public static LinkedList<long> GetFollowedByUserID(long lTargetUserID)
         {
             Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select source_user_id,relation_state from user_relation where target_user_id=" + lTargetUserID.ToString() + " order by update_time";
@@ -195,13 +195,31 @@ namespace Sinawler.Model
         /// 获得用户关系表中所有UserID，包括source_user_id和target_user_id
         /// 返回DataTable，以便于调用者观察进度——本不应该将DataTable暴露给上层的，无奈
         /// </summary>
-        static public DataTable GetAllUserIDTable ()
+        public static DataTable GetAllUserIDTable()
         {
             Database db = DatabaseFactory.CreateDatabase();
             string strSQL = "select user_id from all_user_id order by update_time";
             DataSet ds = db.GetDataSet( strSQL );
             if (ds == null) return null;
             else return ds.Tables[0];
+        }
+
+        /// <summary>
+        /// remove data of specific user
+        /// </summary>
+        public static bool Remove(long lUID)
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                Hashtable ht=new Hashtable();
+                ht.Add("relation_state",0);
+                return db.Update("user_relation",ht,"source_user_id=" + lUID.ToString()+" or target_user_id="+lUID.ToString());
+                //if (db.CountByExecuteSQL("delete from user_relation where source_user_id=" + lUID.ToString()+" or target_user_id="+lUID.ToString()) == 0) return true;
+                //else return false;
+            }
+            catch
+            { return false; }
         }
 
 		#endregion  成员方法

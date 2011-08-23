@@ -119,8 +119,8 @@ namespace Sinawler
         {
             if (oCurrentUser != null)
             {
-                lblCUserID.Text = "UserID：" + oCurrentUser.user_id.ToString();
-                lblCName.Text = "Nickname：" + oCurrentUser.screen_name;
+                lblCUserID.Text = "UserID: " + oCurrentUser.user_id.ToString();
+                lblCName.Text = "Nickname: " + oCurrentUser.screen_name;
                 if (oCurrentUser.gender == "m")
                     lblCGender.Text = "Gender: Male";
                 else
@@ -130,16 +130,14 @@ namespace Sinawler
                 else
                     lblCVerified.Text = "Verified: No";
                 if (oCurrentUser.following)
-                    lblCFollowing.Text = "Followed by Current User：Yes";
+                    lblCFollowing.Text = "Followed by Current User: Yes";
                 else
-                    lblCFollowing.Text = "Followed by Current User：No";
+                    lblCFollowing.Text = "Followed by Current User: No";
                 lblCLocation.Text = "Location: " + oCurrentUser.location;
                 lblCFollowersCount.Text = "Followers: " + oCurrentUser.followers_count.ToString();
                 lblCFriendsCount.Text = "Followings: " + oCurrentUser.friends_count.ToString();
                 lblCStatusesCount.Text = "Tweets: " + oCurrentUser.statuses_count.ToString();
-                string strCreatedAt = oCurrentUser.created_at;
-                string[] strCreatedDate = strCreatedAt.Split(' ')[0].Split('-');
-                lblCCreatedAt.Text = "Created At: " + strCreatedDate[1] + " " + strCreatedDate[2] + ", " + strCreatedDate[0] + "Year";
+                lblCCreatedAt.Text = "Created At: " + oCurrentUser.created_at.Split(' ')[0];
             }
             else
             {
@@ -179,9 +177,7 @@ namespace Sinawler
                 lblFollowersCount.Text = "Followers: " + oSearchedUser.followers_count.ToString();
                 lblFriendsCount.Text = "Followings: " + oSearchedUser.friends_count.ToString();
                 lblStatusesCount.Text = "Tweets: " + oSearchedUser.statuses_count.ToString();
-                string strCreatedAt = oSearchedUser.created_at;
-                string[] strCreatedDate = strCreatedAt.Split(' ')[0].Split('-');
-                lblCreatedAt.Text = "Created At: " + strCreatedDate[1] + " " + strCreatedDate[2] + "," + strCreatedDate[0] + "Year";
+                lblCreatedAt.Text = "Created At: " + oSearchedUser.created_at.Split(' ')[0];
             }
             else
             {

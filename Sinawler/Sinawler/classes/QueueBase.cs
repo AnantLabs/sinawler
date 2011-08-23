@@ -96,7 +96,7 @@ namespace Sinawler
                 lstWaitingID.RemoveFirst();
 
                 //从数据库队列缓存中移入元素
-                if (lstWaitingID.Count == 0)
+                while (lstWaitingID.Count == 0)
                     lstWaitingID = lstWaitingIDInDB.GetFirstValues(iMaxLengthInMem);
             }
             return lFirstValue;
