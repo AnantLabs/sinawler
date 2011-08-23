@@ -804,6 +804,46 @@ namespace Sinawler
         }
 
         /// <summary>
+        /// 获取指定ID的转发微博
+        /// </summary>
+        /// <param name="lStatusID">要获取转发微博内容的微博ID</param>
+        /// <returns>微博</returns>
+        public LinkedList<Status> GetRepostedStatusOf(long lStatusID, int iPageNum)
+        {
+            System.Threading.Thread.Sleep(iSleep);
+            LinkedList<Status> lstStatuses = new LinkedList<Status>();
+            string strResult = api.API.repost_timeline(lStatusID, iPageNum);
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return lstStatuses;
+                System.Threading.Thread.Sleep(iSleep);
+                strResult = api.API.repost_timeline(lStatusID, iPageNum);
+                iTryTimes--;
+                AdjustLimit();
+            }
+            iTryTimes = 10;
+            if (strResult == null) return null;
+            if (api.API.Format == "json")
+            {
+                JsonStatus[] oJsonStatuses = (JsonStatus[])JsonConvert.DeserializeObject(strResult, typeof(JsonStatus[]));
+                foreach (JsonStatus oJsonStatus in oJsonStatuses)
+                    lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
+            }//json
+            else
+            {
+                strResult = PubHelper.stripNonValidXMLCharacters(strResult);  //过滤XML中的无效字符
+                if (strResult.Trim() == "") return lstStatuses;
+                XmlDocument xmlDoc = new XmlDocument();
+                xmlDoc.LoadXml(strResult);
+
+                XmlNodeList nodes = xmlDoc.GetElementsByTagName("status");
+                foreach (XmlNode nodeStatus in nodes)
+                    lstStatuses.AddLast(XMLNodeToStatus(nodeStatus));
+            }//format=xml
+            return lstStatuses;
+        }
+
+        /// <summary>
         /// 获取指定微博评论
         /// </summary>
         /// <param name="lStatusID">要获取评论内容的微博ID</param>

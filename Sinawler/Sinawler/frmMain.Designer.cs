@@ -94,6 +94,7 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserInfoTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
+            this.lblUserBufferInfo = new System.Windows.Forms.Label();
             this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.lblStatusQueueInfo = new System.Windows.Forms.Label();
             this.lblUserTagQueueInfo = new System.Windows.Forms.Label();
@@ -454,7 +455,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(453, 711);
+            this.btnExit.Location = new System.Drawing.Point(453, 725);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 22;
@@ -812,6 +813,7 @@
             // 
             // grpStatus
             // 
+            this.grpStatus.Controls.Add(this.lblUserBufferInfo);
             this.grpStatus.Controls.Add(this.lblCommentQueueInfo);
             this.grpStatus.Controls.Add(this.lblStatusQueueInfo);
             this.grpStatus.Controls.Add(this.lblUserTagQueueInfo);
@@ -829,55 +831,64 @@
             this.grpStatus.Controls.Add(this.lblUserInfoTitle);
             this.grpStatus.Location = new System.Drawing.Point(5, 516);
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size(827, 186);
+            this.grpStatus.Size = new System.Drawing.Size(827, 203);
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "Crawler Status";
+            // 
+            // lblUserBufferInfo
+            // 
+            this.lblUserBufferInfo.AutoSize = true;
+            this.lblUserBufferInfo.Location = new System.Drawing.Point(11, 182);
+            this.lblUserBufferInfo.Name = "lblUserBufferInfo";
+            this.lblUserBufferInfo.Size = new System.Drawing.Size(299, 12);
+            this.lblUserBufferInfo.TabIndex = 25;
+            this.lblUserBufferInfo.Text = "User Buffer: 0 users in memory and 0 in database.";
             // 
             // lblCommentQueueInfo
             // 
             this.lblCommentQueueInfo.AutoSize = true;
             this.lblCommentQueueInfo.Location = new System.Drawing.Point(11, 166);
             this.lblCommentQueueInfo.Name = "lblCommentQueueInfo";
-            this.lblCommentQueueInfo.Size = new System.Drawing.Size(413, 12);
+            this.lblCommentQueueInfo.Size = new System.Drawing.Size(371, 12);
             this.lblCommentQueueInfo.TabIndex = 24;
-            this.lblCommentQueueInfo.Text = "Queue of Comment Robot: 0 status in memory and 0 status in database.";
+            this.lblCommentQueueInfo.Text = "Queue of Comment Robot: 0 status in memory and 0 in database.";
             // 
             // lblStatusQueueInfo
             // 
             this.lblStatusQueueInfo.AutoSize = true;
             this.lblStatusQueueInfo.Location = new System.Drawing.Point(11, 150);
             this.lblStatusQueueInfo.Name = "lblStatusQueueInfo";
-            this.lblStatusQueueInfo.Size = new System.Drawing.Size(383, 12);
+            this.lblStatusQueueInfo.Size = new System.Drawing.Size(353, 12);
             this.lblStatusQueueInfo.TabIndex = 23;
-            this.lblStatusQueueInfo.Text = "Queue of Status Robot: 0 user in memory and 0 user in datebase.";
+            this.lblStatusQueueInfo.Text = "Queue of Status Robot: 0 user in memory and 0 in datebase.";
             // 
             // lblUserTagQueueInfo
             // 
             this.lblUserTagQueueInfo.AutoSize = true;
             this.lblUserTagQueueInfo.Location = new System.Drawing.Point(11, 134);
             this.lblUserTagQueueInfo.Name = "lblUserTagQueueInfo";
-            this.lblUserTagQueueInfo.Size = new System.Drawing.Size(395, 12);
+            this.lblUserTagQueueInfo.Size = new System.Drawing.Size(365, 12);
             this.lblUserTagQueueInfo.TabIndex = 22;
-            this.lblUserTagQueueInfo.Text = "Queue of User Tag Robot: 0 user in memory and 0 user in datebase.";
+            this.lblUserTagQueueInfo.Text = "Queue of User Tag Robot: 0 user in memory and 0 in datebase.";
             // 
             // lblUserRelationQueueInfo
             // 
             this.lblUserRelationQueueInfo.AutoSize = true;
             this.lblUserRelationQueueInfo.Location = new System.Drawing.Point(11, 102);
             this.lblUserRelationQueueInfo.Name = "lblUserRelationQueueInfo";
-            this.lblUserRelationQueueInfo.Size = new System.Drawing.Size(425, 12);
+            this.lblUserRelationQueueInfo.Size = new System.Drawing.Size(395, 12);
             this.lblUserRelationQueueInfo.TabIndex = 22;
-            this.lblUserRelationQueueInfo.Text = "Queue of User Relation Robot: 0 user in memory and 0 user in datebase.";
+            this.lblUserRelationQueueInfo.Text = "Queue of User Relation Robot: 0 user in memory and 0 in datebase.";
             // 
             // lblUserInfoQueueInfo
             // 
             this.lblUserInfoQueueInfo.AutoSize = true;
             this.lblUserInfoQueueInfo.Location = new System.Drawing.Point(11, 118);
             this.lblUserInfoQueueInfo.Name = "lblUserInfoQueueInfo";
-            this.lblUserInfoQueueInfo.Size = new System.Drawing.Size(443, 12);
+            this.lblUserInfoQueueInfo.Size = new System.Drawing.Size(413, 12);
             this.lblUserInfoQueueInfo.TabIndex = 22;
-            this.lblUserInfoQueueInfo.Text = "Queue of User Information Robot: 0 user in memory and 0 user in datebase.";
+            this.lblUserInfoQueueInfo.Text = "Queue of User Information Robot: 0 user in memory and 0 in datebase.";
             // 
             // lblCommentMessage
             // 
@@ -971,11 +982,11 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point(180, 711);
+            this.btnPost.Location = new System.Drawing.Point(180, 725);
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size(250, 23);
             this.btnPost.TabIndex = 21;
-            this.btnPost.Text = "Post a status to advertise :)3Q";
+            this.btnPost.Text = "Post a status to advertise :)THX";
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler(this.btnPost_Click);
             // 
@@ -983,7 +994,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(837, 743);
+            this.ClientSize = new System.Drawing.Size(837, 760);
             this.Controls.Add(this.btnPost);
             this.Controls.Add(this.grpStatus);
             this.Controls.Add(this.gpSetting);
@@ -1104,6 +1115,7 @@
         private System.Windows.Forms.RadioButton optXML;
         private System.Windows.Forms.RadioButton optJSON;
         private System.Windows.Forms.Label lblFormat;
+        private System.Windows.Forms.Label lblUserBufferInfo;
     }
 }
 

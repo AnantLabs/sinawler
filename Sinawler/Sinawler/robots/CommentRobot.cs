@@ -88,6 +88,12 @@ namespace Sinawler
                 Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
                 while (lstTemp.Count > 0)
                 {
+                    if (blnAsyncCancelled) return;
+                    while (blnSuspending)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
+                    }
                     while (lstTemp.Count > 0)
                     {
                         lstComment.AddLast(lstTemp.First.Value);
@@ -126,7 +132,7 @@ namespace Sinawler
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(comment.user.user_id))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of Status Robot...");
                     //add the user into the buffer only when the user does not exist in the queue for userInfo
-                    if (GlobalPool.UserInfoRobotEnabled && !queueUserForUserInfoRobot.QueueExists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
+                    if (GlobalPool.UserInfoRobotEnabled && oUserBuffer.Enqueue(comment.user))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to user buffer...");
 
                     lstComment.RemoveFirst();

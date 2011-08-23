@@ -957,6 +957,7 @@ namespace Sinawler
         {
             lblStatusMessage.Text = robotStatus.LogMessage;
             lblStatusQueueInfo.Text = "Queue of Status Robot: " + GlobalPool.UserQueueForStatusRobot.CountInMem.ToString() + " users in memory and " + GlobalPool.UserQueueForStatusRobot.CountInDB.ToString() + " in database.";
+            lblUserBufferInfo.Text = "User Buffer: " + GlobalPool.UserBuffer.CountInMem.ToString() + " users in memory and " + GlobalPool.UserBuffer.CountInDB.ToString() + " in database.";
         }
 
         private void StatusCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -1004,6 +1005,7 @@ namespace Sinawler
         {
             lblCommentMessage.Text = robotComment.LogMessage;
             lblCommentQueueInfo.Text = "Queue of Comment Robot: " + GlobalPool.StatusQueue.CountInMem.ToString() + " statuses in memory and " + GlobalPool.StatusQueue.CountInDB.ToString() + " in database.";
+            lblUserBufferInfo.Text = "User Buffer: " + GlobalPool.UserBuffer.CountInMem.ToString() + " users in memory and " + GlobalPool.UserBuffer.CountInDB.ToString() + " in database.";
         }
 
         private void CommentCompleteWork(Object sender, RunWorkerCompletedEventArgs e)

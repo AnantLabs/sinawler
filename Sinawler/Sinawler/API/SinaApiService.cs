@@ -140,6 +140,17 @@ namespace Sina.Api
             catch
             { return null; }
         }
+        /*指定StatusID的转发微博列表*/
+        public string repost_timeline(long status_id, int page)
+        {
+            try
+            {
+                string url = "http://api.t.sina.com.cn/statuses/repost_timeline." + Format + "?id=" + status_id.ToString() + "&count=200&page=" + page.ToString();
+                return oAuthWebRequest(Method.GET, url, String.Empty);
+            }
+            catch
+            { return null; }
+        }
         /*最新n条@我的微博*/
         public string mentions()
         {
