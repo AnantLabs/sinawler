@@ -214,6 +214,7 @@ namespace Sinawler.Model
                 Database db = DatabaseFactory.CreateDatabase();
                 Hashtable ht=new Hashtable();
                 ht.Add("relation_state",0);
+                ht.Add("update_time","'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'");
                 return db.Update("user_relation",ht,"source_user_id=" + lUID.ToString()+" or target_user_id="+lUID.ToString());
                 //if (db.CountByExecuteSQL("delete from user_relation where source_user_id=" + lUID.ToString()+" or target_user_id="+lUID.ToString()) == 0) return true;
                 //else return false;

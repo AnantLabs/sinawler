@@ -66,6 +66,10 @@ namespace Sinawler
                 }
                 //将队头取出
                 lCurrentID = queueUserForUserInfoRobot.RollQueue();
+                if (lCurrentID == 1053074001)
+                {
+                    int a = 0;
+                }
                 
                 //日志
                 Log("Recording current UserID: " + lCurrentID.ToString()+"...");
