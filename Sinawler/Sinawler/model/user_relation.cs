@@ -7,11 +7,6 @@ using System.Data;
 namespace Sinawler.Model
 {
     /// <summary>
-    /// UserRelation状态枚举
-    /// </summary>
-    public enum RelationState {RelationExists=1,RelationCanceled=0};
-
-	/// <summary>
 	/// 类UserRelation。此类中的方法，都是与数据库交互，从中读取或向其中写入数据。
     /// 若“源用户ID”与“目的用户ID”之间有关系，表明“源用户”关注“目的用户”
     /// 鉴于此类的特殊性（不同迭代次数时可能存在同样的关系），规定：除非明确指定，否则获取的模型均为最新的关系
@@ -82,16 +77,6 @@ namespace Sinawler.Model
 		public UserRelation(long lSourceUserID,long lTargetUserID)
 		{
             this.GetModel( lSourceUserID,lTargetUserID );
-		}
-
-		/// <summary>
-		/// 是否存在指定的有效关注关系（最新状态）
-		/// </summary>
-        static public bool Exists ( long lSourceUserID, long lTargetUserID)
-		{
-            Database db = DatabaseFactory.CreateDatabase();
-            int count = db.CountByExecuteSQLSelect( "select count(*) from user_relation where source_user_id=" + lSourceUserID.ToString()+" and target_user_id="+lTargetUserID.ToString() );
-            return count > 0;
 		}
 
         /// <summary>
@@ -205,7 +190,7 @@ namespace Sinawler.Model
         }
 
         /// <summary>
-        /// remove data of specific user
+        /// set relations of specific user as cancelled
         /// </summary>
         public static bool Remove(long lUID)
         {
@@ -213,11 +198,46 @@ namespace Sinawler.Model
             {
                 Database db = DatabaseFactory.CreateDatabase();
                 Hashtable ht=new Hashtable();
-                ht.Add("relation_state",0);
+                ht.Add("relation_state",RelationState.RelationCanceled);
                 ht.Add("update_time","'" + DateTime.Now.ToString( "u" ).Replace( "Z", "" ) + "'");
                 return db.Update("user_relation",ht,"source_user_id=" + lUID.ToString()+" or target_user_id="+lUID.ToString());
                 //if (db.CountByExecuteSQL("delete from user_relation where source_user_id=" + lUID.ToString()+" or target_user_id="+lUID.ToString()) == 0) return true;
                 //else return false;
+            }
+            catch
+            { return false; }
+        }
+
+        /// <summary>
+        /// delete specific relation from database
+        /// </summary>
+        public static int Delete(long lSourceUID, long lTargetUID)
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                return db.CountByExecuteSQL("delete from user_relation where source_user_id=" + lSourceUID.ToString() + " and target_user_id=" + lTargetUID.ToString());
+            }
+            catch
+            { return -1; }
+        }
+
+        /// <summary>
+        /// 判断是否存在指定的关系
+        /// </summary>
+        public static bool RelationshipExist(long lSourceUID, long lTargetUID, RelationState eRelationState)
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                DataRow dr=db.GetDataRow("select count(*) from user_relation where source_user_id=" + lSourceUID.ToString() + " and target_user_id=" + lTargetUID.ToString()+
+                    " and relation_state="+eRelationState.ToString());
+                if (dr == null) return false;
+                else
+                {
+                    if (Convert.ToInt32(dr[0]) == 0) return false;
+                    else return true;
+                }
             }
             catch
             { return false; }

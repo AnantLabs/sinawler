@@ -17,7 +17,6 @@ namespace Sinawler
         private UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
         private UserQueue queueUserForUserTagRobot;             //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
-        private UserBuffer oUserBuffer;               //the buffer queue of users
         private int iInitQueueLength = 100;          //初始队列长度
 
         public int InitQueueLength
@@ -32,7 +31,6 @@ namespace Sinawler
             queueUserForUserRelationRobot = GlobalPool.UserQueueForUserRelationRobot;
             queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
             queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
-            oUserBuffer = GlobalPool.UserBuffer;
         }
 
         /// <summary>
@@ -66,10 +64,6 @@ namespace Sinawler
                 }
                 //将队头取出
                 lCurrentID = queueUserForUserInfoRobot.RollQueue();
-                if (lCurrentID == 1053074001)
-                {
-                    int a = 0;
-                }
                 
                 //日志
                 Log("Recording current UserID: " + lCurrentID.ToString()+"...");
@@ -83,21 +77,12 @@ namespace Sinawler
                     Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
 
-                if (oUserBuffer.UserExists(lCurrentID))   //current user exists in the user buffer
-                {
-                    Log("User " + lCurrentID.ToString() + " is in user buffer, getting the information directly...");
-                    user = oUserBuffer.GetUser(lCurrentID);
-                    oUserBuffer.Remove(user);
-                }
-                else
-                {
-                    Log("Crawling information of User " + lCurrentID.ToString() + "...");
-                    user = crawler.GetUserInfo(lCurrentID);
-                }
+                Log("Crawling information of User " + lCurrentID.ToString() + "...");
+                user = crawler.GetUserInfo(lCurrentID);
                 if (user!=null && user.user_id > 0)
                 {
                     //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
-                    if (!User.Exists( lCurrentID ))
+                    if (!User.ExistInDB( lCurrentID ))
                     {
                         //日志
                         Log("Saving User " + lCurrentID.ToString() + " into database...");
@@ -126,7 +111,6 @@ namespace Sinawler
                     //Remove the data related from every table, except statuses and comments
                     User.Remove(lCurrentID);
                     UserRelation.Remove(lCurrentID);
-                    UserTag.Remove(lCurrentID);
                 }
                 #endregion
 

@@ -94,7 +94,6 @@
     <Compile Include="classes\Enums.cs" />
     <Compile Include="classes\GlobalPool.cs" />
     <Compile Include="model\JsonModels.cs" />
-    <Compile Include="classes\UserBuffer.cs" />
     <Compile Include="classes\UserQueue.cs" />
     <Compile Include="robots\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
@@ -156,7 +155,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="sqlscripts\sqlserver\queue_buffer_for_userBuffer.TAB" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>

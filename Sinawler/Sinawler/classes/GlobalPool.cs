@@ -29,8 +29,6 @@ namespace Sinawler
         public static UserQueue UserQueueForStatusRobot = new UserQueue(QueueBufferFor.STATUS);  //微博机器人使用的用户队列
         public static StatusQueue StatusQueue = new StatusQueue();  //微博队列
 
-        public static UserBuffer UserBuffer = new UserBuffer();  //buffor of the users got by status robot and comment robot
-
         public static bool UserInfoRobotEnabled = true;
         public static bool TagRobotEnabled = true;
         public static bool StatusRobotEnabled = true;

@@ -134,6 +134,37 @@ namespace Sinawler
             return ids;
         }
 
+        /// <summary>
+        /// 判定两个用户之间的关系是否存在
+        /// 注：此函数使用friendship/show接口。该接口可返回任意两个用户之间关系的详细信息，
+        /// 但此函数只用它对初步根据social graph接口确认有关系的两个用户进行进一步的确认，
+        /// 因为即使某个用户已经被系统清除，social graph接口依然能够返回其ID
+        /// </summary>
+        /// <param name="lSUID">源用户ID</param>
+        /// <param name="lTUID">目标用户ID</param>
+        /// <returns>结果</returns>
+        public bool RelationExistBetween(long lSUID, long lTUID)
+        {
+            System.Threading.Thread.Sleep(iSleep);
+            string strResult = api.API.friendship_show(lSUID,lTUID);
+            if (strResult == "A User Not Exist")  //用户不存在
+                return false;
+            while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
+            {
+                if (iTryTimes == 0) return false;
+                System.Threading.Thread.Sleep(iSleep);
+                strResult = api.API.friendship_show(lSUID, lTUID);
+                iTryTimes--;
+                AdjustLimit();
+            }
+            iTryTimes = 10;
+            if (strResult==null || strResult == "A User Not Exist")  //用户不存在
+                return false;
+            if (blnStopCrawling)
+                return false;
+            return true;
+        }
+
         //根据UserID抓取用户信息
         public User GetUserInfo(long lUid)
         {
@@ -143,8 +174,6 @@ namespace Sinawler
             string strResult = api.API.user_show(lUid);
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
-            if (blnStopCrawling)
-                return user;
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
@@ -154,8 +183,10 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (strResult == "User Not Exist")  //用户不存在
+            if (strResult == null || strResult == "User Not Exist")  //用户不存在
                 return null;
+            if (blnStopCrawling)
+                return user;
             if (api.API.Format == "json")
             {
                 user = (User)JsonConvert.DeserializeObject(strResult, typeof(User));
@@ -224,7 +255,7 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (strResult == "User Not Exist")  //用户不存在
+            if (strResult==null || strResult == "User Not Exist")  //用户不存在
                 return null;
             if (api.API.Format == "json")
             {
@@ -299,7 +330,7 @@ namespace Sinawler
                 AdjustLimit();
             }
             iTryTimes = 10;
-            if (strResult == "User Not Exist")  //用户不存在
+            if (strResult==null || strResult == "User Not Exist")  //用户不存在
                 return null;
             if (api.API.Format == "json")
             {

@@ -81,6 +81,7 @@ namespace Sinawler.Model
 		private bool _geo_enabled;
         private int _iteration;
         private string _update_time;
+        private bool _exist=true;
 
 		/// <summary>
 		/// 用户UserID（XML中为id）
@@ -264,6 +265,14 @@ namespace Sinawler.Model
             set { _update_time = value; }
             get { return _update_time; }
         }
+        /// <summary>
+        /// 用户是否存在
+        /// </summary>
+        public bool exist
+        {
+            set { _exist = value; }
+            get { return _exist; }
+        }
 		#endregion Model
         
 		#region  成员方法
@@ -279,7 +288,7 @@ namespace Sinawler.Model
 		/// <summary>
 		/// 是否存在该记录
 		/// </summary>
-		static public bool Exists(long lUid)
+		public static bool ExistInDB(long lUid)
 		{
             Database db = DatabaseFactory.CreateDatabase();
             int count = db.CountByExecuteSQLSelect( "select count(user_id) from users where user_id=" + lUid.ToString() );
@@ -339,6 +348,10 @@ namespace Sinawler.Model
                     htValues.Add( "geo_enabled", 0 );
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
+                if (_exist)
+                    htValues.Add("exist", UserState.UserExists);
+                else
+                    htValues.Add("exist", UserState.UserNotExists);
 
                 db.Insert( "users", htValues );
             }
@@ -347,65 +360,16 @@ namespace Sinawler.Model
 		}
 
         /// <summary>
-        /// add a new record into queue_buffer_for_userBuffer
-        /// </summary>
-        public void AddToUserBuffer()
-        {
-            try
-            {
-                Database db = DatabaseFactory.CreateDatabase();
-                Hashtable htValues = new Hashtable();
-                _update_time = "'" + DateTime.Now.ToString("u").Replace("Z", "") + "'";
-                htValues.Add("user_id", _user_id);
-                htValues.Add("screen_name", "'" + _screen_name.Replace("'", "''") + "'");
-                htValues.Add("name", "'" + _name.Replace("'", "''") + "'");
-                htValues.Add("province", "'" + _province + "'");
-                htValues.Add("city", "'" + _city + "'");
-                htValues.Add("location", "'" + _location.Replace("'", "''") + "'");
-                htValues.Add("description", "'" + _description.Replace("'", "''") + "'");
-                htValues.Add("url", "'" + _url.Replace("'", "''") + "'");
-                htValues.Add("profile_image_url", "'" + _profile_image_url.Replace("'", "''") + "'");
-                htValues.Add("domain", "'" + _domain.Replace("'", "''") + "'");
-                htValues.Add("gender", "'" + _gender + "'");
-                htValues.Add("followers_count", _followers_count);
-                htValues.Add("friends_count", _friends_count);
-                htValues.Add("statuses_count", _statuses_count);
-                htValues.Add("favourites_count", _favourites_count);
-                htValues.Add("created_at", "'" + _created_at + "'");
-                if (_following)
-                    htValues.Add("following", 1);
-                else
-                    htValues.Add("following", 0);
-                if (_verified)
-                    htValues.Add("verified", 1);
-                else
-                    htValues.Add("verified", 0);
-                if (_allow_all_act_msg)
-                    htValues.Add("allow_all_act_msg", 1);
-                else
-                    htValues.Add("allow_all_act_msg", 0);
-                if (_geo_enabled)
-                    htValues.Add("geo_enabled", 1);
-                else
-                    htValues.Add("geo_enabled", 0);
-                htValues.Add("iteration", 0);
-                htValues.Add("enqueue_time", _update_time);
-
-                db.Insert("users", htValues);
-            }
-            catch
-            { return; }
-        }
-
-        /// <summary>
-        /// remove a user from table
+        /// sign a user as not exist
         /// </summary>
         public static bool Remove(long lUID)
         {
             try
             {
                 Database db = DatabaseFactory.CreateDatabase();
-                if (db.CountByExecuteSQL("delete from users where user_id=" + lUID.ToString()) == 0) return true;
+                Hashtable ht = new Hashtable();
+                ht.Add("exist", UserState.UserNotExists);
+                if(db.Update("users", ht, "user_id="+lUID.ToString())) return true;
                 else return false;
             }
             catch
@@ -455,6 +419,7 @@ namespace Sinawler.Model
                     htValues.Add( "geo_enabled", 0 );
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
+                htValues.Add("exist", UserState.UserExists);
 
                 db.Update( "users", htValues,"user_id="+_user_id.ToString() );
             }
@@ -549,104 +514,22 @@ namespace Sinawler.Model
                 }
                 _iteration = Convert.ToInt32( dr["iteration"] );
                 _update_time = dr["update_time"].ToString();
+                if (dr["exist"].ToString() != "")
+                {
+                    if (dr["exist"].ToString() == "1")
+                    {
+                        _exist = true;
+                    }
+                    else
+                    {
+                        _exist = false;
+                    }
+                }
                 return true;
             }
             else
                 return false;
 		}
-
-        /// <summary>
-        /// load an object from user buffer by user id
-        /// </summary>
-        public bool GetModelFromUserBuffer(long lUid)
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            StringBuilder strSql = new StringBuilder();
-            strSql.Append("select  top 1 * FROM queue_buffer_for_userBuffer ");
-            strSql.Append(" where user_id=" + lUid.ToString());
-
-            DataRow dr = db.GetDataRow(strSql.ToString());
-            if (dr != null)
-            {
-                _user_id = Convert.ToInt64(dr["user_id"]);
-                _screen_name = dr["screen_name"].ToString();
-                _name = dr["name"].ToString();
-                _province = dr["province"].ToString();
-                _city = dr["city"].ToString();
-                _location = dr["location"].ToString();
-                _description = dr["description"].ToString();
-                _url = dr["url"].ToString();
-                _profile_image_url = dr["profile_image_url"].ToString();
-                _domain = dr["domain"].ToString();
-                _gender = dr["gender"].ToString();
-                if (dr["followers_count"].ToString() != "")
-                {
-                    _followers_count = Convert.ToInt32(dr["followers_count"]);
-                }
-                if (dr["friends_count"].ToString() != "")
-                {
-                    _friends_count = Convert.ToInt32(dr["friends_count"]);
-                }
-                if (dr["statuses_count"].ToString() != "")
-                {
-                    _statuses_count = Convert.ToInt32(dr["statuses_count"]);
-                }
-                if (dr["favourites_count"].ToString() != "")
-                {
-                    _favourites_count = Convert.ToInt32(dr["favourites_count"]);
-                }
-                _created_at = dr["created_at"].ToString();
-                if (dr["following"].ToString() != "")
-                {
-                    if (dr["following"].ToString() == "1")
-                    {
-                        _following = true;
-                    }
-                    else
-                    {
-                        _following = false;
-                    }
-                }
-                if (dr["verified"].ToString() != "")
-                {
-                    if (dr["verified"].ToString() == "1")
-                    {
-                        _verified = true;
-                    }
-                    else
-                    {
-                        _verified = false;
-                    }
-                }
-                if (dr["allow_all_act_msg"].ToString() != "")
-                {
-                    if (dr["allow_all_act_msg"].ToString() == "1")
-                    {
-                        _allow_all_act_msg = true;
-                    }
-                    else
-                    {
-                        _allow_all_act_msg = false;
-                    }
-                }
-                if (dr["geo_enabled"].ToString() != "")
-                {
-                    if (dr["geo_enabled"].ToString() == "1")
-                    {
-                        _geo_enabled = true;
-                    }
-                    else
-                    {
-                        _geo_enabled = false;
-                    }
-                }
-                _iteration = Convert.ToInt32(dr["iteration"]);
-                _update_time = dr["update_time"].ToString();
-                return true;
-            }
-            else
-                return false;
-        }
 
         /// <summary>
         /// 根据用户昵称得到一个对象实体
@@ -735,6 +618,17 @@ namespace Sinawler.Model
                 }
                 _iteration = Convert.ToInt32( dr["iteration"] );
                 _update_time = dr["update_time"].ToString();
+                if (dr["exist"].ToString() != "")
+                {
+                    if (dr["exist"].ToString() == "1")
+                    {
+                        _exist = true;
+                    }
+                    else
+                    {
+                        _exist = false;
+                    }
+                }
                 return true;
             }
             else
@@ -826,6 +720,17 @@ namespace Sinawler.Model
                 }
                 _iteration = Convert.ToInt32( dr["iteration"] );
                 _update_time = dr["update_time"].ToString();
+                if (dr["exist"].ToString() != "")
+                {
+                    if (dr["exist"].ToString() == "1")
+                    {
+                        _exist = true;
+                    }
+                    else
+                    {
+                        _exist = false;
+                    }
+                }
                 return true;
             }
             else

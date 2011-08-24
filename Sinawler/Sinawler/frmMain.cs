@@ -305,7 +305,6 @@ namespace Sinawler
             robotUserTag.Initialize();
             robotStatus.Initialize();
             robotComment.Initialize();
-            GlobalPool.UserBuffer.Initialize();
 
             robotUserInfo.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userInfo.log";
             robotUserRelation.LogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_userRelation.log";
@@ -320,7 +319,6 @@ namespace Sinawler
             GlobalPool.UserQueueForUserTagRobot.MaxLengthInMem = settings.MaxLengthInMem;
             GlobalPool.UserQueueForStatusRobot.MaxLengthInMem = settings.MaxLengthInMem;
             GlobalPool.StatusQueue.MaxLengthInMem = settings.MaxLengthInMem;
-            GlobalPool.UserBuffer.MaxLengthInMem = settings.MaxLengthInMem;
             GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
             GlobalPool.TagRobotEnabled = chkTag.Checked;
             GlobalPool.StatusRobotEnabled = chkStatus.Checked;
@@ -366,6 +364,7 @@ namespace Sinawler
                 chkTag.Enabled = false;
                 chkStatus.Enabled = false;
                 chkComment.Enabled = false;
+                chkConfirmRelationship.Enabled = false;
                 optJSON.Enabled = false;
                 optXML.Enabled = false;
                 Application.DoEvents();
@@ -513,6 +512,7 @@ namespace Sinawler
                 chkTag.Enabled = false;
                 chkStatus.Enabled = false;
                 chkComment.Enabled = false;
+                chkConfirmRelationship.Enabled = false;
                 optJSON.Enabled = false;
                 optXML.Enabled = false;
                 Application.DoEvents();
@@ -660,6 +660,7 @@ namespace Sinawler
                 chkTag.Enabled = false;
                 chkStatus.Enabled = false;
                 chkComment.Enabled = false;
+                chkConfirmRelationship.Enabled = false;
                 optJSON.Enabled = false;
                 optXML.Enabled = false;
                 Application.DoEvents();
@@ -821,6 +822,7 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                chkConfirmRelationship.Enabled = true;
                 optJSON.Enabled = true;
                 optXML.Enabled = true;
             }
@@ -831,11 +833,13 @@ namespace Sinawler
         #region 用户关系机器人
         private void StartCrawUserRelationByCurrentUser(Object sender, DoWorkEventArgs e)
         {
+            robotUserRelation.ConfirmRelationship = chkConfirmRelationship.Checked;
             robotUserRelation.Start(oCurrentUser.user_id);
         }
 
         private void StartCrawUserRelationBySearchedUser(Object sender, DoWorkEventArgs e)
         {
+            robotUserRelation.ConfirmRelationship = chkConfirmRelationship.Checked;
             robotUserRelation.Start(oSearchedUser.user_id);
         }
 
@@ -855,6 +859,7 @@ namespace Sinawler
                     }
                 }
             }
+            robotUserRelation.ConfirmRelationship = chkConfirmRelationship.Checked;
             robotUserRelation.Start(lLastUserID);
         }
 
@@ -893,6 +898,7 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                chkConfirmRelationship.Enabled = true;
                 optJSON.Enabled = true;
                 optXML.Enabled = true;
             }
@@ -940,6 +946,7 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                chkConfirmRelationship.Enabled = true;
                 optJSON.Enabled = true;
                 optXML.Enabled = true;
             }
@@ -957,7 +964,6 @@ namespace Sinawler
         {
             lblStatusMessage.Text = robotStatus.LogMessage;
             lblStatusQueueInfo.Text = "Queue of Status Robot: " + GlobalPool.UserQueueForStatusRobot.CountInMem.ToString() + " users in memory and " + GlobalPool.UserQueueForStatusRobot.CountInDB.ToString() + " in database.";
-            lblUserBufferInfo.Text = "User Buffer: " + GlobalPool.UserBuffer.CountInMem.ToString() + " users in memory and " + GlobalPool.UserBuffer.CountInDB.ToString() + " in database.";
         }
 
         private void StatusCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -988,6 +994,7 @@ namespace Sinawler
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
                 chkComment.Enabled = true;
+                chkConfirmRelationship.Enabled = true;
                 optJSON.Enabled = true;
                 optXML.Enabled = true;
             }
@@ -1005,7 +1012,6 @@ namespace Sinawler
         {
             lblCommentMessage.Text = robotComment.LogMessage;
             lblCommentQueueInfo.Text = "Queue of Comment Robot: " + GlobalPool.StatusQueue.CountInMem.ToString() + " statuses in memory and " + GlobalPool.StatusQueue.CountInDB.ToString() + " in database.";
-            lblUserBufferInfo.Text = "User Buffer: " + GlobalPool.UserBuffer.CountInMem.ToString() + " users in memory and " + GlobalPool.UserBuffer.CountInDB.ToString() + " in database.";
         }
 
         private void CommentCompleteWork(Object sender, RunWorkerCompletedEventArgs e)
@@ -1035,6 +1041,7 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
+                chkConfirmRelationship.Enabled = true;
                 optJSON.Enabled = true;
                 optXML.Enabled = true; chkComment.Enabled = true;
             }
@@ -1066,6 +1073,7 @@ namespace Sinawler
             chkTag.Checked = settings.TagsRobot;
             chkStatus.Checked = settings.StatusesRobot;
             chkComment.Checked = settings.CommentsRobot;
+            chkConfirmRelationship.Checked = settings.ConfirmRelationship;
 
             switch(settings.Format)
             {
@@ -1118,6 +1126,7 @@ namespace Sinawler
             settings.TagsRobot = chkTag.Checked;
             settings.StatusesRobot = chkStatus.Checked;
             settings.CommentsRobot = chkComment.Checked;
+            settings.ConfirmRelationship = chkConfirmRelationship.Checked;
 
             if (optJSON.Checked)
             {

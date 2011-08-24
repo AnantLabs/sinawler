@@ -73,21 +73,6 @@ namespace Sinawler.Model
         }
 
         /// <summary>
-        /// remove data of specific user
-        /// </summary>
-        public static bool Remove(long lUID)
-        {
-            try
-            {
-                Database db = DatabaseFactory.CreateDatabase();
-                if (db.CountByExecuteSQL("delete from user_tag where user_id=" + lUID.ToString()) == 0) return true;
-                else return false;
-            }
-            catch
-            { return false; }
-        }
-
-        /// <summary>
         /// 增加一条数据
         /// </summary>
         public void Add ()

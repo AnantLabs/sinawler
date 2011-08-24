@@ -318,6 +318,23 @@ namespace Sina.Api
             { return false; }
         }
 
+        /*两个用户关系详细信息*/
+        public string friendship_show(long source_id, long target_id)
+        {
+            try
+            {
+                string url = "http://api.t.sina.com.cn/friendships/show." + Format + "?source_id=" + source_id.ToString() + "&target_id=" + target_id.ToString();
+                return oAuthWebRequest(Method.GET, url, String.Empty);
+            }
+            catch (Exception ex)
+            {
+                if (ex.Message.IndexOf("(400)") > 0)   //返回400，某个用户不存在
+                    return "A User Not Exist";
+                else
+                    return null;
+            }
+        }
+
         /*获取用户关注对象user_id列表 */
         /*
          * friends/ids 

@@ -18,8 +18,7 @@ namespace Sinawler
         private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;                    //微博队列引用
-        private UserBuffer oUserBuffer;                     //the buffer queue of users
-
+        
         //构造函数，需要传入相应的新浪微博API
         public CommentRobot ()
             : base(SysArgFor.COMMENT)
@@ -31,7 +30,6 @@ namespace Sinawler
             queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
             queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
             queueStatus = GlobalPool.StatusQueue;
-            oUserBuffer = GlobalPool.UserBuffer;
         }
 
         /// <summary>
@@ -131,9 +129,11 @@ namespace Sinawler
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                     if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(comment.user.user_id))
                         Log("Adding Commenter " + comment.user.user_id.ToString() + " to the user queue of Status Robot...");
-                    //add the user into the buffer only when the user does not exist in the queue for userInfo
-                    if (GlobalPool.UserInfoRobotEnabled && !User.Exists(comment.user.user_id) && oUserBuffer.Enqueue(comment.user))
-                        Log("Adding Commenter " + comment.user.user_id.ToString() + " to user buffer...");
+                    if (!User.ExistInDB(comment.user.user_id))
+                    {
+                        Log("Saving Commenter " + comment.user.user_id.ToString() + " into database...");
+                        comment.user.Add();
+                    }
 
                     lstComment.RemoveFirst();
                 }

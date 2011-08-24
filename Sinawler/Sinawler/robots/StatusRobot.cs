@@ -18,7 +18,6 @@ namespace Sinawler
         private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;                    //微博队列引用
-        private UserBuffer oUserBuffer;                     //the buffer queue of users
         private long lCurrentSID = 0;                       //currently processing status id
 
         //构造函数，需要传入相应的新浪微博API和主界面
@@ -31,7 +30,6 @@ namespace Sinawler
             queueUserForUserTagRobot = GlobalPool.UserQueueForUserTagRobot;
             queueUserForStatusRobot = GlobalPool.UserQueueForStatusRobot;
             queueStatus = GlobalPool.StatusQueue;
-            oUserBuffer = GlobalPool.UserBuffer;
         }
 
         /// <summary>
@@ -87,9 +85,11 @@ namespace Sinawler
                     Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                 if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(status.retweeted_status.user.user_id))
                     Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of Status Robot...");
-                //add the user into the buffer only when the user does not exist in the queue for userInfo
-                if (GlobalPool.UserInfoRobotEnabled && oUserBuffer.Enqueue(status.retweeted_status.user))
-                    Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to user buffer...");
+                if (!User.ExistInDB(status.retweeted_status.user.user_id))
+                {
+                    Log("Saving User " + status.retweeted_status.user.user_id.ToString() + " into database...");
+                    status.retweeted_status.user.Add();
+                }
             }
         }
 
@@ -196,8 +196,11 @@ namespace Sinawler
                             Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                         if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
                             Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of Status Robot...");
-                        if (GlobalPool.UserInfoRobotEnabled && !User.Exists(lstRepostedStatus.First.Value.user.user_id) && oUserBuffer.Enqueue(lstRepostedStatus.First.Value.user))
-                            Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to user buffer...");
+                        if (!User.ExistInDB(lstRepostedStatus.First.Value.user.user_id))
+                        {
+                            Log("Saving Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " into database...");
+                            lstRepostedStatus.First.Value.user.Add();
+                        }
 
                         lstRepostedStatus.RemoveFirst();
 

@@ -23,6 +23,8 @@ namespace Sinawler
         private bool _statuses_robot = true;            //the state of statuses robot
         private bool _comments_robot = true;            //the state of comments robot
 
+        private bool _confirm_relationship = true;      //whethe confirm relationship
+
         public string DBType
         {
             get { return _database_type; }
@@ -87,6 +89,12 @@ namespace Sinawler
         {
             get { return _comments_robot; }
             set { _comments_robot = value; }
+        }
+
+        public bool ConfirmRelationship
+        {
+            get { return _confirm_relationship; }
+            set { _confirm_relationship = value; }
         }
     }
 

@@ -94,7 +94,6 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.lblUserInfoTitle = new System.Windows.Forms.Label();
             this.grpStatus = new System.Windows.Forms.GroupBox();
-            this.lblUserBufferInfo = new System.Windows.Forms.Label();
             this.lblCommentQueueInfo = new System.Windows.Forms.Label();
             this.lblStatusQueueInfo = new System.Windows.Forms.Label();
             this.lblUserTagQueueInfo = new System.Windows.Forms.Label();
@@ -110,6 +109,7 @@
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
+            this.chkConfirmRelationship = new System.Windows.Forms.CheckBox();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -455,7 +455,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(453, 725);
+            this.btnExit.Location = new System.Drawing.Point(453, 715);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 22;
@@ -553,6 +553,7 @@
             // 
             // gpSetting
             // 
+            this.gpSetting.Controls.Add(this.chkConfirmRelationship);
             this.gpSetting.Controls.Add(this.optXML);
             this.gpSetting.Controls.Add(this.optJSON);
             this.gpSetting.Controls.Add(this.lblFormat);
@@ -813,7 +814,6 @@
             // 
             // grpStatus
             // 
-            this.grpStatus.Controls.Add(this.lblUserBufferInfo);
             this.grpStatus.Controls.Add(this.lblCommentQueueInfo);
             this.grpStatus.Controls.Add(this.lblStatusQueueInfo);
             this.grpStatus.Controls.Add(this.lblUserTagQueueInfo);
@@ -831,19 +831,10 @@
             this.grpStatus.Controls.Add(this.lblUserInfoTitle);
             this.grpStatus.Location = new System.Drawing.Point(5, 516);
             this.grpStatus.Name = "grpStatus";
-            this.grpStatus.Size = new System.Drawing.Size(827, 203);
+            this.grpStatus.Size = new System.Drawing.Size(827, 189);
             this.grpStatus.TabIndex = 17;
             this.grpStatus.TabStop = false;
             this.grpStatus.Text = "Crawler Status";
-            // 
-            // lblUserBufferInfo
-            // 
-            this.lblUserBufferInfo.AutoSize = true;
-            this.lblUserBufferInfo.Location = new System.Drawing.Point(11, 182);
-            this.lblUserBufferInfo.Name = "lblUserBufferInfo";
-            this.lblUserBufferInfo.Size = new System.Drawing.Size(299, 12);
-            this.lblUserBufferInfo.TabIndex = 25;
-            this.lblUserBufferInfo.Text = "User Buffer: 0 users in memory and 0 in database.";
             // 
             // lblCommentQueueInfo
             // 
@@ -982,7 +973,7 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point(180, 725);
+            this.btnPost.Location = new System.Drawing.Point(180, 715);
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size(250, 23);
             this.btnPost.TabIndex = 21;
@@ -990,11 +981,21 @@
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler(this.btnPost_Click);
             // 
+            // chkConfirmRelationship
+            // 
+            this.chkConfirmRelationship.AutoSize = true;
+            this.chkConfirmRelationship.Location = new System.Drawing.Point(389, 168);
+            this.chkConfirmRelationship.Name = "chkConfirmRelationship";
+            this.chkConfirmRelationship.Size = new System.Drawing.Size(294, 16);
+            this.chkConfirmRelationship.TabIndex = 17;
+            this.chkConfirmRelationship.Text = "Confirm Relationship(more precisely but slow)";
+            this.chkConfirmRelationship.UseVisualStyleBackColor = true;
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(837, 760);
+            this.ClientSize = new System.Drawing.Size(837, 749);
             this.Controls.Add(this.btnPost);
             this.Controls.Add(this.grpStatus);
             this.Controls.Add(this.gpSetting);
@@ -1115,7 +1116,7 @@
         private System.Windows.Forms.RadioButton optXML;
         private System.Windows.Forms.RadioButton optJSON;
         private System.Windows.Forms.Label lblFormat;
-        private System.Windows.Forms.Label lblUserBufferInfo;
+        private System.Windows.Forms.CheckBox chkConfirmRelationship;
     }
 }
 
