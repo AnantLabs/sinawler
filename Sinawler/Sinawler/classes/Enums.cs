@@ -8,5 +8,4 @@ namespace Sinawler
     public enum DataFormat { JSON = 0, XML = 1 };
     public enum QueueBufferFor { USER_RELATION = 0, USER_INFO = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4 };
     public enum SysArgFor { USER_RELATION = 0, USER_INFO = 1, USER_TAG = 2, STATUS = 3, COMMENT = 4 };
-    public enum UserState { UserExists = 1, UserNotExists = 0 };
 }

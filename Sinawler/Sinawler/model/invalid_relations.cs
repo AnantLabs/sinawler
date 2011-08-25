@@ -53,14 +53,6 @@ namespace Sinawler.Model
 		#region  成员方法
 
 		/// <summary>
-        /// 根据指定的源、目的Uid、关系状态得到最新关系的一个对象实体
-		/// </summary>
-        public InvalidRelation(long lSourceUserID, long lTargetUserID)
-		{
-            this.GetModel( lSourceUserID,lTargetUserID );
-		}
-
-        /// <summary>
 		/// 增加一条数据
 		/// </summary>
 		public void Add()
@@ -79,47 +71,6 @@ namespace Sinawler.Model
             catch
             { return; }
 		}
-
-        /// <summary>
-        /// 根据指定的源、目的Uid得到他们最新关系的一个对象实体
-        /// </summary>
-        public bool GetModel ( long lSourceUserID, long lTargetUserID)
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            string strSQL = "select top 1 * from user_relation where source_user_id=" + lSourceUserID.ToString() + " and target_user_id=" + lTargetUserID.ToString() + " order by iteration";
-
-            DataRow dr = db.GetDataRow( strSQL );
-            if (dr != null)
-            {
-                _source_user_id = Convert.ToInt64( dr["source_user_id"] );
-                _target_user_id = Convert.ToInt64( dr["target_user_id"] );
-                _update_time = dr["update_time"].ToString();
-                return true;
-            }
-            else
-                return false;
-        }
-
-		/// <summary>
-        /// 判断是否存在指定的关系
-        /// </summary>
-        public static bool RelationshipExist(long lSourceUID, long lTargetUID)
-        {
-            try
-            {
-                Database db = DatabaseFactory.CreateDatabase();
-                DataRow dr=db.GetDataRow("select count(*) from invalid_relation where source_user_id=" + lSourceUID.ToString() + " and target_user_id=" + lTargetUID.ToString());
-                if (dr == null) return false;
-                else
-                {
-                    if (Convert.ToInt32(dr[0]) == 0) return false;
-                    else return true;
-                }
-            }
-            catch
-            { return false; }
-        }
-
 		#endregion  成员方法
 	}
 }

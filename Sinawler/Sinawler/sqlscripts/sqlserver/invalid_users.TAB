@@ -1,0 +1,13 @@
+CREATE TABLE [invalid_users] (
+	[user_id] [bigint] NOT NULL ,
+	[update_time] [datetime] NULL ,
+	CONSTRAINT [PK_invalid_users] PRIMARY KEY  CLUSTERED 
+	(
+		[user_id]
+	) WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY] 
+) ON [PRIMARY]
+GO
+
+ALTER INDEX PK_invalid_users on invalid_users REBUILD 
+WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, ONLINE = ON, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = OFF)
+GO

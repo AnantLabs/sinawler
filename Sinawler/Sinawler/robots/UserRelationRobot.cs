@@ -107,20 +107,23 @@ namespace Sinawler
                         else
                         {
                             //日志
-                            Log("Relationship not exists. Deleting it...");
+                            Log("Relationship not exists. Recording invalid relationship...");
                             InvalidRelation ir = new InvalidRelation();
                             ir.source_user_id = lCurrentID;
                             ir.target_user_id = lQueueBufferFirst;
                             ir.Add();
 
+                            Log("Recording invalid User " + lQueueBufferFirst.ToString() + "...");
+                            InvalidUser iu = new InvalidUser();
+                            iu.user_id = lQueueBufferFirst;
+                            iu.Add();
+
                             //将该用户ID从各个队列中去掉
+                            Log("Removing invalid User " + lQueueBufferFirst.ToString() + " from all queues...");
                             queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
                             queueUserForUserRelationRobot.Remove(lQueueBufferFirst);
                             queueUserForUserTagRobot.Remove(lQueueBufferFirst);
                             queueUserForStatusRobot.Remove(lQueueBufferFirst);
-
-                            //Remove the data related from every table, except statuses and comments
-                            User.Remove(lQueueBufferFirst);
                         }
                     }
                     else
@@ -200,20 +203,23 @@ namespace Sinawler
                         else
                         {
                             //日志
-                            Log("Relationship not exists. Deleting it...");
+                            Log("Relationship not exists. Recording invalid relationship...");
                             InvalidRelation ir = new InvalidRelation();
                             ir.source_user_id = lQueueBufferFirst;
                             ir.target_user_id = lCurrentID;
                             ir.Add();
 
+                            Log("Recording invalid User " + lQueueBufferFirst.ToString() + "...");
+                            InvalidUser iu = new InvalidUser();
+                            iu.user_id = lQueueBufferFirst;
+                            iu.Add();
+
                             //将该用户ID从各个队列中去掉
+                            Log("Removing invalid User " + lQueueBufferFirst.ToString() + " from all queues...");
                             queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
                             queueUserForUserRelationRobot.Remove(lQueueBufferFirst);
                             queueUserForUserTagRobot.Remove(lQueueBufferFirst);
                             queueUserForStatusRobot.Remove(lQueueBufferFirst);
-
-                            //Remove the data related from every table, except statuses and comments
-                            User.Remove(lQueueBufferFirst);
                         }
                     }
                     else

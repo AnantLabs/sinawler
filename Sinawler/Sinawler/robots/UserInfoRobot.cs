@@ -99,17 +99,17 @@ namespace Sinawler
                 }
                 else if(user==null) //用户不存在
                 {
-                    //日志
-                    Log( "User " + lCurrentID.ToString() + " not exists. Removing from all queues..." );
-                    //将该用户ID从各个队列中去掉
-                    queueUserForUserInfoRobot.Remove( lCurrentID );
-                    queueUserForUserRelationRobot.Remove( lCurrentID );
-                    queueUserForUserTagRobot.Remove( lCurrentID );
-                    queueUserForStatusRobot.Remove( lCurrentID );
+                    Log("Recording invalid User " + lCurrentID.ToString() + "...");
+                    InvalidUser iu = new InvalidUser();
+                    iu.user_id = lCurrentID;
+                    iu.Add();
 
-                    Log("User " + lCurrentID.ToString() + " not exists. Deleting related data...");
-                    //Remove the data related from every table, except statuses and comments
-                    User.Remove(lCurrentID);
+                    //将该用户ID从各个队列中去掉
+                    Log("Removing invalid User " + lCurrentID.ToString() + " from all queues...");
+                    queueUserForUserInfoRobot.Remove(lCurrentID);
+                    queueUserForUserRelationRobot.Remove(lCurrentID);
+                    queueUserForUserTagRobot.Remove(lCurrentID);
+                    queueUserForStatusRobot.Remove(lCurrentID);
                 }
                 #endregion
 

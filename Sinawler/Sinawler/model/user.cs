@@ -81,7 +81,6 @@ namespace Sinawler.Model
 		private bool _geo_enabled;
         private int _iteration;
         private string _update_time;
-        private bool _exist=true;
 
 		/// <summary>
 		/// 用户UserID（XML中为id）
@@ -265,15 +264,7 @@ namespace Sinawler.Model
             set { _update_time = value; }
             get { return _update_time; }
         }
-        /// <summary>
-        /// 用户是否存在
-        /// </summary>
-        public bool exist
-        {
-            set { _exist = value; }
-            get { return _exist; }
-        }
-		#endregion Model
+        #endregion Model
         
 		#region  成员方法
 
@@ -348,33 +339,12 @@ namespace Sinawler.Model
                     htValues.Add( "geo_enabled", 0 );
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
-                if (_exist)
-                    htValues.Add("exist", UserState.UserExists);
-                else
-                    htValues.Add("exist", UserState.UserNotExists);
-
+                
                 db.Insert( "users", htValues );
             }
             catch
             { return; }
 		}
-
-        /// <summary>
-        /// sign a user as not exist
-        /// </summary>
-        public static bool Remove(long lUID)
-        {
-            try
-            {
-                Database db = DatabaseFactory.CreateDatabase();
-                Hashtable ht = new Hashtable();
-                ht.Add("exist", UserState.UserNotExists);
-                if(db.Update("users", ht, "user_id="+lUID.ToString())) return true;
-                else return false;
-            }
-            catch
-            { return false; }
-        }
 
         /// <summary>
         /// 更新数据
@@ -419,7 +389,6 @@ namespace Sinawler.Model
                     htValues.Add( "geo_enabled", 0 );
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
-                htValues.Add("exist", UserState.UserExists);
 
                 db.Update( "users", htValues,"user_id="+_user_id.ToString() );
             }
@@ -514,17 +483,6 @@ namespace Sinawler.Model
                 }
                 _iteration = Convert.ToInt32( dr["iteration"] );
                 _update_time = dr["update_time"].ToString();
-                if (dr["exist"].ToString() != "")
-                {
-                    if (dr["exist"].ToString() == "1")
-                    {
-                        _exist = true;
-                    }
-                    else
-                    {
-                        _exist = false;
-                    }
-                }
                 return true;
             }
             else
@@ -618,17 +576,6 @@ namespace Sinawler.Model
                 }
                 _iteration = Convert.ToInt32( dr["iteration"] );
                 _update_time = dr["update_time"].ToString();
-                if (dr["exist"].ToString() != "")
-                {
-                    if (dr["exist"].ToString() == "1")
-                    {
-                        _exist = true;
-                    }
-                    else
-                    {
-                        _exist = false;
-                    }
-                }
                 return true;
             }
             else
@@ -720,17 +667,6 @@ namespace Sinawler.Model
                 }
                 _iteration = Convert.ToInt32( dr["iteration"] );
                 _update_time = dr["update_time"].ToString();
-                if (dr["exist"].ToString() != "")
-                {
-                    if (dr["exist"].ToString() == "1")
-                    {
-                        _exist = true;
-                    }
-                    else
-                    {
-                        _exist = false;
-                    }
-                }
                 return true;
             }
             else
