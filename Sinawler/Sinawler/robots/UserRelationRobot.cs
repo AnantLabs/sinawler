@@ -93,90 +93,56 @@ namespace Sinawler
                         Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     lQueueBufferFirst = lstBuffer.First.Value;
+                    bool blnRecordRelation = true;
                     if (blnConfirmRelationship)
                     {
-                        #region Confirm Relationship
                         //日志                
                         Log("Confirming the relationship between User " + lCurrentID.ToString() + " and User " + lQueueBufferFirst.ToString());
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
+                        blnRecordRelation = crawler.RelationExistBetween(lCurrentID, lQueueBufferFirst);
+                        if (blnRecordRelation)
                         {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
-                        }
-                        if (crawler.RelationExistBetween(lCurrentID, lQueueBufferFirst))
-                        {
-                            if (UserRelation.RelationshipExist(lCurrentID, lQueueBufferFirst, RelationState.RelationExists))
-                            {
-                                //日志
-                                Log("Relationship exists.");
-                            }
-                            else
-                            {
-                                //日志
-                                Log("Relationship confirmed. Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
-                                UserRelation.Delete(lCurrentID, lQueueBufferFirst);
-                                UserRelation ur = new UserRelation();
-                                ur.source_user_id = lCurrentID;
-                                ur.target_user_id = lQueueBufferFirst;
-                                ur.relation_state = Convert.ToInt32(RelationState.RelationExists);
-                                ur.Add();
-                            }
-
-                            if (blnAsyncCancelled) return;
-                            while (blnSuspending)
-                            {
-                                if (blnAsyncCancelled) return;
-                                Thread.Sleep(GlobalPool.SleepMsForThread);
-                            }
-                            //加入队列
-                            if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Relation Robot...");
-                            if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Information Robot...");
-                            if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Tag Robot...");
-                            if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
+                            //日志
+                            Log("Relationship confirmed. Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
                         }
                         else
                         {
                             //日志
                             Log("Relationship not exists. Deleting it...");
-                            UserRelation.Delete(lCurrentID, lQueueBufferFirst);
-                            UserRelation.Delete(lQueueBufferFirst, lCurrentID);
+                            InvalidRelation ir = new InvalidRelation();
+                            ir.source_user_id = lCurrentID;
+                            ir.target_user_id = lQueueBufferFirst;
+                            ir.Add();
+
+                            //将该用户ID从各个队列中去掉
+                            queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
+                            queueUserForUserRelationRobot.Remove(lQueueBufferFirst);
+                            queueUserForUserTagRobot.Remove(lQueueBufferFirst);
+                            queueUserForStatusRobot.Remove(lQueueBufferFirst);
+
+                            //Remove the data related from every table, except statuses and comments
+                            User.Remove(lQueueBufferFirst);
                         }
-                        #endregion
                     }
                     else
                     {
-                        #region Not Confirm Relationship
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
-                        {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
-                        }
-
                         //日志
                         Log("Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
-                        UserRelation.Delete(lCurrentID, lQueueBufferFirst);
-                        UserRelation ur = new UserRelation();
-                        ur.source_user_id = lCurrentID;
-                        ur.target_user_id = lQueueBufferFirst;
-                        ur.relation_state = Convert.ToInt32(RelationState.RelationExists);
-                        ur.Add();
-
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
+                    }
+                    if (blnRecordRelation)
+                    {
+                        if (UserRelation.RelationshipExist(lCurrentID, lQueueBufferFirst))
                         {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
+                            //日志
+                            Log("Relationship exists.");
                         }
+                        else
+                        {
+                            UserRelation ur = new UserRelation();
+                            ur.source_user_id = lCurrentID;
+                            ur.target_user_id = lQueueBufferFirst;
+                            ur.Add();
+                        }
+
                         //加入队列
                         if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
                             //日志
@@ -190,7 +156,6 @@ namespace Sinawler
                         if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
                             //日志
                             Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
-                        #endregion
                     }
                     //日志
                     AdjustFreq();
@@ -199,15 +164,15 @@ namespace Sinawler
                 }
                 #endregion
                 #region 用户粉丝列表
-                //爬取当前用户的粉丝的ID，记录关系，加入队列
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
                     Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
-                //日志
+                //日志                
                 Log("Crawling the followers of User " + lCurrentID.ToString() + "...");
+                //爬取当前用户的粉丝的用户ID，记录关系，加入队列
                 lstBuffer = crawler.GetFollowersOf(lCurrentID, -1);
                 //日志
                 Log(lstBuffer.Count.ToString() + " followers crawled.");
@@ -221,90 +186,56 @@ namespace Sinawler
                         Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     lQueueBufferFirst = lstBuffer.First.Value;
+                    bool blnRecordRelation = true;
                     if (blnConfirmRelationship)
                     {
-                        #region Confirm Relationship
                         //日志                
                         Log("Confirming the relationship between User " + lQueueBufferFirst.ToString() + " and User " + lCurrentID.ToString());
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
+                        blnRecordRelation = crawler.RelationExistBetween(lQueueBufferFirst, lCurrentID);
+                        if (blnRecordRelation)
                         {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
-                        }
-                        if (crawler.RelationExistBetween(lQueueBufferFirst, lCurrentID))
-                        {
-                            if (UserRelation.RelationshipExist(lQueueBufferFirst, lCurrentID, RelationState.RelationExists))
-                            {
-                                //日志
-                                Log("Relationship exists.");
-                            }
-                            else
-                            {
-                                //日志
-                                Log("Relationship confirmed. Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
-                                UserRelation.Delete(lQueueBufferFirst, lCurrentID);
-                                UserRelation ur = new UserRelation();
-                                ur.source_user_id = lQueueBufferFirst;
-                                ur.target_user_id = lCurrentID;
-                                ur.relation_state = Convert.ToInt32(RelationState.RelationExists);
-                                ur.Add();
-                            }
-
-                            if (blnAsyncCancelled) return;
-                            while (blnSuspending)
-                            {
-                                if (blnAsyncCancelled) return;
-                                Thread.Sleep(GlobalPool.SleepMsForThread);
-                            }
-                            //加入队列
-                            if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Relation Robot...");
-                            if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Information Robot...");
-                            if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of User Tag Robot...");
-                            if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
-                                //日志
-                                Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
+                            //日志
+                            Log("Relationship confirmed. Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
                         }
                         else
                         {
                             //日志
                             Log("Relationship not exists. Deleting it...");
-                            UserRelation.Delete(lQueueBufferFirst, lCurrentID);
-                            UserRelation.Delete(lCurrentID, lQueueBufferFirst);
+                            InvalidRelation ir = new InvalidRelation();
+                            ir.source_user_id = lQueueBufferFirst;
+                            ir.target_user_id = lCurrentID;
+                            ir.Add();
+
+                            //将该用户ID从各个队列中去掉
+                            queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
+                            queueUserForUserRelationRobot.Remove(lQueueBufferFirst);
+                            queueUserForUserTagRobot.Remove(lQueueBufferFirst);
+                            queueUserForStatusRobot.Remove(lQueueBufferFirst);
+
+                            //Remove the data related from every table, except statuses and comments
+                            User.Remove(lQueueBufferFirst);
                         }
-                        #endregion
                     }
                     else
                     {
-                        #region Not Confirm Relationship
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
-                        {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
-                        }
-
                         //日志
                         Log("Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
-                        UserRelation.Delete(lQueueBufferFirst, lCurrentID);
-                        UserRelation ur = new UserRelation();
-                        ur.source_user_id = lQueueBufferFirst;
-                        ur.target_user_id = lCurrentID;
-                        ur.relation_state = Convert.ToInt32(RelationState.RelationExists);
-                        ur.Add();
-
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
+                    }
+                    if (blnRecordRelation)
+                    {
+                        if (UserRelation.RelationshipExist(lQueueBufferFirst, lCurrentID))
                         {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
+                            //日志
+                            Log("Relationship exists.");
                         }
+                        else
+                        {
+                            UserRelation ur = new UserRelation();
+                            ur.source_user_id = lQueueBufferFirst;
+                            ur.target_user_id = lCurrentID;
+                            ur.Add();
+                        }
+
                         //加入队列
                         if (queueUserForUserRelationRobot.Enqueue(lQueueBufferFirst))
                             //日志
@@ -318,7 +249,6 @@ namespace Sinawler
                         if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lQueueBufferFirst))
                             //日志
                             Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
-                        #endregion
                     }
                     //日志
                     AdjustFreq();

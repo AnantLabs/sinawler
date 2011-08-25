@@ -110,7 +110,6 @@ namespace Sinawler
                     Log("User " + lCurrentID.ToString() + " not exists. Deleting related data...");
                     //Remove the data related from every table, except statuses and comments
                     User.Remove(lCurrentID);
-                    UserRelation.Remove(lCurrentID);
                 }
                 #endregion
 

@@ -95,6 +95,7 @@
     <Compile Include="classes\GlobalPool.cs" />
     <Compile Include="model\JsonModels.cs" />
     <Compile Include="classes\UserQueue.cs" />
+    <Compile Include="model\invalid_relation.cs" />
     <Compile Include="robots\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="robots\StatusRobot.cs" />
@@ -161,6 +162,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Settings.cs" />
+    <None Include="sqlscripts\sqlserver\invalid_relations.TAB" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
