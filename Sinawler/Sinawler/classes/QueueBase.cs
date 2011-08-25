@@ -134,8 +134,11 @@ namespace Sinawler
         public void Remove ( long lID )
         {
             if (lID <= 0) return;
-            lstWaitingID.Remove( lID );
-            lstWaitingIDInDB.Remove( lID );
+            lock (oLock)
+            {
+                lstWaitingID.Remove(lID);
+                lstWaitingIDInDB.Remove(lID);
+            }
         }
 
         public void Initialize ()

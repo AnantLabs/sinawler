@@ -42,10 +42,11 @@ namespace Sinawler
             wbBrowsers[3] = wbStatus;
             wbBrowsers[4] = wbComment;
 
-            foreach (WebBrowser wb in wbBrowsers)
-            {
-                wb.DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(wbBrowser_DocumentCompleted);
-            }
+            wbBrowsers[0].DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(wbUserRelation_DocumentCompleted);
+            wbBrowsers[1].DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(wbUserInfo_DocumentCompleted);
+            wbBrowsers[2].DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(wbUserTag_DocumentCompleted);
+            wbBrowsers[3].DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(wbStatus_DocumentCompleted);
+            wbBrowsers[4].DocumentCompleted += new WebBrowserDocumentCompletedEventHandler(wbComment_DocumentCompleted);
         }
 
         private void AutoLogin(string strUserID, string strPWD)
@@ -163,223 +164,222 @@ namespace Sinawler
             }
         }
 
-        private void wbBrowser_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void wbUserRelation_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
         {
-            if (sender.Equals(wbUserRelation))
+            if (wbUserRelation.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserRelation.Url.ToString())
             {
-                if (wbUserRelation.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserRelation.Url.ToString())
+                if (wbUserRelation.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
                 {
-                    if (wbUserRelation.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                    nCountOfReady++;
+                    if (nCountOfReady == 5)
                     {
-                        nCountOfReady++;
-                        if (nCountOfReady == 5)
-                        {
-                            txtUserID.Enabled = true;
-                            txtPWD.Enabled = true;
-                            btnLogin.Enabled = true;
-                            btnCancel.Enabled = true;
-
-                            btnLogin.Text = "Login";
-                            txtUserID.Focus();
-                        }
-                        return;
-                    }
-                    string strHTML = wbUserRelation.DocumentText;
-                    if (strHTML.Contains("登录名或密码错误"))
-                    {
-                        MessageBox.Show("User Relation thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
+
                         btnLogin.Text = "Login";
-                        return;
+                        txtUserID.Focus();
                     }
-                    if (blnDirectAuthUserRelation && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    string strPin = _apiUserRelation.ParseHtml(strHTML);
-                    if (strPin != "")
-                    {
-                        _apiUserRelation.Verifier = strPin;
-                        _apiUserRelation.AccessTokenGet();
-
-                        nCountOfLoginOK++;
-
-                        if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    }
+                    return;
                 }
-            }//UserRelation
-            if (sender.Equals(wbUserInfo))
-            {
-                if (wbUserInfo.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserInfo.Url.ToString())
+                string strHTML = wbUserRelation.DocumentText;
+                if (strHTML.Contains("登录名或密码错误"))
                 {
-                    if (wbUserInfo.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
-                    {
-                        nCountOfReady++;
-                        if (nCountOfReady == 5)
-                        {
-                            txtUserID.Enabled = true;
-                            txtPWD.Enabled = true;
-                            btnLogin.Enabled = true;
-                            btnCancel.Enabled = true;
+                    MessageBox.Show("User Relation thread login failed. Please try again.", "Sinawler");
+                    txtUserID.Enabled = true;
+                    txtPWD.Enabled = true;
+                    btnLogin.Enabled = true;
+                    btnCancel.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+                if (blnDirectAuthUserRelation && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                string strPin = _apiUserRelation.ParseHtml(strHTML);
+                if (strPin != "")
+                {
+                    _apiUserRelation.Verifier = strPin;
+                    _apiUserRelation.AccessTokenGet();
+                    nCountOfLoginOK++;
+                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                }
+            }
+        }
 
-                            btnLogin.Text = "Login";
-                            txtUserID.Focus();
-                        }
-                        return;
-                    }
-                    string strHTML = wbUserInfo.DocumentText;
-                    if (strHTML.Contains("登录名或密码错误"))
+        private void wbUserInfo_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (wbUserInfo.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserInfo.Url.ToString())
+            {
+                if (wbUserInfo.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                {
+                    nCountOfReady++;
+                    if (nCountOfReady == 5)
                     {
-                        MessageBox.Show("User Information thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
+
                         btnLogin.Text = "Login";
-                        return;
+                        txtUserID.Focus();
                     }
-                    if (blnDirectAuthUserInfo && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    string strPin = _apiUserInfo.ParseHtml(strHTML);
-                    if (strPin != "")
-                    {
-                        _apiUserInfo.Verifier = strPin;
-                        _apiUserInfo.AccessTokenGet();
-
-                        nCountOfLoginOK++;
-
-                        if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    }
+                    return;
                 }
-            }//UserInfo
-            if (sender.Equals(wbUserTag))
-            {
-                if (wbUserTag.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserTag.Url.ToString())
+                string strHTML = wbUserInfo.DocumentText;
+                if (strHTML.Contains("登录名或密码错误"))
                 {
-                    if (wbUserTag.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
-                    {
-                        nCountOfReady++;
-                        if (nCountOfReady == 5)
-                        {
-                            txtUserID.Enabled = true;
-                            txtPWD.Enabled = true;
-                            btnLogin.Enabled = true;
-                            btnCancel.Enabled = true;
+                    MessageBox.Show("User Information thread login failed. Please try again.", "Sinawler");
+                    txtUserID.Enabled = true;
+                    txtPWD.Enabled = true;
+                    btnLogin.Enabled = true;
+                    btnCancel.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+                if (blnDirectAuthUserInfo && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                string strPin = _apiUserInfo.ParseHtml(strHTML);
+                if (strPin != "")
+                {
+                    _apiUserInfo.Verifier = strPin;
+                    _apiUserInfo.AccessTokenGet();
 
-                            btnLogin.Text = "Login";
-                            txtUserID.Focus();
-                        }
-                        return;
-                    }
-                    string strHTML = wbUserTag.DocumentText;
-                    if (strHTML.Contains("登录名或密码错误"))
+                    nCountOfLoginOK++;
+
+                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                }
+            }
+        }
+
+        private void wbUserTag_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (wbUserTag.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserTag.Url.ToString())
+            {
+                if (wbUserTag.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                {
+                    nCountOfReady++;
+                    if (nCountOfReady == 5)
                     {
-                        MessageBox.Show("User Tag thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
+
                         btnLogin.Text = "Login";
-                        return;
+                        txtUserID.Focus();
                     }
-                    if (blnDirectAuthUserTag && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    string strPin = _apiUserTag.ParseHtml(strHTML);
-                    if (strPin != "")
-                    {
-                        _apiUserTag.Verifier = strPin;
-                        _apiUserTag.AccessTokenGet();
-
-                        nCountOfLoginOK++;
-
-                        if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    }
+                    return;
                 }
-            }//UserTag
-            if (sender.Equals(wbStatus))
-            {
-                if (wbStatus.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbStatus.Url.ToString())
+                string strHTML = wbUserTag.DocumentText;
+                if (strHTML.Contains("登录名或密码错误"))
                 {
-                    if (wbStatus.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
-                    {
-                        nCountOfReady++;
-                        if (nCountOfReady == 5)
-                        {
-                            txtUserID.Enabled = true;
-                            txtPWD.Enabled = true;
-                            btnLogin.Enabled = true;
-                            btnCancel.Enabled = true;
+                    MessageBox.Show("User Tag thread login failed. Please try again.", "Sinawler");
+                    txtUserID.Enabled = true;
+                    txtPWD.Enabled = true;
+                    btnLogin.Enabled = true;
+                    btnCancel.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+                if (blnDirectAuthUserTag && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                string strPin = _apiUserTag.ParseHtml(strHTML);
+                if (strPin != "")
+                {
+                    _apiUserTag.Verifier = strPin;
+                    _apiUserTag.AccessTokenGet();
 
-                            btnLogin.Text = "Login";
-                            txtUserID.Focus();
-                        }
-                        return;
-                    }
-                    string strHTML = wbStatus.DocumentText;
-                    if (strHTML.Contains("登录名或密码错误"))
+                    nCountOfLoginOK++;
+
+                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                }
+            }
+        }
+
+        private void wbStatus_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (wbStatus.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbStatus.Url.ToString())
+            {
+                if (wbStatus.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                {
+                    nCountOfReady++;
+                    if (nCountOfReady == 5)
                     {
-                        MessageBox.Show("Status thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
+
                         btnLogin.Text = "Login";
-                        return;
+                        txtUserID.Focus();
                     }
-                    if (blnDirectAuthStatus && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    string strPin = _apiStatus.ParseHtml(strHTML);
-                    if (strPin != "")
-                    {
-                        _apiStatus.Verifier = strPin;
-                        _apiStatus.AccessTokenGet();
-
-                        nCountOfLoginOK++;
-
-                        if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    }
+                    return;
                 }
-            }//Status
-            if (sender.Equals(wbComment))
-            {
-                if (wbComment.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbComment.Url.ToString())
+                string strHTML = wbStatus.DocumentText;
+                if (strHTML.Contains("登录名或密码错误"))
                 {
-                    if (wbComment.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
-                    {
-                        nCountOfReady++;
-                        if (nCountOfReady == 5)
-                        {
-                            txtUserID.Enabled = true;
-                            txtPWD.Enabled = true;
-                            btnLogin.Enabled = true;
-                            btnCancel.Enabled = true;
+                    MessageBox.Show("Status thread login failed. Please try again.", "Sinawler");
+                    txtUserID.Enabled = true;
+                    txtPWD.Enabled = true;
+                    btnLogin.Enabled = true;
+                    btnCancel.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+                if (blnDirectAuthStatus && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                string strPin = _apiStatus.ParseHtml(strHTML);
+                if (strPin != "")
+                {
+                    _apiStatus.Verifier = strPin;
+                    _apiStatus.AccessTokenGet();
 
-                            btnLogin.Text = "Login";
-                            txtUserID.Focus();
-                        }
-                        return;
-                    }
-                    string strHTML = wbComment.DocumentText;
-                    if (strHTML.Contains("登录名或密码错误"))
+                    nCountOfLoginOK++;
+
+                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                }
+            }
+        }
+
+        private void wbComment_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {
+            if (wbComment.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbComment.Url.ToString())
+            {
+                if (wbComment.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                {
+                    nCountOfReady++;
+                    if (nCountOfReady == 5)
                     {
-                        MessageBox.Show("Comment thread login failed. Please try again.", "Sinawler");
                         txtUserID.Enabled = true;
                         txtPWD.Enabled = true;
                         btnLogin.Enabled = true;
                         btnCancel.Enabled = true;
+
                         btnLogin.Text = "Login";
-                        return;
+                        txtUserID.Focus();
                     }
-                    if (blnDirectAuthComment && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    string strPin = _apiComment.ParseHtml(strHTML);
-                    if (strPin != "")
-                    {
-                        _apiComment.Verifier = strPin;
-                        _apiComment.AccessTokenGet();
-
-                        nCountOfLoginOK++;
-
-                        if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                    }
+                    return;
                 }
-            }//Comment
+                string strHTML = wbComment.DocumentText;
+                if (strHTML.Contains("登录名或密码错误"))
+                {
+                    MessageBox.Show("Comment thread login failed. Please try again.", "Sinawler");
+                    txtUserID.Enabled = true;
+                    txtPWD.Enabled = true;
+                    btnLogin.Enabled = true;
+                    btnCancel.Enabled = true;
+                    btnLogin.Text = "Login";
+                    return;
+                }
+                if (blnDirectAuthComment && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                string strPin = _apiComment.ParseHtml(strHTML);
+                if (strPin != "")
+                {
+                    _apiComment.Verifier = strPin;
+                    _apiComment.AccessTokenGet();
+
+                    nCountOfLoginOK++;
+
+                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
+                }
+            }
         }
     }
 }

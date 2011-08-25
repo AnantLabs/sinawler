@@ -67,7 +67,7 @@
             this.wbUserRelation.Size = new System.Drawing.Size(33, 20);
             this.wbUserRelation.TabIndex = 4;
             this.wbUserRelation.Visible = false;
-            this.wbUserRelation.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbBrowser_DocumentCompleted);
+            this.wbUserRelation.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbUserRelation_DocumentCompleted);
             // 
             // txtUserID
             // 
