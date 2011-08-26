@@ -16,56 +16,13 @@ namespace Sinawler.Model
     {
         private QueueBufferFor _target = QueueBufferFor.USER_INFO;
         private int iCount = 0;
-        private long lFirstValue;   //首节点值
-
-        public object FirstValue
-        {
-            get { return lFirstValue; }
-        }
-
+        
         #region  成员方法
         ///构造函数
         ///<param name="target">要操作的目标</param>
         public QueueBuffer(QueueBufferFor target)
         {
             _target = target;
-        }
-
-        /// <summary>
-        /// 从数据库中读取队头值
-        /// </summary>
-        private void GetFirstValue()
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            DataRow dr;
-            switch (_target)
-            {
-                case QueueBufferFor.USER_INFO:
-                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userInfo order by enqueue_time");
-                    if (dr == null) return;
-                    lFirstValue = Convert.ToInt64(dr["user_id"]);
-                    break;
-                case QueueBufferFor.USER_RELATION:
-                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_userRelation order by enqueue_time");
-                    if (dr == null) return;
-                    lFirstValue = Convert.ToInt64(dr["user_id"]);
-                    break;
-                case QueueBufferFor.USER_TAG:
-                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_tag order by enqueue_time");
-                    if (dr == null) return;
-                    lFirstValue = Convert.ToInt64(dr["user_id"]);
-                    break;
-                case QueueBufferFor.STATUS:
-                    dr = db.GetDataRow("select top 1 user_id from queue_buffer_for_status order by enqueue_time");
-                    if (dr == null) return;
-                    lFirstValue = Convert.ToInt64(dr["user_id"]);
-                    break;
-                case QueueBufferFor.COMMENT:
-                    dr = db.GetDataRow("select top 1 status_id from queue_buffer_for_comment order by enqueue_time");
-                    if (dr == null) return;
-                    lFirstValue = Convert.ToInt64(dr["status_id"]);
-                    break;
-            }
         }
 
         /// <summary>
@@ -193,20 +150,6 @@ namespace Sinawler.Model
             }
 
             iCount++;
-            //更新新的队头值
-            if (iCount == 1)
-                lFirstValue = lID;
-        }
-
-        /// <summary>
-        /// 队头ID出队
-        /// </summary>
-        public long Dequeue()
-        {
-            //先记录头节点,再删除头节点
-            long lResult = lFirstValue;
-            this.Remove(lResult);
-            return lResult;
         }
 
         /// <summary>
@@ -245,9 +188,6 @@ namespace Sinawler.Model
             }
 
             iCount++;
-            //更新新的队头值
-            if (iCount == 1)
-                lFirstValue = lID;
         }
 
         /// <summary>
@@ -278,7 +218,6 @@ namespace Sinawler.Model
                 default:
                     return;
             }
-            GetFirstValue();
 
             if (iRowsDeleted > 0) iCount = iCount - iRowsDeleted;
         }
@@ -310,7 +249,6 @@ namespace Sinawler.Model
                     return;
             }
             iCount = 0;
-            lFirstValue = 0;
         }
 
         public int Count
