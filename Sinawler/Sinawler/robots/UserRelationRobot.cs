@@ -43,14 +43,18 @@ namespace Sinawler
         public void Start(long lStartUserID)
         {
             if (lStartUserID == 0) return;
-            AdjustFreq();
+            AdjustRealFreq();
+            SetCrawlerFreq();
             Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
             //将起始UserID入队
             queueUserForUserRelationRobot.Enqueue(lStartUserID);
-            queueUserForUserInfoRobot.Enqueue(lStartUserID);
-            queueUserForUserTagRobot.Enqueue(lStartUserID);
-            queueUserForStatusRobot.Enqueue(lStartUserID);
+            if(GlobalPool.UserInfoRobotEnabled)
+                queueUserForUserInfoRobot.Enqueue(lStartUserID);
+            if(GlobalPool.TagRobotEnabled)
+                queueUserForUserTagRobot.Enqueue(lStartUserID);
+            if(GlobalPool.StatusRobotEnabled)
+                queueUserForStatusRobot.Enqueue(lStartUserID);
             lCurrentID = lStartUserID;
 
             //对队列无限循环爬行，直至有操作暂停或停止
@@ -83,6 +87,10 @@ namespace Sinawler
                 LinkedList<long> lstBuffer = crawler.GetFriendsOf(lCurrentID, -1);
                 //日志
                 Log(lstBuffer.Count.ToString() + " followings crawled.");
+                //日志
+                AdjustFreq();
+                SetCrawlerFreq();
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
                 while (lstBuffer.Count > 0)
                 {
@@ -99,6 +107,10 @@ namespace Sinawler
                         //日志                
                         Log("Confirming the relationship between User " + lCurrentID.ToString() + " and User " + lQueueBufferFirst.ToString());
                         blnRecordRelation = crawler.RelationExistBetween(lCurrentID, lQueueBufferFirst);
+                        //日志
+                        AdjustFreq();
+                        SetCrawlerFreq();
+                        Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                         if (blnRecordRelation)
                         {
                             //日志
@@ -120,10 +132,13 @@ namespace Sinawler
 
                             //将该用户ID从各个队列中去掉
                             Log("Removing invalid User " + lQueueBufferFirst.ToString() + " from all queues...");
-                            queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
                             queueUserForUserRelationRobot.Remove(lQueueBufferFirst);
-                            queueUserForUserTagRobot.Remove(lQueueBufferFirst);
-                            queueUserForStatusRobot.Remove(lQueueBufferFirst);
+                            if(GlobalPool.UserInfoRobotEnabled)
+                                queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
+                            if(GlobalPool.TagRobotEnabled)
+                                queueUserForUserTagRobot.Remove(lQueueBufferFirst);
+                            if(GlobalPool.StatusRobotEnabled)
+                                queueUserForStatusRobot.Remove(lQueueBufferFirst);
                         }
                     }
                     else
@@ -160,9 +175,6 @@ namespace Sinawler
                             //日志
                             Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
                     }
-                    //日志
-                    AdjustFreq();
-                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                     lstBuffer.RemoveFirst();
                 }
                 #endregion
@@ -179,6 +191,10 @@ namespace Sinawler
                 lstBuffer = crawler.GetFollowersOf(lCurrentID, -1);
                 //日志
                 Log(lstBuffer.Count.ToString() + " followers crawled.");
+                //日志
+                AdjustFreq();
+                SetCrawlerFreq();
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
                 while (lstBuffer.Count > 0)
                 {
@@ -195,6 +211,10 @@ namespace Sinawler
                         //日志                
                         Log("Confirming the relationship between User " + lQueueBufferFirst.ToString() + " and User " + lCurrentID.ToString());
                         blnRecordRelation = crawler.RelationExistBetween(lQueueBufferFirst, lCurrentID);
+                        //日志
+                        AdjustFreq();
+                        SetCrawlerFreq();
+                        Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                         if (blnRecordRelation)
                         {
                             //日志
@@ -216,10 +236,13 @@ namespace Sinawler
 
                             //将该用户ID从各个队列中去掉
                             Log("Removing invalid User " + lQueueBufferFirst.ToString() + " from all queues...");
-                            queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
                             queueUserForUserRelationRobot.Remove(lQueueBufferFirst);
-                            queueUserForUserTagRobot.Remove(lQueueBufferFirst);
-                            queueUserForStatusRobot.Remove(lQueueBufferFirst);
+                            if (GlobalPool.UserInfoRobotEnabled)
+                                queueUserForUserInfoRobot.Remove(lQueueBufferFirst);
+                            if (GlobalPool.TagRobotEnabled)
+                                queueUserForUserTagRobot.Remove(lQueueBufferFirst);
+                            if (GlobalPool.StatusRobotEnabled)
+                                queueUserForStatusRobot.Remove(lQueueBufferFirst);
                         }
                     }
                     else
@@ -256,17 +279,11 @@ namespace Sinawler
                             //日志
                             Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
                     }
-                    //日志
-                    AdjustFreq();
-                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                     lstBuffer.RemoveFirst();
                 }
                 #endregion
                 //日志
                 Log("Social grapgh of User " + lCurrentID.ToString() + " crawled.");
-                //日志
-                AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
             }
         }
 
@@ -277,12 +294,6 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForUserRelationRobot.Initialize();
-        }
-
-        sealed protected override void AdjustFreq()
-        {
-            base.AdjustRealFreq();
-            SetCrawlerFreq();
         }
     }
 }

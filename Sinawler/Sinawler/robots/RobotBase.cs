@@ -100,7 +100,7 @@ namespace Sinawler
         //2011-02-23 改为间隔下限为500ms
         //2011-05-24 改为间隔下限为1s
         //except user relation robot, others get and record the reset time only
-        protected virtual void AdjustRealFreq()
+        protected void AdjustRealFreq()
         {
             if (api == null) return;
             string strResult = api.API.check_hits_limit();
@@ -142,7 +142,7 @@ namespace Sinawler
         //2011-02-23 改为间隔下限为500ms
         //2011-05-24 改为间隔下限为1s
         //except user relation robot, others get and record the reset time only
-        protected virtual void AdjustFreq()
+        protected void AdjustFreq()
         {
             if(api!=null)
             {

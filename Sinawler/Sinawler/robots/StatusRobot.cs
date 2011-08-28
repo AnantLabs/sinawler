@@ -106,8 +106,8 @@ namespace Sinawler
                 if (blnAsyncCancelled) return;
                 Thread.Sleep( GlobalPool.SleepMsForThread );   //若队列为空，则等待
             }
-            Thread.Sleep(500);  //waiting that user relation robot update list data
 
+            AdjustRealFreq();
             SetCrawlerFreq();
             Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
@@ -155,6 +155,10 @@ namespace Sinawler
                 LinkedList<Status> lstStatus = crawler.GetStatusesOfSince(lCurrentID, lCurrentSID);
                 //日志
                 Log( lstStatus.Count.ToString() + " statuses crawled." );
+                //日志
+                AdjustFreq();
+                SetCrawlerFreq();
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
                 while (lstStatus.Count > 0)
                 {
@@ -173,7 +177,9 @@ namespace Sinawler
                     int iPage = 1;
                     LinkedList<Status> lstRepostedStatus = new LinkedList<Status>();
                     lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
+                    //日志
                     AdjustFreq();
+                    SetCrawlerFreq();
                     Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                     int iRepostTimes = lstRepostedStatus.Count;
                     while (lstRepostedStatus.Count > 0)
@@ -206,7 +212,9 @@ namespace Sinawler
 
                         iPage++;
                         lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
+                        //日志
                         AdjustFreq();
+                        SetCrawlerFreq();
                         Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                         iRepostTimes += lstRepostedStatus.Count;
                     }
@@ -214,13 +222,9 @@ namespace Sinawler
                     Log(iRepostTimes.ToString() + " retweeted statuses of Status " + status.status_id.ToString() + " crawled.");
                 }
                 #endregion
-                //}
                 #endregion
                 //日志
                 Log( "Statuses of User " + lCurrentID.ToString() + " crawled." );
-                //日志
-                AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
             }
         }
 
@@ -231,12 +235,6 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForStatusRobot.Initialize();
-        }
-
-        sealed protected override void AdjustFreq()
-        {
-            base.AdjustFreq();
-            SetCrawlerFreq();
         }
     }
 }

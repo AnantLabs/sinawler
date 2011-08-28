@@ -45,8 +45,8 @@ namespace Sinawler
                 if (blnAsyncCancelled) return;
                 Thread.Sleep(GlobalPool.SleepMsForThread);   //若队列为空，则等待
             }
-            Thread.Sleep(500);  //waiting that user relation robot update limit data
 
+            AdjustRealFreq();
             SetCrawlerFreq();
             Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
@@ -82,8 +82,10 @@ namespace Sinawler
                 LinkedList<Comment> lstComment = new LinkedList<Comment>();
                 LinkedList<Comment> lstTemp=new LinkedList<Comment>();
                 lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
+                //日志
                 AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
+                SetCrawlerFreq();
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                 while (lstTemp.Count > 0)
                 {
                     if (blnAsyncCancelled) return;
@@ -99,8 +101,10 @@ namespace Sinawler
                     }
                     iPage++;
                     lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
+                    //日志
                     AdjustFreq();
-                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
+                    SetCrawlerFreq();
+                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                 }
                 //日志
                 Log(lstComment.Count.ToString() + " comments of Status " + lCurrentID.ToString() + " crawled.");
@@ -150,12 +154,6 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueStatus.Initialize();
-        }
-
-        sealed protected override void AdjustFreq()
-        {
-            base.AdjustFreq();
-            SetCrawlerFreq();
         }
     }
 }

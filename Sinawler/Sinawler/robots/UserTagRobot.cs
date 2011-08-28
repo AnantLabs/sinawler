@@ -43,8 +43,8 @@ namespace Sinawler
                 if (blnAsyncCancelled) return;
                 Thread.Sleep(GlobalPool.SleepMsForThread);   //若队列为空，则等待
             }
-            Thread.Sleep(500);  //waiting that user relation robot update request limit data
 
+            AdjustRealFreq();
             SetCrawlerFreq();
             Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
 
@@ -78,6 +78,10 @@ namespace Sinawler
                 LinkedList<Tag> lstTag = crawler.GetTagsOf( lCurrentID );
                 //日志
                 Log( lstTag.Count.ToString() + " tags crawled." );
+                //日志
+                AdjustFreq();
+                SetCrawlerFreq();
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
                 while (lstTag.Count > 0)
                 {
@@ -114,11 +118,6 @@ namespace Sinawler
                     lstTag.RemoveFirst();
                 }
                 #endregion
-                //日志
-                Log( "Tags of User " + lCurrentID.ToString() + " crawled." );
-                //日志
-                AdjustFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
             }
         }
 
@@ -129,12 +128,6 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForUserTagRobot.Initialize();
-        }
-
-        sealed protected override void AdjustFreq()
-        {
-            base.AdjustFreq();
-            SetCrawlerFreq();
         }
     }
 }

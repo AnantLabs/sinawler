@@ -47,12 +47,10 @@ namespace Sinawler
                 if (blnAsyncCancelled) return;
                 Thread.Sleep(GlobalPool.SleepMsForThread);   //若队列为空，则等待
             }
-            Thread.Sleep(500);  //waiting that user relation robot update request limit data
-            User user;
-
+            AdjustRealFreq();
             SetCrawlerFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
-
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
+            User user;
             //对队列循环爬行
             while (true)
             {
@@ -79,6 +77,10 @@ namespace Sinawler
 
                 Log("Crawling information of User " + lCurrentID.ToString() + "...");
                 user = crawler.GetUserInfo(lCurrentID);
+                //日志
+                AdjustFreq();
+                SetCrawlerFreq();
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                 if (user!=null && user.user_id > 0)
                 {
                     //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
@@ -106,16 +108,14 @@ namespace Sinawler
 
                     //将该用户ID从各个队列中去掉
                     Log("Removing invalid User " + lCurrentID.ToString() + " from all queues...");
-                    queueUserForUserInfoRobot.Remove(lCurrentID);
                     queueUserForUserRelationRobot.Remove(lCurrentID);
-                    queueUserForUserTagRobot.Remove(lCurrentID);
-                    queueUserForStatusRobot.Remove(lCurrentID);
+                    queueUserForUserInfoRobot.Remove(lCurrentID);
+                    if (GlobalPool.TagRobotEnabled)
+                        queueUserForUserTagRobot.Remove(lCurrentID);
+                    if (GlobalPool.StatusRobotEnabled)
+                        queueUserForStatusRobot.Remove(lCurrentID);
                 }
                 #endregion
-
-                AdjustFreq();
-                //日志
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
             }
         }
 
@@ -126,12 +126,6 @@ namespace Sinawler
             blnSuspending = false;
             crawler.StopCrawling = false;
             queueUserForUserInfoRobot.Initialize();
-        }
-
-        sealed protected override void AdjustFreq()
-        {
-            base.AdjustFreq();
-            SetCrawlerFreq();
         }
     }
 }

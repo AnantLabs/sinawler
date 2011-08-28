@@ -60,10 +60,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return ids;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.friends_ids(lUid, iCursor);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.API.Format == "xml")
@@ -104,10 +104,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return ids;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.followers_ids(lUid, iCursor);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.API.Format == "xml")
@@ -152,10 +152,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return false;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.friendship_show(lSUID, lTUID);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult==null || strResult == "A User Not Exist")  //用户不存在
@@ -177,10 +177,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.user_show(lUid);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == null || strResult == "User Not Exist")  //用户不存在
@@ -249,10 +249,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.user_show(strScreenName);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult==null || strResult == "User Not Exist")  //用户不存在
@@ -324,10 +324,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.user_show(lUid, strScreenName);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult==null || strResult == "User Not Exist")  //用户不存在
@@ -770,10 +770,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.statuses_show(lStatusID);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == null) return null;
@@ -808,10 +808,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstStatuses;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.user_timeline(lUid, lSinceSid);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.API.Format == "json")
@@ -847,10 +847,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstStatuses;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.repost_timeline(lStatusID, iPageNum);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (strResult == null) return null;
@@ -887,10 +887,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstComments;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.comments(lStatusID, iPageNum);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.API.Format == "json")
@@ -1048,10 +1048,10 @@ namespace Sinawler
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return lstTags;
+                AdjustLimit();
                 System.Threading.Thread.Sleep(iSleep);
                 strResult = api.API.tags_of(lUserID);
                 iTryTimes--;
-                AdjustLimit();
             }
             iTryTimes = 10;
             if (api.API.Format == "json")
