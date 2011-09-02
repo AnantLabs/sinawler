@@ -83,6 +83,9 @@ namespace Sinawler
         /// </summary>
         public long RollQueue () 
         {
+            //从数据库队列缓存中移入元素
+            while (lstWaitingID.Count == 0)
+                lstWaitingID = lstWaitingIDInDB.GetFirstValues(iMaxLengthInMem);
             if (lstWaitingID.Count == 0) return 0;
             //记录队头
             long lFirstValue = lstWaitingID.First.Value;
