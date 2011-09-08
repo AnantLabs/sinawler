@@ -194,7 +194,7 @@ namespace Sinawler
                 lblStatusesCount.Text = "Tweets:";
                 lblCreatedAt.Text = "Created At:";
                 if (oSearchedUser.user_id == -1)
-                    MessageBox.Show("Service is forbidden now. Maybe your request is too frequent. Please try later.", "Sinawler");
+                    MessageBox.Show("Service is forbidden now. Maybe your request is too frequent.\nIt is recommended that restart me "+GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds.ToString()+" later.", "Sinawler");
             }
         }
 
