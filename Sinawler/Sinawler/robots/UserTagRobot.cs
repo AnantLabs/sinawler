@@ -81,7 +81,7 @@ namespace Sinawler
                 //ÈÕÖ¾
                 AdjustFreq();
                 SetCrawlerFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
                 while (lstTag.Count > 0)
                 {

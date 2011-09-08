@@ -125,7 +125,11 @@ namespace Sinawler
                 {
                     int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
                     Log("Service is forbidden now. I will wait for " + iSleepSeconds .ToString()+ "s to continue...");
-                    Thread.Sleep(iSleepSeconds*1000);
+                    for(int i=0;i<iSleepSeconds;i++)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(1000);
+                    }
                 }
                 #endregion
             }
