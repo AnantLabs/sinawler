@@ -174,6 +174,8 @@ namespace Sinawler
             string strResult = api.API.user_show(lUid);
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
+            if (strResult == "Forbidden")  //服务已禁止
+                return null;
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;
@@ -185,6 +187,8 @@ namespace Sinawler
             iTryTimes = 10;
             if (strResult == null || strResult == "User Not Exist")  //用户不存在
                 return null;
+            if (strResult == "Forbidden")  //服务已禁止
+                return user;
             if (blnStopCrawling)
                 return user;
             if (api.API.Format == "json")

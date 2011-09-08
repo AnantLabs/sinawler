@@ -58,6 +58,25 @@ namespace Sinawler.Model
             catch
             { return; }
 		}
+
+        /// <summary>
+        /// 是否存在该记录
+        /// </summary>
+        public static bool ExistInDB(long lUid)
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            int count = db.CountByExecuteSQLSelect("select count(user_id) from invalid_users where user_id=" + lUid.ToString());
+            return count > 0;
+        }
+
+        /// <summary>
+        /// 从数据库中删除指定记录
+        /// </summary>
+        public static void RemoveFromDB(long lUid)
+        {
+            Database db = DatabaseFactory.CreateDatabase();
+            int count = db.CountByExecuteSQL("delete from invalid_users where user_id=" + lUid.ToString());
+        }
 		#endregion  成员方法
 	}
 }

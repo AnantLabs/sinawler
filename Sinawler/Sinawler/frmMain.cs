@@ -117,7 +117,7 @@ namespace Sinawler
         //显示登录帐号用户信息
         private void ShowCurrentUser()
         {
-            if (oCurrentUser != null)
+            if (oCurrentUser != null && oCurrentUser.user_id!=-1)
             {
                 lblCUserID.Text = "UserID: " + oCurrentUser.user_id.ToString();
                 lblCName.Text = "Nickname: " + oCurrentUser.screen_name;
@@ -151,13 +151,15 @@ namespace Sinawler
                 lblCFriendsCount.Text = "Followings:";
                 lblCStatusesCount.Text = "Tweets:";
                 lblCCreatedAt.Text = "Created At:";
+                if(oCurrentUser.user_id==-1)
+                    MessageBox.Show("Service is forbidden now. Maybe your request is too frequent. Please try later.", "Sinawler");
             }
         }
 
         //显示搜索结果用户信息
         private void ShowSearchedUser()
         {
-            if (oSearchedUser != null)
+            if (oSearchedUser != null && oSearchedUser.user_id!=-1)
             {
                 lblUserID.Text = "UserID：" + oSearchedUser.user_id.ToString();
                 lblName.Text = "Nickname：" + oSearchedUser.screen_name;
@@ -191,6 +193,8 @@ namespace Sinawler
                 lblFriendsCount.Text = "Followings:";
                 lblStatusesCount.Text = "Tweets:";
                 lblCreatedAt.Text = "Created At:";
+                if (oSearchedUser.user_id == -1)
+                    MessageBox.Show("Service is forbidden now. Maybe your request is too frequent. Please try later.", "Sinawler");
             }
         }
 

@@ -80,7 +80,7 @@ namespace Sinawler
                 //日志
                 AdjustFreq();
                 SetCrawlerFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms." + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
+                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                 if (user!=null && user.user_id > 0)
                 {
                     //若数据库中不存在当前用户的基本信息，则爬取，加入数据库
@@ -95,6 +95,12 @@ namespace Sinawler
                         //日志
                         Log("Updating the information of User " + lCurrentID.ToString() + "...");
                         user.Update();
+                    }
+                    if(InvalidUser.ExistInDB(lCurrentID))
+                    {
+                        //日志
+                        Log("Removing User " + lCurrentID.ToString() + " from invalid users...");
+                        InvalidUser.RemoveFromDB(lCurrentID);
                     }
                     //日志
                     Log( "The information of User " + lCurrentID.ToString() + " crawled." );
@@ -114,6 +120,12 @@ namespace Sinawler
                         queueUserForUserTagRobot.Remove(lCurrentID);
                     if (GlobalPool.StatusRobotEnabled)
                         queueUserForStatusRobot.Remove(lCurrentID);
+                }
+                else if (user.user_id == -1)   //forbidden
+                {
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Service is forbidden now. Maybe the request is too frequent. I will wait for " + iSleepSeconds .ToString()+ "s to continue...");
+                    Thread.Sleep(iSleepSeconds*1000);
                 }
                 #endregion
             }

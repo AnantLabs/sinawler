@@ -2,12 +2,12 @@ CREATE TABLE [invalid_relations] (
 	[source_user_id] [bigint] NOT NULL ,
 	[target_user_id] [bigint] NOT NULL ,
 	[update_time] [datetime] NULL ,
-	CONSTRAINT [PK_invalid_relations] PRIMARY KEY  CLUSTERED 
+	CONSTRAINT [PK_invalid_relations] PRIMARY KEY NONCLUSTERED 
 	(
 		[source_user_id],
 		[target_user_id]
-	) WITH (IGNORE_DUP_KEY = OFF) ON [PRIMARY] 
-) ON [PRIMARY]
+	) WITH (IGNORE_DUP_KEY = OFF) ON PRIMARY
+) ON PRIMARY
 GO
 
 CREATE NONCLUSTERED INDEX index_source_user_id ON invalid_relations
@@ -24,4 +24,10 @@ GO
 
 ALTER INDEX PK_invalid_relations on invalid_relations REBUILD 
 WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, ONLINE = ON, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = OFF)
+GO
+
+CREATE CLUSTERED INDEX IX_invalid_users ON invalid_relations
+(
+	update_time DESC
+)WITH (SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, IGNORE_DUP_KEY = OFF, ONLINE = ON) ON PRIMARY
 GO

@@ -286,15 +286,6 @@ namespace Sinawler.Model
             return count > 0;
 		}
 
-        /// <summary>
-        /// 更新数据库中已有数据的迭代次数
-        /// </summary>
-        public static void NewIterate()
-        {
-            Database db = DatabaseFactory.CreateDatabase();
-            db.CountByExecuteSQL("update users set iteration=iteration+1");
-        }
-
 		/// <summary>
 		/// 增加一条数据
 		/// </summary>
