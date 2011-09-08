@@ -175,7 +175,7 @@ namespace Sinawler
             if (strResult == "User Not Exist")  //用户不存在
                 return null;
             if (strResult == "Forbidden")  //服务已禁止
-                return null;
+                return user;
             while ((strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null) && !blnStopCrawling)
             {
                 if (iTryTimes == 0) return null;

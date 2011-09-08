@@ -124,7 +124,7 @@ namespace Sinawler
                 else if (user.user_id == -1)   //forbidden
                 {
                     int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
-                    Log("Service is forbidden now. Maybe the request is too frequent. I will wait for " + iSleepSeconds .ToString()+ "s to continue...");
+                    Log("Service is forbidden now. I will wait for " + iSleepSeconds .ToString()+ "s to continue...");
                     Thread.Sleep(iSleepSeconds*1000);
                 }
                 #endregion

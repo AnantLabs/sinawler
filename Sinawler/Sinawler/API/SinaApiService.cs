@@ -81,7 +81,7 @@ namespace Sina.Api
                 if (ex.Message.IndexOf( "(400)" ) > 0 || ex.Message.IndexOf("(500)")>0)   //返回400或500，认为用户不存在
                     return "User Not Exist";
                 if (ex.Message.IndexOf("(403)") > 0)   //返回403，已禁止
-                    return "Fobbiden";
+                    return "Forbidden";
                 return null; 
             }
         }
@@ -117,7 +117,7 @@ namespace Sina.Api
                 if (ex.Message.IndexOf( "(400)" ) > 0)   //返回400，认为用户不存在
                     return "User Not Exist";
                 if (ex.Message.IndexOf("(403)") > 0)   //返回403，已禁止
-                    return "Fobbiden";
+                    return "Forbidden";
                 return null; 
             }
         }
