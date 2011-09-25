@@ -74,6 +74,11 @@ namespace Sinawler
                         return false;
                     }
                 }
+                if (robotUserRelation != null) robotUserRelation.Initialize();
+                if (robotUserInfo != null) robotUserInfo.Initialize();
+                if (robotUserTag != null) robotUserTag.Initialize();
+                if (robotStatus != null) robotStatus.Initialize();
+                if (robotComment != null) robotComment.Initialize();
             }
             return true;
         }
@@ -352,28 +357,34 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
-                strDataBaseStatus = PubHelper.TestDataBase();
-                if (strDataBaseStatus != "OK")
+                if ((oAsyncWorkerUserRelation == null || !oAsyncWorkerUserRelation.IsBusy) &&
+                    (oAsyncWorkerUserInfo == null || !oAsyncWorkerUserInfo.IsBusy) &&
+                    (oAsyncWorkerUserTag == null || oAsyncWorkerUserTag.IsBusy) &&
+                    (oAsyncWorkerStatus == null || oAsyncWorkerStatus.IsBusy) &&
+                    (oAsyncWorkerComment == null || oAsyncWorkerComment.IsBusy))
                 {
-                    MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
-                    return;
+                    PrepareToStart();
+                    strDataBaseStatus = PubHelper.TestDataBase();
+                    if (strDataBaseStatus != "OK")
+                    {
+                        MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
+                        return;
+                    }
+
+                    btnStartByCurrent.Text = "Initializing. Please wait...";
+                    btnStartByCurrent.Enabled = false;
+                    btnStartBySearch.Enabled = false;
+                    btnStartByLast.Enabled = false;
+
+                    chkUserInfo.Enabled = false;
+                    chkTag.Enabled = false;
+                    chkStatus.Enabled = false;
+                    chkComment.Enabled = false;
+                    chkConfirmRelationship.Enabled = false;
+                    optJSON.Enabled = false;
+                    optXML.Enabled = false;
+                    Application.DoEvents();
                 }
-
-                btnStartByCurrent.Text = "Initializing. Please wait...";
-                btnStartByCurrent.Enabled = false;
-                btnStartBySearch.Enabled = false;
-                btnStartByLast.Enabled = false;
-
-                chkUserInfo.Enabled = false;
-                chkTag.Enabled = false;
-                chkStatus.Enabled = false;
-                chkComment.Enabled = false;
-                chkConfirmRelationship.Enabled = false;
-                optJSON.Enabled = false;
-                optXML.Enabled = false;
-                Application.DoEvents();
-
-                PrepareToStart();
 
                 if (oAsyncWorkerUserRelation == null)
                 {
@@ -495,33 +506,39 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
-                if (oSearchedUser == null)
+                if ((oAsyncWorkerUserRelation == null || !oAsyncWorkerUserRelation.IsBusy) &&
+                    (oAsyncWorkerUserInfo == null || !oAsyncWorkerUserInfo.IsBusy) &&
+                    (oAsyncWorkerUserTag == null || oAsyncWorkerUserTag.IsBusy) &&
+                    (oAsyncWorkerStatus == null || oAsyncWorkerStatus.IsBusy) &&
+                    (oAsyncWorkerComment == null || oAsyncWorkerComment.IsBusy))
                 {
-                    MessageBox.Show(this, "No searched user. Please search user first.", "Sinawler");
-                    return;
+                    if (oSearchedUser == null)
+                    {
+                        MessageBox.Show(this, "No searched user. Please search user first.", "Sinawler");
+                        return;
+                    }
+                    PrepareToStart();
+                    strDataBaseStatus = PubHelper.TestDataBase();
+                    if (strDataBaseStatus != "OK")
+                    {
+                        MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
+                        return;
+                    }
+
+                    btnStartBySearch.Text = "Initializing. Please wait...";
+                    btnStartBySearch.Enabled = false;
+                    btnStartByCurrent.Enabled = false;
+                    btnStartByLast.Enabled = false;
+
+                    chkUserInfo.Enabled = false;
+                    chkTag.Enabled = false;
+                    chkStatus.Enabled = false;
+                    chkComment.Enabled = false;
+                    chkConfirmRelationship.Enabled = false;
+                    optJSON.Enabled = false;
+                    optXML.Enabled = false;
+                    Application.DoEvents();
                 }
-                strDataBaseStatus = PubHelper.TestDataBase();
-                if (strDataBaseStatus != "OK")
-                {
-                    MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
-                    return;
-                }
-
-                btnStartBySearch.Text = "Initializing. Please wait...";
-                btnStartBySearch.Enabled = false;
-                btnStartByCurrent.Enabled = false;
-                btnStartByLast.Enabled = false;
-
-                chkUserInfo.Enabled = false;
-                chkTag.Enabled = false;
-                chkStatus.Enabled = false;
-                chkComment.Enabled = false;
-                chkConfirmRelationship.Enabled = false;
-                optJSON.Enabled = false;
-                optXML.Enabled = false;
-                Application.DoEvents();
-
-                PrepareToStart();
 
                 if (oAsyncWorkerUserRelation == null)
                 {
@@ -643,33 +660,39 @@ namespace Sinawler
             CheckLogin();
             if (blnAuthorized)
             {
-                strDataBaseStatus = PubHelper.TestDataBase();
-                if (strDataBaseStatus != "OK")
+                if ((oAsyncWorkerUserRelation==null || !oAsyncWorkerUserRelation.IsBusy) &&
+                    (oAsyncWorkerUserInfo == null || !oAsyncWorkerUserInfo.IsBusy) &&
+                    (oAsyncWorkerUserTag == null || oAsyncWorkerUserTag.IsBusy) &&
+                    (oAsyncWorkerStatus == null || oAsyncWorkerStatus.IsBusy) &&
+                    (oAsyncWorkerComment == null || oAsyncWorkerComment.IsBusy))
                 {
-                    MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
-                    return;
+                    PrepareToStart();
+                    strDataBaseStatus = PubHelper.TestDataBase();
+                    if (strDataBaseStatus != "OK")
+                    {
+                        MessageBox.Show("Database Error: " + strDataBaseStatus, "Sinawler");
+                        return;
+                    }
+                    if (SysArg.GetCurrentID(SysArgFor.USER_RELATION) == 0)
+                    {
+                        MessageBox.Show(this, "No user stopped last time. Please select another start point.", "Sinawler");
+                        return;
+                    }
+
+                    btnStartByLast.Text = "Initializing. Please wait...";
+                    btnStartByLast.Enabled = false;
+                    btnStartBySearch.Enabled = false;
+                    btnStartByCurrent.Enabled = false;
+
+                    chkUserInfo.Enabled = false;
+                    chkTag.Enabled = false;
+                    chkStatus.Enabled = false;
+                    chkComment.Enabled = false;
+                    chkConfirmRelationship.Enabled = false;
+                    optJSON.Enabled = false;
+                    optXML.Enabled = false;
+                    Application.DoEvents();
                 }
-                if (SysArg.GetCurrentID(SysArgFor.USER_RELATION) == 0)
-                {
-                    MessageBox.Show(this, "No user stopped last time. Please select another start point.", "Sinawler");
-                    return;
-                }
-
-                btnStartByLast.Text = "Initializing. Please wait...";
-                btnStartByLast.Enabled = false;
-                btnStartBySearch.Enabled = false;
-                btnStartByCurrent.Enabled = false;
-
-                chkUserInfo.Enabled = false;
-                chkTag.Enabled = false;
-                chkStatus.Enabled = false;
-                chkComment.Enabled = false;
-                chkConfirmRelationship.Enabled = false;
-                optJSON.Enabled = false;
-                optXML.Enabled = false;
-                Application.DoEvents();
-
-                PrepareToStart();
 
                 if (oAsyncWorkerUserRelation == null)
                 {

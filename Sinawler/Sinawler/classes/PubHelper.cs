@@ -7,6 +7,7 @@ using Sina.Api;
 using System.Xml;
 using System.Net;
 using System.IO;
+using System.Reflection;
 
 namespace Sinawler
 {
@@ -85,7 +86,183 @@ namespace Sinawler
             Database db = DatabaseFactory.CreateDatabase();
             try
             {
-                db.Test();
+                Assembly Asm = Assembly.GetExecutingAssembly();
+                Stream strmUserRelationBuffer,strmUserInfoBuffer,strmUserTagBuffer,strmStatusBuffer,strmCommentBuffer;
+
+                SettingItems settings = AppSettings.Load();
+                if (settings == null) settings = AppSettings.LoadDefault();
+                #region UserRelation
+                switch (settings.DBType)
+                {
+                    case "SQL Server":
+                        strmUserRelationBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_userRelation.sql");
+                        break;
+                    default:
+                        strmUserRelationBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_userRelation.sql");
+                        break;
+                }
+                StreamReader readerUserRelationBuffer = new StreamReader(strmUserRelationBuffer);
+                string sql = "";
+                string strLine = readerUserRelationBuffer.ReadLine();
+                while (strLine != null)
+                {
+                    if (strLine.Trim() != "")
+                    {
+                        if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_userRelation"+GlobalPool.TimeStamp.ToString()+"] (";
+                        sql += " " + strLine;
+                        if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL语句结尾
+                        {
+                            sql = sql.Substring(0, sql.Length - 1);
+                            db.CountByExecuteSQL(sql);
+                            sql = "";
+                        }
+                    }
+                    strLine = readerUserRelationBuffer.ReadLine();
+                }
+
+                readerUserRelationBuffer.Close();
+                readerUserRelationBuffer.Dispose();
+                #endregion
+                #region UserInfo
+                switch (settings.DBType)
+                {
+                    case "SQL Server":
+                        strmUserInfoBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_userInfo.sql");
+                        break;
+                    default:
+                        strmUserInfoBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_userInfo.sql");
+                        break;
+                }
+                if (GlobalPool.UserInfoRobotEnabled)
+                {
+                    StreamReader readerUserInfoBuffer = new StreamReader(strmUserInfoBuffer);
+                    sql = "";
+                    strLine = readerUserInfoBuffer.ReadLine();
+                    while (strLine != null)
+                    {
+                        if (strLine.Trim() != "")
+                        {
+                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_userInfo" + GlobalPool.TimeStamp.ToString() + "] (";
+                            sql += " " + strLine;
+                            if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL语句结尾
+                            {
+                                sql = sql.Substring(0, sql.Length - 1);
+                                db.CountByExecuteSQL(sql);
+                                sql = "";
+                            }
+                        }
+                        strLine = readerUserInfoBuffer.ReadLine();
+                    }
+
+                    readerUserInfoBuffer.Close();
+                    readerUserInfoBuffer.Dispose();
+                }
+                #endregion
+                #region UserTags
+                switch (settings.DBType)
+                {
+                    case "SQL Server":
+                        strmUserTagBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_tag.sql");
+                        break;
+                    default:
+                        strmUserTagBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_tag.sql");
+                        break;
+                }
+                if (GlobalPool.TagRobotEnabled)
+                {
+                    StreamReader readerUserTagBuffer = new StreamReader(strmUserTagBuffer);
+                    sql = "";
+                    strLine = readerUserTagBuffer.ReadLine();
+                    while (strLine != null)
+                    {
+                        if (strLine.Trim() != "")
+                        {
+                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_tag" + GlobalPool.TimeStamp.ToString() + "] (";
+                            sql += " " + strLine;
+                            if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL语句结尾
+                            {
+                                sql = sql.Substring(0, sql.Length - 1);
+                                db.CountByExecuteSQL(sql);
+                                sql = "";
+                            }
+                        }
+                        strLine = readerUserTagBuffer.ReadLine();
+                    }
+
+                    readerUserTagBuffer.Close();
+                    readerUserTagBuffer.Dispose();
+                }
+                #endregion
+                #region Status
+                switch (settings.DBType)
+                {
+                    case "SQL Server":
+                        strmStatusBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_status.sql");
+                        break;
+                    default:
+                        strmStatusBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_status.sql");
+                        break;
+                }
+                if (GlobalPool.StatusRobotEnabled)
+                {
+                    StreamReader readerStatusBuffer = new StreamReader(strmStatusBuffer);
+                    sql = "";
+                    strLine = readerStatusBuffer.ReadLine();
+                    while (strLine != null)
+                    {
+                        if (strLine.Trim() != "")
+                        {
+                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_status" + GlobalPool.TimeStamp.ToString() + "] (";
+                            sql += " " + strLine;
+                            if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL语句结尾
+                            {
+                                sql = sql.Substring(0, sql.Length - 1);
+                                db.CountByExecuteSQL(sql);
+                                sql = "";
+                            }
+                        }
+                        strLine = readerStatusBuffer.ReadLine();
+                    }
+
+                    readerStatusBuffer.Close();
+                    readerStatusBuffer.Dispose();
+                }
+                #endregion
+                #region Comment
+                switch (settings.DBType)
+                {
+                    case "SQL Server":
+                        strmCommentBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_comment.sql");
+                        break;
+                    default:
+                        strmCommentBuffer = Asm.GetManifestResourceStream(Asm.GetName().Name + ".queue_buffer_for_comment.sql");
+                        break;
+                }
+                if (GlobalPool.CommentRobotEnabled)
+                {
+                    StreamReader readerCommentBuffer = new StreamReader(strmCommentBuffer);
+                    sql = "";
+                    strLine = readerCommentBuffer.ReadLine();
+                    while (strLine != null)
+                    {
+                        if (strLine.Trim() != "")
+                        {
+                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_comment" + GlobalPool.TimeStamp.ToString() + "] (";
+                            sql += " " + strLine;
+                            if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL语句结尾
+                            {
+                                sql = sql.Substring(0, sql.Length - 1);
+                                db.CountByExecuteSQL(sql);
+                                sql = "";
+                            }
+                        }
+                        strLine = readerCommentBuffer.ReadLine();
+                    }
+
+                    readerCommentBuffer.Close();
+                    readerCommentBuffer.Dispose();
+                }
+                #endregion
                 strResult = "OK";
             }
             catch (Exception ex)
@@ -130,8 +307,8 @@ namespace Sinawler
         //发一条微博帮忙推广
         static public bool PostAdvertisement(int UserCount, int StatusCount)
         {
-            string strResult = GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.statuses_update("（" + DateTime.Now.ToString() + "）I'm using an open source application Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + 
-                ". There have been "+UserCount.ToString()+" users and "+StatusCount.ToString()+" statuses in queues！Project Homepage: http://code.google.com/p/sinawler/");
+            string strResult = GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.statuses_update("（" + DateTime.Now.ToString() + "）I'm using an open source application Sinawler v" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() +
+                ". There have been " + UserCount.ToString() + " users and " + StatusCount.ToString() + " statuses in queues！Project Homepage: http://code.google.com/p/sinawler/");
             if (strResult == null) return false;
             else return true;
         }
@@ -169,7 +346,7 @@ namespace Sinawler
         //自己实现队列的Contains操作，从头尾同时找，效率提高一倍
         static public bool ContainsInQueue<T>(LinkedList<T> list, T value)
         {
-            if (list == null || value==null) return false;
+            if (list == null || value == null) return false;
             if (list.Count == 0) return false;
             if (list.Count == 1) return list.First.Value.Equals(value);
 

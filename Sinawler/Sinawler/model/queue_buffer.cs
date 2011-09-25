@@ -17,6 +17,7 @@ namespace Sinawler.Model
         private QueueBufferFor _target = QueueBufferFor.USER_INFO;
         private int iCount = 0;
         
+        
         #region  成员方法
         ///构造函数
         ///<param name="target">要操作的目标</param>
@@ -36,19 +37,19 @@ namespace Sinawler.Model
             switch (_target)
             {
                 case QueueBufferFor.USER_RELATION:
-                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_userRelation order by enqueue_time");
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from "+GlobalPool.UserRelationBufferTable+" order by enqueue_time");
                     break;
                 case QueueBufferFor.USER_INFO:
-                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_userInfo order by enqueue_time");
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from " + GlobalPool.UserInfoBufferTable + " order by enqueue_time");
                     break;
                 case QueueBufferFor.USER_TAG:
-                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_tag order by enqueue_time");
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from " + GlobalPool.UserTagBufferTable + " order by enqueue_time");
                     break;
                 case QueueBufferFor.STATUS:
-                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from queue_buffer_for_status order by enqueue_time");
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " user_id from " + GlobalPool.StatusBufferTable + " order by enqueue_time");
                     break;
                 case QueueBufferFor.COMMENT:
-                    ds = db.GetDataSet("select top " + iCount.ToString() + " status_id from queue_buffer_for_comment order by enqueue_time");
+                    ds = db.GetDataSet("select top " + iCount.ToString() + " status_id from " + GlobalPool.CommentBufferTable + " order by enqueue_time");
                     break;
             }
             if (ds != null)
@@ -64,19 +65,19 @@ namespace Sinawler.Model
                 switch (_target)
                 {
                     case QueueBufferFor.USER_RELATION:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from " + GlobalPool.UserRelationBufferTable + " where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.USER_INFO:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from " + GlobalPool.UserInfoBufferTable + " where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.USER_TAG:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from " + GlobalPool.UserTagBufferTable + " where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.STATUS:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from " + GlobalPool.StatusBufferTable + " where user_id in " + strIDsToBeDeleted);
                         break;
                     case QueueBufferFor.COMMENT:
-                        db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id in " + strIDsToBeDeleted);
+                        db.CountByExecuteSQL("delete from " + GlobalPool.CommentBufferTable + " where status_id in " + strIDsToBeDeleted);
                         break;
                 }
             }
@@ -93,19 +94,19 @@ namespace Sinawler.Model
             switch (_target)
             {
                 case QueueBufferFor.USER_RELATION:
-                    count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userRelation where user_id=" + lID.ToString());
+                    count = db.CountByExecuteSQLSelect("select count(1) from " + GlobalPool.UserRelationBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.USER_INFO:
-                    count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_userInfo where user_id=" + lID.ToString());
+                    count = db.CountByExecuteSQLSelect("select count(1) from " + GlobalPool.UserInfoBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.USER_TAG:
-                    count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_tag where user_id=" + lID.ToString());
+                    count = db.CountByExecuteSQLSelect("select count(1) from " + GlobalPool.UserTagBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.STATUS:
-                    count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_status where user_id=" + lID.ToString());
+                    count = db.CountByExecuteSQLSelect("select count(1) from " + GlobalPool.StatusBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.COMMENT:
-                    count = db.CountByExecuteSQLSelect("select count(1) from queue_buffer_for_comment where status_id=" + lID.ToString());
+                    count = db.CountByExecuteSQLSelect("select count(1) from " + GlobalPool.CommentBufferTable + " where status_id=" + lID.ToString());
                     break;
                 default:
                     return false;
@@ -127,23 +128,23 @@ namespace Sinawler.Model
             {
                 case QueueBufferFor.USER_RELATION:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_userRelation", htValues);
+                    db.Insert(GlobalPool.UserRelationBufferTable, htValues);
                     break;
                 case QueueBufferFor.USER_INFO:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_userInfo", htValues);
+                    db.Insert(GlobalPool.UserInfoBufferTable, htValues);
                     break;
                 case QueueBufferFor.USER_TAG:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_tag", htValues);
+                    db.Insert(GlobalPool.UserTagBufferTable, htValues);
                     break;
                 case QueueBufferFor.STATUS:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_status", htValues);
+                    db.Insert(GlobalPool.StatusBufferTable, htValues);
                     break;
                 case QueueBufferFor.COMMENT:
                     htValues.Add("status_id", lID);
-                    db.Insert("queue_buffer_for_comment", htValues);
+                    db.Insert(GlobalPool.CommentBufferTable, htValues);
                     break;
                 default:
                     return;
@@ -165,23 +166,23 @@ namespace Sinawler.Model
             {
                 case QueueBufferFor.USER_RELATION:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_userRelation", htValues);
+                    db.Insert(GlobalPool.UserRelationBufferTable, htValues);
                     break;
                 case QueueBufferFor.USER_INFO:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_userInfo", htValues);
+                    db.Insert(GlobalPool.UserInfoBufferTable, htValues);
                     break;
                 case QueueBufferFor.USER_TAG:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_tag", htValues);
+                    db.Insert(GlobalPool.UserTagBufferTable, htValues);
                     break;
                 case QueueBufferFor.STATUS:
                     htValues.Add("user_id", lID);
-                    db.Insert("queue_buffer_for_status", htValues);
+                    db.Insert(GlobalPool.StatusBufferTable, htValues);
                     break;
                 case QueueBufferFor.COMMENT:
                     htValues.Add("status_id", lID);
-                    db.Insert("queue_buffer_for_comment", htValues);
+                    db.Insert(GlobalPool.CommentBufferTable, htValues);
                     break;
                 default:
                     return;
@@ -201,19 +202,19 @@ namespace Sinawler.Model
             switch (_target)
             {
                 case QueueBufferFor.USER_RELATION:
-                    iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_userRelation where user_id=" + lID.ToString());
+                    iRowsDeleted = db.CountByExecuteSQL("delete from " + GlobalPool.UserRelationBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.USER_INFO:
-                    iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_userInfo where user_id=" + lID.ToString());
+                    iRowsDeleted = db.CountByExecuteSQL("delete from " + GlobalPool.UserInfoBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.USER_TAG:
-                    iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_tag where user_id=" + lID.ToString());
+                    iRowsDeleted = db.CountByExecuteSQL("delete from " + GlobalPool.UserTagBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.STATUS:
-                    iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_status where user_id=" + lID.ToString());
+                    iRowsDeleted = db.CountByExecuteSQL("delete from " + GlobalPool.StatusBufferTable + " where user_id=" + lID.ToString());
                     break;
                 case QueueBufferFor.COMMENT:
-                    iRowsDeleted = db.CountByExecuteSQL("delete from queue_buffer_for_comment where status_id=" + lID.ToString());
+                    iRowsDeleted = db.CountByExecuteSQL("delete from " + GlobalPool.CommentBufferTable + " where status_id=" + lID.ToString());
                     break;
                 default:
                     return;
@@ -231,19 +232,19 @@ namespace Sinawler.Model
             switch (_target)
             {
                 case QueueBufferFor.USER_RELATION:
-                    db.CountByExecuteSQL("truncate table queue_buffer_for_userRelation");
+                    db.CountByExecuteSQL("drop table " + GlobalPool.UserRelationBufferTable);
                     break;
                 case QueueBufferFor.USER_INFO:
-                    db.CountByExecuteSQL("truncate table queue_buffer_for_userInfo");
+                    db.CountByExecuteSQL("drop table " + GlobalPool.UserInfoBufferTable);
                     break;
                 case QueueBufferFor.USER_TAG:
-                    db.CountByExecuteSQL("truncate table queue_buffer_for_tag");
+                    db.CountByExecuteSQL("drop table " + GlobalPool.UserTagBufferTable);
                     break;
                 case QueueBufferFor.STATUS:
-                    db.CountByExecuteSQL("truncate table queue_buffer_for_status");
+                    db.CountByExecuteSQL("drop table " + GlobalPool.StatusBufferTable);
                     break;
                 case QueueBufferFor.COMMENT:
-                    db.CountByExecuteSQL("truncate table queue_buffer_for_comment");
+                    db.CountByExecuteSQL("drop table " + GlobalPool.CommentBufferTable);
                     break;
                 default:
                     return;
@@ -261,19 +262,19 @@ namespace Sinawler.Model
                     switch (_target)
                     {
                         case QueueBufferFor.USER_RELATION:
-                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userRelation");
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from " + GlobalPool.UserRelationBufferTable);
                             break;
                         case QueueBufferFor.USER_INFO:
-                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_userInfo");
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from " + GlobalPool.UserInfoBufferTable);
                             break;
                         case QueueBufferFor.USER_TAG:
-                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_tag");
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from " + GlobalPool.UserTagBufferTable);
                             break;
                         case QueueBufferFor.STATUS:
-                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from queue_buffer_for_status");
+                            iCount = db.CountByExecuteSQLSelect("select count(user_id) as cnt from " + GlobalPool.StatusBufferTable);
                             break;
                         case QueueBufferFor.COMMENT:
-                            iCount = db.CountByExecuteSQLSelect("select count(status_id) as cnt from queue_buffer_for_comment");
+                            iCount = db.CountByExecuteSQLSelect("select count(status_id) as cnt from " + GlobalPool.CommentBufferTable);
                             break;
                     }
                     if (iCount == -1) iCount = 0;

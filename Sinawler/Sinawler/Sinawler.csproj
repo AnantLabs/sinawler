@@ -187,19 +187,20 @@
     <Content Include="Monsters21.ico" />
     <Content Include="Newtonsoft.Json.Net20.dll" />
     <Content Include="sqlscripts\sqlserver\comments.TAB" />
-    <Content Include="sqlscripts\sqlserver\queue_buffer_for_comment.TAB" />
-    <Content Include="sqlscripts\sqlserver\queue_buffer_for_userInfo.TAB" />
+    <EmbeddedResource Include="queue_buffer_for_comment.sql" />
+    <EmbeddedResource Include="queue_buffer_for_userInfo.sql" />
     <Content Include="sqlscripts\sqlserver\statuses.TAB" />
     <Content Include="sqlscripts\sqlserver\sys_args.TAB" />
     <Content Include="sqlscripts\sqlserver\tags.TAB" />
     <Content Include="sqlscripts\sqlserver\users.TAB" />
     <Content Include="sqlscripts\sqlserver\user_relation.TAB" />
     <Content Include="sqlscripts\sqlserver\user_tag.TAB" />
-    <Content Include="sqlscripts\sqlserver\queue_buffer_for_status.TAB" />
-    <Content Include="sqlscripts\sqlserver\queue_buffer_for_userRelation.TAB" />
-    <Content Include="sqlscripts\sqlserver\queue_buffer_for_tag.TAB" />
+    <EmbeddedResource Include="queue_buffer_for_status.sql" />
+    <EmbeddedResource Include="queue_buffer_for_userRelation.sql" />
+    <EmbeddedResource Include="queue_buffer_for_tag.sql" />
     <Content Include="sqlscripts\testsql.sql" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -42,6 +42,13 @@ namespace Sinawler
 
         public static int SleepMsForThread = 1;
 
+        public static long TimeStamp = Math.Abs(DateTime.Now.ToBinary());
+        public static string UserRelationBufferTable = "queue_buffer_for_userRelation" + GlobalPool.TimeStamp.ToString();
+        public static string UserInfoBufferTable = "queue_buffer_for_userInfo" + GlobalPool.TimeStamp.ToString();
+        public static string UserTagBufferTable = "queue_buffer_for_tag" + GlobalPool.TimeStamp.ToString();
+        public static string StatusBufferTable = "queue_buffer_for_status" + GlobalPool.TimeStamp.ToString();
+        public static string CommentBufferTable = "queue_buffer_for_comment" + GlobalPool.TimeStamp.ToString();
+
         public static APIInfo GetAPI(SysArgFor apiType)
         {
             switch (apiType)
