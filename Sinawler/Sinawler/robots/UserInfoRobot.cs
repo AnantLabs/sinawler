@@ -65,7 +65,7 @@ namespace Sinawler
                 
                 //日志
                 Log("Recording current UserID: " + lCurrentID.ToString()+"...");
-                SysArg.SetCurrentID( lCurrentID,SysArgFor.USER_INFO );
+                SysArg.SetCurrentID(lCurrentID, SysArgFor.USER_INFO);
 
                 #region 用户基本信息
                 if (blnAsyncCancelled) return;

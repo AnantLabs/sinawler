@@ -63,7 +63,7 @@ namespace Sinawler
                 
                 //日志
                 Log( "Recording current UserID: " + lCurrentID.ToString()+"..." );
-                SysArg.SetCurrentID( lCurrentID, SysArgFor.USER_TAG );
+                SysArg.SetCurrentID(lCurrentID, SysArgFor.USER_TAG);
 
                 #region 用户标签信息
                 if (blnAsyncCancelled) return;

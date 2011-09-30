@@ -48,6 +48,7 @@ namespace Sinawler
         public static string UserTagBufferTable = "queue_buffer_for_tag" + GlobalPool.TimeStamp.ToString();
         public static string StatusBufferTable = "queue_buffer_for_status" + GlobalPool.TimeStamp.ToString();
         public static string CommentBufferTable = "queue_buffer_for_comment" + GlobalPool.TimeStamp.ToString();
+        public static string SysArgsTable = "sys_args" + GlobalPool.TimeStamp.ToString();
 
         public static APIInfo GetAPI(SysArgFor apiType)
         {

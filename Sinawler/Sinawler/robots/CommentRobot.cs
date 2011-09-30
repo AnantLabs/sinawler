@@ -65,7 +65,7 @@ namespace Sinawler
 
                 //日志
                 Log("Recording current StatusID: " + lCurrentID.ToString()+"...");
-                SysArg.SetCurrentID(lCurrentID,SysArgFor.COMMENT);
+                SysArg.SetCurrentID(lCurrentID, SysArgFor.COMMENT);
 
                 #region 微博相应评论
                 if (blnAsyncCancelled) return;

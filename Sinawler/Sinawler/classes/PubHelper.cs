@@ -108,11 +108,13 @@ namespace Sinawler
                 {
                     if (strLine.Trim() != "")
                     {
-                        if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_userRelation"+GlobalPool.TimeStamp.ToString()+"] (";
                         sql += " " + strLine;
                         if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL”Ôæ‰Ω·Œ≤
                         {
                             sql = sql.Substring(0, sql.Length - 1);
+                            sql = sql.Replace("queue_buffer_for_userRelation", GlobalPool.UserRelationBufferTable);
+                            sql = sql.Replace("PK_queue_buffer_for_userRelation", "PK_queue_buffer_for_userRelation" + GlobalPool.TimeStamp.ToString());
+                            sql = sql.Replace("index_enqueue_time", "index_enqueue_time" + GlobalPool.TimeStamp.ToString());
                             db.CountByExecuteSQL(sql);
                             sql = "";
                         }
@@ -142,11 +144,13 @@ namespace Sinawler
                     {
                         if (strLine.Trim() != "")
                         {
-                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_userInfo" + GlobalPool.TimeStamp.ToString() + "] (";
                             sql += " " + strLine;
                             if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL”Ôæ‰Ω·Œ≤
                             {
                                 sql = sql.Substring(0, sql.Length - 1);
+                                sql = sql.Replace("queue_buffer_for_userInfo", GlobalPool.UserInfoBufferTable);
+                                sql = sql.Replace("PK_queue_buffer_for_userInfo", "PK_queue_buffer_for_userInfo" + GlobalPool.TimeStamp.ToString());
+                                sql = sql.Replace("index_enqueue_time", "index_enqueue_time" + GlobalPool.TimeStamp.ToString());
                                 db.CountByExecuteSQL(sql);
                                 sql = "";
                             }
@@ -177,11 +181,13 @@ namespace Sinawler
                     {
                         if (strLine.Trim() != "")
                         {
-                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_tag" + GlobalPool.TimeStamp.ToString() + "] (";
                             sql += " " + strLine;
                             if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL”Ôæ‰Ω·Œ≤
                             {
                                 sql = sql.Substring(0, sql.Length - 1);
+                                sql = sql.Replace("queue_buffer_for_tag", GlobalPool.UserTagBufferTable);
+                                sql = sql.Replace("PK_queue_buffer_for_tag", "PK_queue_buffer_for_tag" + GlobalPool.TimeStamp.ToString());
+                                sql = sql.Replace("index_enqueue_time", "index_enqueue_time" + GlobalPool.TimeStamp.ToString());
                                 db.CountByExecuteSQL(sql);
                                 sql = "";
                             }
@@ -212,11 +218,13 @@ namespace Sinawler
                     {
                         if (strLine.Trim() != "")
                         {
-                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_status" + GlobalPool.TimeStamp.ToString() + "] (";
                             sql += " " + strLine;
                             if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL”Ôæ‰Ω·Œ≤
                             {
                                 sql = sql.Substring(0, sql.Length - 1);
+                                sql = sql.Replace("queue_buffer_for_status", GlobalPool.StatusBufferTable);
+                                sql = sql.Replace("PK_queue_buffer_for_status", "PK_queue_buffer_for_status" + GlobalPool.TimeStamp.ToString());
+                                sql = sql.Replace("index_enqueue_time", "index_enqueue_time" + GlobalPool.TimeStamp.ToString());
                                 db.CountByExecuteSQL(sql);
                                 sql = "";
                             }
@@ -247,11 +255,13 @@ namespace Sinawler
                     {
                         if (strLine.Trim() != "")
                         {
-                            if (strLine.IndexOf("CREATE TABLE") == 0) strLine = "CREATE TABLE [queue_buffer_for_comment" + GlobalPool.TimeStamp.ToString() + "] (";
                             sql += " " + strLine;
                             if (strLine.LastIndexOf(';') == strLine.Length - 1)  //SQL”Ôæ‰Ω·Œ≤
                             {
                                 sql = sql.Substring(0, sql.Length - 1);
+                                sql = sql.Replace("queue_buffer_for_comment", GlobalPool.CommentBufferTable);
+                                sql = sql.Replace("PK_queue_buffer_for_comment", "PK_queue_buffer_for_comment" + GlobalPool.TimeStamp.ToString());
+                                sql = sql.Replace("index_enqueue_time", "index_enqueue_time" + GlobalPool.TimeStamp.ToString());
                                 db.CountByExecuteSQL(sql);
                                 sql = "";
                             }

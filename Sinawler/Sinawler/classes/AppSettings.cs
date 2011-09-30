@@ -106,8 +106,8 @@ namespace Sinawler
             SettingItems settings = new SettingItems();
             if (!File.Exists(Application.StartupPath + "\\config.ini"))
                 return null;
-            FileStream fs = new FileStream(Application.StartupPath + "\\config.ini", FileMode.Open, FileAccess.Read);
             byte[] arrByte = new byte[1024];
+            FileStream fs = new FileStream(Application.StartupPath + "\\config.ini", FileMode.Open, FileAccess.Read);
             fs.Read(arrByte, 0, 1024);
             fs.Close();
             int nLength = PubHelper.byteToInt(arrByte);

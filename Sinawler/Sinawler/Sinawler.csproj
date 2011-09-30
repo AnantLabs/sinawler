@@ -97,6 +97,7 @@
     <Compile Include="classes\UserQueue.cs" />
     <Compile Include="model\invalid_relations.cs" />
     <Compile Include="model\invalid_users.cs" />
+    <Compile Include="model\sys_args.cs" />
     <Compile Include="robots\UserInfoRobot.cs" />
     <Compile Include="classes\Serialize.cs" />
     <Compile Include="robots\StatusRobot.cs" />
@@ -129,7 +130,6 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="model\sys_args.cs" />
     <Compile Include="model\queue_buffer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
