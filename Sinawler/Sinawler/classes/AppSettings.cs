@@ -21,6 +21,7 @@ namespace Sinawler
         private bool _user_info_robot = true;           //the state of user information robot
         private bool _tags_robot = true;                 //the state of tag robot
         private bool _statuses_robot = true;            //the state of statuses robot
+        private bool _crawl_retweets = true;            //whether to crawl retweeting statuses for each status
         private bool _comments_robot = true;            //the state of comments robot
 
         private bool _confirm_relationship = true;      //whethe confirm relationship
@@ -83,6 +84,12 @@ namespace Sinawler
         {
             get { return _statuses_robot; }
             set { _statuses_robot = value; }
+        }
+
+        public bool CrawlRetweets
+        {
+            get { return _crawl_retweets; }
+            set { _crawl_retweets = value; }
         }
 
         public bool CommentsRobot

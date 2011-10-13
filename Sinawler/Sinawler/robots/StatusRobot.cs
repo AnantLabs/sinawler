@@ -166,60 +166,63 @@ namespace Sinawler
                     while (blnSuspending)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep( GlobalPool.SleepMsForThread );
+                        Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     status = lstStatus.First.Value;
-                    SaveStatus( status );
+                    SaveStatus(status);
                     lstStatus.RemoveFirst();
 
-                    //日志
-                    Log("Crawling retweeted statuses of Status " + status.status_id.ToString() + "...");
-                    int iPage = 1;
-                    LinkedList<Status> lstRepostedStatus = new LinkedList<Status>();
-                    lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
-                    //日志
-                    AdjustFreq();
-                    SetCrawlerFreq();
-                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-                    int iRepostTimes = lstRepostedStatus.Count;
-                    while (lstRepostedStatus.Count > 0)
+                    if (GlobalPool.CrawlRetweets)
                     {
-                        if (blnAsyncCancelled) return;
-                        while (blnSuspending)
-                        {
-                            if (blnAsyncCancelled) return;
-                            Thread.Sleep(GlobalPool.SleepMsForThread);
-                        }
-
-                        if(!PubHelper.ContainsInQueue<Status>(lstStatus,lstRepostedStatus.First.Value))
-                            lstStatus.AddLast(lstRepostedStatus.First.Value);
-                        
-                        if (queueUserForUserRelationRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                            Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Relation Robot...");
-                        if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                            Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Information Robot...");
-                        if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                            Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Tag Robot...");
-                        if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                            Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of Status Robot...");
-                        if (!User.ExistInDB(lstRepostedStatus.First.Value.user.user_id))
-                        {
-                            Log("Saving Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " into database...");
-                            lstRepostedStatus.First.Value.user.Add();
-                        }
-
-                        lstRepostedStatus.RemoveFirst();
-
-                        iPage++;
+                        //日志
+                        Log("Crawling retweeted statuses of Status " + status.status_id.ToString() + "...");
+                        int iPage = 1;
+                        LinkedList<Status> lstRepostedStatus = new LinkedList<Status>();
                         lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
                         //日志
                         AdjustFreq();
                         SetCrawlerFreq();
                         Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-                        iRepostTimes += lstRepostedStatus.Count;
+                        int iRepostTimes = lstRepostedStatus.Count;
+                        while (lstRepostedStatus.Count > 0)
+                        {
+                            if (blnAsyncCancelled) return;
+                            while (blnSuspending)
+                            {
+                                if (blnAsyncCancelled) return;
+                                Thread.Sleep(GlobalPool.SleepMsForThread);
+                            }
+
+                            if (!PubHelper.ContainsInQueue<Status>(lstStatus, lstRepostedStatus.First.Value))
+                                lstStatus.AddLast(lstRepostedStatus.First.Value);
+
+                            if (queueUserForUserRelationRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
+                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Relation Robot...");
+                            if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
+                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Information Robot...");
+                            if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
+                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Tag Robot...");
+                            if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
+                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of Status Robot...");
+                            if (!User.ExistInDB(lstRepostedStatus.First.Value.user.user_id))
+                            {
+                                Log("Saving Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " into database...");
+                                lstRepostedStatus.First.Value.user.Add();
+                            }
+
+                            lstRepostedStatus.RemoveFirst();
+
+                            iPage++;
+                            lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
+                            //日志
+                            AdjustFreq();
+                            SetCrawlerFreq();
+                            Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
+                            iRepostTimes += lstRepostedStatus.Count;
+                        }
+                        //日志
+                        Log(iRepostTimes.ToString() + " retweeted statuses of Status " + status.status_id.ToString() + " crawled.");
                     }
-                    //日志
-                    Log(iRepostTimes.ToString() + " retweeted statuses of Status " + status.status_id.ToString() + " crawled.");
                 }
                 #endregion
                 #endregion

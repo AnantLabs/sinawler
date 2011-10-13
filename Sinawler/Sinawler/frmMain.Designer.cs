@@ -64,13 +64,15 @@
             this.grpSearch = new System.Windows.Forms.GroupBox();
             this.btnExit = new System.Windows.Forms.Button();
             this.grpControl = new System.Windows.Forms.GroupBox();
+            this.btnPauseContinue = new System.Windows.Forms.Button();
+            this.gpSetting = new System.Windows.Forms.GroupBox();
+            this.chkCrawlRetweets = new System.Windows.Forms.CheckBox();
             this.chkComment = new System.Windows.Forms.CheckBox();
             this.chkStatus = new System.Windows.Forms.CheckBox();
             this.chkTag = new System.Windows.Forms.CheckBox();
             this.chkUserInfo = new System.Windows.Forms.CheckBox();
             this.lblRobotSelect = new System.Windows.Forms.Label();
-            this.btnPauseContinue = new System.Windows.Forms.Button();
-            this.gpSetting = new System.Windows.Forms.GroupBox();
+            this.chkConfirmRelationship = new System.Windows.Forms.CheckBox();
             this.optXML = new System.Windows.Forms.RadioButton();
             this.optJSON = new System.Windows.Forms.RadioButton();
             this.lblFormat = new System.Windows.Forms.Label();
@@ -109,7 +111,6 @@
             this.lblUserRelationTitle = new System.Windows.Forms.Label();
             this.lblStatusTitle = new System.Windows.Forms.Label();
             this.btnPost = new System.Windows.Forms.Button();
-            this.chkConfirmRelationship = new System.Windows.Forms.CheckBox();
             this.grpUserInfo.SuspendLayout();
             this.grpSearchCondition.SuspendLayout();
             this.grpCurrentUser.SuspendLayout();
@@ -125,9 +126,9 @@
             // 
             // btnStartByLast
             // 
-            this.btnStartByLast.Location = new System.Drawing.Point(455, 18);
+            this.btnStartByLast.Location = new System.Drawing.Point(480, 19);
             this.btnStartByLast.Name = "btnStartByLast";
-            this.btnStartByLast.Size = new System.Drawing.Size(260, 30);
+            this.btnStartByLast.Size = new System.Drawing.Size(234, 30);
             this.btnStartByLast.TabIndex = 19;
             this.btnStartByLast.Text = "Start Crawling by Last Stopped User";
             this.btnStartByLast.UseVisualStyleBackColor = true;
@@ -244,9 +245,9 @@
             // 
             // btnStartBySearch
             // 
-            this.btnStartBySearch.Location = new System.Drawing.Point(215, 18);
+            this.btnStartBySearch.Location = new System.Drawing.Point(243, 19);
             this.btnStartBySearch.Name = "btnStartBySearch";
-            this.btnStartBySearch.Size = new System.Drawing.Size(235, 30);
+            this.btnStartBySearch.Size = new System.Drawing.Size(234, 30);
             this.btnStartBySearch.TabIndex = 18;
             this.btnStartBySearch.Text = "Start Crawling by Searched User";
             this.btnStartBySearch.UseVisualStyleBackColor = true;
@@ -432,9 +433,9 @@
             // 
             // btnStartByCurrent
             // 
-            this.btnStartByCurrent.Location = new System.Drawing.Point(3, 18);
+            this.btnStartByCurrent.Location = new System.Drawing.Point(6, 19);
             this.btnStartByCurrent.Name = "btnStartByCurrent";
-            this.btnStartByCurrent.Size = new System.Drawing.Size(205, 30);
+            this.btnStartByCurrent.Size = new System.Drawing.Size(234, 30);
             this.btnStartByCurrent.TabIndex = 17;
             this.btnStartByCurrent.Text = "Start Crawling by Current User";
             this.btnStartByCurrent.UseVisualStyleBackColor = true;
@@ -455,7 +456,7 @@
             // 
             // btnExit
             // 
-            this.btnExit.Location = new System.Drawing.Point(453, 715);
+            this.btnExit.Location = new System.Drawing.Point(453, 725);
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(170, 23);
             this.btnExit.TabIndex = 22;
@@ -465,85 +466,21 @@
             // 
             // grpControl
             // 
-            this.grpControl.Controls.Add(this.chkComment);
-            this.grpControl.Controls.Add(this.chkStatus);
-            this.grpControl.Controls.Add(this.chkTag);
-            this.grpControl.Controls.Add(this.chkUserInfo);
-            this.grpControl.Controls.Add(this.lblRobotSelect);
             this.grpControl.Controls.Add(this.btnPauseContinue);
             this.grpControl.Controls.Add(this.btnStartByCurrent);
             this.grpControl.Controls.Add(this.btnStartBySearch);
             this.grpControl.Controls.Add(this.btnStartByLast);
-            this.grpControl.Location = new System.Drawing.Point(5, 427);
+            this.grpControl.Location = new System.Drawing.Point(5, 460);
             this.grpControl.Name = "grpControl";
-            this.grpControl.Size = new System.Drawing.Size(827, 85);
+            this.grpControl.Size = new System.Drawing.Size(827, 61);
             this.grpControl.TabIndex = 14;
             this.grpControl.TabStop = false;
             this.grpControl.Text = "Crawler Controlling";
             // 
-            // chkComment
-            // 
-            this.chkComment.AutoSize = true;
-            this.chkComment.Checked = true;
-            this.chkComment.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkComment.Location = new System.Drawing.Point(708, 60);
-            this.chkComment.Name = "chkComment";
-            this.chkComment.Size = new System.Drawing.Size(108, 16);
-            this.chkComment.TabIndex = 25;
-            this.chkComment.Text = "Comments Robot";
-            this.chkComment.UseVisualStyleBackColor = true;
-            this.chkComment.CheckedChanged += new System.EventHandler(this.chkComment_CheckedChanged);
-            // 
-            // chkStatus
-            // 
-            this.chkStatus.AutoSize = true;
-            this.chkStatus.Checked = true;
-            this.chkStatus.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkStatus.Location = new System.Drawing.Point(594, 60);
-            this.chkStatus.Name = "chkStatus";
-            this.chkStatus.Size = new System.Drawing.Size(108, 16);
-            this.chkStatus.TabIndex = 24;
-            this.chkStatus.Text = "Statuses Robot";
-            this.chkStatus.UseVisualStyleBackColor = true;
-            this.chkStatus.CheckedChanged += new System.EventHandler(this.chkStatus_CheckedChanged);
-            // 
-            // chkTag
-            // 
-            this.chkTag.AutoSize = true;
-            this.chkTag.Checked = true;
-            this.chkTag.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkTag.Location = new System.Drawing.Point(504, 61);
-            this.chkTag.Name = "chkTag";
-            this.chkTag.Size = new System.Drawing.Size(84, 16);
-            this.chkTag.TabIndex = 23;
-            this.chkTag.Text = "Tags Robot";
-            this.chkTag.UseVisualStyleBackColor = true;
-            // 
-            // chkUserInfo
-            // 
-            this.chkUserInfo.AutoSize = true;
-            this.chkUserInfo.Checked = true;
-            this.chkUserInfo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkUserInfo.Location = new System.Drawing.Point(342, 60);
-            this.chkUserInfo.Name = "chkUserInfo";
-            this.chkUserInfo.Size = new System.Drawing.Size(156, 16);
-            this.chkUserInfo.TabIndex = 22;
-            this.chkUserInfo.Text = "User Information Robot";
-            this.chkUserInfo.UseVisualStyleBackColor = true;
-            // 
-            // lblRobotSelect
-            // 
-            this.lblRobotSelect.AutoSize = true;
-            this.lblRobotSelect.Location = new System.Drawing.Point(6, 61);
-            this.lblRobotSelect.Name = "lblRobotSelect";
-            this.lblRobotSelect.Size = new System.Drawing.Size(323, 12);
-            this.lblRobotSelect.TabIndex = 21;
-            this.lblRobotSelect.Text = "Select Robots (User Relation Robot works by default):";
-            // 
             // btnPauseContinue
             // 
             this.btnPauseContinue.Enabled = false;
-            this.btnPauseContinue.Location = new System.Drawing.Point(720, 18);
+            this.btnPauseContinue.Location = new System.Drawing.Point(717, 19);
             this.btnPauseContinue.Name = "btnPauseContinue";
             this.btnPauseContinue.Size = new System.Drawing.Size(105, 30);
             this.btnPauseContinue.TabIndex = 20;
@@ -553,6 +490,12 @@
             // 
             // gpSetting
             // 
+            this.gpSetting.Controls.Add(this.chkCrawlRetweets);
+            this.gpSetting.Controls.Add(this.chkComment);
+            this.gpSetting.Controls.Add(this.chkStatus);
+            this.gpSetting.Controls.Add(this.chkTag);
+            this.gpSetting.Controls.Add(this.chkUserInfo);
+            this.gpSetting.Controls.Add(this.lblRobotSelect);
             this.gpSetting.Controls.Add(this.chkConfirmRelationship);
             this.gpSetting.Controls.Add(this.optXML);
             this.gpSetting.Controls.Add(this.optJSON);
@@ -564,10 +507,91 @@
             this.gpSetting.Controls.Add(this.btnSave);
             this.gpSetting.Location = new System.Drawing.Point(5, 232);
             this.gpSetting.Name = "gpSetting";
-            this.gpSetting.Size = new System.Drawing.Size(826, 189);
+            this.gpSetting.Size = new System.Drawing.Size(826, 222);
             this.gpSetting.TabIndex = 15;
             this.gpSetting.TabStop = false;
             this.gpSetting.Text = "Options";
+            // 
+            // chkCrawlRetweets
+            // 
+            this.chkCrawlRetweets.AutoSize = true;
+            this.chkCrawlRetweets.Checked = true;
+            this.chkCrawlRetweets.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCrawlRetweets.Location = new System.Drawing.Point(405, 201);
+            this.chkCrawlRetweets.Name = "chkCrawlRetweets";
+            this.chkCrawlRetweets.Size = new System.Drawing.Size(270, 16);
+            this.chkCrawlRetweets.TabIndex = 32;
+            this.chkCrawlRetweets.Text = "Crawl retweeting statuses for each status";
+            this.chkCrawlRetweets.UseVisualStyleBackColor = true;
+            // 
+            // chkComment
+            // 
+            this.chkComment.AutoSize = true;
+            this.chkComment.Checked = true;
+            this.chkComment.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkComment.Location = new System.Drawing.Point(681, 201);
+            this.chkComment.Name = "chkComment";
+            this.chkComment.Size = new System.Drawing.Size(108, 16);
+            this.chkComment.TabIndex = 31;
+            this.chkComment.Text = "Comments Robot";
+            this.chkComment.UseVisualStyleBackColor = true;
+            this.chkComment.CheckedChanged += new System.EventHandler(this.chkComment_CheckedChanged);
+            // 
+            // chkStatus
+            // 
+            this.chkStatus.AutoSize = true;
+            this.chkStatus.Checked = true;
+            this.chkStatus.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkStatus.Location = new System.Drawing.Point(291, 201);
+            this.chkStatus.Name = "chkStatus";
+            this.chkStatus.Size = new System.Drawing.Size(108, 16);
+            this.chkStatus.TabIndex = 30;
+            this.chkStatus.Text = "Statuses Robot";
+            this.chkStatus.UseVisualStyleBackColor = true;
+            this.chkStatus.CheckedChanged += new System.EventHandler(this.chkStatus_CheckedChanged);
+            // 
+            // chkTag
+            // 
+            this.chkTag.AutoSize = true;
+            this.chkTag.Checked = true;
+            this.chkTag.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkTag.Location = new System.Drawing.Point(201, 201);
+            this.chkTag.Name = "chkTag";
+            this.chkTag.Size = new System.Drawing.Size(84, 16);
+            this.chkTag.TabIndex = 29;
+            this.chkTag.Text = "Tags Robot";
+            this.chkTag.UseVisualStyleBackColor = true;
+            // 
+            // chkUserInfo
+            // 
+            this.chkUserInfo.AutoSize = true;
+            this.chkUserInfo.Checked = true;
+            this.chkUserInfo.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkUserInfo.Location = new System.Drawing.Point(39, 201);
+            this.chkUserInfo.Name = "chkUserInfo";
+            this.chkUserInfo.Size = new System.Drawing.Size(156, 16);
+            this.chkUserInfo.TabIndex = 28;
+            this.chkUserInfo.Text = "User Information Robot";
+            this.chkUserInfo.UseVisualStyleBackColor = true;
+            // 
+            // lblRobotSelect
+            // 
+            this.lblRobotSelect.AutoSize = true;
+            this.lblRobotSelect.Location = new System.Drawing.Point(25, 184);
+            this.lblRobotSelect.Name = "lblRobotSelect";
+            this.lblRobotSelect.Size = new System.Drawing.Size(323, 12);
+            this.lblRobotSelect.TabIndex = 27;
+            this.lblRobotSelect.Text = "Select Robots (User Relation Robot works by default):";
+            // 
+            // chkConfirmRelationship
+            // 
+            this.chkConfirmRelationship.AutoSize = true;
+            this.chkConfirmRelationship.Location = new System.Drawing.Point(389, 168);
+            this.chkConfirmRelationship.Name = "chkConfirmRelationship";
+            this.chkConfirmRelationship.Size = new System.Drawing.Size(294, 16);
+            this.chkConfirmRelationship.TabIndex = 17;
+            this.chkConfirmRelationship.Text = "Confirm Relationship(more precisely but slow)";
+            this.chkConfirmRelationship.UseVisualStyleBackColor = true;
             // 
             // optXML
             // 
@@ -829,7 +853,7 @@
             this.grpStatus.Controls.Add(this.lblUserRelationTitle);
             this.grpStatus.Controls.Add(this.lblStatusTitle);
             this.grpStatus.Controls.Add(this.lblUserInfoTitle);
-            this.grpStatus.Location = new System.Drawing.Point(5, 516);
+            this.grpStatus.Location = new System.Drawing.Point(5, 526);
             this.grpStatus.Name = "grpStatus";
             this.grpStatus.Size = new System.Drawing.Size(827, 189);
             this.grpStatus.TabIndex = 17;
@@ -973,7 +997,7 @@
             // 
             // btnPost
             // 
-            this.btnPost.Location = new System.Drawing.Point(180, 715);
+            this.btnPost.Location = new System.Drawing.Point(180, 725);
             this.btnPost.Name = "btnPost";
             this.btnPost.Size = new System.Drawing.Size(250, 23);
             this.btnPost.TabIndex = 21;
@@ -981,21 +1005,11 @@
             this.btnPost.UseVisualStyleBackColor = true;
             this.btnPost.Click += new System.EventHandler(this.btnPost_Click);
             // 
-            // chkConfirmRelationship
-            // 
-            this.chkConfirmRelationship.AutoSize = true;
-            this.chkConfirmRelationship.Location = new System.Drawing.Point(389, 168);
-            this.chkConfirmRelationship.Name = "chkConfirmRelationship";
-            this.chkConfirmRelationship.Size = new System.Drawing.Size(294, 16);
-            this.chkConfirmRelationship.TabIndex = 17;
-            this.chkConfirmRelationship.Text = "Confirm Relationship(more precisely but slow)";
-            this.chkConfirmRelationship.UseVisualStyleBackColor = true;
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(837, 749);
+            this.ClientSize = new System.Drawing.Size(837, 765);
             this.Controls.Add(this.btnPost);
             this.Controls.Add(this.grpStatus);
             this.Controls.Add(this.gpSetting);
@@ -1019,7 +1033,6 @@
             this.grpCurrentUser.PerformLayout();
             this.grpSearch.ResumeLayout(false);
             this.grpControl.ResumeLayout(false);
-            this.grpControl.PerformLayout();
             this.gpSetting.ResumeLayout(false);
             this.gpSetting.PerformLayout();
             this.grpDBSettings.ResumeLayout(false);
@@ -1108,15 +1121,16 @@
         private System.Windows.Forms.Label lblUserTagQueueInfo;
         private System.Windows.Forms.Label lblUserTagMessage;
         private System.Windows.Forms.Label lblUserTagTitle;
-        private System.Windows.Forms.CheckBox chkStatus;
-        private System.Windows.Forms.CheckBox chkTag;
-        private System.Windows.Forms.CheckBox chkUserInfo;
-        private System.Windows.Forms.Label lblRobotSelect;
-        private System.Windows.Forms.CheckBox chkComment;
         private System.Windows.Forms.RadioButton optXML;
         private System.Windows.Forms.RadioButton optJSON;
         private System.Windows.Forms.Label lblFormat;
         private System.Windows.Forms.CheckBox chkConfirmRelationship;
+        private System.Windows.Forms.CheckBox chkCrawlRetweets;
+        private System.Windows.Forms.CheckBox chkComment;
+        private System.Windows.Forms.CheckBox chkStatus;
+        private System.Windows.Forms.CheckBox chkTag;
+        private System.Windows.Forms.CheckBox chkUserInfo;
+        private System.Windows.Forms.Label lblRobotSelect;
     }
 }
 

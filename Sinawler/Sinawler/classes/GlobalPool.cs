@@ -32,6 +32,7 @@ namespace Sinawler
         public static bool UserInfoRobotEnabled = true;
         public static bool TagRobotEnabled = true;
         public static bool StatusRobotEnabled = true;
+        public static bool CrawlRetweets = true;
         public static bool CommentRobotEnabled = true;
 
         public static int MinSleepMsForUserRelation = 500;
