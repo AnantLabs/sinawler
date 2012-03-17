@@ -14,7 +14,6 @@ namespace Sinawler.Model
     
     //source_user_id: 源用户UserID
     //target_user_id: 目的用户UserID
-    //relation_state: 关系状态，1为成立，0为不成立，以此记录关系动态变化，默认为1
     //iteration: 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
 
 	public class UserRelation
@@ -105,5 +104,38 @@ namespace Sinawler.Model
 
 		#endregion  成员方法
 	}
+
+    #region 关系信息
+    public class RelationShip
+    {
+        public RelationInfo source { get; set; }
+        public RelationInfo target { get; set; }
+        public bool UserNotExist { get; set; }
+    }
+
+    public class RelationInfo
+    {
+        /// <summary>
+        /// 用户ID
+        /// </summary>
+        public Int64 id { get; set; }
+        /// <summary>
+        /// 微博昵称
+        /// </summary>
+        public String screen_name { get; set; }
+        /// <summary>
+        /// 关注
+        /// </summary>
+        public Boolean following { get; set; }
+        /// <summary>
+        /// 被关注
+        /// </summary>
+        public Boolean followed_by { get; set; }
+        /// <summary>
+        /// 启用通知
+        /// </summary>
+        public Boolean notifications_enabled { get; set; }
+    }
+    #endregion
 }
 

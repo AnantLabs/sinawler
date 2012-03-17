@@ -8,18 +8,40 @@ namespace Sinawler
 {
     //the classes that receive the deserialized objects from Json
     //some ones can use model classes directly
-    class JsonIDs
+
+    public class JsonIDs
     {
         private long[] ids;
+        private int _next_cursor;
+        private int _previous_cursor;
+        private int _total_number;
 
         public long[] IDs
         { 
             get { return ids; }
             set { ids = value; }
         }
+
+        public int next_cursor
+        {
+            get { return _next_cursor; }
+            set { _next_cursor = value; }
+        }
+
+        public int previous_cursor
+        {
+            get { return _previous_cursor; }
+            set { _previous_cursor = value; }
+        }
+
+        public int total_number
+        {
+            get { return _total_number; }
+            set { _total_number = value; }
+        }
     }
 
-    class JsonGEO
+    public class JsonGEO
     {
         private string _type;
         private double[] _coordinates = new double[2];
@@ -37,7 +59,7 @@ namespace Sinawler
         }
     }
 
-    class JsonStatus
+    public class JsonStatus
     {
         private long _id;
         private string _created_at;
@@ -193,7 +215,7 @@ namespace Sinawler
         }
     }
 
-    class JsonComment
+    public class JsonComment
     {
         private long _id;
         private string _text;
@@ -261,5 +283,108 @@ namespace Sinawler
             get { return _mid; }
         }
         #endregion
+    }
+
+    public class JsonWriteLimit
+    {
+        private string _api;
+        private int _limit;
+        private string _limit_time_unit;
+        private int _remaining_hits;
+
+        public string api
+        { get { return _api; } set { _api = value; } }
+
+        public int limit
+        { get { return _limit; } set { _limit = value; } }
+
+        public string limit_time_unit
+        { get { return _limit_time_unit; } set { _limit_time_unit = value; } }
+
+        public int remaining_hits
+        { get { return _remaining_hits; } set { _remaining_hits = value; } }
+    }
+
+    public class JsonRateLimit
+    {
+        private JsonWriteLimit[] _api_rate_limits;
+        private int _ip_limit;
+        private string _limit_time_unit;
+        private int _remaining_ip_hits;
+        private int _remaining_user_hits;
+        private string _reset_time;
+        private int _reset_time_in_seconds;
+        private int _user_limit;
+
+        public JsonWriteLimit[] api_rate_limite
+        {get{return _api_rate_limits;} set{_api_rate_limits=value;}}
+
+        public int ip_limit
+        { get { return _ip_limit; } set { _ip_limit = value; } }
+
+        public string limit_time_unit
+        { get { return _limit_time_unit; } set { _limit_time_unit = value; } }
+
+        public int remaining_ip_hits
+        { get { return _remaining_ip_hits; } set { _remaining_ip_hits = value; } }
+
+        public int remaining_user_hits
+        { get { return _remaining_user_hits; } set { _remaining_user_hits = value; } }
+
+        public string reset_time
+        { get { return _reset_time; } set { _reset_time = value; } }
+
+        public int reset_time_in_seconds
+        { get { return _reset_time_in_seconds; } set { _reset_time_in_seconds = value; } }
+
+        public int user_limit
+        { get { return _user_limit; } set { _user_limit = value; } }
+    }
+
+    public class JsonAccountUID
+    {
+        private long _uid;
+
+        public long uid
+        { get { return _uid; } set { _uid = value; } }
+    }
+
+    public class JsonError
+    {
+        private string _error="";
+        private int _error_code=0;
+        private string _request="";
+
+        public string error
+        { get { return _error; } set { _error = value; } }
+
+        public int error_code
+        { get { return _error_code; } set { _error_code = value; } }
+
+        public string request
+        { get { return _request; } set { _request = value; } }
+
+        public void Initial()
+        {
+            _error = "";
+            _error_code = 0;
+            _request = "";
+        }
+    }
+
+    public class JsonTag
+    {
+        private string _id="";
+        private string _content = "";
+        private string _weight = "";
+
+        public string id
+        { get { return _id; } set { _id = value; } }
+
+        public string content
+        { get { return _content; } set { _content = value; } }
+
+        public string weight
+        { get { return _weight; } set { _weight = value; } }
     }
 }

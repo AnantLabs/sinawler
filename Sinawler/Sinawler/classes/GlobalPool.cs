@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
+//using Sina.Api;
+using Open.Sina2SDK;
 using Sinawler.Model;
 
 namespace Sinawler
 {
     public class APIInfo
     {
-        public SinaApiService API = new SinaApiService();
+        //public SinaApiService API = new SinaApiService();
+        public SinaSerive API = new SinaSerive();
         public DateTime LimitUpdateTime = DateTime.Now;
         public int ResetTimeInSeconds = 3600;
         public int RemainingHits = 1000;
@@ -56,18 +58,23 @@ namespace Sinawler
             switch (apiType)
             {
                 case SysArgFor.USER_RELATION:
+                    ApiForUserRelation.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForUserRelation;
                     break;
                 case SysArgFor.USER_INFO:
+                    ApiForUserInfo.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForUserInfo;
                     break;
                 case SysArgFor.USER_TAG:
+                    ApiForUserTag.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForUserTag;
                     break;
                 case SysArgFor.STATUS:
+                    ApiForStatus.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForStatus;
                     break;
                 case SysArgFor.COMMENT:
+                    ApiForComment.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForComment;
                     break;
                 default:

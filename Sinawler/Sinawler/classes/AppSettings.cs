@@ -16,7 +16,6 @@ namespace Sinawler
         private string _db_pwd = "sa";                  //数据库密码
         private string _db_name = "Sinawler";           //数据库名称
         private int _max_length_in_mem = 5000;          //内存中列最大长度
-        private DataFormat _format = DataFormat.JSON;
 
         private bool _user_info_robot = true;           //the state of user information robot
         private bool _tags_robot = true;                 //the state of tag robot
@@ -60,12 +59,6 @@ namespace Sinawler
         {
             get { return _max_length_in_mem; }
             set { _max_length_in_mem = value; }
-        }
-
-        public DataFormat Format
-        {
-            get { return _format; }
-            set { _format = value; }
         }
 
         public bool UserInfoRobot

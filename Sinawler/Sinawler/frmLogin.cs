@@ -5,18 +5,21 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Sina.Api;
+using Open.Sina2SDK;
 using System.Configuration;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Sinawler
 {
     public partial class frmLogin : Form
     {
-        private SinaApiService _apiUserRelation = GlobalPool.GetAPI(SysArgFor.USER_RELATION).API;
-        private SinaApiService _apiUserInfo = GlobalPool.GetAPI(SysArgFor.USER_INFO).API;
-        private SinaApiService _apiUserTag = GlobalPool.GetAPI(SysArgFor.USER_TAG).API;
-        private SinaApiService _apiStatus = GlobalPool.GetAPI(SysArgFor.STATUS).API;
-        private SinaApiService _apiComment = GlobalPool.GetAPI(SysArgFor.COMMENT).API;
+        private SinaSerive _apiUserRelation = GlobalPool.GetAPI(SysArgFor.USER_RELATION).API;
+        private SinaSerive _apiUserInfo = GlobalPool.GetAPI(SysArgFor.USER_INFO).API;
+        private SinaSerive _apiUserTag = GlobalPool.GetAPI(SysArgFor.USER_TAG).API;
+        private SinaSerive _apiStatus = GlobalPool.GetAPI(SysArgFor.STATUS).API;
+        private SinaSerive _apiComment = GlobalPool.GetAPI(SysArgFor.COMMENT).API;
 
         private WebBrowser wbUserInfo = new WebBrowser();
         private WebBrowser wbUserTag = new WebBrowser();
@@ -32,6 +35,8 @@ namespace Sinawler
 
         private int nCountOfReady = 0;
         private int nCountOfLoginOK = 0;
+
+        private bool blnMessageBox = true;
 
         public frmLogin()
         {
@@ -56,38 +61,36 @@ namespace Sinawler
             {
                 wb.Document.GetElementById("userId").SetAttribute("value", strUserID);
                 wb.Document.GetElementById("passwd").SetAttribute("value", strPWD);
+                wb.Document.GetElementById("ssologinFlag").SetAttribute("checked", "true");
                 HtmlElementCollection elements = wb.Document.GetElementsByTagName("a");
                 foreach (HtmlElement element in elements)
                 {
-                    if (element.InnerHtml != null)
+                    if (element.OuterHtml.Contains("WB_btn_oauth formbtn_01"))    //授权按钮
                     {
-                        if (element.InnerHtml.ToLower() == "<em>授权</em>")
+                        switch (i)
                         {
-                            switch (i)
-                            {
-                                case 1:
-                                    blnDirectAuthUserInfo = true;
-                                    break;
-                                case 2:
-                                    blnDirectAuthUserTag = true;
-                                    break;
-                                case 3:
-                                    blnDirectAuthStatus = true;
-                                    break;
-                                case 4:
-                                    blnDirectAuthComment = true;
-                                    break;
-                                default:
-                                    blnDirectAuthUserRelation = true;
-                                    break;
-                            }
-                            element.InvokeMember("click");
+                            case 1:
+                                blnDirectAuthUserInfo = true;
+                                break;
+                            case 2:
+                                blnDirectAuthUserTag = true;
+                                break;
+                            case 3:
+                                blnDirectAuthStatus = true;
+                                break;
+                            case 4:
+                                blnDirectAuthComment = true;
+                                break;
+                            default:
+                                blnDirectAuthUserRelation = true;
+                                break;
                         }
-                        if (element.InnerHtml.ToLower() == "<em>登录并授权</em>")
-                        {
-                            element.InvokeMember("click");
-                        }
+                        element.InvokeMember("click");
                     }
+                    //if (element.InnerHtml.ToLower() == "<em>登录并授权</em>")
+                    //{
+                    //    element.InvokeMember("click");
+                    //}
                 }
                 i++;
             }
@@ -102,7 +105,7 @@ namespace Sinawler
             btnCancel.Enabled = false;
             string strUserID = txtUserID.Text;
             string strPWD = txtPWD.Text;
-
+            blnMessageBox = true;
             AutoLogin(strUserID, strPWD);
         }
 
@@ -110,38 +113,28 @@ namespace Sinawler
         {
             btnLogin.Text = "Initializing...";
             //the two strings below must to be "" to generate right signature
-            _apiUserRelation.Token = "";
-            _apiUserRelation.TokenSecret = "";
-            _apiUserInfo.Token = "";
-            _apiUserInfo.TokenSecret = "";
-            _apiUserTag.Token = "";
-            _apiUserTag.TokenSecret = "";
-            _apiStatus.Token = "";
-            _apiStatus.TokenSecret = "";
-            _apiComment.Token = "";
-            _apiComment.TokenSecret = "";
             try
             {
                 Sinawler.Properties.Settings settings = new Sinawler.Properties.Settings();
 
-                _apiUserRelation.appKey = settings.appKeyForUserRelation;
-                _apiUserRelation.appSecret = settings.appSecretForUserRelation;
+                _apiUserRelation.App_Key = settings.appKeyForUserRelation;
+                _apiUserRelation.App_Secret = settings.appSecretForUserRelation;
                 GlobalPool.MinSleepMsForUserRelation = settings.MinSleepMsForUserRelation;
 
-                _apiUserInfo.appKey = settings.appKeyForUserInfo;
-                _apiUserInfo.appSecret = settings.appSecretForUserInfo;
+                _apiUserInfo.App_Key = settings.appKeyForUserInfo;
+                _apiUserInfo.App_Secret = settings.appSecretForUserInfo;
                 GlobalPool.MinSleepMsForUserInfo = settings.MinSleepMsForUserInfo;
 
-                _apiUserTag.appKey = settings.appKeyForUserTag;
-                _apiUserTag.appSecret = settings.appSecretForUserTag;
+                _apiUserTag.App_Key = settings.appKeyForUserTag;
+                _apiUserTag.App_Secret = settings.appSecretForUserTag;
                 GlobalPool.MinSleepMsForUserTag = settings.MinSleepMsForUserTag;
 
-                _apiStatus.appKey = settings.appKeyForStatus;
-                _apiStatus.appSecret = settings.appSecretForStatus;
+                _apiStatus.App_Key = settings.appKeyForStatus;
+                _apiStatus.App_Secret = settings.appSecretForStatus;
                 GlobalPool.MinSleepMsForStatus = settings.MinSleepMsForStatus;
 
-                _apiComment.appKey = settings.appKeyForComment;
-                _apiComment.appSecret = settings.appSecretForComment;
+                _apiComment.App_Key = settings.appKeyForComment;
+                _apiComment.App_Secret = settings.appSecretForComment;
                 GlobalPool.MinSleepMsForComment = settings.MinSleepMsForComment;
             }
             catch (Exception ex)
@@ -150,12 +143,12 @@ namespace Sinawler
                 Application.Exit();
             }
             try
-            {
-                wbUserRelation.Url = new Uri(_apiUserRelation.AuthorizationGet());
-                wbUserInfo.Url = new Uri(_apiUserInfo.AuthorizationGet());
-                wbUserTag.Url = new Uri(_apiUserTag.AuthorizationGet());
-                wbStatus.Url = new Uri(_apiStatus.AuthorizationGet());
-                wbComment.Url = new Uri(_apiComment.AuthorizationGet());
+            {                
+                wbUserInfo.Url = new Uri(_apiUserInfo.GetAuthorizationCodeURL());
+                wbUserTag.Url = new Uri(_apiUserTag.GetAuthorizationCodeURL());
+                wbStatus.Url = new Uri(_apiStatus.GetAuthorizationCodeURL());
+                wbComment.Url = new Uri(_apiComment.GetAuthorizationCodeURL());
+                wbUserRelation.Url = new Uri(_apiUserRelation.GetAuthorizationCodeURL());
             }
             catch (Exception ex)
             {
@@ -164,11 +157,39 @@ namespace Sinawler
             }
         }
 
-        private void wbUserRelation_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        #region 监视ajax登录返回结果
+        private void WebUserRelationOnChange(Object sender, EventArgs e)
         {
+            HtmlElement div = wbUserRelation.Document.GetElementById("cs");
+            if (div == null) return;
+            if (div.InnerText.Contains("登录名或密码错误") && div.GetAttribute("display")=="")
+            {
+                if (blnMessageBox)
+                {
+                    MessageBox.Show("Login failed. Please try again.", "Sinawler");
+                    blnMessageBox = false;
+                }
+                txtUserID.Enabled = true;
+                txtPWD.Enabled = true;
+                btnLogin.Enabled = true;
+                btnCancel.Enabled = true;
+                btnLogin.Text = "Login";
+                return;
+            }
+        }
+        #endregion
+
+        private void wbUserRelation_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        {            
             if (wbUserRelation.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserRelation.Url.ToString())
             {
-                if (wbUserRelation.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                string url=wbUserRelation.Url.ToString();
+                if (url.Contains("code="))
+                {
+                    string code = url.Substring(url.IndexOf("code=") + 5);
+                    _apiUserRelation.GetAccessTokenByAuthorizationCode(code);
+                }
+                if (wbUserRelation.Url.ToString().Contains("https://api.weibo.com/oauth2/authorize?client_id="))
                 {
                     nCountOfReady++;
                     if (nCountOfReady == 5)
@@ -181,28 +202,15 @@ namespace Sinawler
                         btnLogin.Text = "Login";
                         txtUserID.Focus();
                     }
+                    HtmlElement target = wbUserRelation.Document.GetElementById("cs");
+                    if (target != null)
+                    {
+                        target.AttachEventHandler("onpropertychange", new EventHandler(WebUserRelationOnChange));
+                    }
                     return;
                 }
-                string strHTML = wbUserRelation.DocumentText;
-                if (strHTML.Contains("登录名或密码错误"))
-                {
-                    MessageBox.Show("User Relation thread login failed. Please try again.", "Sinawler");
-                    txtUserID.Enabled = true;
-                    txtPWD.Enabled = true;
-                    btnLogin.Enabled = true;
-                    btnCancel.Enabled = true;
-                    btnLogin.Text = "Login";
-                    return;
-                }
+                nCountOfLoginOK++;
                 if (blnDirectAuthUserRelation && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                string strPin = _apiUserRelation.ParseHtml(strHTML);
-                if (strPin != "")
-                {
-                    _apiUserRelation.Verifier = strPin;
-                    _apiUserRelation.AccessTokenGet();
-                    nCountOfLoginOK++;
-                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                }
             }
         }
 
@@ -210,7 +218,13 @@ namespace Sinawler
         {
             if (wbUserInfo.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserInfo.Url.ToString())
             {
-                if (wbUserInfo.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                string url = wbUserInfo.Url.ToString();
+                if (url.Contains("code="))
+                {
+                    string code = url.Substring(url.IndexOf("code=") + 5);
+                    _apiUserInfo.GetAccessTokenByAuthorizationCode(code);
+                }
+                if (wbUserInfo.Url.ToString().Contains("https://api.weibo.com/oauth2/authorize?client_id="))
                 {
                     nCountOfReady++;
                     if (nCountOfReady == 5)
@@ -225,28 +239,8 @@ namespace Sinawler
                     }
                     return;
                 }
-                string strHTML = wbUserInfo.DocumentText;
-                if (strHTML.Contains("登录名或密码错误"))
-                {
-                    MessageBox.Show("User Information thread login failed. Please try again.", "Sinawler");
-                    txtUserID.Enabled = true;
-                    txtPWD.Enabled = true;
-                    btnLogin.Enabled = true;
-                    btnCancel.Enabled = true;
-                    btnLogin.Text = "Login";
-                    return;
-                }
+                nCountOfLoginOK++;
                 if (blnDirectAuthUserInfo && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                string strPin = _apiUserInfo.ParseHtml(strHTML);
-                if (strPin != "")
-                {
-                    _apiUserInfo.Verifier = strPin;
-                    _apiUserInfo.AccessTokenGet();
-
-                    nCountOfLoginOK++;
-
-                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                }
             }
         }
 
@@ -254,7 +248,13 @@ namespace Sinawler
         {
             if (wbUserTag.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbUserTag.Url.ToString())
             {
-                if (wbUserTag.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                string url = wbUserTag.Url.ToString();
+                if (url.Contains("code="))
+                {
+                    string code = url.Substring(url.IndexOf("code=") + 5);
+                    _apiUserTag.GetAccessTokenByAuthorizationCode(code);
+                }
+                if (wbUserTag.Url.ToString().Contains("https://api.weibo.com/oauth2/authorize?client_id="))
                 {
                     nCountOfReady++;
                     if (nCountOfReady == 5)
@@ -269,28 +269,8 @@ namespace Sinawler
                     }
                     return;
                 }
-                string strHTML = wbUserTag.DocumentText;
-                if (strHTML.Contains("登录名或密码错误"))
-                {
-                    MessageBox.Show("User Tag thread login failed. Please try again.", "Sinawler");
-                    txtUserID.Enabled = true;
-                    txtPWD.Enabled = true;
-                    btnLogin.Enabled = true;
-                    btnCancel.Enabled = true;
-                    btnLogin.Text = "Login";
-                    return;
-                }
+                nCountOfLoginOK++;
                 if (blnDirectAuthUserTag && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                string strPin = _apiUserTag.ParseHtml(strHTML);
-                if (strPin != "")
-                {
-                    _apiUserTag.Verifier = strPin;
-                    _apiUserTag.AccessTokenGet();
-
-                    nCountOfLoginOK++;
-
-                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                }
             }
         }
 
@@ -298,7 +278,13 @@ namespace Sinawler
         {
             if (wbStatus.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbStatus.Url.ToString())
             {
-                if (wbStatus.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                string url = wbStatus.Url.ToString();
+                if (url.Contains("code="))
+                {
+                    string code = url.Substring(url.IndexOf("code=") + 5);
+                    _apiStatus.GetAccessTokenByAuthorizationCode(code);
+                }
+                if (wbStatus.Url.ToString().Contains("https://api.weibo.com/oauth2/authorize?client_id="))
                 {
                     nCountOfReady++;
                     if (nCountOfReady == 5)
@@ -313,28 +299,8 @@ namespace Sinawler
                     }
                     return;
                 }
-                string strHTML = wbStatus.DocumentText;
-                if (strHTML.Contains("登录名或密码错误"))
-                {
-                    MessageBox.Show("Status thread login failed. Please try again.", "Sinawler");
-                    txtUserID.Enabled = true;
-                    txtPWD.Enabled = true;
-                    btnLogin.Enabled = true;
-                    btnCancel.Enabled = true;
-                    btnLogin.Text = "Login";
-                    return;
-                }
+                nCountOfLoginOK++;
                 if (blnDirectAuthStatus && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                string strPin = _apiStatus.ParseHtml(strHTML);
-                if (strPin != "")
-                {
-                    _apiStatus.Verifier = strPin;
-                    _apiStatus.AccessTokenGet();
-
-                    nCountOfLoginOK++;
-
-                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                }
             }
         }
 
@@ -342,7 +308,13 @@ namespace Sinawler
         {
             if (wbComment.ReadyState == WebBrowserReadyState.Complete && e.Url.ToString() == wbComment.Url.ToString())
             {
-                if (wbComment.Url.ToString().Contains("http://api.t.sina.com.cn/oauth/authorize?oauth_token="))
+                string url = wbComment.Url.ToString();
+                if (url.Contains("code="))
+                {
+                    string code = url.Substring(url.IndexOf("code=") + 5);
+                    _apiComment.GetAccessTokenByAuthorizationCode(code);
+                }
+                if (wbComment.Url.ToString().Contains("https://api.weibo.com/oauth2/authorize?client_id="))
                 {
                     nCountOfReady++;
                     if (nCountOfReady == 5)
@@ -357,28 +329,8 @@ namespace Sinawler
                     }
                     return;
                 }
-                string strHTML = wbComment.DocumentText;
-                if (strHTML.Contains("登录名或密码错误"))
-                {
-                    MessageBox.Show("Comment thread login failed. Please try again.", "Sinawler");
-                    txtUserID.Enabled = true;
-                    txtPWD.Enabled = true;
-                    btnLogin.Enabled = true;
-                    btnCancel.Enabled = true;
-                    btnLogin.Text = "Login";
-                    return;
-                }
+                nCountOfLoginOK++;
                 if (blnDirectAuthComment && nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                string strPin = _apiComment.ParseHtml(strHTML);
-                if (strPin != "")
-                {
-                    _apiComment.Verifier = strPin;
-                    _apiComment.AccessTokenGet();
-
-                    nCountOfLoginOK++;
-
-                    if (nCountOfLoginOK == 5) this.DialogResult = DialogResult.OK;
-                }
             }
         }
     }

@@ -95,7 +95,12 @@ namespace Sinawler
                     SinaMBCrawler crawler = new SinaMBCrawler(SysArgFor.USER_RELATION);
                     crawler.SleepTime = 0;  //这里不等待
                     oCurrentUser = crawler.GetCurrentUserInfo();
-                    ShowCurrentUser();
+                    if(oCurrentUser.user_id==0)
+                        MessageBox.Show("Getting User Information Failed. Please try later.", "Sinawler");
+                    if (oCurrentUser.user_id == -1)
+                        MessageBox.Show("Service is forbidden now. Maybe your request is too frequent. Please try later.", "Sinawler");
+                    else
+                        ShowCurrentUser();
                     oSearchedUser = oCurrentUser;
 
                     btnStartByCurrent.Enabled = true;
@@ -122,7 +127,8 @@ namespace Sinawler
         //显示登录帐号用户信息
         private void ShowCurrentUser()
         {
-            if (oCurrentUser != null && oCurrentUser.user_id!=-1)
+            if (oCurrentUser.user_id == 0)  return;
+            if (oCurrentUser.user_id>0)
             {
                 lblCUserID.Text = "UserID: " + oCurrentUser.user_id.ToString();
                 lblCName.Text = "Nickname: " + oCurrentUser.screen_name;
@@ -156,15 +162,14 @@ namespace Sinawler
                 lblCFriendsCount.Text = "Followings:";
                 lblCStatusesCount.Text = "Tweets:";
                 lblCCreatedAt.Text = "Created At:";
-                if(oCurrentUser.user_id==-1)
-                    MessageBox.Show("Service is forbidden now. Maybe your request is too frequent. Please try later.", "Sinawler");
             }
         }
 
         //显示搜索结果用户信息
         private void ShowSearchedUser()
         {
-            if (oSearchedUser != null && oSearchedUser.user_id!=-1)
+            if (oCurrentUser.user_id == 0)  return;
+            if (oSearchedUser.user_id>0)
             {
                 lblUserID.Text = "UserID：" + oSearchedUser.user_id.ToString();
                 lblName.Text = "Nickname：" + oSearchedUser.screen_name;
@@ -242,8 +247,12 @@ namespace Sinawler
                     oSearchedUser = crawler.GetUserInfo(strScreenName);
                 if (strUserID != "" && strScreenName != "")
                     oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUserID), strScreenName);
-                if (oSearchedUser == null) MessageBox.Show("User not found.", "Sinawler");
-                ShowSearchedUser();
+                if (oSearchedUser.user_id == 0)
+                    MessageBox.Show("User not found.", "Sinawler");
+                if (oSearchedUser.user_id == -1)
+                    MessageBox.Show("Service is forbidden now. Maybe your request is too frequent. Please try later.", "Sinawler");
+                else
+                    ShowSearchedUser();
             }
             else
             {
@@ -333,24 +342,6 @@ namespace Sinawler
             GlobalPool.StatusRobotEnabled = chkStatus.Checked;
             GlobalPool.CrawlRetweets = chkCrawlRetweets.Checked;
             GlobalPool.CommentRobotEnabled = chkComment.Checked;
-            if (optJSON.Checked)
-            {
-                settings.Format = DataFormat.JSON;
-                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "json";
-            }
-            if (optXML.Checked)
-            {
-                settings.Format = DataFormat.XML;
-                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "xml";
-            }
         }
 
         private void btnStartByCurrent_Click(object sender, EventArgs e)
@@ -383,8 +374,6 @@ namespace Sinawler
                     chkCrawlRetweets.Enabled = false;
                     chkComment.Enabled = false;
                     chkConfirmRelationship.Enabled = false;
-                    optJSON.Enabled = false;
-                    optXML.Enabled = false;
                     Application.DoEvents();
                 }
 
@@ -538,8 +527,6 @@ namespace Sinawler
                     chkCrawlRetweets.Enabled = false;
                     chkComment.Enabled = false;
                     chkConfirmRelationship.Enabled = false;
-                    optJSON.Enabled = false;
-                    optXML.Enabled = false;
                     Application.DoEvents();
                 }
 
@@ -693,8 +680,6 @@ namespace Sinawler
                     chkCrawlRetweets.Enabled = false;
                     chkComment.Enabled = false;
                     chkConfirmRelationship.Enabled = false;
-                    optJSON.Enabled = false;
-                    optXML.Enabled = false;
                     Application.DoEvents();
                 }
 
@@ -855,8 +840,6 @@ namespace Sinawler
                 chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
-                optJSON.Enabled = true;
-                optXML.Enabled = true;
             }
             oAsyncWorkerUserInfo = null;
         }
@@ -932,8 +915,6 @@ namespace Sinawler
                 chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
-                optJSON.Enabled = true;
-                optXML.Enabled = true;
             }
             oAsyncWorkerUserRelation = null;
         }
@@ -981,8 +962,6 @@ namespace Sinawler
                 chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
-                optJSON.Enabled = true;
-                optXML.Enabled = true;
             }
             oAsyncWorkerUserTag = null;
         }
@@ -1030,8 +1009,6 @@ namespace Sinawler
                 chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
-                optJSON.Enabled = true;
-                optXML.Enabled = true;
             }
             oAsyncWorkerStatus = null;
         }
@@ -1079,8 +1056,6 @@ namespace Sinawler
                 chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
-                optJSON.Enabled = true;
-                optXML.Enabled = true; chkComment.Enabled = true;
             }
             oAsyncWorkerComment = null;
         }
@@ -1113,26 +1088,6 @@ namespace Sinawler
             chkCrawlRetweets.Checked = settings.CrawlRetweets;
             chkComment.Checked = settings.CommentsRobot;
             chkConfirmRelationship.Checked = settings.ConfirmRelationship;
-
-            switch(settings.Format)
-            {
-                case DataFormat.JSON:
-                    optJSON.Checked = true;
-                    GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "json";
-                    GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "json";
-                    GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "json";
-                    GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "json";
-                    GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "json";
-                    break;
-                case DataFormat.XML:
-                    optXML.Checked = true;
-                    GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "xml";
-                    GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "xml";
-                    GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "xml";
-                    GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "xml";
-                    GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "xml";
-                    break;
-            }
         }
 
         private void btnDefault_Click(object sender, EventArgs e)
@@ -1168,25 +1123,6 @@ namespace Sinawler
             settings.CrawlRetweets = chkCrawlRetweets.Checked;
             settings.CommentsRobot = chkComment.Checked;
             settings.ConfirmRelationship = chkConfirmRelationship.Checked;
-
-            if (optJSON.Checked)
-            {
-                settings.Format = DataFormat.JSON;
-                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "json";
-                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "json";
-            }
-            if (optXML.Checked)
-            {
-                settings.Format = DataFormat.XML;
-                GlobalPool.GetAPI(SysArgFor.USER_RELATION).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.USER_INFO).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.USER_TAG).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.STATUS).API.Format = "xml";
-                GlobalPool.GetAPI(SysArgFor.COMMENT).API.Format = "xml";
-            }
 
             AppSettings.Save(settings);
 

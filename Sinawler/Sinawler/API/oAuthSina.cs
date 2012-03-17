@@ -28,14 +28,9 @@ namespace Sina.Api
         private string _appSecret = "";
         private string _token = "";
         private string _tokenSecret = "";
-        private string _format = "json";
 
         #region Properties
-        public string Format 
-        { 
-            get{return _format;}
-            set{_format=value;}
-        }
+        
         public string appKey
         {
             get { return _appKey;  }

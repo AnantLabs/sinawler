@@ -26,12 +26,12 @@ namespace Sinawler
         protected int iMinSleep = 100;              //minimum ms for sleeping
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public RobotBase (SysArgFor robotType)
+        public RobotBase(SysArgFor robotType)
         {
             crawler = new SinaMBCrawler(robotType);
             api = GlobalPool.GetAPI(robotType);
             switch (robotType)
-            { 
+            {
                 case SysArgFor.USER_INFO:
                     if (iMinSleep < GlobalPool.MinSleepMsForUserInfo) iMinSleep = GlobalPool.MinSleepMsForUserInfo;
                     break;
@@ -53,8 +53,8 @@ namespace Sinawler
 
         public bool AsyncCancelled
         {
-            set 
-            { 
+            set
+            {
                 blnAsyncCancelled = value;
                 crawler.StopCrawling = value;
             }
@@ -88,11 +88,11 @@ namespace Sinawler
         protected void Log(string strLog)
         {
             strLogMessage = DateTime.Now.ToString() + " " + strLog;
-            StreamWriter swComment = File.AppendText( strLogFile );
-            swComment.WriteLine( strLogMessage );
+            StreamWriter swComment = File.AppendText(strLogFile);
+            swComment.WriteLine(strLogMessage);
             swComment.Close();
 
-            bwAsync.ReportProgress( 0 );
+            bwAsync.ReportProgress(0);
             Thread.Sleep(GlobalPool.SleepMsForThread);
         }
 
@@ -103,34 +103,11 @@ namespace Sinawler
         protected void AdjustRealFreq()
         {
             if (api == null) return;
-            string strResult = api.API.check_hits_limit();
-            while (strResult == "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" || strResult == null)
-            {
-                System.Threading.Thread.Sleep(100);
-                strResult = api.API.check_hits_limit();
-            }
-            int iResetTimeInSeconds = 0;
-            int iRemainingHits = 0;
-            if (api.API.Format == "xml")
-            {
-                XmlDocument xmlDoc = new XmlDocument();
-                xmlDoc.LoadXml(strResult);
+            JsonRateLimit oJsonRateLimit = api.API.Account_Rate_Limit_Status();
+            int iResetTimeInSeconds = oJsonRateLimit.reset_time_in_seconds;
+            int iRemainingHits = oJsonRateLimit.remaining_ip_hits;
 
-                iResetTimeInSeconds = Convert.ToInt32(xmlDoc.GetElementsByTagName("reset-time-in-seconds")[0].InnerText);
-                iRemainingHits = Convert.ToInt32(xmlDoc.GetElementsByTagName("remaining-hits")[0].InnerText);
-            }//xml
-            else
-            {
-                //such as {"remaining_hits":804,"hourly_limit":1000,"reset_time_in_seconds":2462,"reset_time":"Sun May 22 17:00:00 +0800 2011"}
-                Hashtable oJsonHitsLimit = (Hashtable)JsonConvert.DeserializeObject(strResult, typeof(Hashtable));
-                foreach (DictionaryEntry de in oJsonHitsLimit)
-                {
-                    if (de.Key.ToString() == "reset_time_in_seconds") iResetTimeInSeconds = Convert.ToInt32(de.Value);
-                    if (de.Key.ToString() == "remaining_hits") iRemainingHits = Convert.ToInt32(de.Value);
-                }
-            }
-
-            if(api!=null)
+            if (api != null)
             {
                 api.LimitUpdateTime = DateTime.Now;
                 api.RemainingHits = iRemainingHits;
@@ -144,12 +121,12 @@ namespace Sinawler
         //except user relation robot, others get and record the reset time only
         protected void AdjustFreq()
         {
-            if(api!=null)
+            if (api != null)
             {
                 api.RemainingHits--;
                 api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.LimitUpdateTime).TotalSeconds);
                 api.LimitUpdateTime = DateTime.Now;
-                if (api.ResetTimeInSeconds % 100 == 0 || api.RemainingHits % 20 == 0 || api.ResetTimeInSeconds <= 0 || api.RemainingHits<0) AdjustRealFreq();
+                if (api.ResetTimeInSeconds % 100 == 0 || api.RemainingHits % 20 == 0 || api.ResetTimeInSeconds <= 0 || api.RemainingHits < 0) AdjustRealFreq();
             }
         }
 
@@ -169,6 +146,6 @@ namespace Sinawler
             }
         }
 
-        public virtual void Initialize (){}
+        public virtual void Initialize() { }
     }
 }

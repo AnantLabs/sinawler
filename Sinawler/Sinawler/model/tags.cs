@@ -17,6 +17,7 @@ namespace Sinawler.Model
 		#region Model
 		private long _tag_id;
 		private string _tag;
+        private long _weight;
         private int _iteration;
         private string _update_time;
 		/// <summary>
@@ -35,6 +36,14 @@ namespace Sinawler.Model
 			set{ _tag=value;}
 			get{return _tag;}
 		}
+        /// <summary>
+        /// 权重
+        /// </summary>
+        public long weight
+        {
+            set { _weight = value; }
+            get { return _weight; }
+        }
         /// <summary>
         /// 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
         /// </summary>
