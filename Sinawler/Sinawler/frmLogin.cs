@@ -137,7 +137,7 @@ namespace Sinawler
                 _apiComment.App_Secret = settings.appSecretForComment;
                 GlobalPool.MinSleepMsForComment = settings.MinSleepMsForComment;
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Authentication failed! Please check appKey and appSecret values in .config file.");
                 Application.Exit();

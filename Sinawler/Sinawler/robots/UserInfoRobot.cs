@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
@@ -61,7 +60,8 @@ namespace Sinawler
                     Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
                 //将队头取出
-                lCurrentID = queueUserForUserInfoRobot.RollQueue();
+                //lCurrentID = queueUserForUserInfoRobot.RollQueue();
+                lCurrentID = queueUserForUserInfoRobot.FirstValue;
                 
                 //日志
                 Log("Recording current UserID: " + lCurrentID.ToString()+"...");
@@ -104,6 +104,7 @@ namespace Sinawler
                     }
                     //日志
                     Log( "The information of User " + lCurrentID.ToString() + " crawled." );
+                    queueUserForUserInfoRobot.RollQueue();
                 }
                 else if(user==null) //用户不存在
                 {

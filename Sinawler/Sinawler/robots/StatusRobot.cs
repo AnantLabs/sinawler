@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
@@ -21,7 +20,7 @@ namespace Sinawler
         private long lCurrentSID = 0;                       //currently processing status id
 
         //构造函数，需要传入相应的新浪微博API和主界面
-        public StatusRobot ()
+        public StatusRobot()
             : base(SysArgFor.STATUS)
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_status.log";
@@ -35,7 +34,7 @@ namespace Sinawler
         /// <summary>
         /// 处理并保存爬取的微博数据
         /// </summary>
-        private void SaveStatus ( Status status )
+        private void SaveStatus(Status status)
         {
             lCurrentSID = status.status_id;
             if (!Status.Exists(lCurrentSID))
@@ -55,32 +54,32 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( 10 );
+                    Thread.Sleep(10);
                 }
 
                 //日志
                 Log("Status " + status.retweeted_status.status_id.ToString() + " is retweeted by Status " + lCurrentSID.ToString() + ", saving it into database...");
 
-                if (!Status.Exists( status.retweeted_status.status_id ))
+                if (!Status.Exists(status.retweeted_status.status_id))
                 {
                     status.retweeted_status.Add();
 
                     //日志
-                    Log( "Retweeted Status " + status.retweeted_status.status_id.ToString() + " saved." );
+                    Log("Retweeted Status " + status.retweeted_status.status_id.ToString() + " saved.");
                 }
                 else
                 {
                     //日志
-                    Log( "Retweeted Status " + status.retweeted_status.status_id.ToString() + " exists." );
+                    Log("Retweeted Status " + status.retweeted_status.status_id.ToString() + " exists.");
                 }
 
-                if (queueStatus.Enqueue( status.retweeted_status.status_id ))
-                    Log( "Adding retweeted Status " + status.retweeted_status.status_id.ToString() + " to status queue..." );
+                if (queueStatus.Enqueue(status.retweeted_status.status_id))
+                    Log("Adding retweeted Status " + status.retweeted_status.status_id.ToString() + " to status queue...");
 
                 if (queueUserForUserRelationRobot.Enqueue(status.retweeted_status.user.user_id))
                     Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Relation Robot...");
                 if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(status.retweeted_status.user.user_id))
-                    Log( "Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Information Robot..." );
+                    Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Information Robot...");
                 if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(status.retweeted_status.user.user_id))
                     Log("Adding User " + status.retweeted_status.user.user_id.ToString() + " to the user queue of User Tag Robot...");
                 if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(status.retweeted_status.user.user_id))
@@ -96,7 +95,7 @@ namespace Sinawler
         /// <summary>
         /// 开始爬取微博数据
         /// </summary>
-        public void Start ()
+        public void Start()
         {
             //获取上次中止处的用户ID并入队
             long lLastUID = SysArg.GetCurrentID(SysArgFor.STATUS);
@@ -104,12 +103,12 @@ namespace Sinawler
             while (queueUserForStatusRobot.Count == 0)
             {
                 if (blnAsyncCancelled) return;
-                Thread.Sleep( GlobalPool.SleepMsForThread );   //若队列为空，则等待
+                Thread.Sleep(GlobalPool.SleepMsForThread);   //若队列为空，则等待
             }
 
             AdjustRealFreq();
             SetCrawlerFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
@@ -118,14 +117,15 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( GlobalPool.SleepMsForThread );
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
 
                 //将队头取出
-                lCurrentID = queueUserForStatusRobot.RollQueue();
+                //lCurrentID = queueUserForStatusRobot.RollQueue();
+                lCurrentID = queueUserForStatusRobot.FirstValue;
 
                 //日志
-                Log("Recording current UserID: " + lCurrentID.ToString()+"...");
+                Log("Recording current UserID: " + lCurrentID.ToString() + "...");
                 SysArg.SetCurrentID(lCurrentID, SysArgFor.STATUS);
 
                 #region 用户微博信息
@@ -133,7 +133,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( GlobalPool.SleepMsForThread );
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
                 //日志
                 Log("Getting the latest Status ID of User " + lCurrentID.ToString() + "...");
@@ -144,7 +144,7 @@ namespace Sinawler
                 while (blnSuspending)
                 {
                     if (blnAsyncCancelled) return;
-                    Thread.Sleep( GlobalPool.SleepMsForThread );
+                    Thread.Sleep(GlobalPool.SleepMsForThread);
                 }
 
                 Status status;
@@ -153,85 +153,55 @@ namespace Sinawler
                 Log("Crawling statuses after Status " + lCurrentSID.ToString() + " of User " + lCurrentID.ToString() + "...");
                 //爬取数据库中当前用户最新一条微博的ID之后的微博，存入数据库
                 LinkedList<Status> lstStatus = crawler.GetStatusesOfSince(lCurrentID, lCurrentSID);
-                //日志
-                Log( lstStatus.Count.ToString() + " statuses crawled." );
-                //日志
-                AdjustFreq();
-                SetCrawlerFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-
-                while (lstStatus.Count > 0)
+                if (lstStatus.Count>0 && lstStatus.First.Value.status_id > 0)
                 {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
+                    //日志
+                    Log(lstStatus.Count.ToString() + " statuses crawled.");
+                    //日志
+                    AdjustFreq();
+                    SetCrawlerFreq();
+                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
+
+                    while (lstStatus.Count > 0)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep(GlobalPool.SleepMsForThread);
-                    }
-                    status = lstStatus.First.Value;
-                    SaveStatus(status);
-                    lstStatus.RemoveFirst();
-
-                    if (GlobalPool.CrawlRetweets)
-                    {
-                        //日志
-                        Log("Crawling retweeted statuses of Status " + status.status_id.ToString() + "...");
-                        int iPage = 1;
-                        LinkedList<Status> lstRepostedStatus = new LinkedList<Status>();
-                        lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
-                        //日志
-                        AdjustFreq();
-                        SetCrawlerFreq();
-                        Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-                        int iRepostTimes = lstRepostedStatus.Count;
-                        while (lstRepostedStatus.Count > 0)
+                        while (blnSuspending)
                         {
                             if (blnAsyncCancelled) return;
-                            while (blnSuspending)
-                            {
-                                if (blnAsyncCancelled) return;
-                                Thread.Sleep(GlobalPool.SleepMsForThread);
-                            }
-
-                            if (!PubHelper.ContainsInQueue<Status>(lstStatus, lstRepostedStatus.First.Value))
-                                lstStatus.AddLast(lstRepostedStatus.First.Value);
-
-                            if (queueUserForUserRelationRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Relation Robot...");
-                            if (GlobalPool.UserInfoRobotEnabled && queueUserForUserInfoRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Information Robot...");
-                            if (GlobalPool.TagRobotEnabled && queueUserForUserTagRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of User Tag Robot...");
-                            if (GlobalPool.StatusRobotEnabled && queueUserForStatusRobot.Enqueue(lstRepostedStatus.First.Value.user.user_id))
-                                Log("Adding Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " to the user queue of Status Robot...");
-                            if (!User.ExistInDB(lstRepostedStatus.First.Value.user.user_id))
-                            {
-                                Log("Saving Retweeter " + lstRepostedStatus.First.Value.user.user_id.ToString() + " into database...");
-                                lstRepostedStatus.First.Value.user.Add();
-                            }
-
-                            lstRepostedStatus.RemoveFirst();
-
-                            iPage++;
-                            lstRepostedStatus = crawler.GetRepostedStatusOf(status.status_id, iPage);
-                            //日志
-                            AdjustFreq();
-                            SetCrawlerFreq();
-                            Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-                            iRepostTimes += lstRepostedStatus.Count;
+                            Thread.Sleep(GlobalPool.SleepMsForThread);
                         }
-                        //日志
-                        Log(iRepostTimes.ToString() + " retweeted statuses of Status " + status.status_id.ToString() + " crawled.");
+                        status = lstStatus.First.Value;
+                        SaveStatus(status);
+                        lstStatus.RemoveFirst();
                     }
+                    queueUserForStatusRobot.RollQueue();
+                    //日志
+                    Log("Statuses of User " + lCurrentID.ToString() + " crawled.");
+                }
+                else if (lstStatus.Count > 0 && lstStatus.First.Value.status_id == -1)
+                {
+                    lstStatus.Clear();
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                    for (int i = 0; i < iSleepSeconds; i++)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(1000);
+                    }
+                    continue;
+                }
+                else
+                {
+                    queueUserForStatusRobot.RollQueue();
+                    //日志
+                    Log("Statuses of User " + lCurrentID.ToString() + " crawled.");
                 }
                 #endregion
                 #endregion
-                //日志
-                Log( "Statuses of User " + lCurrentID.ToString() + " crawled." );
             }
         }
 
-        public override void Initialize ()
+        public override void Initialize()
         {
             //初始化相应变量
             blnAsyncCancelled = false;

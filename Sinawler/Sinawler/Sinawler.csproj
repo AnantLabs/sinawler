@@ -41,7 +41,7 @@
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
     <DisallowUrlActivation>true</DisallowUrlActivation>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>7.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>7.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
     <BootstrapperComponentsLocation>Relative</BootstrapperComponentsLocation>
@@ -98,9 +98,6 @@
     <Compile Include="API2\SinaSerive.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="API\oAuthBase.cs" />
-    <Compile Include="API\oAuthSina.cs" />
-    <Compile Include="API\SinaApiService.cs" />
     <Compile Include="classes\AppSettings.cs" />
     <Compile Include="classes\DatabaseFactory.cs" />
     <Compile Include="classes\Enums.cs" />

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
@@ -59,7 +58,8 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentID = queueUserForUserTagRobot.RollQueue();
+                //lCurrentID = queueUserForUserTagRobot.RollQueue();
+                lCurrentID = queueUserForUserTagRobot.FirstValue;
                 
                 //日志
                 Log( "Recording current UserID: " + lCurrentID.ToString()+"..." );
@@ -76,46 +76,74 @@ namespace Sinawler
                 //日志
                 Log( "Crawling tags of User " + lCurrentID.ToString() + "..." );
                 LinkedList<Tag> lstTag = crawler.GetTagsOf( lCurrentID );
-                //日志
-                Log( lstTag.Count.ToString() + " tags crawled." );
-                //日志
-                AdjustFreq();
-                SetCrawlerFreq();
-                Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-
-                while (lstTag.Count > 0)
+                if (lstTag.Count>0 && lstTag.First.Value.tag_id > 0)
                 {
-                    if (blnAsyncCancelled) return;
-                    while (blnSuspending)
+                    //日志
+                    Log(lstTag.Count.ToString() + " tags crawled.");
+                    //日志
+                    AdjustFreq();
+                    SetCrawlerFreq();
+                    Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
+
+                    while (lstTag.Count > 0)
                     {
                         if (blnAsyncCancelled) return;
-                        Thread.Sleep( GlobalPool.SleepMsForThread );
-                    }
-                    Tag tag = lstTag.First.Value;
-                    if (!Tag.Exists( tag.tag_id ))
-                    {
-                        //日志
-                        Log( "Saving Tag " + tag.tag_id.ToString() + " into database..." );
-                        tag.Add();
-                    }
-                    else
-                        //日志
-                        Log( "Tag " + tag.tag_id.ToString() + " exists." );
+                        while (blnSuspending)
+                        {
+                            if (blnAsyncCancelled) return;
+                            Thread.Sleep(GlobalPool.SleepMsForThread);
+                        }
+                        Tag tag = lstTag.First.Value;
+                        if (!Tag.Exists(tag.tag_id))
+                        {
+                            //日志
+                            Log("Saving Tag " + tag.tag_id.ToString() + " into database...");
+                            tag.Add();
+                        }
+                        else
+                        {
+                            //日志
+                            //Log( "Tag " + tag.tag_id.ToString() + " exists." );
+                            Log("Updating Tag " + tag.tag_id.ToString() + " into database...");
+                            tag.Update();
+                        }
 
-                    if (!UserTag.Exists( lCurrentID, tag.tag_id ))
-                    {
-                        //日志
-                        Log( "Recording User " + lCurrentID.ToString() + " has Tag " + tag.tag_id.ToString() + "..." );
-                        UserTag user_tag = new UserTag();
-                        user_tag.user_id = lCurrentID;
-                        user_tag.tag_id = tag.tag_id;
-                        user_tag.Add();
-                    }
-                    else
-                        //日志
-                        Log( "Tag " + tag.tag_id.ToString() + " of User "+ lCurrentID.ToString() + " exists." );
+                        if (!UserTag.Exists(lCurrentID, tag.tag_id))
+                        {
+                            //日志
+                            Log("Recording User " + lCurrentID.ToString() + " has Tag " + tag.tag_id.ToString() + "...");
+                            UserTag user_tag = new UserTag();
+                            user_tag.user_id = lCurrentID;
+                            user_tag.tag_id = tag.tag_id;
+                            user_tag.Add();
+                        }
+                        else
+                            //日志
+                            Log("Tag " + tag.tag_id.ToString() + " of User " + lCurrentID.ToString() + " exists.");
 
-                    lstTag.RemoveFirst();
+                        lstTag.RemoveFirst();
+                    }
+                    queueUserForUserTagRobot.RollQueue();
+                    //日志
+                    Log("Tags of User " + lCurrentID.ToString() + " crawled.");
+                }
+                else if (lstTag.Count > 0 && lstTag.First.Value.tag_id == -1)
+                {
+                    lstTag.Clear();
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                    for (int i = 0; i < iSleepSeconds; i++)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(1000);
+                    }
+                    continue;
+                }
+                else
+                {
+                    queueUserForUserTagRobot.RollQueue();
+                    //日志
+                    Log("Tags of User " + lCurrentID.ToString() + " crawled.");
                 }
                 #endregion
             }

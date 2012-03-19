@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
@@ -68,7 +67,8 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentID = queueUserForUserRelationRobot.RollQueue();
+                //lCurrentID = queueUserForUserRelationRobot.RollQueue();
+                lCurrentID = queueUserForUserRelationRobot.FirstValue;
 
                 //日志
                 Log("Recording current UserID：" + lCurrentID.ToString() + "...");
@@ -85,6 +85,17 @@ namespace Sinawler
                 Log("Crawling the followings of User " + lCurrentID.ToString() + "...");
                 //爬取当前用户的关注的用户ID，记录关系，加入队列
                 LinkedList<long> lstBuffer = crawler.GetFriendsOf(lCurrentID, -1);
+                if (lstBuffer.First.Value == -1)
+                {
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                    for (int i = 0; i < iSleepSeconds; i++)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(1000);
+                    }
+                    continue;
+                }
                 //日志
                 Log(lstBuffer.Count.ToString() + " followings crawled.");
                 //日志
@@ -101,17 +112,28 @@ namespace Sinawler
                         Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     lQueueBufferFirst = lstBuffer.First.Value;
-                    bool blnRecordRelation = true;
+                    int nRecordRelation = 1;
                     if (blnConfirmRelationship)
                     {
                         //日志                
                         Log("Confirming the relationship between User " + lCurrentID.ToString() + " and User " + lQueueBufferFirst.ToString());
-                        blnRecordRelation = crawler.RelationExistBetween(lCurrentID, lQueueBufferFirst);
+                        nRecordRelation = crawler.RelationExistBetween(lCurrentID, lQueueBufferFirst);
                         //日志
                         AdjustFreq();
                         SetCrawlerFreq();
                         Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-                        if (blnRecordRelation)
+                        if (nRecordRelation == -1)
+                        {
+                            int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                            Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                            for (int i = 0; i < iSleepSeconds; i++)
+                            {
+                                if (blnAsyncCancelled) return;
+                                Thread.Sleep(1000);
+                            }
+                            continue;
+                        }
+                        if (nRecordRelation==1)
                         {
                             //日志
                             Log("Relationship confirmed. Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
@@ -140,13 +162,13 @@ namespace Sinawler
                             if(GlobalPool.StatusRobotEnabled)
                                 queueUserForStatusRobot.Remove(lQueueBufferFirst);
                         }
-                    }
+                    }//if (blnConfirmRelationship)
                     else
                     {
                         //日志
                         Log("Recording User " + lCurrentID.ToString() + " follows User " + lQueueBufferFirst.ToString() + "...");
                     }
-                    if (blnRecordRelation)
+                    if (nRecordRelation==1)
                     {
                         if (UserRelation.RelationshipExist(lCurrentID, lQueueBufferFirst))
                         {
@@ -176,7 +198,7 @@ namespace Sinawler
                             Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
                     }
                     lstBuffer.RemoveFirst();
-                }
+                }//while (lstBuffer.Count > 0)
                 #endregion
                 #region 用户粉丝列表
                 if (blnAsyncCancelled) return;
@@ -189,6 +211,17 @@ namespace Sinawler
                 Log("Crawling the followers of User " + lCurrentID.ToString() + "...");
                 //爬取当前用户的粉丝的用户ID，记录关系，加入队列
                 lstBuffer = crawler.GetFollowersOf(lCurrentID, -1);
+                if (lstBuffer.First.Value == -1)
+                {
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                    for (int i = 0; i < iSleepSeconds; i++)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(1000);
+                    }
+                    continue;
+                }
                 //日志
                 Log(lstBuffer.Count.ToString() + " followers crawled.");
                 //日志
@@ -205,17 +238,28 @@ namespace Sinawler
                         Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     lQueueBufferFirst = lstBuffer.First.Value;
-                    bool blnRecordRelation = true;
+                    int nRecordRelation = 1;
                     if (blnConfirmRelationship)
                     {
                         //日志                
                         Log("Confirming the relationship between User " + lQueueBufferFirst.ToString() + " and User " + lCurrentID.ToString());
-                        blnRecordRelation = crawler.RelationExistBetween(lQueueBufferFirst, lCurrentID);
+                        nRecordRelation = crawler.RelationExistBetween(lQueueBufferFirst, lCurrentID);
                         //日志
                         AdjustFreq();
                         SetCrawlerFreq();
                         Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
-                        if (blnRecordRelation)
+                        if (nRecordRelation == -1)
+                        {
+                            int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                            Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                            for (int i = 0; i < iSleepSeconds; i++)
+                            {
+                                if (blnAsyncCancelled) return;
+                                Thread.Sleep(1000);
+                            }
+                            continue;
+                        }
+                        if (nRecordRelation==1)
                         {
                             //日志
                             Log("Relationship confirmed. Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
@@ -250,7 +294,7 @@ namespace Sinawler
                         //日志
                         Log("Recording User " + lQueueBufferFirst.ToString() + " follows User " + lCurrentID.ToString() + "...");
                     }
-                    if (blnRecordRelation)
+                    if (nRecordRelation==1)
                     {
                         if (UserRelation.RelationshipExist(lQueueBufferFirst, lCurrentID))
                         {
@@ -280,8 +324,9 @@ namespace Sinawler
                             Log("Adding User " + lQueueBufferFirst.ToString() + " to the user queue of Status Robot...");
                     }
                     lstBuffer.RemoveFirst();
-                }
+                }//while (lstBuffer.Count > 0)
                 #endregion
+                queueUserForUserRelationRobot.RollQueue();
                 //日志
                 Log("Social grapgh of User " + lCurrentID.ToString() + " crawled.");
             }

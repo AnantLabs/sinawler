@@ -42,7 +42,7 @@ namespace Sinawler
                 cs.Close();
                 return byteEncrypt;
             }
-            catch (System.Exception error)
+            catch
             {
                 return null;
             }
@@ -71,7 +71,7 @@ namespace Sinawler
                 msDecrypt.Close();
                 return obj;
             }
-            catch (System.Exception error)
+            catch
             {
                 return null;
             }
@@ -96,7 +96,7 @@ namespace Sinawler
                 ms.Close();
                 return ary;
             }
-            catch (Exception e)
+            catch
             {
                 zip.Close();
                 ms.Close();
@@ -121,7 +121,7 @@ namespace Sinawler
                 ms.Close();
                 return obj;
             }
-            catch (Exception e)
+            catch
             {
                 UnZip.Close();
                 ms.Close();

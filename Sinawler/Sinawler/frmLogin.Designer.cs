@@ -40,10 +40,9 @@
             // btnLogin
             // 
             this.btnLogin.Enabled = false;
-            this.btnLogin.Location = new System.Drawing.Point(40, 151);
-            this.btnLogin.Margin = new System.Windows.Forms.Padding(4);
+            this.btnLogin.Location = new System.Drawing.Point(30, 121);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(100, 29);
+            this.btnLogin.Size = new System.Drawing.Size(75, 23);
             this.btnLogin.TabIndex = 2;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -53,21 +52,19 @@
             // 
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Enabled = false;
-            this.btnCancel.Location = new System.Drawing.Point(161, 151);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCancel.Location = new System.Drawing.Point(121, 121);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 29);
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // wbUserRelation
             // 
-            this.wbUserRelation.Location = new System.Drawing.Point(79, 111);
-            this.wbUserRelation.Margin = new System.Windows.Forms.Padding(4);
-            this.wbUserRelation.MinimumSize = new System.Drawing.Size(27, 25);
+            this.wbUserRelation.Location = new System.Drawing.Point(47, 94);
+            this.wbUserRelation.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbUserRelation.Name = "wbUserRelation";
-            this.wbUserRelation.Size = new System.Drawing.Size(37, 32);
+            this.wbUserRelation.Size = new System.Drawing.Size(58, 21);
             this.wbUserRelation.TabIndex = 4;
             this.wbUserRelation.Visible = false;
             this.wbUserRelation.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbUserRelation_DocumentCompleted);
@@ -76,50 +73,46 @@
             // 
             this.txtUserID.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtUserID.Enabled = false;
-            this.txtUserID.Location = new System.Drawing.Point(128, 29);
-            this.txtUserID.Margin = new System.Windows.Forms.Padding(4);
+            this.txtUserID.Location = new System.Drawing.Point(96, 23);
             this.txtUserID.Name = "txtUserID";
-            this.txtUserID.Size = new System.Drawing.Size(133, 25);
+            this.txtUserID.Size = new System.Drawing.Size(100, 21);
             this.txtUserID.TabIndex = 7;
             // 
             // txtPWD
             // 
             this.txtPWD.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.txtPWD.Enabled = false;
-            this.txtPWD.Location = new System.Drawing.Point(128, 81);
-            this.txtPWD.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPWD.Location = new System.Drawing.Point(96, 65);
             this.txtPWD.Name = "txtPWD";
             this.txtPWD.PasswordChar = '*';
-            this.txtPWD.Size = new System.Drawing.Size(133, 25);
+            this.txtPWD.Size = new System.Drawing.Size(100, 21);
             this.txtPWD.TabIndex = 8;
             // 
             // lblUserId
             // 
             this.lblUserId.AutoSize = true;
-            this.lblUserId.Location = new System.Drawing.Point(37, 35);
-            this.lblUserId.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblUserId.Location = new System.Drawing.Point(28, 28);
             this.lblUserId.Name = "lblUserId";
-            this.lblUserId.Size = new System.Drawing.Size(63, 15);
+            this.lblUserId.Size = new System.Drawing.Size(47, 12);
             this.lblUserId.TabIndex = 9;
             this.lblUserId.Text = "UserID:";
             // 
             // lblPWD
             // 
             this.lblPWD.AutoSize = true;
-            this.lblPWD.Location = new System.Drawing.Point(37, 88);
-            this.lblPWD.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPWD.Location = new System.Drawing.Point(28, 70);
             this.lblPWD.Name = "lblPWD";
-            this.lblPWD.Size = new System.Drawing.Size(79, 15);
+            this.lblPWD.Size = new System.Drawing.Size(59, 12);
             this.lblPWD.TabIndex = 10;
             this.lblPWD.Text = "PassWord:";
             // 
             // frmLogin
             // 
             this.AcceptButton = this.btnLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(300, 207);
+            this.ClientSize = new System.Drawing.Size(227, 172);
             this.ControlBox = false;
             this.Controls.Add(this.lblPWD);
             this.Controls.Add(this.lblUserId);
@@ -129,7 +122,6 @@
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.wbUserRelation);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmLogin";

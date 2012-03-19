@@ -84,7 +84,7 @@ namespace Sinawler.Model
         private int _friends_count;
         private int _statuses_count;
         private int _favourites_count;
-        private string _created_at;
+        private string _created_at="";
         private bool _following;
         private bool _verified;
         private bool _allow_all_act_msg;
@@ -103,6 +103,8 @@ namespace Sinawler.Model
         private string _avatar_large;
         private string _lang;
 
+        //-20120317加
+        private string _remark;
         /// <summary>
         /// 用户UserID（XML中为id）
         /// </summary>
@@ -340,6 +342,13 @@ namespace Sinawler.Model
             set { _lang = value; }
             get { return _lang; }
         }
+
+        //-2012031加
+        public string remark
+        {
+            set { _remark = value; }
+            get { return _remark; }
+        }
         #endregion Model
 
         #region  成员方法
@@ -404,6 +413,25 @@ namespace Sinawler.Model
                     htValues.Add("geo_enabled", 1);
                 else
                     htValues.Add("geo_enabled", 0);
+
+                //-------------20120222加--------------
+                htValues.Add("idstr", "'" + _idstr + "'");
+                htValues.Add("weihao", "'" + _weihao + "'");
+                htValues.Add("bi_followers_count", _bi_followers_count);
+                htValues.Add("online_status", _online_status);
+                htValues.Add("verified_type", _verified_type);
+                htValues.Add("verified_reason", "'" + _verified_reason + "'");
+                if (_allow_all_comment)
+                    htValues.Add("allow_all_comment", 1);
+                else
+                    htValues.Add("allow_all_comment", 0);
+                htValues.Add("avatar_large", "'" + _avatar_large.Replace("'", "''") + "'");
+                htValues.Add("lang", "'" + _lang.Replace("'", "''") + "'");
+                //--------------------------------------
+                //-------------20120317加---------------
+                htValues.Add("remark", "'" + _remark + "'");
+                //--------------------------------------
+
                 htValues.Add("iteration", 0);
                 htValues.Add("update_time", _update_time);
 
@@ -451,6 +479,9 @@ namespace Sinawler.Model
                     htValues.Add("allow_all_comment", 0);
                 htValues.Add("avatar_large", "'" + _avatar_large.Replace("'", "''") + "'");
                 htValues.Add("lang", "'" + _lang.Replace("'", "''") + "'");
+                //--------------------------------------
+                //-------------20120317加---------------
+                htValues.Add("remark", "'" + _remark + "'");
                 //--------------------------------------
                 if (_following)
                     htValues.Add("following", 1);
@@ -594,6 +625,9 @@ namespace Sinawler.Model
                 _avatar_large = dr["avatar_large"].ToString();
                 _lang = dr["lang"].ToString();
                 //--------------------------------------
+                //-------------20120317加---------------
+                _remark = dr["remark"].ToString();
+                //--------------------------------------
                 return true;
             }
             else
@@ -717,6 +751,9 @@ namespace Sinawler.Model
                 _avatar_large = dr["avatar_large"].ToString();
                 _lang = dr["lang"].ToString();
                 //--------------------------------------
+                //-------------20120317加---------------
+                _remark = dr["remark"].ToString();
+                //--------------------------------------
                 return true;
             }
             else
@@ -837,6 +874,9 @@ namespace Sinawler.Model
                 }
                 _avatar_large = dr["avatar_large"].ToString();
                 _lang = dr["lang"].ToString();
+                //--------------------------------------
+                //-------------20120317加---------------
+                _remark = dr["remark"].ToString();
                 //--------------------------------------
                 return true;
             }

@@ -34,7 +34,6 @@ namespace Sinawler
         public static bool UserInfoRobotEnabled = true;
         public static bool TagRobotEnabled = true;
         public static bool StatusRobotEnabled = true;
-        public static bool CrawlRetweets = true;
         public static bool CommentRobotEnabled = true;
 
         public static int MinSleepMsForUserRelation = 500;
@@ -60,26 +59,20 @@ namespace Sinawler
                 case SysArgFor.USER_RELATION:
                     ApiForUserRelation.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForUserRelation;
-                    break;
                 case SysArgFor.USER_INFO:
                     ApiForUserInfo.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForUserInfo;
-                    break;
                 case SysArgFor.USER_TAG:
                     ApiForUserTag.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForUserTag;
-                    break;
                 case SysArgFor.STATUS:
                     ApiForStatus.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForStatus;
-                    break;
                 case SysArgFor.COMMENT:
                     ApiForComment.API.Redirect_Uri = "http://weibo.com/sizheng";
                     return ApiForComment;
-                    break;
                 default:
                     return null;
-                    break;
             }
         }
     }

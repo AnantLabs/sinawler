@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.ComponentModel;
-using Sina.Api;
 using System.Xml;
 using System.Net;
 using System.IO;
@@ -377,6 +376,7 @@ class PubHelper
     //为新版的Tag结果转换json
     static public string ParseNewTags(string strJsonTags)
     {
+        if (strJsonTags == null || strJsonTags.Trim() == "" || strJsonTags == "[]") return "[]";
         string result = "[";
         string[] jsons = strJsonTags.Trim('[').Trim(']').Split(',');
         foreach (string str in jsons)

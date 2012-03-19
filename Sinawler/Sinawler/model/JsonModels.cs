@@ -59,6 +59,18 @@ namespace Sinawler
         }
     }
 
+    public class JsonVisible
+    {
+        private int _type = 0;
+        private int _list_id = 0;
+
+        public int type
+        { get { return _type; } set { _type = value; } }
+
+        public int list_id
+        { get { return _list_id; } set { _list_id = value; } }
+    }
+
     public class JsonStatus
     {
         private long _id;
@@ -77,6 +89,13 @@ namespace Sinawler
         private string _mid;
         private User _user = new User();
         private JsonStatus _retweeted_status = null;
+        //------------20120317加------------
+        private string _idstr = "";
+        private int _reposts_count = 0;
+        private int _comments_count = 0;
+        private int _mlevel = 0;
+        private JsonVisible _visible=null;
+        //----------------------------------
 
         #region properties
         /// <summary>
@@ -207,12 +226,44 @@ namespace Sinawler
             set { _retweeted_status = value; }
             get { return _retweeted_status; }
         }
+        //------------20120317加------------
+        public string idstr
+        { get { return _idstr; } set { _idstr = value; } }
+        public int reposts_count
+        { get { return _reposts_count; } set { _reposts_count = value; } }
+        public int comments_count
+        { get { return _comments_count; } set { _comments_count = value; } }
+        public int mlevel
+        { get { return _mlevel; } set { _mlevel = value; } }
+        public JsonVisible visible
+        { get { return _visible; } set { _visible = value; } }
+        //----------------------------------
         #endregion
 
         public JsonStatus()
         {
             _id = 0;
         }
+    }
+
+    public class JsonStatuses
+    {
+        private JsonStatus[] _oJsonStatuses;
+        private bool _hasvisible = false;
+        private long _previous_cursor = 0;
+        private long _next_cursor = 0;
+        private int _total_number = 0;
+
+        public JsonStatus[] Statuses
+        { get { return _oJsonStatuses; } set { _oJsonStatuses = value; } }
+        public bool hasvisible
+        { get { return _hasvisible; } set { _hasvisible = value; } }
+        public long previous_cursor
+        { get { return _previous_cursor; } set { _previous_cursor = value; } }
+        public long next_cursor
+        { get { return _next_cursor; } set { _next_cursor = value; } }
+        public int total_number
+        { get { return _total_number; } set { _total_number = value; } }
     }
 
     public class JsonComment
@@ -224,6 +275,10 @@ namespace Sinawler
         private string _mid;
         private User _user = new User();
         private JsonStatus _status;
+        //------------20120318加---------------
+        private string _idstr;
+        private JsonComment _reply_comment;
+        //-------------------------------------
         
         #region property
         /// <summary>
@@ -282,7 +337,33 @@ namespace Sinawler
             set{_mid=value;}
             get { return _mid; }
         }
+        //------------20120318加---------------
+        public string idstr
+        { get { return _idstr; } set { _idstr = value; } }
+        public JsonComment reply_comment
+        { get { return _reply_comment; } set { _reply_comment = value; } }
+        //-------------------------------------
         #endregion
+    }
+
+    public class JsonComments
+    {
+        private JsonComment[] _oJsonComments;
+        private bool _hasvisible = false;
+        private long _previous_cursor = 0;
+        private long _next_cursor = 0;
+        private int _total_number = 0;
+
+        public JsonComment[] Comments
+        { get { return _oJsonComments; } set { _oJsonComments = value; } }
+        public bool hasvisible
+        { get { return _hasvisible; } set { _hasvisible = value; } }
+        public long previous_cursor
+        { get { return _previous_cursor; } set { _previous_cursor = value; } }
+        public long next_cursor
+        { get { return _next_cursor; } set { _next_cursor = value; } }
+        public int total_number
+        { get { return _total_number; } set { _total_number = value; } }
     }
 
     public class JsonWriteLimit

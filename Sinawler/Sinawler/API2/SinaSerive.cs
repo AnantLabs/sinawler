@@ -131,7 +131,7 @@ namespace Open.Sina2SDK
         /// <param name="trim_user">返回值中user信息开关，0：返回完整的user信息、1：user字段仅返回user_id，默认为0。</param>
         /// <param name="feature">过滤类型ID，默认为All。</param>
         /// <returns></returns>
-        public JsonStatus[] Statuses_User_Timeline(long uid, long? since_id, long? max_id, int? page, int? count, int? trim_user, Feature? feature)
+        public JsonStatuses Statuses_User_Timeline(long uid, long? since_id, long? max_id, int? page, int? count, int? trim_user, Feature? feature)
         {
             var dictionary = new Dictionary<object, object>
             {
@@ -143,7 +143,7 @@ namespace Open.Sina2SDK
                 {"trim_user",trim_user??0},
                 {"feature",(int)(feature??Feature.All)}
             };
-            return HttpGet<JsonStatus[]>("statuses/user_timeline.json", dictionary); 
+            return HttpGet<JsonStatuses>("statuses/user_timeline.json", dictionary); 
         }
         #endregion
 
@@ -185,7 +185,7 @@ namespace Open.Sina2SDK
         /// <param name="count">单页返回的记录条数，默认为200。</param>
         /// <param name="filter_by_author">作者筛选类型，默认为All。</param>
         /// <returns></returns>
-        public JsonStatus[] Statuses_Repost_Timeline(long id, long? since_id, long? max_id, int? page, int? count, FilterByAuthor? filter_by_author)
+        public JsonStatuses Statuses_Repost_Timeline(long id, long? since_id, long? max_id, int? page, int? count, FilterByAuthor? filter_by_author)
         {
             var dictionary = new Dictionary<object, object>
             {
@@ -196,7 +196,7 @@ namespace Open.Sina2SDK
                 {"count",count??200},
                 {"feature",(int)(filter_by_author??FilterByAuthor.All)}
             };
-            return HttpGet<JsonStatus[]>("statuses/repost_timeline.json", dictionary); 
+            return HttpGet<JsonStatuses>("statuses/repost_timeline.json", dictionary); 
         }
         #endregion
 
@@ -595,10 +595,10 @@ namespace Open.Sina2SDK
         /// <param name="count">单页返回的记录条数，默认为200。</param>
         /// <param name="filter_by_author">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
         /// <returns></returns>
-        public JsonComment[] Comments_Show(long id, long? since_id, long? max_id, int? page, int? count, FilterByAuthor? filter_by_author)
+        public JsonComments Comments_Show(long id, long? since_id, long? max_id, int? page, int? count, FilterByAuthor? filter_by_author)
         {
             var dictionary = new Dictionary<object, object>
-            {                
+            {
                 {"id",id},
                 {"since_id",since_id??0},
                 {"max_id",max_id??0},
@@ -606,7 +606,7 @@ namespace Open.Sina2SDK
                 {"count",count??200},
                 {"filter_by_author",(int)(filter_by_author??FilterByAuthor.All)}
             };
-            return HttpGet<JsonComment[]>("comments/show.json", dictionary);
+            return HttpGet<JsonComments>("comments/show.json", dictionary);
         }
         #endregion
 
@@ -620,7 +620,7 @@ namespace Open.Sina2SDK
         /// <param name="count">单页返回的记录条数，默认为200。</param>
         /// <param name="filter_by_author">作者筛选类型，0：全部、1：我关注的人、2：陌生人，默认为0。</param>
         /// <returns></returns>
-        public JsonComment[] Comments_Show(long? since_id, long? max_id, int? page, int? count, FilterBySource? filter_by_source)
+        public JsonComments Comments_Show(long? since_id, long? max_id, int? page, int? count, FilterBySource? filter_by_source)
         {
             var dictionary = new Dictionary<object, object>
             {                
@@ -630,7 +630,7 @@ namespace Open.Sina2SDK
                 {"count",count??200},
                 {"filter_by_source",(int)(filter_by_source??FilterBySource.All)}
             };
-            return HttpGet<JsonComment[]>("comments/by_me.json", dictionary);
+            return HttpGet<JsonComments>("comments/by_me.json", dictionary);
         }
         #endregion
 
@@ -1727,11 +1727,11 @@ namespace Open.Sina2SDK
             }
             catch (Exception ex)
             {
-                if (partUrl == "users/show.json")
-                {
+                //if (partUrl == "users/show.json" || partUrl == "account/get_uid.json" || partUrl == "account/rate_limit_status.json")
+                //{
                     json = ex.Message;
                     return null;
-                }
+                //}
             }
             return JsonConvert.DeserializeObject<T>(json);
         }

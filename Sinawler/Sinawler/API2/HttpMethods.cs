@@ -157,7 +157,7 @@ namespace Open.Sina2SDK
                 responseStr= reader2.ReadToEnd();
                 //logger.Debug(string.Format("File uploaded, server response is: {0}", responseStr));
             }
-            catch (Exception ex)
+            catch
             {
                 //logger.Error("Error uploading file", ex);
                 if (wresp != null)
@@ -226,7 +226,7 @@ namespace Open.Sina2SDK
                 responseStr = reader2.ReadToEnd();
                 //logger.Error(string.Format("File uploaded, server response is: {0}", responseStr));
             }
-            catch (Exception ex)
+            catch
             {
                 //logger.Error("Error uploading file", ex);
                 if (wresp != null)

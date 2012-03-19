@@ -7,7 +7,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 using Sinawler.Model;
-using Sina.Api;
 using System.IO;
 using System.Threading;
 
@@ -340,7 +339,6 @@ namespace Sinawler
             GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
             GlobalPool.TagRobotEnabled = chkTag.Checked;
             GlobalPool.StatusRobotEnabled = chkStatus.Checked;
-            GlobalPool.CrawlRetweets = chkCrawlRetweets.Checked;
             GlobalPool.CommentRobotEnabled = chkComment.Checked;
         }
 
@@ -371,7 +369,6 @@ namespace Sinawler
                     chkUserInfo.Enabled = false;
                     chkTag.Enabled = false;
                     chkStatus.Enabled = false;
-                    chkCrawlRetweets.Enabled = false;
                     chkComment.Enabled = false;
                     chkConfirmRelationship.Enabled = false;
                     Application.DoEvents();
@@ -524,7 +521,6 @@ namespace Sinawler
                     chkUserInfo.Enabled = false;
                     chkTag.Enabled = false;
                     chkStatus.Enabled = false;
-                    chkCrawlRetweets.Enabled = false;
                     chkComment.Enabled = false;
                     chkConfirmRelationship.Enabled = false;
                     Application.DoEvents();
@@ -677,7 +673,6 @@ namespace Sinawler
                     chkUserInfo.Enabled = false;
                     chkTag.Enabled = false;
                     chkStatus.Enabled = false;
-                    chkCrawlRetweets.Enabled = false;
                     chkComment.Enabled = false;
                     chkConfirmRelationship.Enabled = false;
                     Application.DoEvents();
@@ -837,7 +832,6 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
-                chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
             }
@@ -912,7 +906,6 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
-                chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
             }
@@ -959,7 +952,6 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
-                chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
             }
@@ -1006,7 +998,6 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
-                chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
             }
@@ -1053,7 +1044,6 @@ namespace Sinawler
                 chkUserInfo.Enabled = true;
                 chkTag.Enabled = true;
                 chkStatus.Enabled = true;
-                chkCrawlRetweets.Enabled = chkStatus.Checked;
                 chkComment.Enabled = true;
                 chkConfirmRelationship.Enabled = true;
             }
@@ -1079,13 +1069,11 @@ namespace Sinawler
             GlobalPool.UserInfoRobotEnabled = settings.UserInfoRobot;
             GlobalPool.TagRobotEnabled = settings.TagsRobot;
             GlobalPool.StatusRobotEnabled = settings.StatusesRobot;
-            GlobalPool.CrawlRetweets = settings.CrawlRetweets;
             GlobalPool.CommentRobotEnabled = settings.CommentsRobot;
 
             chkUserInfo.Checked = settings.UserInfoRobot;
             chkTag.Checked = settings.TagsRobot;
             chkStatus.Checked = settings.StatusesRobot;
-            chkCrawlRetweets.Checked = settings.CrawlRetweets;
             chkComment.Checked = settings.CommentsRobot;
             chkConfirmRelationship.Checked = settings.ConfirmRelationship;
         }
@@ -1106,7 +1094,6 @@ namespace Sinawler
             GlobalPool.UserInfoRobotEnabled = chkUserInfo.Checked;
             GlobalPool.TagRobotEnabled = chkTag.Checked;
             GlobalPool.StatusRobotEnabled = chkStatus.Checked;
-            GlobalPool.CrawlRetweets = chkCrawlRetweets.Checked;
             GlobalPool.CommentRobotEnabled = chkComment.Checked;
 
             SettingItems settings = new SettingItems();
@@ -1120,7 +1107,6 @@ namespace Sinawler
             settings.UserInfoRobot = chkUserInfo.Checked;
             settings.TagsRobot = chkTag.Checked;
             settings.StatusesRobot = chkStatus.Checked;
-            settings.CrawlRetweets = chkCrawlRetweets.Checked;
             settings.CommentsRobot = chkComment.Checked;
             settings.ConfirmRelationship = chkConfirmRelationship.Checked;
 
@@ -1182,7 +1168,6 @@ namespace Sinawler
 
         private void chkStatus_CheckedChanged(object sender, EventArgs e)
         {
-            chkCrawlRetweets.Enabled = chkStatus.Checked;
             if (!chkStatus.Checked) chkComment.Checked = false;
         }
     }

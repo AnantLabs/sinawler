@@ -18,7 +18,7 @@ namespace Sinawler.Model
 		private long _tag_id;
 		private string _tag;
         private long _weight;
-        private int _iteration;
+        private int _iteration=0;
         private string _update_time;
 		/// <summary>
 		/// 
@@ -104,6 +104,28 @@ namespace Sinawler.Model
             catch
             { return; }
 		}
+
+        /// <summary>
+        /// 更新数据
+        /// </summary>
+        public void Update()
+        {
+            try
+            {
+                Database db = DatabaseFactory.CreateDatabase();
+                Hashtable htValues = new Hashtable();
+                _update_time = "'" + DateTime.Now.ToString("u").Replace("Z", "") + "'";
+                htValues.Add("tag_id", _tag_id);
+                htValues.Add("tag", "'" + _tag.Replace("'", "''") + "'");
+                htValues.Add("weight", _weight);
+                htValues.Add("iteration", 0);
+                htValues.Add("update_time", _update_time);
+
+                db.Update("tags", htValues, "tag_id=" + _tag_id.ToString());
+            }
+            catch
+            { return; }
+        }
 
 		#endregion  成员方法
 	}

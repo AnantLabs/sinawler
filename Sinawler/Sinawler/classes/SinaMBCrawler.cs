@@ -19,7 +19,6 @@ namespace Sinawler
         ///2011-02-23设定为下限500ms
         private int iSleep = 3000;
         private bool blnStopCrawling = false;   //是否停止爬行
-        private int iTryTimes = 10;             //the times that try to get XML
 
         private void AdjustLimit()
         {
@@ -56,9 +55,15 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<long> ids = new LinkedList<long>();
-            JsonIDs oJsonIDs = api.API.Friendships_Friends_Ids(lUid,5000,iCursor);
-            for (int i = 0; i < oJsonIDs.IDs.Length; i++)
-                ids.AddLast(oJsonIDs.IDs[i]);
+            JsonIDs oJsonIDs = api.API.Friendships_Friends_Ids(lUid, 5000, iCursor);
+            if (oJsonIDs == null)
+            {
+                ids.AddLast(-1);
+                return ids;
+            }
+            if(oJsonIDs!=null && oJsonIDs.IDs!=null)
+                for (int i = 0; i < oJsonIDs.IDs.Length; i++)
+                    ids.AddLast(oJsonIDs.IDs[i]);
 
             return ids;
         }
@@ -74,9 +79,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<long> ids = new LinkedList<long>();
             JsonIDs oJsonIDs = api.API.Friendships_Followers_Ids(lUid, 5000, iCursor);
-
-            for (int i = 0; i < oJsonIDs.IDs.Length; i++)
-                ids.AddLast(oJsonIDs.IDs[i]);
+            if (oJsonIDs == null)
+            {
+                ids.AddLast(-1);
+                return ids;
+            }
+            if (oJsonIDs != null && oJsonIDs.IDs != null)
+                for (int i = 0; i < oJsonIDs.IDs.Length; i++)
+                    ids.AddLast(oJsonIDs.IDs[i]);
 
             return ids;
         }
@@ -90,16 +100,17 @@ namespace Sinawler
         /// <param name="lSUID">源用户ID</param>
         /// <param name="lTUID">目标用户ID</param>
         /// <returns>结果</returns>
-        public bool RelationExistBetween(long lSUID, long lTUID)
+        public int RelationExistBetween(long lSUID, long lTUID)
         {
             System.Threading.Thread.Sleep(iSleep);
             RelationShip rs = api.API.Friendships_Show(lSUID, lTUID);
-            if (rs.UserNotExist) return false;
+            if (rs == null) return -1;  //forbidden
+            if (rs.UserNotExist) return 0;
             if (!rs.source.followed_by && !rs.source.following)  //不存在
-                return false;
+                return 0;
             if (blnStopCrawling)
-                return false;
-            return true;
+                return 0;
+            return 1;
         }
 
         //根据UserID抓取用户信息
@@ -219,305 +230,42 @@ namespace Sinawler
                 if (status.retweeted_status.user.created_at != null)
                     status.retweeted_status.user.created_at = PubHelper.ParseDateTime(status.retweeted_status.user.created_at);
             }
+            //------------20120317加------------
+            status.idstr = oJsonStatus.idstr;
+            status.reposts_count = oJsonStatus.reposts_count;
+            status.comments_count = oJsonStatus.comments_count;
+            status.mlevel = oJsonStatus.mlevel;
+            if (oJsonStatus.visible != null)
+            {
+                status.visible_type = oJsonStatus.visible.type;
+                status.visible_list_id = oJsonStatus.visible.list_id;
+            }
+            //----------------------------------
             return status;
         }
 
-        //generate a Status object from an XML node
-        private Status XMLNodeToStatus(XmlNode nodeStatus)
+        //transform a JsonComment object to a Comment object
+        private Comment JsonCommentToComment(JsonComment oJsonComment)
         {
-            Status status = new Status();
-            foreach (XmlNode node in nodeStatus.ChildNodes)
+            Comment comment = new Comment();            
+            comment.comment_id = oJsonComment.id;
+            comment.content = oJsonComment.text;
+            comment.created_at = PubHelper.ParseDateTime(oJsonComment.created_at);
+            comment.idstr = oJsonComment.idstr;
+            if(oJsonComment.mid!=null && oJsonComment.mid.Trim()!="")
+                comment.mid = Convert.ToInt64(oJsonComment.mid);            
+            if (oJsonComment.source != null)
             {
-                switch (node.Name.ToLower())
-                {
-                    case "created_at":
-                        status.created_at = PubHelper.ParseDateTime(node.InnerText);
-                        break;
-                    case "id":
-                        status.status_id = Convert.ToInt64(node.InnerText);
-                        break;
-                    case "text":
-                        status.content = node.InnerText;
-                        break;
-                    case "source":
-                        status.source_name = node.InnerText;
-                        status.source_url = node.ChildNodes[0].Attributes["href"].Value;
-                        break;
-                    case "favorited":
-                        if (node.InnerText == "false")
-                            status.favorited = false;
-                        else
-                            status.favorited = true;
-                        break;
-                    case "truncated":
-                        if (node.InnerText == "false")
-                            status.truncated = false;
-                        else
-                            status.truncated = true;
-                        break;
-                    case "geo":
-                        status.geo_type = node.ChildNodes[0].LocalName.ToLower();
-                        string[] strCoordinates = node.InnerText.Split(' ');
-                        status.geo_coordinates_x = Convert.ToDouble(strCoordinates[0]);
-                        status.geo_coordinates_y = Convert.ToDouble(strCoordinates[1]);
-                        break;
-                    case "in_reply_to_status_id":
-                        if (node.InnerText == "")
-                            status.in_reply_to_status_id = 0;
-                        else
-                            status.in_reply_to_status_id = Convert.ToInt64(node.InnerText);
-                        break;
-                    case "in_reply_to_user_id":
-                        if (node.InnerText == "")
-                            status.in_reply_to_user_id = 0;
-                        else
-                            status.in_reply_to_user_id = Convert.ToInt64(node.InnerText);
-                        break;
-                    case "in_reply_to_screen_name":
-                        status.in_reply_to_screen_name = node.InnerText;
-                        break;
-                    case "thumbnail_pic":
-                        status.thumbnail_pic = node.InnerText;
-                        break;
-                    case "bmiddle_pic":
-                        status.bmiddle_pic = node.InnerText;
-                        break;
-                    case "original_pic":
-                        status.original_pic = node.InnerText;
-                        break;
-                    case "mid":
-                        status.mid = Convert.ToInt64(node.InnerText);
-                        break;
-                    case "user":
-                        foreach (XmlNode nodeUser in node.ChildNodes)
-                        {
-                            switch (nodeUser.Name.ToLower())
-                            {
-                                case "id":
-                                    status.user.user_id = Convert.ToInt64(nodeUser.InnerText);
-                                    break;
-                                case "screen_name":
-                                    status.user.screen_name = nodeUser.InnerText;
-                                    break;
-                                case "name":
-                                    status.user.name = nodeUser.InnerText;
-                                    break;
-                                case "province":
-                                    status.user.province = nodeUser.InnerText;
-                                    break;
-                                case "city":
-                                    status.user.city = nodeUser.InnerText;
-                                    break;
-                                case "location":
-                                    status.user.location = nodeUser.InnerText;
-                                    break;
-                                case "description":
-                                    status.user.description = nodeUser.InnerText;
-                                    break;
-                                case "url":
-                                    status.user.url = nodeUser.InnerText;
-                                    break;
-                                case "profile_image_url":
-                                    status.user.profile_image_url = nodeUser.InnerText;
-                                    break;
-                                case "domain":
-                                    status.user.domain = nodeUser.InnerText;
-                                    break;
-                                case "gender":
-                                    status.user.gender = nodeUser.InnerText;
-                                    break;
-                                case "followers_count":
-                                    status.user.followers_count = Convert.ToInt32(nodeUser.InnerText);
-                                    break;
-                                case "friends_count":
-                                    status.user.friends_count = Convert.ToInt32(nodeUser.InnerText);
-                                    break;
-                                case "statuses_count":
-                                    status.user.statuses_count = Convert.ToInt32(nodeUser.InnerText);
-                                    break;
-                                case "favourites_count":
-                                    status.user.favourites_count = Convert.ToInt32(nodeUser.InnerText);
-                                    break;
-                                case "created_at":
-                                    status.user.created_at = PubHelper.ParseDateTime(nodeUser.InnerText);
-                                    break;
-                                case "following":
-                                    if (nodeUser.InnerText == "false")
-                                        status.user.following = false;
-                                    else
-                                        status.user.following = true;
-                                    break;
-                                case "verified":
-                                    if (nodeUser.InnerText == "false")
-                                        status.user.verified = false;
-                                    else
-                                        status.user.verified = true;
-                                    break;
-                                case "allow_all_act_msg":
-                                    if (nodeUser.InnerText == "false")
-                                        status.user.allow_all_act_msg = false;
-                                    else
-                                        status.user.allow_all_act_msg = true;
-                                    break;
-                                case "geo_enabled":
-                                    if (nodeUser.InnerText == "false")
-                                        status.user.geo_enabled = false;
-                                    else
-                                        status.user.geo_enabled = true;
-                                    break;
-                            }//switch
-                        }//for
-                        break;
-                    case "retweeted_status":
-                        status.retweeted_status = new Status();
-                        foreach (XmlNode retweeted_node in node.ChildNodes)
-                        {
-                            switch (retweeted_node.Name.ToLower())
-                            {
-                                case "created_at":
-                                    status.retweeted_status.created_at = PubHelper.ParseDateTime(retweeted_node.InnerText);
-                                    break;
-                                case "id":
-                                    status.retweeted_status.status_id = Convert.ToInt64(retweeted_node.InnerText);
-                                    break;
-                                case "text":
-                                    status.retweeted_status.content = retweeted_node.InnerText;
-                                    break;
-                                case "source":
-                                    status.retweeted_status.source_name = retweeted_node.ChildNodes[0].InnerText;
-                                    status.retweeted_status.source_url = retweeted_node.ChildNodes[0].Attributes["href"].Value;
-                                    break;
-                                case "favorited":
-                                    if (retweeted_node.InnerText == "false")
-                                        status.retweeted_status.favorited = false;
-                                    else
-                                        status.retweeted_status.favorited = true;
-                                    break;
-                                case "truncated":
-                                    if (retweeted_node.InnerText == "false")
-                                        status.retweeted_status.truncated = false;
-                                    else
-                                        status.retweeted_status.truncated = true;
-                                    break;
-                                case "geo":
-                                    status.retweeted_status.geo_type = retweeted_node.ChildNodes[0].LocalName.ToLower();
-                                    strCoordinates = retweeted_node.InnerText.Split(' ');
-                                    status.retweeted_status.geo_coordinates_x = Convert.ToDouble(strCoordinates[0]);
-                                    status.retweeted_status.geo_coordinates_y = Convert.ToDouble(strCoordinates[1]);
-                                    break;
-                                case "in_reply_to_status_id":
-                                    if (retweeted_node.InnerText == "")
-                                        status.retweeted_status.in_reply_to_status_id = 0;
-                                    else
-                                        status.retweeted_status.in_reply_to_status_id = Convert.ToInt64(retweeted_node.InnerText);
-                                    break;
-                                case "in_reply_to_user_id":
-                                    if (retweeted_node.InnerText == "")
-                                        status.retweeted_status.in_reply_to_user_id = 0;
-                                    else
-                                        status.retweeted_status.in_reply_to_user_id = Convert.ToInt64(retweeted_node.InnerText);
-                                    break;
-                                case "in_reply_to_screen_name":
-                                    status.retweeted_status.in_reply_to_screen_name = retweeted_node.InnerText;
-                                    break;
-                                case "thumbnail_pic":
-                                    status.retweeted_status.thumbnail_pic = retweeted_node.InnerText;
-                                    break;
-                                case "bmiddle_pic":
-                                    status.retweeted_status.bmiddle_pic = retweeted_node.InnerText;
-                                    break;
-                                case "original_pic":
-                                    status.retweeted_status.original_pic = retweeted_node.InnerText;
-                                    break;
-                                case "mid":
-                                    status.retweeted_status.mid = Convert.ToInt64(retweeted_node.InnerText);
-                                    break;
-                                case "user":
-                                    foreach (XmlNode nodeUser in retweeted_node.ChildNodes)
-                                    {
-                                        switch (nodeUser.Name.ToLower())
-                                        {
-                                            case "id":
-                                                status.retweeted_status.user.user_id = Convert.ToInt64(nodeUser.InnerText);
-                                                break;
-                                            case "screen_name":
-                                                status.retweeted_status.user.screen_name = nodeUser.InnerText;
-                                                break;
-                                            case "name":
-                                                status.retweeted_status.user.name = nodeUser.InnerText;
-                                                break;
-                                            case "province":
-                                                status.retweeted_status.user.province = nodeUser.InnerText;
-                                                break;
-                                            case "city":
-                                                status.retweeted_status.user.city = nodeUser.InnerText;
-                                                break;
-                                            case "location":
-                                                status.retweeted_status.user.location = nodeUser.InnerText;
-                                                break;
-                                            case "description":
-                                                status.retweeted_status.user.description = nodeUser.InnerText;
-                                                break;
-                                            case "url":
-                                                status.retweeted_status.user.url = nodeUser.InnerText;
-                                                break;
-                                            case "profile_image_url":
-                                                status.retweeted_status.user.profile_image_url = nodeUser.InnerText;
-                                                break;
-                                            case "domain":
-                                                status.retweeted_status.user.domain = nodeUser.InnerText;
-                                                break;
-                                            case "gender":
-                                                status.retweeted_status.user.gender = nodeUser.InnerText;
-                                                break;
-                                            case "followers_count":
-                                                status.retweeted_status.user.followers_count = Convert.ToInt32(nodeUser.InnerText);
-                                                break;
-                                            case "friends_count":
-                                                status.retweeted_status.user.friends_count = Convert.ToInt32(nodeUser.InnerText);
-                                                break;
-                                            case "statuses_count":
-                                                status.retweeted_status.user.statuses_count = Convert.ToInt32(nodeUser.InnerText);
-                                                break;
-                                            case "favourites_count":
-                                                status.retweeted_status.user.favourites_count = Convert.ToInt32(nodeUser.InnerText);
-                                                break;
-                                            case "created_at":
-                                                status.retweeted_status.user.created_at = PubHelper.ParseDateTime(nodeUser.InnerText);
-                                                break;
-                                            case "following":
-                                                if (nodeUser.InnerText == "false")
-                                                    status.retweeted_status.user.following = false;
-                                                else
-                                                    status.retweeted_status.user.following = true;
-                                                break;
-                                            case "verified":
-                                                if (nodeUser.InnerText == "false")
-                                                    status.retweeted_status.user.verified = false;
-                                                else
-                                                    status.retweeted_status.user.verified = true;
-                                                break;
-                                            case "allow_all_act_msg":
-                                                if (nodeUser.InnerText == "false")
-                                                    status.retweeted_status.user.allow_all_act_msg = false;
-                                                else
-                                                    status.retweeted_status.user.allow_all_act_msg = true;
-                                                break;
-                                            case "geo_enabled":
-                                                if (nodeUser.InnerText == "false")
-                                                    status.retweeted_status.user.geo_enabled = false;
-                                                else
-                                                    status.retweeted_status.user.geo_enabled = true;
-                                                break;
-                                        }//switch
-                                    }//for
-                                    break;
-                            }
-                        }
-                        break;
-                }
+                comment.source_url = oJsonComment.source.Substring(9, oJsonComment.source.IndexOf("rel") - 11);
+                comment.source_name = oJsonComment.source.Substring(oJsonComment.source.IndexOf('>') + 1, oJsonComment.source.IndexOf("</") - oJsonComment.source.IndexOf('>') - 1);
             }
-            return status;
+            if(oJsonComment.status!=null)
+                comment.status_id = oJsonComment.status.id;
+            comment.user = oJsonComment.user;
+            if(oJsonComment.reply_comment!=null)
+               comment.reply_comment = JsonCommentToComment(oJsonComment.reply_comment);
+
+            return comment;
         }
 
         /// <summary>
@@ -528,7 +276,14 @@ namespace Sinawler
         public Status GetStatus(long lStatusID)
         {
             System.Threading.Thread.Sleep(iSleep);
-            return JsonStatusToStatus(api.API.Statuses_Show(lStatusID));
+            JsonStatus oJsonStatus = api.API.Statuses_Show(lStatusID);
+            if (oJsonStatus == null)
+            {
+                Status s = new Status();
+                s.status_id = -1;
+                return s;
+            }
+            return JsonStatusToStatus(oJsonStatus);
         }
 
         /// <summary>
@@ -541,9 +296,17 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Status> lstStatuses = new LinkedList<Status>();
-            JsonStatus[] oJsonStatuses = api.API.Statuses_User_Timeline(lUid, lSinceSid,0,1,200,0,Feature.All);
-            foreach (JsonStatus oJsonStatus in oJsonStatuses)
-                lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
+            JsonStatuses oJsonStatuses = api.API.Statuses_User_Timeline(lUid, lSinceSid, 0, 1, 200, 0, Feature.All);
+            if (oJsonStatuses!=null && oJsonStatuses.Statuses != null)
+                foreach (JsonStatus oJsonStatus in oJsonStatuses.Statuses)
+                    lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
+            //Add a status with id as -1 to specify 403 forbidden
+            if (oJsonStatuses == null)
+            {
+                Status s = new Status();
+                s.status_id = -1;
+                lstStatuses.AddLast(s);
+            }
 
             return lstStatuses;
         }
@@ -557,9 +320,19 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Status> lstStatuses = new LinkedList<Status>();
-            JsonStatus[] oJsonStatuses = api.API.Statuses_Repost_Timeline(lStatusID,0,0, iPageNum,200,FilterByAuthor.All);
-            foreach (JsonStatus oJsonStatus in oJsonStatuses)
-                lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
+            JsonStatuses oJsonStatuses = api.API.Statuses_Repost_Timeline(lStatusID, 0, 0, iPageNum, 200, FilterByAuthor.All);
+            //JsonStatus[] oJsonStatuses = api.API.Statuses_Repost_Timeline(lStatusID,0,0, iPageNum,200,FilterByAuthor.All);
+            if (oJsonStatuses!=null && oJsonStatuses.Statuses != null)
+                foreach (JsonStatus oJsonStatus in oJsonStatuses.Statuses)
+                    lstStatuses.AddLast(JsonStatusToStatus(oJsonStatus));
+
+            //Add a status with id as -1 to specify 403 forbidden
+            if (oJsonStatuses == null)
+            {
+                Status s = new Status();
+                s.status_id = -1;
+                lstStatuses.AddLast(s);
+            }
 
             return lstStatuses;
         }
@@ -573,24 +346,20 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Comment> lstComments = new LinkedList<Comment>();
-            JsonComment[] oJsonComments = api.API.Comments_Show(lStatusID,0, iPageNum,200,FilterBySource.All);
-            foreach (JsonComment oJsonComment in oJsonComments)
-            {
-                Comment comment = new Comment();
-                comment.status_id = lStatusID;
-                comment.created_at = PubHelper.ParseDateTime(oJsonComment.created_at);
-                comment.comment_id = oJsonComment.id;
-                comment.content = oJsonComment.text;
-                if (oJsonComment.source != null)
+            JsonComments oJsonComments = api.API.Comments_Show(lStatusID, 0, 0, iPageNum, 200, FilterByAuthor.All);
+            if (oJsonComments != null && oJsonComments.Comments != null)
+                foreach (JsonComment oJsonComment in oJsonComments.Comments)
                 {
-                    comment.source_url = oJsonComment.source.Substring(9, oJsonComment.source.IndexOf("rel") - 11);
-                    comment.source_name = oJsonComment.source.Substring(oJsonComment.source.IndexOf('>') + 1, oJsonComment.source.IndexOf("</") - oJsonComment.source.IndexOf('>') - 1);
+                    Comment comment = JsonCommentToComment(oJsonComment);
+                    lstComments.AddLast(comment);
                 }
-                comment.mid = Convert.ToInt64(oJsonComment.mid);
-                comment.user = oJsonComment.user;
-                comment.user.created_at = PubHelper.ParseDateTime(comment.user.created_at);
 
-                lstComments.AddLast(comment);
+            //Add a comment with id as -1 to specify 403 forbidden
+            if (oJsonComments == null)
+            {
+                Comment c = new Comment();
+                c.comment_id = -1;
+                lstComments.AddLast(c);
             }
 
             return lstComments;
@@ -614,9 +383,10 @@ namespace Sinawler
         {
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Tag> lstTags = new LinkedList<Tag>();
-            JsonTag[] oJsonTags = api.API.Tags(lUserID,1,50);
-            foreach (JsonTag oJsonTag in oJsonTags)
-                lstTags.AddLast(JsonTagToTag(oJsonTag));
+            JsonTag[] oJsonTags = api.API.Tags(lUserID, 1, 50);
+            if (oJsonTags != null)
+                foreach (JsonTag oJsonTag in oJsonTags)
+                    lstTags.AddLast(JsonTagToTag(oJsonTag));
 
             return lstTags;
         }

@@ -297,7 +297,7 @@ namespace Sinawler
                 //给足够的时间关闭连接，否则异常——无语……
                 //Thread.Sleep( 10 );
             }
-            catch (Exception ex)
+            catch
             {
                 dataset = null;
             }
@@ -323,7 +323,7 @@ namespace Sinawler
                 cmd.CommandTimeout = 120;
                 count = cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
                 count = -1;
             }
@@ -518,7 +518,7 @@ namespace Sinawler
                 cmd.CommandTimeout = 120;
                 count = cmd.ExecuteNonQuery();
             }
-            catch (Exception ex)
+            catch
             {
                 count = -1;
             }

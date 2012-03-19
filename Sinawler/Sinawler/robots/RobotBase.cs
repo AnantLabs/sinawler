@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
@@ -104,6 +103,7 @@ namespace Sinawler
         {
             if (api == null) return;
             JsonRateLimit oJsonRateLimit = api.API.Account_Rate_Limit_Status();
+            if (oJsonRateLimit == null) return;
             int iResetTimeInSeconds = oJsonRateLimit.reset_time_in_seconds;
             int iRemainingHits = oJsonRateLimit.remaining_ip_hits;
 

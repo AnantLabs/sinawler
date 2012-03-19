@@ -24,7 +24,7 @@ namespace Sinawler.Model
 		#region Model
 		private long _source_user_id;
         private long _target_user_id;
-        private int _iteration;
+        private int _iteration=0;
         private string _update_time;
 		/// <summary>
 		/// Ô´ÓÃ»§UserID

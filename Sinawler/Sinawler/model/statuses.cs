@@ -78,8 +78,16 @@ namespace Sinawler.Model
         private long _mid;
 		private User _user=new User();
         private Status _retweeted_status = null;
-        private int _iteration;
+        private int _iteration=0;
         private string _update_time;
+        //------------20120317加------------
+        private string _idstr;
+        private int _reposts_count = 0;
+        private int _comments_count = 0;
+        private int _mlevel = 0;
+        private int _visible_type = 0;
+        private int _visible_list_id = 0;
+        //----------------------------------
 		/// <summary>
 		/// 微博ID（XML中为id）
 		/// </summary>
@@ -88,13 +96,6 @@ namespace Sinawler.Model
 			set{ _status_id=value;}
 			get{return _status_id;}
 		}
-        /// <summary>
-        /// 微博ID（XML中为id），用于Json反序列化
-        /// </summary>
-        public long id
-        {
-            set { _status_id = value; }
-        }
 		/// <summary>
 		/// 创建时间
 		/// </summary>
@@ -254,6 +255,38 @@ namespace Sinawler.Model
             set { _update_time = value; }
             get { return _update_time; }
         }
+        //------------20120317加------------
+        public string idstr
+        {
+            set { _idstr = value; }
+            get { return _idstr; }
+        }
+        public int reposts_count
+        {
+            set { _reposts_count = value; }
+            get { return _reposts_count; }
+        }
+        public int comments_count
+        {
+            set { _comments_count = value; }
+            get { return _comments_count; }
+        }
+        public int mlevel
+        {
+            set { _mlevel = value; }
+            get { return _mlevel; }
+        }
+        public int visible_type
+        {
+            set { _visible_type = value; }
+            get { return _visible_type; }
+        }
+        public int visible_list_id
+        {
+            set { _visible_list_id = value; }
+            get { return _visible_list_id; }
+        }
+        //----------------------------------
 		#endregion Model
 
 		#region  成员方法
@@ -316,6 +349,14 @@ namespace Sinawler.Model
                     htValues.Add( "retweeted_status_id", 0 );
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
+                //------------20120317加------------
+                htValues.Add("idstr", "'"+_idstr+"'");
+                htValues.Add( "reposts_count", _reposts_count );
+                htValues.Add( "comments_count", _comments_count );
+                htValues.Add( "mlevel", _mlevel );
+                htValues.Add( "visible_type", _visible_type );
+                htValues.Add( "visible_list_id", _visible_list_id );
+                //----------------------------------
 
                 db.Insert( "statuses", htValues );
             }

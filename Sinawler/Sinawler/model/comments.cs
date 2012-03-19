@@ -30,9 +30,13 @@ namespace Sinawler.Model
         private string _source_url;
         private string _source_name;
 		private User _user=new User();
-		private long _status_id;
+		private long _status_id=0;
         private long _mid;
-		private int _iteration;
+        //------------20120318加------------
+        private string _idstr;
+        private Comment _reply_comment = null;
+        //----------------------------------
+		private int _iteration=0;
         private string _update_time;
 		/// <summary>
 		/// 评论ID（XML中为id）
@@ -79,8 +83,8 @@ namespace Sinawler.Model
 		/// </summary>
 		public User user
 		{
-			set{ _user=value;}
-			get{return _user;}
+            set { _user = value; }
+            get { return _user; }
 		}
 		/// <summary>
 		/// 评论的微博
@@ -97,6 +101,22 @@ namespace Sinawler.Model
         {
             set { _mid = value; }
             get { return _mid; }
+        }
+        /// <summary>
+        /// idstr
+        /// </summary>
+        public string idstr
+        {
+            set { _idstr = value; }
+            get { return _idstr; }
+        }
+        /// <summary>
+        /// reply_comment_id
+        /// </summary>
+        public Comment reply_comment
+        {
+            set { _reply_comment = value; }
+            get { return _reply_comment; }
         } 
 		/// <summary>
         /// 迭代次数。默认为0，每迭代一次，就加1，则为0的为最近的数据
@@ -160,6 +180,10 @@ namespace Sinawler.Model
                 htValues.Add( "user_id", _user.user_id );
                 htValues.Add( "status_id", _status_id );
                 htValues.Add("mid", _mid);
+                //------------20120318加------------
+                htValues.Add("idstr", _idstr);
+                htValues.Add("reply_comment_id", _reply_comment.comment_id);
+                //----------------------------------
                 htValues.Add( "iteration", 0 );
                 htValues.Add( "update_time", _update_time );
 

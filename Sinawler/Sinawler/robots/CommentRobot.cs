@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Sina.Api;
 using System.Threading;
 using System.ComponentModel;
 using System.IO;
@@ -18,9 +17,9 @@ namespace Sinawler
         private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
         private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private StatusQueue queueStatus;                    //微博队列引用
-        
+
         //构造函数，需要传入相应的新浪微博API
-        public CommentRobot ()
+        public CommentRobot()
             : base(SysArgFor.COMMENT)
         {
             strLogFile = Application.StartupPath + "\\" + DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + "_comment.log";
@@ -39,7 +38,7 @@ namespace Sinawler
         {
             //获取上次中止处的微博ID并入队
             long lLastStatusID = SysArg.GetCurrentID(SysArgFor.COMMENT);
-            if (lLastStatusID > 0) queueStatus.Enqueue( lLastStatusID );
+            if (lLastStatusID > 0) queueStatus.Enqueue(lLastStatusID);
             while (queueStatus.Count == 0)
             {
                 if (blnAsyncCancelled) return;
@@ -48,11 +47,12 @@ namespace Sinawler
 
             AdjustRealFreq();
             SetCrawlerFreq();
-            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString()+" requests left this hour.");
+            Log("The initial requesting interval is " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
 
             //对队列无限循环爬行，直至有操作暂停或停止
             while (true)
             {
+                bool blnForbidden = false;
                 if (blnAsyncCancelled) return;
                 while (blnSuspending)
                 {
@@ -61,10 +61,11 @@ namespace Sinawler
                 }
 
                 //将队头取出
-                lCurrentID = queueStatus.RollQueue();
+                lCurrentID = queueStatus.FirstValue;
+                //lCurrentID = queueStatus.RollQueue();
 
                 //日志
-                Log("Recording current StatusID: " + lCurrentID.ToString()+"...");
+                Log("Recording current StatusID: " + lCurrentID.ToString() + "...");
                 SysArg.SetCurrentID(lCurrentID, SysArgFor.COMMENT);
 
                 #region 微博相应评论
@@ -80,7 +81,7 @@ namespace Sinawler
                 int iPage = 1;
                 //爬取当前微博的评论
                 LinkedList<Comment> lstComment = new LinkedList<Comment>();
-                LinkedList<Comment> lstTemp=new LinkedList<Comment>();
+                LinkedList<Comment> lstTemp = new LinkedList<Comment>();
                 lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
                 //日志
                 AdjustFreq();
@@ -96,8 +97,24 @@ namespace Sinawler
                     }
                     while (lstTemp.Count > 0)
                     {
-                        lstComment.AddLast(lstTemp.First.Value);
-                        lstTemp.RemoveFirst();
+                        if (lstTemp.First.Value.comment_id > 0)
+                        {
+                            lstComment.AddLast(lstTemp.First.Value);
+                            lstTemp.RemoveFirst();
+                        }
+                        else
+                        {
+                            blnForbidden = true;
+                            lstTemp.Clear();
+                            int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                            Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                            for (int i = 0; i < iSleepSeconds; i++)
+                            {
+                                if (blnAsyncCancelled) return;
+                                Thread.Sleep(1000);
+                            }
+                            continue;
+                        }
                     }
                     iPage++;
                     lstTemp = crawler.GetCommentsOf(lCurrentID, iPage);
@@ -106,10 +123,13 @@ namespace Sinawler
                     SetCrawlerFreq();
                     Log("Requesting interval is adjusted as " + crawler.SleepTime.ToString() + "ms. " + api.ResetTimeInSeconds.ToString() + "s and " + api.RemainingHits.ToString() + " requests left this hour.");
                 }
+
+                if (blnForbidden) continue;
+
                 //日志
                 Log(lstComment.Count.ToString() + " comments of Status " + lCurrentID.ToString() + " crawled.");
                 Comment comment;
-                while(lstComment.Count>0)
+                while (lstComment.Count > 0)
                 {
                     if (blnAsyncCancelled) return;
                     while (blnSuspending)
@@ -118,10 +138,11 @@ namespace Sinawler
                         Thread.Sleep(GlobalPool.SleepMsForThread);
                     }
                     comment = lstComment.First.Value;
-                    if (!Comment.Exists( comment.comment_id ))
+
+                    if (!Comment.Exists(comment.comment_id))
                     {
                         //日志
-                        Log( "Saving Comment " + comment.comment_id.ToString() + " into database..." );
+                        Log("Saving Comment " + comment.comment_id.ToString() + " into database...");
                         comment.Add();
                     }
 
@@ -140,10 +161,13 @@ namespace Sinawler
                     }
 
                     lstComment.RemoveFirst();
-                }
-                #endregion
+
+                    if (comment.reply_comment != null) lstComment.AddLast(comment.reply_comment);
+                }//while for lstComment
+                queueStatus.RollQueue();
                 //日志
                 Log("Comments of Status " + lCurrentID.ToString() + " crawled.");
+                #endregion
             }
         }
 
