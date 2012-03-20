@@ -85,7 +85,7 @@ namespace Sinawler
                 Log("Crawling the followings of User " + lCurrentID.ToString() + "...");
                 //爬取当前用户的关注的用户ID，记录关系，加入队列
                 LinkedList<long> lstBuffer = crawler.GetFriendsOf(lCurrentID, -1);
-                if (lstBuffer.First.Value == -1)
+                if (lstBuffer.Count > 0 && lstBuffer.First.Value == -1)
                 {
                     int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
                     Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
@@ -211,7 +211,7 @@ namespace Sinawler
                 Log("Crawling the followers of User " + lCurrentID.ToString() + "...");
                 //爬取当前用户的粉丝的用户ID，记录关系，加入队列
                 lstBuffer = crawler.GetFollowersOf(lCurrentID, -1);
-                if (lstBuffer.First.Value == -1)
+                if (lstBuffer.Count>0 && lstBuffer.First.Value == -1)
                 {
                     int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
                     Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");

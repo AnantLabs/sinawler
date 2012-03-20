@@ -119,7 +119,7 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             User user = api.API.Users_Show(lUid);
             if (user == null && api.API.JsonResult.Contains("400"))    //用户不存在
-                return new User();
+                return null;
             if (user == null && api.API.JsonResult.Contains("403"))    //服务已禁止
             {
                 user = new User();
