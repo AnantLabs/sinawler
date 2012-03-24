@@ -181,7 +181,7 @@ namespace Sinawler
                 else if (lstStatus.Count > 0 && lstStatus.First.Value.status_id == -1)
                 {
                     lstStatus.Clear();
-                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.STATUS).ResetTimeInSeconds;
                     Log("Service is forbidden now. I will wait for " + iSleepSeconds.ToString() + "s to continue...");
                     for (int i = 0; i < iSleepSeconds; i++)
                     {
