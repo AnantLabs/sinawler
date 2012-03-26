@@ -105,7 +105,9 @@ namespace Sinawler
             JsonRateLimit oJsonRateLimit = api.API.Account_Rate_Limit_Status();
             if (oJsonRateLimit == null) return;
             int iResetTimeInSeconds = oJsonRateLimit.reset_time_in_seconds;
+            if (iResetTimeInSeconds < 0) iResetTimeInSeconds = 0;
             int iRemainingHits = oJsonRateLimit.remaining_ip_hits;
+            if (iRemainingHits < 0) iRemainingHits = 0;
 
             if (api != null)
             {
@@ -124,7 +126,9 @@ namespace Sinawler
             if (api != null)
             {
                 api.RemainingHits--;
+                if (api.RemainingHits < 0) api.RemainingHits = 0;
                 api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.LimitUpdateTime).TotalSeconds);
+                if (api.ResetTimeInSeconds < 0) api.ResetTimeInSeconds = 0;
                 api.LimitUpdateTime = DateTime.Now;
                 if (api.ResetTimeInSeconds % 100 == 0 || api.RemainingHits % 20 == 0 || api.ResetTimeInSeconds <= 0 || api.RemainingHits < 0) AdjustRealFreq();
             }
