@@ -11,9 +11,11 @@ namespace Sinawler
     {
         //public SinaApiService API = new SinaApiService();
         public SinaSerive API = new SinaSerive();
-        public DateTime LimitUpdateTime = DateTime.Now;
+        public int IPLimit=1000;
+        public int RemainingIPHits=1000;
+        public int RemainingUserHits=150;
+        public DateTime ResetTime = DateTime.Now;
         public int ResetTimeInSeconds = 3600;
-        public int RemainingHits = 1000;
     }
 
     static public class GlobalPool

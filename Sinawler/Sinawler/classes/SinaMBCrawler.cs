@@ -22,10 +22,11 @@ namespace Sinawler
 
         private void AdjustLimit()
         {
-            api.RemainingHits--;
-            api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.LimitUpdateTime).TotalSeconds);
-            api.LimitUpdateTime = DateTime.Now;
-            if (api.ResetTimeInSeconds <= 0 || api.RemainingHits < 0) api.ResetTimeInSeconds = 3;
+            api.RemainingIPHits--;
+            api.RemainingUserHits--;
+            api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.ResetTime).TotalSeconds);
+            api.ResetTime = DateTime.Now;
+            if (api.ResetTimeInSeconds <= 0 || api.RemainingIPHits < 0 || api.RemainingUserHits<0) api.ResetTimeInSeconds = 3;
         }
 
         public SinaMBCrawler(SysArgFor crawlerType)
@@ -384,7 +385,14 @@ namespace Sinawler
             System.Threading.Thread.Sleep(iSleep);
             LinkedList<Tag> lstTags = new LinkedList<Tag>();
             JsonTag[] oJsonTags = api.API.Tags(lUserID, 1, 50);
-            if (oJsonTags != null)
+            
+            if(oJsonTags==null && api.API.JsonResult.Contains("403"))
+            {
+                Tag t = new Tag();
+                t.tag_id = -1;
+                lstTags.AddLast(t);
+            }
+            else
                 foreach (JsonTag oJsonTag in oJsonTags)
                     lstTags.AddLast(JsonTagToTag(oJsonTag));
 
