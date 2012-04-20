@@ -61,7 +61,8 @@ namespace Sinawler
             {
                 wb.Document.GetElementById("userId").SetAttribute("value", strUserID);
                 wb.Document.GetElementById("passwd").SetAttribute("value", strPWD);
-                wb.Document.GetElementById("ssologinFlag").SetAttribute("checked", "true");
+                HtmlElement e=wb.Document.GetElementById("ssologinFlag");
+                if(e!=null) e.SetAttribute("checked", "true");
                 HtmlElementCollection elements = wb.Document.GetElementsByTagName("a");
                 foreach (HtmlElement element in elements)
                 {
