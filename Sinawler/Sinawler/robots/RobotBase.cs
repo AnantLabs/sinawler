@@ -135,7 +135,7 @@ namespace Sinawler
                 api.ResetTimeInSeconds = api.ResetTimeInSeconds - Convert.ToInt32((DateTime.Now - api.ResetTime).TotalSeconds);
                 if (api.ResetTimeInSeconds < 0) api.ResetTimeInSeconds = 0;
                 api.ResetTime = DateTime.Now;
-                if (api.ResetTimeInSeconds % 100 == 0 || api.RemainingIPHits % 20 == 0 || api.RemainingUserHits % 10 == 0 || api.ResetTimeInSeconds <= 0 || api.RemainingIPHits < 0 || api.RemainingUserHits<0) AdjustRealFreq();
+                if (api.ResetTimeInSeconds % 100 == 0 || api.RemainingIPHits % 15 == 0 || api.RemainingUserHits % 10 == 0 || api.ResetTimeInSeconds <= 0 || api.RemainingIPHits < 0 || api.RemainingUserHits<0) AdjustRealFreq();
             }
         }
 
@@ -147,9 +147,13 @@ namespace Sinawler
                 int iSleep = api.ResetTimeInSeconds * 1000;
                 if (iSleep < iMinSleep) iSleep = iMinSleep;
                 int i=0, j=0;
-                if (api.RemainingIPHits > 0)    i = Convert.ToInt32(api.ResetTimeInSeconds * 1000 / api.RemainingIPHits);
-                if (api.RemainingUserHits > 0) j = Convert.ToInt32(api.ResetTimeInSeconds * 1000 / api.RemainingUserHits);
-                iSleep = Math.Max(i, j);
+                if (api.RemainingIPHits == 0 || api.RemainingUserHits == 0) iSleep = api.ResetTimeInSeconds * 1000;
+                else
+                {
+                    if (api.RemainingIPHits > 0) i = Convert.ToInt32(api.ResetTimeInSeconds * 1000 / api.RemainingIPHits);
+                    if (api.RemainingUserHits > 0) j = Convert.ToInt32(api.ResetTimeInSeconds * 1000 / api.RemainingUserHits);
+                    iSleep = Math.Max(i, j);
+                }
                 if (iSleep < iMinSleep) iSleep = iMinSleep; //sleep at least 1s
                 crawler.SleepTime = iSleep;
             }

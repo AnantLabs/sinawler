@@ -368,6 +368,7 @@ namespace Sinawler
 
         private Tag JsonTagToTag(JsonTag oJsonTag)
         {
+            if (oJsonTag == null) return null;
             Tag tag = new Tag();
             tag.tag_id = Convert.ToInt64(oJsonTag.id);
             tag.tag = oJsonTag.content;
