@@ -12,10 +12,6 @@ namespace Sinawler
 {
     class UserInfoRobot:RobotBase
     {
-        private UserQueue queueUserForUserInfoRobot;            //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
-        private UserQueue queueUserForUserTagRobot;             //用户标签机器人使用的用户队列引用
-        private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private int iInitQueueLength = 100;          //初始队列长度
 
         public int InitQueueLength

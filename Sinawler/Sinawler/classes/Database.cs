@@ -44,16 +44,6 @@ namespace Sinawler
         public Database(string pDatabaseConnectionString) { }
 
         /// <summary>
-        /// 加载数据库配置信息
-        /// </summary>
-        public void LoadSettings()
-        {
-            SettingItems settings = AppSettings.Load();
-            if (settings == null) settings = AppSettings.LoadDefault();
-            _connection_string = "Data Source=" + settings.DBServer + ";User Id=" + settings.DBUserName + ";Password=" + settings.DBPwd + ";database=" + settings.DBName;
-        }
-
-        /// <summary>
         /// 析构函数，释放非托管资源
         /// </summary>
         ~Database() { }

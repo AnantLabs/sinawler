@@ -13,10 +13,6 @@ namespace Sinawler
 {
     class UserRelationRobot : RobotBase
     {
-        private UserQueue queueUserForUserInfoRobot;        //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
-        private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
-        private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
         private long lQueueBufferFirst = 0;   //用于记录获取的关注用户列表、粉丝用户列表的队头值
         private bool blnConfirmRelationship = false;
 

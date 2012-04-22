@@ -24,6 +24,12 @@ namespace Sinawler
         protected BackgroundWorker bwAsync = null;
         protected int iMinSleep = 100;              //minimum ms for sleeping
 
+        protected UserQueue queueUserForUserInfoRobot;            //用户信息机器人使用的用户队列引用
+        protected UserQueue queueUserForUserRelationRobot;        //用户关系机器人使用的用户队列引用
+        protected UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
+        protected UserQueue queueUserForUserTagRobot;             //用户标签机器人使用的用户队列引用
+        protected StatusQueue queueStatus;                    //微博队列引用
+
         //构造函数，需要传入相应的新浪微博API和主界面
         public RobotBase(SysArgFor robotType)
         {

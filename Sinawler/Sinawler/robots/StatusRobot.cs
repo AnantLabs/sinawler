@@ -12,11 +12,6 @@ namespace Sinawler
 {
     class StatusRobot : RobotBase
     {
-        private UserQueue queueUserForUserInfoRobot;        //用户信息机器人使用的用户队列引用
-        private UserQueue queueUserForUserRelationRobot;    //用户关系机器人使用的用户队列引用
-        private UserQueue queueUserForUserTagRobot;         //用户标签机器人使用的用户队列引用
-        private UserQueue queueUserForStatusRobot;          //微博机器人使用的用户队列引用
-        private StatusQueue queueStatus;                    //微博队列引用
         private long lCurrentSID = 0;                       //currently processing status id
 
         //构造函数，需要传入相应的新浪微博API和主界面

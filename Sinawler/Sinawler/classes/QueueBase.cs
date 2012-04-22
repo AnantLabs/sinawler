@@ -8,9 +8,6 @@ namespace Sinawler
 {
     public class QueueBase
     {
-        protected string strLogFile = "";             //日志文件
-        private string strLogMessage = "";          //日志内容
-
         protected LinkedList<long> lstWaitingID = new LinkedList<long>();     //等待爬行的ID队列。可能是UserID，也可能是StatusID等
         protected int iMaxLengthInMem = 5000;               //内存中队列长度上限，默认5000
         protected QueueBuffer lstWaitingIDInDB;              //数据库队列缓存
@@ -23,17 +20,6 @@ namespace Sinawler
             SettingItems settings = AppSettings.Load();
             if (settings == null) settings = AppSettings.LoadDefault();
             iMaxLengthInMem = settings.MaxLengthInMem;
-        }
-
-        public string LogFile
-        {
-            set { strLogFile = value; }
-            get { return strLogFile; }
-        }
-
-        public string LogMessage
-        {
-            get { return strLogMessage; }
         }
 
         public int MaxLengthInMem
