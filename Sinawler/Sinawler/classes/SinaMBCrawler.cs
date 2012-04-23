@@ -387,10 +387,16 @@ namespace Sinawler
             LinkedList<Tag> lstTags = new LinkedList<Tag>();
             JsonTag[] oJsonTags = api.API.Tags(lUserID, 1, 50);
             
-            if(oJsonTags==null && api.API.JsonResult.Contains("403"))
+            if(oJsonTags==null)
             {
+                
                 Tag t = new Tag();
-                t.tag_id = -1;
+                if (api.API.JsonResult.Contains("403")) t.tag_id = -1;
+                else
+                {
+                    t.tag_id = -2;
+                    t.tag = api.API.JsonResult;
+                }
                 lstTags.AddLast(t);
             }
             else

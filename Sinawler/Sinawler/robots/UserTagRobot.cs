@@ -134,6 +134,18 @@ namespace Sinawler
                     }
                     continue;
                 }
+                else if (lstTag.Count > 0 && lstTag.First.Value.tag_id == -2)
+                {   
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Error! The error message is \""+lstTag.First.Value.tag+"\". I will wait for " + iSleepSeconds.ToString() + "s to continue...");
+                    lstTag.Clear();
+                    for (int i = 0; i < iSleepSeconds; i++)
+                    {
+                        if (blnAsyncCancelled) return;
+                        Thread.Sleep(1000);
+                    }
+                    continue;
+                }
                 else
                 {
                     queueUserForUserTagRobot.RollQueue();
