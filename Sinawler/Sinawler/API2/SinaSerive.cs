@@ -1727,11 +1727,13 @@ namespace Open.Sina2SDK
             }
             catch (Exception ex)
             {
-                //if (partUrl == "users/show.json" || partUrl == "account/get_uid.json" || partUrl == "account/rate_limit_status.json")
-                //{
+                if (typeof(T).Name == "RelationShip" && ex.Message.Contains("400"))
+                    json = "{\"target\": {\"id\": 0,\"screen_name\": \"0\",\"followed_by\": false,\"following\": false,\"notifications_enabled\": false},\"source\": {\"id\": 0,\"screen_name\": \"\",\"followed_by\": false,\"following\": false,\"notifications_enabled\": false}}";
+                else
+                {
                     json = ex.Message;
                     return null;
-                //}
+                }
             }
             return JsonConvert.DeserializeObject<T>(json);
         }

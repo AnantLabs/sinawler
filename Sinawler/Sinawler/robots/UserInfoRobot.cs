@@ -128,6 +128,11 @@ namespace Sinawler
                         Thread.Sleep(1000);
                     }
                 }
+                else if (user.user_id == -2)   //timeout
+                {
+                    int iSleepSeconds = GlobalPool.GetAPI(SysArgFor.USER_INFO).ResetTimeInSeconds;
+                    Log("Time out. I will crawl user "+lCurrentID.ToString()+" again...");
+                }
                 #endregion
             }
         }

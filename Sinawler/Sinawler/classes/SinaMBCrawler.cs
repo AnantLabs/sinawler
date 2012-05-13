@@ -121,10 +121,15 @@ namespace Sinawler
             User user = api.API.Users_Show(lUid);
             if (user == null && api.API.JsonResult.Contains("400"))    //用户不存在
                 return null;
-            if (user == null && api.API.JsonResult.Contains("403"))    //服务已禁止
+            if (user == null && api.API.JsonResult.Contains("403") || api.API.JsonResult.Contains("无法解析"))    //服务已禁止
             {
                 user = new User();
                 user.user_id = -1;
+            }
+            if (user == null && api.API.JsonResult.Contains("超时"))
+            {
+                user = new User();
+                user.user_id = -2;
             }
             user.created_at = PubHelper.ParseDateTime(user.created_at);
             return user;
