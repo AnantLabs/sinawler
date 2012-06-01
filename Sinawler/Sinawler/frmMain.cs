@@ -221,6 +221,13 @@ namespace Sinawler
 
         private void btnSearchOnline_Click(object sender, EventArgs e)
         {
+            string strUserID = txtUserID.Text.Trim();
+            string strScreenName = txtUserName.Text.Trim();
+            if (strUserID != "" && strScreenName != "")
+            {
+                MessageBox.Show("Please select either UserID or Nickname to fill, but not both of them.", "Sinawler");
+                return;
+            }
             CheckLogin();
             if (blnAuthorized)
             {
@@ -230,8 +237,7 @@ namespace Sinawler
                     txtUserID.Focus();
                     return;
                 }
-                string strUserID = txtUserID.Text.Trim();
-                string strScreenName = txtUserName.Text.Trim();
+                
                 long lBuffer;
                 if (strUserID != "" && !long.TryParse(strUserID, out lBuffer))
                 {
@@ -243,9 +249,7 @@ namespace Sinawler
                 if (strUserID != "" && strScreenName == "")
                     oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUserID));
                 if (strUserID == "" && strScreenName != "")
-                    oSearchedUser = crawler.GetUserInfo(strScreenName);
-                if (strUserID != "" && strScreenName != "")
-                    oSearchedUser = crawler.GetUserInfo(Convert.ToInt64(strUserID), strScreenName);
+                    oSearchedUser = crawler.GetUserInfo(strScreenName);                
                 if (oSearchedUser.user_id == 0)
                     MessageBox.Show("User not found.", "Sinawler");
                 if (oSearchedUser.user_id == -1)
