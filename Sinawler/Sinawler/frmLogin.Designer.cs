@@ -61,11 +61,12 @@
             // 
             // wbUserRelation
             // 
-            this.wbUserRelation.Location = new System.Drawing.Point(30, 183);
+            this.wbUserRelation.Location = new System.Drawing.Point(12, 70);
             this.wbUserRelation.MinimumSize = new System.Drawing.Size(20, 20);
             this.wbUserRelation.Name = "wbUserRelation";
-            this.wbUserRelation.Size = new System.Drawing.Size(853, 508);
+            this.wbUserRelation.Size = new System.Drawing.Size(78, 39);
             this.wbUserRelation.TabIndex = 4;
+            this.wbUserRelation.Visible = false;
             this.wbUserRelation.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbUserRelation_DocumentCompleted);
             // 
             // txtUserID
@@ -111,7 +112,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(968, 734);
+            this.ClientSize = new System.Drawing.Size(243, 178);
             this.ControlBox = false;
             this.Controls.Add(this.lblPWD);
             this.Controls.Add(this.lblUserId);
